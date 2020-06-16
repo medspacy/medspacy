@@ -1,0 +1,964 @@
+#/*******************************************************************************
+# * Copyright  2016  Department of Biomedical Informatics, University of Utah
+# * <p>
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# * <p>
+# * http://www.apache.org/licenses/LICENSE-2.0
+# * <p>
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *******************************************************************************/
+
+#this list is optimized for shorter rule length rules for semeval were added
+@maxRepeatLength:100
+
+#stbegin is the marker for sentence begin, the span of sentence will start at the begin of the captured group
+#stbegin has two scores 0, 1: 0 for true sentence begin, 1 for false sentence begin which will overwrite 0 when they are overlapping
+#stend is the marker for sentence begin, the span of sentence will end at the end of the captured group
+#stend has two scores 2, 3: 2 for true sentence end, 3 for false sentence end which will overwrite 2 when they are overlapping
+
+# \d   A digit
+# \C   A capital letter
+# \c   A lowercase letter
+# \s   A whitespace
+# \a   A Non-whitespace character
+# \u   A unusual character: not a letter, not a number, not a punctuation, not a whitespace
+# \n   A return
+# (   Beginning of capturing a group
+# )   End of capturing a group
+# \p   A punctuation
+# <p>
+# \+   An addition symbol (to distinguish the "+" after a wildcard)
+# \(   A left parentheses symbol
+# \)   A right parentheses symbol
+# <p>
+# The wildcard plus "+": 1 or more wildcard
+
+\b(\a	0	stbegin
+\b(\d	0	stbegin
+\b\w+(\a	0	stbegin
+\c.\s+(\C)	0	stbegin
+ mL.\s+(\C)	0	stbegin
+*)	1	stbegin
+\c\c.\s+(\C)	0	stbegin
+\c\).\s+(\C)	0	stbegin
+\d\).\s+(\C)	0	stbegin
+\C\C\C.\s+(\C)\c	0	stbegin
+\d.\s+(\C)	0	stbegin
+\n\n\s+(\C)	0	stbegin
+ Med\n\n\n+(\c+)	0	stbegin
+ Med\s+\n\n\n+\s+(\c+)	0	stbegin
+ Med\s+\n+\s+\n+\s+(\c+)	0	stbegin
+ Normal\s+\n+\s+\n+\s+(\c+)	0	stbegin
+\c\c.\n+(\c\c	0	stbegin
+\c\c.\n+(\d+	0	stbegin
+\d%.\n+(\d+	0	stbegin
+\c\c.\n\n\w+(\c+)	0	stbegin
+\c\c.\s+\n\n\w+(\c+)	0	stbegin
+\c\c.\s+\n\n\w+(\c+)	0	stbegin
+\c\c.\n\w+(\c+)	0	stbegin
+\c\c.\w+(\c+)	0	stbegin
+\c.\n+(\d+)\s	0	stbegin
+\c.\s+\n+(\d+)\s	0	stbegin
+\c.\n+\s+(\d+)\s	0	stbegin
+\c.\s+\n+(\d).\s+\d	0	stbegin
+\c.\s+\n+\s+(\d+)\s+	0	stbegin
+\c.\n+(\d+).\d+x	0	stbegin
+\c.\s+\n+(\d+).\d+x	0	stbegin
+\c.\n+\s+(\d+).\d+x	0	stbegin
+\c.\s+\n+\s+(\d+).\d+x	0	stbegin
+\c.\n+(\d+).\d+*	0	stbegin
+\c.\s+\n+(\d+).\d+*	0	stbegin
+\c.\n+\s+(\d+).\d+*	0	stbegin
+\c.\s+\n+\s+(\d+).\d+*	0	stbegin
+\c.\n+(\d+)x	0	stbegin
+\c.\s+\n+(\d+)x	0	stbegin
+\c.\n+\s+(\d+)x	0	stbegin
+\c.\s+\n+\s+(\d+)x	0	stbegin
+\c.\n+(\d+)\s+\c	0	stbegin
+\c.\s+\n+(\d+)\s+\c	0	stbegin
+\c.\n+\s+(\d+)\s+\c	0	stbegin
+\c.\s+\n+\s+(\d+)\s+\c	0	stbegin
+\c.\n+(\d+)\c	0	stbegin
+\c.\s+\n+(\d+)\c	0	stbegin
+\c.\n+\s+(\d+)\c	0	stbegin
+\c.\s+\n+\s+(\d+)\c	0	stbegin
+\n\n\s\w+\d+.(\C)	0	stbegin
+\n\n\s\w+\d+.\s+(\C)	0	stbegin
+\n\n\s\w+(\d)\s	0	stbegin
+\n\n\s\w+(\d+)\s	0	stbegin
+\n\n\s\w+(")\C	0	stbegin
+\n\n\d+.(\C)	0	stbegin
+\n\d/\s+(\C)	0	stbegin
+\n\n(\d+.\s+\C	0	stbegin
+\n(\d+.\s+\c	0	stbegin
+\n\n(\d)\s	0	stbegin
+\n\n(\d+)\s	0	stbegin
+\n\n(")\C	0	stbegin
+\n\n(")\s+\C	0	stbegin
+\n\n\s+(")\s+\C	0	stbegin
+\n\n(-\C	0	stbegin
+\n(-\C	0	stbegin
+\c.\s+\n(-\C	0	stbegin
+\c:\s+\n(-\C	0	stbegin
+\c.\n(-\C	0	stbegin
+\c:\n(-\C	0	stbegin
+\n\n\s+(-\C	0	stbegin
+\n\n\s+(-\s+\C	0	stbegin
+\n\n(-\s+\C	0	stbegin
+
+
+\n\n(-\s+\c)\c	0	stbegin
+\n\n\s+-\s+(\c)\c	0	stbegin
+\c.\n(-\c)\c	0	stbegin
+\c:\n(-\c)\c	0	stbegin
+\c.\s+\n(-\c)	0	stbegin
+\c:\s+\n(-\c)	0	stbegin
+\n(-\c)\c	0	stbegin
+\n (•  \c	0	stbegin
+
+\c.\n+(-\d)	0	stbegin
+\c.\s+\n+(-\d)	0	stbegin
+\c.\s+\n+\s+(-\d)	0	stbegin
+
+\n\n*(\C)	0	stbegin
+\n\n\s+(*)\C	0	stbegin
+\n\n\s+(*)\s+\C	0	stbegin
+\n\n(*)\s+\C	0	stbegin
+\n\n\s+(')\C	0	stbegin
+\n\n(')\C	0	stbegin
+\n\n(')\s+\C	0	stbegin
+\n\n\s+(')\s+\C	0	stbegin
+\n\n\s+(%)\C	0	stbegin
+\n\n(%)\C	0	stbegin
+\n\n(%)\s+\C	0	stbegin
+\n\n\s+(%)\s+\C	0	stbegin
+\b*\p+(\C)	0	stbegin
+\b\n*\p+(\C	0	stbegin
+\n\n*\p+(\C	0	stbegin
+\n\n*\p+\s+(\C	0	stbegin
+\n**\p+\s+(\C	0	stbegin
+\n**\s+(\C	0	stbegin
+\n**\p+(\C	0	stbegin
+\n**(\C	0	stbegin
+\n**(\d	0	stbegin
+\n\n\s+*\p+(\C	0	stbegin
+\n\n\s+*\p+\s+\C	0	stbegin
+\c.\s+**\p+(\C	0	stbegin
+
+\n\n\s+(\u)\s+\d\s	0	stbegin
+\n\n\s+(\u)\s+\d+\s	0	stbegin
+\n\n\s+(\u)\s+\d+/	0	stbegin
+\n\n\s+(\u)\s+\d/	0	stbegin
+\n\n\s+(\u)\s+\c	0	stbegin
+\n\n\s+(\u)\s+\C	0	stbegin
+\n\n(\u)\s+\C	0	stbegin
+?\s+(\C)\c	0	stbegin
+?\s+(\d	0	stbegin
+!\s+(\C)\c	0	stbegin
+!\s+(\d	0	stbegin
+
+
+
+#start with time
+\n\n(\d):\d\s	0	stbegin
+\n\n(\d):\d\d\s	0	stbegin
+\n\n(\d)\d:\d\d\s	0	stbegin
+\n\n(\d)\d:\d\s	0	stbegin
+\n\n(\d):\d-	0	stbegin
+\n\n(\d):\d\d-	0	stbegin
+\n\n(\d)\d:\d\d-	0	stbegin
+\n\n(\d)\d:\d-	0	stbegin
+\n\n\w+(\d):\d\s	0	stbegin
+\n\n\w+(\d):\d\d\s	0	stbegin
+\n\n\w+(\d)\d:\d\d\s	0	stbegin
+\n\n\w+(\d)\d:\d\s	0	stbegin
+\n\n\w+(\d):\d-	0	stbegin
+\n\n\w+(\d):\d\d-	0	stbegin
+\n\n\w+(\d)\d:\d\d-	0	stbegin
+\n\n\w+(\d)\d:\d-	0	stbegin
+#start with dates
+\n\n(\d+)\s+	0	stbegin
+\n\n(\d)\d/\d/\d\d\d\d	0	stbegin
+\n\n(\d)/\d/\d\d\d\d	0	stbegin
+\n\n(\d)\d/\d\d/\d\d\d\d	0	stbegin
+\n\n(\d)/\d\d/\d\d\d\d	0	stbegin
+\n\n(\d)\d/\d/\d\d	0	stbegin
+\n\n(\d)/\d/\d\d	0	stbegin
+\n\n(\d)\d/\d\d/\d\d	0	stbegin
+\n\n(\d)/\d\d/\d\d	0	stbegin
+\n\n(\d)\d/\d\s	0	stbegin
+\n\n(\d)/\d\s	0	stbegin
+\n\n(\d)\d/\d\d\s	0	stbegin
+\n\n(\d)/\d\d/\d\s	0	stbegin
+\n+\s\s\s\s(\C)	0	stbegin
+\n+\s\s\s(\C)	0	stbegin
+\n+\s\s(\C)	0	stbegin
+\n+(\C)	0	stbegin
+.\s+(N)ow 	0	stbegin
+.\s+(D)ischarge 	0	stbegin
+
+\n(\(-\)\s+\C	0	stbegin
+#\n(\(+\)\s+\C	0	stbegin
+\n        (\d	0	stbegin
+\C:\n+(\d	0	stbegin
+\n(\d.\s+)\C	0	stbegin
+\n(\d.\C	0	stbegin
+\n\s+(\d.\s+\C	0	stbegin
+\n\s+(\d\d.\s+\C	0	stbegin
+\n\d.\)\s+(\C	0	stbegin
+\n\d\d.\)\s+(\C	0	stbegin
+\c:\n+(\a	0	stbegin
+\s+\s+(\d\)\s+\C	0	stbegin
+\s+\s+(\d\d\)\s+\C	0	stbegin
+\n)                                    \d\d\)	2	stend
+
+\c:\n+(\d. 	0	stbegin
+\d:\n+(\d	0	stbegin
+
+\C:\s+\n+(\d	0	stbegin
+\C:\s+\n+(1. 	0	stbegin
+\c:\s+\n+(\d	0	stbegin
+\d:\s+\n+(\d	0	stbegin
+\).\s+(\C	0	stbegin
+\n(- \c	0	stbegin
+\n(- \C	0	stbegin
+\n(# \c	0	stbegin
+\n(# \C	0	stbegin
+\n(#\C	0	stbegin
+\n(#\c	0	stbegin
+\n(* \c	0	stbegin
+\n(* \C	0	stbegin
+\n(? \C	0	stbegin
+\n(? \c	0	stbegin
+\n(. \C	0	stbegin
+\n(+ \C	0	stbegin
+\n(/ \C	0	stbegin
+\n+\d\d-\d\d\s+(\C	0	stbegin
+\n+\d+-\d\d-\d\d\s+(\C	0	stbegin
+\n+\d+-\d\d-\d\d\s+:\s+(\C	0	stbegin
+\c.\s+\n(\d.\C	0	stbegin
+\n(\d\)\s+\C	0	stbegin
+\n(\d\d\)\s+\C	0	stbegin
+\n(\d\)\s+\c	0	stbegin
+\n(\d\)\s+?\c	0	stbegin
+\n(\d\d\)\s+\c	0	stbegin
+\n(\d\)\C	0	stbegin
+\s\s(\d\)\C	0	stbegin
+\s\s(\d\)?\s+\C	0	stbegin
+
+\c)\w+\d\)\s+\d+\s+(\c	0	stbegin
+
+\c\w+(\d\)\C	0	stbegin
+\d\)\C+\w+(\d\)\c	0	stbegin
+
+\c)\w+\d\)	2	stend
+\c)\w+\d\d\)	2	stend
+\(\a+\w+\a+\)	3	stend
+\c\c)\w+\d\d\),	3	stend
+\c\c)\w+\d\),	3	stend
+\c\c)\w+\d\).	3	stend
+\c\c)\w+\d\d\).	3	stend
+from \d+ to \d+	3	stend
+
+\C\C)\w+\d\d\),	3	stend
+\C\C)\w+\d\),	3	stend
+\C\C)\w+\d\).	3	stend
+\C\C)\w+\d\d\).	3	stend
+
+\C(\C)\w+\d\)	2	stend
+\C(\C)\w+\d\d\)	2	stend
+\(\C+\s+\d\d\)	3	stend
+\(\c+\s+\d\d\)	3	stend
+\d(%)\w+\d\)	2	stend
+\d(%)\w+\d\d\)	2	stend
+\d)\w+\d\)	2	stend
+\d)\w+\d\d\)	2	stend
+\d\d-\d\d\s+(.)\s+\C	2	stend
+\d\d-\d\d\s+.\s+(\C	0	stbegin
+\d\d\d(\d)\s+.\s+\C	2	stend
+\d\d\d\d\s+.\s+(\C	0	stbegin
+
+\n(\d.\)\C	0	stbegin
+\n(\d.\)\s+\C	0	stbegin
+\n\s+(\d.\s+\C	0	stbegin
+\n\s+(\d.\)\C	0	stbegin
+\n\s+(\d.\)\s+\C	0	stbegin
+\n\d.\s+(\d)\d-\d\d\s	0	stbegin
+\n\d.\s+(\d)\d-\d\d\d\d\s	0	stbegin
+\n\d.\s+(\d)\d-\d\d-\d\d\d\d\s	0	stbegin
+\n\(a\)\s+(\C	0	stbegin
+\n\(b\)\s+(\C	0	stbegin
+\n\(c\)\s+(\C	0	stbegin
+\n\(d\)\s+(\C	0	stbegin
+\n\(e\)\s+(\C	0	stbegin
+\n\(f\)\s+(\C	0	stbegin
+\n\(g\)\s+(\C	0	stbegin
+\n(\(\d\)\s+\C	0	stbegin
+\n("\C	0	stbegin
+
+\a.\s+(This 	0	stbegin
+\a.\s+(That 	0	stbegin
+\a.\s+(The 	0	stbegin
+\a.\s+(She 	0	stbegin
+\a.\s+(He 	0	stbegin
+\a.\s+(Her 	0	stbegin
+\a.\s+(His 	0	stbegin
+\a.\s+(They 	0	stbegin
+\a.\s+(Their 	0	stbegin
+\a.\s+(But 	0	stbegin
+\a.\s+(Now 	0	stbegin
+\a.\s+(Discharge 	0	stbegin
+
+
+(\a)\s+\n+-	2	stend
+\c(\c)\n+ \C	2	stend
+\a(.)\s+This 	2	stend
+\a(.)\s+That 	2	stend
+\a(.)\s+The 	2	stend
+\a(.)\s+She 	2	stend
+\a(.)\s+He 	2	stend
+\a(.)\s+Her 	2	stend
+\a(.)\s+His 	2	stend
+\a(.)\s+They 	2	stend
+\a(.)\s+Their 	2	stend
+\a(.)\s+But 	2	stend
+\a(.)\s+Now 	2	stend
+\a(.)\s+Discharge 	2	stend
+ mL(.)\s+The 	2	stend
+\c(.)\s+I	2	stend
+\d(.)\s+\C	2	stend
+\d(.)\s\C	2	stend
+.\s+\d.\s+\C	2	stend
+\)(.)\s+\C	2	stend
+\p\p\p\s+\n\C	2	stend
+\)(.)\s+\n\C	2	stend
+\c(\c)\n+\C	2	stend
+\c(\c)\s+\n+\C	2	stend
+\a\s+\n\n	2	stend
+\a\n\n	2	stend
+\a\n\e	2	stend
+\a\s+\n\e	2	stend
+\a\n\n\e	2	stend
+\c)********	2	stend
+\c)**\n	2	stend
+\c)**\s+\n	2	stend
+\c)**\p+\s+\n	2	stend
+\c)**\p+\n	2	stend
+\c)\s+**\p+\s+\n	2	stend
+\c\s+**\p+\n	2	stend
+\c\s+\n\w+**	2	stend
+\c.\s+\n\w+**	2	stend
+\d(.)\s+\n\w+**	2	stend
+(\d)**\p+\s+\n	2	stend
+\d**\p+\n	2	stend
+.\s+**\p+\s+\n	2	stend
+.\s+**\p+\n	2	stend
+.**\p+\s+\n	2	stend
+.**\s+\p+\n	2	stend
+.**\p+\s+\p+\n	2	stend
+.**\p+\n	2	stend
+.**\s+\n\n	2	stend
+.**\n\n	2	stend
+.\s+**\s+\n\n	2	stend
+.\s+**\n\n	2	stend
+:**\p+\n	2	stend
+:**\s+\n\n	2	stend
+:**\s+\n\w+	2	stend
+:**\n\n	2	stend
+:\s+**\s+\n\n	2	stend
+:\s+**\n\n	2	stend
+:)\n\u\s+\C	2	stend
+\d**\s+\n\n	2	stend
+\d**\n\n	2	stend
+\a\s+\n+**	2	stend
+\a\s+\n\w+**\p+\C	2	stend
+\c(.\s+**\p+\C	2	stend
+\d)\s+\n+\d.\s+\C	2	stend
+\d)\s+\n+\d\d.\s+\C	2	stend
+\c)\s+\n+\d.\s+\C	2	stend
+\c)\s+\n+\d\d.\s+\C	2	stend
+\C)\s+\n+\d.\s+\C	2	stend
+\C)\s+\n+\d\d.\s+\C	2	stend
+\d)\s+\n+\d.\s+\c	2	stend
+\c)\s+\n+\d.\s+\c	2	stend
+\c)\s+\n+\d\d.\s+\c	2	stend
+\C)\s+\n+\d.\s+\c	2	stend
+\C)\s+\n+\d\d.\s+\c	2	stend
+
+\c(\))\s+\n\n	2	stend
+\c(\c)\s+\n\e	2	stend
+\c\c(.)\s+\C	2	stend
+\c(.)\s+\e	2	stend
+\c(.)\s+\n\e	2	stend
+\c(.)\s+\n	2	stend
+\d(.)\n	2	stend
+\c(:)\n	2	stend
+\C(:)\n	2	stend
+\d(:)\n	2	stend
+\c(:)\s+\n	2	stend
+\C(:)\s+\n	2	stend
+\d(:)\s+\n	2	stend
+\C\C\C(.)\s+\C\c	2	stend
+\C(.)\n	2	stend
+\)(.)\n	2	stend
+](.)\n	2	stend
+\c(.)\n	2	stend
+\c(.)\e	2	stend
+\c\e	2	stend
+\C\e	2	stend
+\d\e	2	stend
+\p\e	2	stend
+\c\s+\e	2	stend
+\C\s+\e	2	stend
+\p\s+\e	2	stend
+\d\s+\e	2	stend
+
+\b\d(.)\s+\C	3	stend
+\n\d+(.)\s+\C	3	stend
+\d+.\C+(:)\s+\n	3	stend
+Mrs(.) 	3	stend
+Miss(.) 	3	stend
+Mr(.) 	3	stend
+Ms(.) 	3	stend
+\c\n+\c	3	stend
+\c\n+\s+\c	3	stend
+\c\s+\n+\c	3	stend
+\c\s+\n+\s+\c	3	stend
+
+,\w+\c\c	3	stend
+,\n\w+\c\c	3	stend
+,\w+\c\c	3	stend
+,\w+\d+ 	3	stend
+,\n\w+\d+ 	3	stend
+,\w+\d+ 	3	stend
+;\w+\c\c	3	stend
+
+\)\w+\c\c	3	stend
+\)\n\w+\c\c	3	stend
+\)\w+\d 	3	stend
+\)\n\w+\d+ 	3	stend
+\)\w+\d 	3	stend
+\c)\s+\d+\)\s+\d+\s+.	2	stend
+\d+\s+.\s+(\C	0	stbegin
+
+\s+\C(\C)\w+\c\c	3	stend
+\s+\C\C(\C)\w+\c\c	3	stend
+\s+\C\C\C(\C)\w+\c\c	3	stend
+
+A\w+\c\c	3	stend
+A\n\w+\c\c	3	stend
+A\w+\c\c	3	stend
+A\w+\d+ 	3	stend
+A\n\w+\d+ 	3	stend
+A\w+\d+ 	3	stend
+
+\d+)\w+week	3	stend
+\d+)\w+month	3	stend
+\d+)\w+\day	3	stend
+\d+)\w+year	3	stend
+\d+)\w+cm 	3	stend
+\d+)\w+m 	3	stend
+\d+)\w+mg 	3	stend
+\d+)\w+g 	3	stend
+\d+)\w+kg 	3	stend
+\d+)\w+lb 	3	stend
+\d+)\w+feet 	3	stend
+\d+)\w+inch 	3	stend
+\d+)\w+ml 	3	stend
+\d+)\w+ou 	3	stend
+\d+)\w+ounce 	3	stend
+\d+)\w+total dose	3	stend
+\d+)\w+dose	3	stend
+\d+)\w+tablet	3	stend
+
+#start with number + units
+\c\n+\d+\s+\c\c	3	stend
+\c\n+\s+\d+\s+\c\c	3	stend
+\c\s+\n+\d+\s+\c\c	3	stend
+\c\s+\n+\d+\s+\s+\c\c	3	stend
+#start with float + units
+\c\n+\d+.\d+\s+\c\c	3	stend
+\c\n+\s+\d+.\d+\s+\c\c	3	stend
+\c\s+\n+\d+.\d+\s+\c\c	3	stend
+\c\s+\n+\d+.\d+\s+\s+\c\c	3	stend
+
+are:\s+\n+\c	3	stend
+\sis:\s+\n+\c	3	stend
+was:\s+\n+\c	3	stend
+were:\s+\n+\c	3	stend
+are:\n+\c	3	stend
+\sis:\n+\c	3	stend
+was:\n+\c	3	stend
+were:\n+\c	3	stend
+are:\n+\s+\c	3	stend
+\sis:\n+\s+\c	3	stend
+was:\n+\s+\c	3	stend
+were:\n+\s+\c	3	stend
+are:\s+\n+\s+\c	3	stend
+\sis:\s+\n+\s+\c	3	stend
+was:\s+\n+\s+\c	3	stend
+were:\s+\n+\s+\c	3	stend
+#:\n+\c)+	3	stend
+#:\s+\n+\c\c	3	stend
+#:\n+\s+\c\c	3	stend
+#:\s+\n+\s+\c\c	3	stend
+\spulm.	3	stend
+
+ mL\n+\c)+	3	stend
+ mL\s+\n+\c\c	3	stend
+ mL\n+\s+\c\c	3	stend
+ mL\s+\n+\s+\c\c	3	stend
+
+
+ \n\n\n+ •  	2	stend
+\s+\n\n+\s+\C	2	stend
+\d+.\s+\C+(:\s+\n\n+\s+\C\c+\s+\d+.	3	stend
+\d+.\s+\C\c+(:\s+\n\n+\s+\C\c+\s+\d+.	3	stend
+\a\w+_______________	2	stend
+\a(\p)\w+_______________	2	stend
+(\c)\n- \c	2	stend
+(\c)\n- \C	2	stend
+\c.(")\s+\C	2	stend
+\c."\s+(\C	0	stbegin
+
+Heart\nFailure	3	stend
+ and\s+\n\n	3	stend
+ that\s+\n\n	3	stend
+ for\s+\n+	3	stend
+ had\s+\n+	3	stend
+ have\s+\n+	3	stend
+ has\s+\n+	3	stend
+ "I\s+\n\n	3	stend
+ I\s+\n\n	3	stend
+\(\C+\s+\n\n	3	stend
+\(\c+\s+\n\n	3	stend
+\n(rhabdomyolysis:\n	0	stbegin
+.\s+\n+(\c+\s+\c+\s+\c+\s+\c+:\n	0	stbegin
+.\s+\n+(\c+\s+\c+\s+\c+:\n	0	stbegin
+.\s+\n+(\c+\s+\c+\s+\c+:\n	0	stbegin
+#\w+(H)istory of Present Illness:	0	stbegin
+\c)\w+History of Present Illness:	2	stend
+\C)\w+History of Present Illness:	2	stend
+\p)\w+History of Present Illness:	2	stend
+\c)\w+History of present illness:	2	stend
+\C)\w+History of present illness:	2	stend
+\p)\w+History of present illness:	2	stend
+\c)\w+HISTORY OF PRESENT ILLNESS:	2	stend
+\C)\w+HISTORY OF PRESENT ILLNESS:	2	stend
+\p)\w+HISTORY OF PRESENT ILLNESS:	2	stend
+\c)\w+Past Medical History:	2	stend
+\C)\w+Past Medical History:	2	stend
+\p)\w+Past Medical History:	2	stend
+\c)\w+History of Past Illness:	2	stend
+\C)\w+History of Past Illness:	2	stend
+\p)\w+History of Past Illness:	2	stend
+\c)\w+Chief Complaint:	2	stend
+\C)\w+Chief Complaint:	2	stend
+\p)\w+Chief Complaint:	2	stend
+\c)\w+Chief Complaint:	2	stend
+\C)\w+Chief Complaint:	2	stend
+\p)\w+Chief Complaint:	2	stend
+.)\s+The	2	stend
+.\s+(The	0	stbegin
+.\s+(\d.\s+\C	0	stbegin
+.\s+(\d.\C	0	stbegin
+\c(.\s+\d.\C	2	stend
+
+
+\c)\w+REASON FOR	2	stend
+\C)\w+REASON FOR	2	stend
+\d)\w+REASON FOR	2	stend
+\p)\w+REASON FOR	2	stend
+\c)\w+\w+REASON FOR	2	stend
+\C)\w+\w+REASON FOR	2	stend
+\d)\w+\w+REASON FOR	2	stend
+\p)\w+\w+REASON FOR	2	stend
+\c)\w+Reason For	2	stend
+\C)\w+Reason For	2	stend
+\d)\w+Reason For	2	stend
+\p)\w+Reason For	2	stend
+\c)\w+\w+Reason For	2	stend
+\C)\w+\w+Reason For	2	stend
+\d)\w+\w+Reason For	2	stend
+\p)\w+\w+Reason For	2	stend
+R)EASON FOR	0	stbegin
+#REASON FOR THIS EXAMINATION(:	2	stend
+#REASON FOR\w+(\d	0	stbegin
+#REASON FOR\w+(\C	0	stbegin
+#REASON FOR\w+(\c	0	stbegin
+#REASON FOR\w+(\p	0	stbegin
+#Reason For This Examination(:	2	stend
+#Reason For\w+(\d	0	stbegin
+#Reason For\w+(\C	0	stbegin
+#Reason For\w+(\c	0	stbegin
+#Reason For\w+(\p	0	stbegin
+
+
+\c)\w+INDICATION:	2	stend
+\C)\w+INDICATION:	2	stend
+\d)\w+INDICATION:	2	stend
+\p)\w+INDICATION:	2	stend
+\c)\w+Indication:	2	stend
+\C)\w+Indication:	2	stend
+\d)\w+Indication:	2	stend
+\p)\w+Indication:	2	stend
+#INDICATION(:	2	stend
+#INDICATION:\w+(\d	0	stbegin
+#INDICATION:\w+(\C	0	stbegin
+#INDICATION:\w+(\c	0	stbegin
+#INDICATION:\w+(\p	0	stbegin
+#Indication(:	2	stend
+#Indication:\w+(\d	0	stbegin
+#Indication:\w+(\C	0	stbegin
+#Indication:\w+(\c	0	stbegin
+#Indication:\w+(\p	0	stbegin
+
+
+\c)\w+REASON:	2	stend
+\C)\w+REASON:	2	stend
+\d)\w+REASON:	2	stend
+\p)\w+REASON:	2	stend
+\c)\w+Reason:	2	stend
+\C)\w+Reason:	2	stend
+\d)\w+Reason:	2	stend
+\p)\w+Reason:	2	stend
+#REASON(:	2	stend
+#REASON:\w+(\d	0	stbegin
+#REASON:\w+(\C	0	stbegin
+#REASON:\w+(\c	0	stbegin
+#REASON:\w+(\p	0	stbegin
+#Reason(:	2	stend
+#Reason:\w+(\d	0	stbegin
+#Reason:\w+(\C	0	stbegin
+#Reason:\w+(\c	0	stbegin
+#Reason:\w+(\p	0	stbegin
+
+\a)\w+Admitting Diagnosis:	2	stend
+\a)\w+ADMITTING DIAGNOSIS:	2	stend
+\a\w+(A)dmitting Diagnosis:	0	stbegin
+\a\w+(A)DMITTING DIAGNOSIS:	0	stbegin
+#Admitting Diagnosis(:	2	stend
+#Admitting Diagnosis:\w+(\d	0	stbegin
+#Admitting Diagnosis:\w+(\C	0	stbegin
+#Admitting Diagnosis:\w+(\c	0	stbegin
+#Admitting Diagnosis:\w+(\p	0	stbegin
+#ADMITTING DIAGNOSIS(:	2	stend
+#ADMITTING DIAGNOSIS:\w+(\d	0	stbegin
+#ADMITTING DIAGNOSIS:\w+(\C	0	stbegin
+#ADMITTING DIAGNOSIS:\w+(\c	0	stbegin
+#ADMITTING DIAGNOSIS:\w+(\p	0	stbegin
+
+
+\c)\w+Discharge Diagnosis:	2	stend
+\d)\w+Discharge Diagnosis:	2	stend
+\p)\w+Discharge Diagnosis:	2	stend
+\C)\w+Discharge Diagnosis:	2	stend
+\c)\w+DISCHARGE DIAGNOSIS:	2	stend
+\C)\w+DISCHARGE DIAGNOSIS:	2	stend
+\d)\w+DISCHARGE DIAGNOSIS:	2	stend
+\p)\w+DISCHARGE DIAGNOSIS:	2	stend
+#Discharge Diagnosis(:	2	stend
+#Discharge Diagnosis:\w+(\d	0	stbegin
+#Discharge Diagnosis:\w+(\C	0	stbegin
+#Discharge Diagnosis:\w+(\c	0	stbegin
+#Discharge Diagnosis:\w+(\p	0	stbegin
+#DISCHARGE DIAGNOSIS(:	2	stend
+#DISCHARGE DIAGNOSIS:\w+(\d	0	stbegin
+#DISCHARGE DIAGNOSIS:\w+(\C	0	stbegin
+#DISCHARGE DIAGNOSIS:\w+(\c	0	stbegin
+#DISCHARGE DIAGNOSIS:\w+(\p	0	stbegin
+
+\c)\w+FINDINGS:	2	stend
+\C)\w+FINDINGS:	2	stend
+\d)\w+FINDINGS:	2	stend
+\p)\w+FINDINGS:	2	stend
+F)INDINGS:	0	stbegin
+#FINDINGS(:	2	stend
+#FINDINGS:\w+(\d	0	stbegin
+#FINDINGS:\w+(\C	0	stbegin
+#FINDINGS:\w+(\c	0	stbegin
+#FINDINGS:\w+(\p	0	stbegin
+\c)\w+Findings:	2	stend
+\C)\w+Findings:	2	stend
+\d)\w+Findings:	2	stend
+\p)\w+Findings:	2	stend
+#Findings(:	2	stend
+#Findings:\w+(\d	0	stbegin
+#Findings:\w+(\C	0	stbegin
+#Findings:\w+(\c	0	stbegin
+#Findings:\w+(\p	0	stbegin
+
+
+#Brief Hospital Course(:	2	stend
+#Brief Hospital Course:\w+(\d	0	stbegin
+#Brief Hospital Course:\w+(\C	0	stbegin
+#Brief Hospital Course:\w+(\c	0	stbegin
+#Brief Hospital Course:\w+(\p	0	stbegin
+
+
+
+
+\c(?)\w+	2	stend
+\C(?)\w+	2	stend
+\d(?)\w+	2	stend
+:\w+(?\w+	3	stend
+
+
+D(.)\s+\n+\d+.\s+\C	2	stend
+N(.)\s+\n+\d+.\s+\C	2	stend
+NPO(.)\s+\n+\C	2	stend
+\)(.)\w+\d+.\s+\C	2	stend
+\c+\s+(.)\s+\C\c+	2	stend
+\c+\s+.\s+(\C\c+	0	stbegin
+P(M\n\C	2	stend
+\a)\s\s\s\s+Reason:	2	stend
+\s\s\s\s+(Reason:	0	stbegin
+\a)\s\s\s\s+Admitting Diagnosis:	2	stend
+\s\s\s\s+(Admitting Diagnosis:	0	stbegin
+\a)\s\s\s\s+Sex:	2	stend
+\s\s\s\s+(Sex:	0	stbegin
+\a)\s\s\s\s+Discharge Date:	2	stend
+\s\s\s\s+(Discharge Date:	0	stbegin
+dail(y\n-	2	stend
+qh(s\n-	2	stend
+dail(y\n-	2	stend
+\sq(d\n-	2	stend
+QH(S\n-	2	stend
+\a)\s+Refills:	2	stend
+\a)*\s+Refills:	2	stend
+\a\s+(Refills:	0	stbegin
+\a)\n\C:	2	stend
+\a)\s+\n\C:	2	stend
+\n(\C:	0	stbegin
+\n(JOB#:	0	stbegin
+\a)\nJOB#:	2	stend
+\a)\s+\nJOB#:	2	stend
+\n(Signed\s	0	stbegin
+\a)\s\s\s\w+Signed\s	2	stend
+\c)\n+Signed\s	2	stend
+\d)\n+Signed\s	2	stend
+\p)\n+Signed\s	2	stend
+\(End of Report	0	stbegin
+\a)\w+\(End of Report\)	2	stend
+Instructions(:\n+\a	2	stend
+Instructions:\n+(\a	0	stbegin
+\n+(Follow	0	stbegin
+\a)\w+\n+Follow	2	stend
+\d+\s+\n+total dose	3	stend
+\a)\n+\C\c+:	2	stend
+\a\n+(\C\c+:	0	stbegin
+\a)\n+\C\C+:	2	stend
+\a\n+(\C\C+:	0	stbegin
+\a)\s+\n+\C\C+:	2	stend
+\a\s+\n+(\C\C+:	0	stbegin
+
+\c)\n+\C\C+\s\(\a\a+\):	2	stend
+\c\n+(\C\C+\s\(\a\a+\):	0	stbegin
+\d)\n+\C\C+\s\(\a\a+\):	2	stend
+\d\n+(\C\C+\s\(\a\a+\):	0	stbegin
+
+\a)\n+T\s+	2	stend
+\a\n+(T)\s+	0	stbegin
+\a)\n+P\s+	2	stend
+\a\n+(P)\s+	0	stbegin
+\a)\n+R\s+	2	stend
+\a\n+(R)\s+	0	stbegin
+\a)\s+\n+R\s+	2	stend
+\a\s+\n+(R)\s+	0	stbegin
+\a)\n+BP\s+	2	stend
+\a\n+(BP)\s+	0	stbegin
+\a)\n+O2\s+	2	stend
+\a\n+(O2)\s+	0	stbegin
+\a)\w+Sig:\s+	2	stend
+\a\w+(Sig:\s+	0	stbegin
+\)(.)\s+\n+\d.\s+\c+	2	stend
+\).\s+\n+(\d.\s+\c+	0	stbegin
+\)(.)\s+\n+\d.\s+\c+	2	stend
+\))\s+\n+\d.\s+\c+	2	stend
+\)\s+\n+(\d.\s+\c+	0	stbegin
+\))\n+\d.\s+\c+	2	stend
+\)\n+(\d.\s+\c+	0	stbegin
+\a\n+(\d.\s+\C	0	stbegin
+\a)\n+\d.\s+\C	2	stend
+\a)*\n+\d.\s+\C	2	stend
+
+
+
+\a)\n+\d\d\d\d-\d\d-\d\d\s\s\s+	2	stend
+\a)*+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	2	stend
+\a\n+(\d)\d\d\d-\d\d-\d\d\s\s\s+	0	stbegin
+\a)\s+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	2	stend
+\a\s+\n+(\d)\d\d\d-\d\d-\d\d\s\s\s+	0	stbegin
+\C\C+\n+(\d+.\s+\C	0	stbegin
+\C)\n+\d+.\s+\C	2	stend
+\d)\n+\C\C+	2	stend
+
+\c)\n+\C\c+\s\(\a\a+\):	2	stend
+\c\n+(\C\c+\s\(\a\a+\):	0	stbegin
+\d)\n+\C\c+\s\(\a\a+\):	2	stend
+\d\n+(\C\c+\s\(\a\a+\):	0	stbegin
+
+\c.\s+(-)\s+\C	0	stbegin
+\c(.)\s+-\s+\C	2	stend
+\c\s+(-)\s+\C	0	stbegin
+\c\s+-\s+\C	2	stend
+\C\c+\s+-\s+\C\c+	3	stend
+\C\c+(:)\s+\n+\c	2	stend
+\C\c+:\s+\n+(\c	0	stbegin
+\C\c+:\n+\s+(\c	0	stbegin
+\C\c+(:)\n+\c	2	stend
+\C\c+:\n+(\c	0	stbegin
+\C\C\C:\n+(\c	0	stbegin
+\C\C\C\):\n+(\c	0	stbegin
+\sand)\s+\n+\C	3	stend
+\sand)\s+\n+\c	3	stend
+\sand)\n+\C	3	stend
+\sand)\n+\c	3	stend
+
+
+
+\c(:)\s+\p+\s+\n	2	stend
+\s\s\s+(·)\s+\C	0	stbegin
+\c)\s\s\s+·\s\C	2	stend
+\c)\s\s\s+·\s\C	2	stend
+\p)\s\s\s+·\s\C	2	stend
+\C\c+\s+(-)\s+\C\c+	1	stbegin
+\s\s+(P)atient Name:	0	stbegin
+\s\s\s+(P)rocedure Date:	0	stbegin
+\s\s\s+(D)ate of Birth:	0	stbegin
+\s\s\s+(A)ge:	0	stbegin
+\s\s\s+(G)ender:	0	stbegin
+\s\s\s+(N)ote Status:	0	stbegin
+
+\a)\s\s+Patient Name:	2	stend
+\a)\s\s\s+Procedure Date:	2	stend
+\a)\s\s\s+Date of Birth:	2	stend
+\a)\s\s\s+Age:	2	stend
+\a)\s\s\s+Gender:	2	stend
+\a)\s\s\s+Note Status:	2	stend
+\n\n(\(\a+	0	stbegin
+\c.\n+(\(\a+	0	stbegin
+\n+(\c)\c+:	0	stbegin
+\a+\)\n\s+\c\c+:	2	stend
+\a+\)\s+\n+\c\c+:	2	stend
+\a+\)\n+\c\c+:	2	stend
+\a+\)\s+\n+\s+\c\c+:	2	stend
+\c\n+\c\c+:	2	stend
+
+On)\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+On)\s+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+on)\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+on)\s+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+by)\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+by)\s+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+since)\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+since)\s+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+Since)\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+Since)\s+\n+\d\d\d\d-\d\d-\d\d\s\s\s+	3	stend
+
+\a)\s+**+\s+\n\n	2	stend
+\a)\s+**+\n\n	2	stend
+
+\a(\a)\n+\d\).\s+\C	2	stend
+\a\n+\d\)(.)\s+\C	3	stend
+\C\C\n+(\d\).\s+\C	0	stbegin
+\c.\n+(\d\).\s+\C	0	stbegin
+\C\C.\n+(\d\).\s+\C	0	stbegin
+\c.\s+\n+(\d)\).\s+\C	0	stbegin
+.\s+\n+\d\)(.)\s+\C	3	stend
+
+
+\a\n+(\d)\d-\d\d\s+	0	stbegin
+\a\s+\n+(\d)\d-\d\d\s+	0	stbegin
+\a.\s+\n+(\d)\d-\d\d\s+	0	stbegin
+
+\c\w+(\d)\)\s+\C	0	stbegin
+\c\c+.\w+(\d)\)\s+\C	0	stbegin
+\c+\c(.)\w+\d\)\s+\C	2	stend
+
+
+\a)\s+\n+\C\c+\s+\C\c+:	2	stend
+\a\s+\n+(\C)\c+\s+\C\c+:	0	stbegin
+\a)\s+\n+\C\c+:	2	stend
+\a\s+\n+(\C)\c+:	0	stbegin
+\a)\w+Date of Birth:	2	stend
+\w+(D)ate of Birth:	0	stbegin
+
+\c:\s+\n(\a	0	stbegin
+\sDr(.)\s	3	stend
+\sMr(.)\s	3	stend
+\sMrs(.)\s	3	stend
+\sMs(.)\s	3	stend
+\sth(e)\n\C\c+	3	stend
+\sTh(e)\n\C\c+	3	stend
+\si(n)\n\a+	3	stend
+\sI(n)\n\a+	3	stend
+\sfo(r)\n\a+	3	stend
+\sb(y)\a+	3	stend
+\shi(s)\a+	3	stend
+\she(r)\a+	3	stend
+\swit(h)\a+	3	stend
+\so(n)\a+	3	stend
+\sO(n)\a+	3	stend
+\sunti(l)\a+	3	stend
+\sUnti(l)\a+	3	stend
+\so(f)\a+	3	stend
+\sthroug(h)\a+	3	stend
+\san(d)\a+	3	stend
+\so(r)\n\a+	3	stend
+\sa(s)\n\a+	3	stend
+\sincludin(g)\a+	3	stend
+
+
+Cardiac\w+Surgery\w+Intensive\w+Care\w+Unit	3	stend
+\C\c+\w+Cardiac\w+Surge\(+ry\w+Intensive\w+Care\w+Unit	3	stend
+Intensive\w+Care\w+Unit	3	stend
+\C\c+\w+Intensive\w+Care\w+Unit	3	stend
+Emergency\w+Department	3	stend
+Coronary\w+Care\w+Unit	3	stend
+
+\a)*\n\n	2	stend
+\a)*\n\d\d+.\s\C	2	stend
+\a)*\n\d.\s\C	2	stend
+
+CENTER\w+(.	2	stend
+Paterna(l	3	stend
+HOSPITAL\w+(.	2	stend
+CENTER\w+.\w+(\C	0	stbegin
+HOSPITAL\w+.\w+(\C	0	stbegin
+\C\c+\w+Surgery	3	stend
+
+\c.\c(.)\w+\C\c\c	2	stend
+\wTR(.\w+\C\c\c	2	stend
+\wTR.\w+(\C)\c\c	0	stbegin
+.)\w+He 	2	stend
+.)\w+His 	2	stend
+.)\w+Her 	2	stend
+.)\w+She 	2	stend
+.)\w+We 	2	stend
+.)\w+Our 	2	stend
+.)\w+The 	2	stend
+.)\w+They 	2	stend
+.)\w+Their 	2	stend
+.)\w+I 	2	stend
+.)\w+My 	2	stend
+
+.\w+(He 	0	stbegin
+.\w+(His 	0	stbegin
+.\w+(Her 	0	stbegin
+.\w+(She 	0	stbegin
+.\w+(We 	0	stbegin
+.\w+(Our 	0	stbegin
+.\w+(The 	0	stbegin
+.\w+(They 	0	stbegin
+.\w+(Their 	0	stbegin
+.\w+(I 	0	stbegin
+.\w+(My 	0	stbegin
+
+

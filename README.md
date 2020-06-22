@@ -69,8 +69,8 @@ There is no evidence of pneumonia. Continue warfarin for Afib. Follow up for man
 # Add rules for target concept extraction
 target_matcher = nlp.get_pipe("target_matcher")
 target_rules = [
-    TargetRule("atrial fibriliation", "PROBLEM"),
-    TargetRule("atrial fibrlllation", "PROBLEM", pattern=[{"LOWER": "afib"}]),
+    TargetRule("atrial fibrillation", "PROBLEM"),
+    TargetRule("atrial fibrillation", "PROBLEM", pattern=[{"LOWER": "afib"}]),
     TargetRule("pneumonia", "PROBLEM"),
     TargetRule("Type II Diabetes Mellitus", "PROBLEM", 
               pattern=[

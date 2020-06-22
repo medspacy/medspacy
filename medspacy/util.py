@@ -31,7 +31,7 @@ def load(model="default", disable=None):
         nlp.add_pipe(target_matcher)
 
     if "sectionizer" not in disable:
-        from .sectionizer import Sectionizer
+        from .section_detection import Sectionizer
         sectionizer = Sectionizer(nlp)
         nlp.add_pipe(sectionizer)
 
@@ -42,7 +42,7 @@ def load(model="default", disable=None):
 
     if "postprocessor" not in disable:
         from .postprocess import Postprocessor, PostprocessingRule, PostprocessingPattern
-        postprocessor = Postprocessor(debug=True)
+        postprocessor = Postprocessor(debug=False)
         nlp.add_pipe(postprocessor)
 
     return nlp

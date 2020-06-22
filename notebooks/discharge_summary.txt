@@ -17,56 +17,28 @@ ERCP w/ sphincterotomy [**5-31**]
 
 
 History of Present Illness:
-74y female with hypertension, old MI and a recent stroke affecting her
-speech, who presents with 2 days of abdominal pain.  She had multiple bouts of
-nausea and vomiting, with chills and decreased flatus.
+74y female with type 2 dm and a recent stroke affecting her
+speech, who presents with 2 days of abdominal pain. Imaging shows no evidence of metastasis.
 
 Past Medical History:
 1. Colon cancer dx'd in [**2554**], tx'd with hemicolectomy, XRT,
 chemo. Last colonoscopy showed: Last CEA was in the 8 range
 (down from 9)
-2. Lymphedema from XRT, takes a diuretic
-3. Cataracts
-4. Hypertension
-5. heart murmur - TTE in [**2567**] showed LA mod dilated, LV mildly
-hypertrophied, aortic sclerosis, mild AI, mild MR.
+2. Type II Diabetes Mellitus
+3. Hypertension
 
 Social History:
-Married, former secretary, waitress. + tobacco x 40 years at
-4ppd, quit 30 yrs ago. No alcohol or drug use.
+Married, former tobacco use. No alcohol or drug use.
 
 Family History:
 Mother with stroke at age 82. no early deaths.
 2 daughters- healthy
 
-Ultrasound [**5-30**]: IMPRESSION: 1. Dilated common bile duct with
-mild intrahepatic biliary ductal dilatation and dilataion of the
-pancreatic duct. 2. Edematous gallbladder wall.
-
 
 Brief Hospital Course:
 Ms. [**Known patient lastname 2004**] was admitted on [**2573-5-30**]. Ultrasound at the time of
 admission demonstrated pancreatic duct dilitation and an
-edematous gallbladder. She was admitted to the ICU. [**5-31**] she
-underwent ERCP w/ sphincterotomy, an impacted stone was removed.
-She has had a prolonged ICU course. Review of hospital course by
-system includes.
-
-Cardiovascular: The cardiology team was consulted on [**6-1**] and a
-TTE was obtained showing decreased biventricular systolic
-dysfunction representing a diffuse process.  On [**6-14**] a repeat TTE
-followed by a TEE was done to rule out endocarditis; no
-vegatation or abscess was seen. A TEE was again performed on
-[**6-22**] there was no significant change from the prior study. The
-patient was treated with amiodarone to control her afib.
-
-Pulmonary: Patient was intubated on admission and transferred to
-the ICU. Patient was initially extubated on hospital day six.
-
-Medications on Admission:
-ASA 325mg daily
-buspirone 5mg TID
-
+edematous gallbladder. She was admitted to the ICU.
 Discharge Medications:
 1. Miconazole Nitrate 2 % Powder Sig: One (1) Appl Topical  BID
 (2 times a day) as needed.
@@ -76,11 +48,10 @@ Injection TID (3 times a day).
 (every 4 to 6 hours) as needed.
 
 Discharge Diagnosis:
-Atrial Fibrillation
+Type 2 DM
 Pancreatitis
 HTN
 h/o aspiration respiratory distress
-
 
 
 Discharge Instructions:

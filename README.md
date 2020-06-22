@@ -13,13 +13,13 @@ contextual analysis and attribute assertion, and section detection.
 
 `medspacy` is modularized so that each component can be used independently. All of `medspacy` is designed to be used 
 as part of a `spacy` processing pipeline. Each of the following modules is available as part of `medspacy`:
+- `medspacy.preprocess`: Destructive preprocessing for modifying clinical text before processing
+- `medspacy.sentence_splitter`: Clinical sentence segmentation
+- `medspacy.ner`: Utilities for extracting concepts from clinical text
 - `medspacy.context`: Implementation of the [ConText](https://www.sciencedirect.com/science/article/pii/S1532046409000744)
 for detecting semantic modifiers and attributes of entities, including negation and uncertainty
-- `medspacy.ner`: Utilities for extracting concepts from clinical text
-- `medspacy.postprocess`: Flexible framework for modifying and removing extracted entities
-- `medspacy.preprocess`: Destructive preprocessing for modifying clinical text before processing
 - `medspacy.section_detection`: Clinical section detection and segmentation
-- `medspacy.sentence_splitter`: Clinical sentence segmentation
+- `medspacy.postprocess`: Flexible framework for modifying and removing extracted entities
 - `medspacy.visualization`: Utilities for visualizing concepts and relationships extracted from text
 
 Future work could include I/O, UMLS matching, relations extraction, and pre-trained clinical models.

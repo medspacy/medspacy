@@ -15,9 +15,9 @@ setup(
     author_email="medspacy.dev@gmail.com",
     packages=["medspacy"],
     install_requires=[
-        "spacy>=2.2.2",
+        "spacy==2.2.2",
         "nlp_preprocessor",
-        # "PyRuSH",
+        "PyRuSH",
         "cycontext",
         "clinical_sectionizer",
         "target_matcher",

@@ -1,6 +1,5 @@
 from spacy import displacy
 
-
 def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
     """Create a NER-style visualization
     for targets and modifiers in Doc.
@@ -38,16 +37,17 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
 
     if context:
         visualized_modifiers = set()
-        for _, modifier in doc._.context_graph.edges:
-            if modifier in visualized_modifiers:
-                continue
-            ent_data = {
-                "start": modifier.span.start_char,
-                "end": modifier.span.end_char,
-                "label": modifier.category,
-            }
-            ents_data.append((ent_data, "modifier"))
-            visualized_modifiers.add(modifier)
+        for target in doc.ents:
+            for modifier in target._.modifiers:
+                if modifier in visualized_modifiers:
+                    continue
+                ent_data = {
+                    "start": modifier.span.start_char,
+                    "end": modifier.span.end_char,
+                    "label": modifier.category,
+                }
+                ents_data.append((ent_data, "modifier"))
+                visualized_modifiers.add(modifier)
     if sections:
         for (title, header, _) in doc._.sections:
             if title is None:
@@ -116,7 +116,9 @@ def _create_color_generator():
 
 def visualize_dep(doc, jupyter=True):
     """Create a dependency-style visualization for
-    targets and modifiers in doc."""
+    ConText targets and modifiers in doc. This will show the
+    relationships between entities in doc and contextual modifiers.
+    """
     token_data = []
     token_data_mapping = {}
     for token in doc:

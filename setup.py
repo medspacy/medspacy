@@ -15,14 +15,15 @@ setup(
     author_email="medspacy.dev@gmail.com",
     packages=["medspacy"],
     install_requires=[
-        "spacy==2.2.2",
-        "nlp_preprocessor",
-        "PyRuSH",
-        "cycontext",
-        "clinical_sectionizer",
-        "target_matcher",
-        "nlp_postprocessor",
+        "spacy>=2.2.2,<2.3",
+        "nlp_preprocessor>=0.0.1",
+        "PyRuSH>=1.0.3.2",
+        "cycontext>=1.0.3",
+        "clinical_sectionizer>=0.1.1",
+        "target_matcher>=0.0.1",
+        "nlp_postprocessor>=0.0.1",
     ],
     long_description=long_description,
-    long_description_content_type="text/markdown"
+    long_description_content_type="text/markdown",
+    package_data={"medspacy": ["../resources/*"]},
 )

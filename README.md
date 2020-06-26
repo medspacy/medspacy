@@ -1,8 +1,9 @@
 # medspacy
-Library for clinical NLP with spaCy.
+Library for clinical NLP with spaCy. 
 
 ![alt text](./images/medspacy_logo.png "medSpaCy logo")
 
+**MedSpaCy is currently in beta.**
 
 
 # Overview
@@ -35,6 +36,14 @@ python setup.py install
 ```bash
 pip install medspacy
 ```
+
+After installing medSpaCy, you'll need to download a spaCy model to use as a base model. 
+The default in medSpaCy is`en_core_web_sm`, which you can download as:
+```bash
+python -m spacy download en_core_web_sm
+```
+
+If you download other models, you can use them by providing the model name to `medspacy.load(model_name)`.
 
 ### Requirements
 The following packages are required and installed when `medspacy` is installed:

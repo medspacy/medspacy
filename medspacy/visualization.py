@@ -1,5 +1,6 @@
 from spacy import displacy
 
+
 def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
     """Create a NER-style visualization
     for targets and modifiers in Doc.
@@ -96,6 +97,7 @@ def _create_color_mapping(labels):
             mapping[label] = next(color_cycle)
     return mapping
 
+
 def _create_color_generator():
     """Create a generator which will cycle through a list of default matplotlib colors"""
     from itertools import cycle
@@ -113,6 +115,7 @@ def _create_color_generator():
         "#17becf",
     ]
     return cycle(colors)
+
 
 def visualize_dep(doc, jupyter=True):
     """Create a dependency-style visualization for

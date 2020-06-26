@@ -1,7 +1,14 @@
-DEFAULT_PIPENAMES = {"tagger", "parser", "preprocessor",
-                     # "sentencizer",
-                     "context",
-                     "target_matcher", "sectionizer", "postprocessor"}
+DEFAULT_PIPENAMES = {
+    "tagger",
+    "parser",
+    "preprocessor",
+    # "sentencizer",
+    "context",
+    "target_matcher",
+    "sectionizer",
+    "postprocessor",
+}
+
 
 def load(model="default", enable=None, disable=None, load_rules=True):
     """Load a spaCy language object with medSpaCy pipeline components.
@@ -9,7 +16,6 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     and 'parser' pipeline components, followed by the following medSpaCy
     components:
         - preprocessor (set to be nlp.tokenizer)
-        - sentencizer
         - target_matcher
         - sectionizer
         - context
@@ -23,8 +29,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         disable (iterable or None): A list of component names to exclude.
             Cannot be set if `enable` is not None.
         load_rules (bool): Whether or not to include default rules for available components.
-            If True, sentencizer, sectionizer, and context will all be loaded with default rules.
-            If False, only sentencizer will load rules since it is required by PyRuSH's constructor.
+            If True, sectionizer and context will both be loaded with default rules.
             Default is True.
 
     Returns:
@@ -58,6 +63,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
 
     if "preprocessor" in enable:
         from .preprocess import Preprocessor
+
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
@@ -79,27 +85,31 @@ def load(model="default", enable=None, disable=None, load_rules=True):
 
     if "target_matcher" in enable:
         from .ner import TargetMatcher
+
         target_matcher = TargetMatcher(nlp)
         nlp.add_pipe(target_matcher)
 
     if "sectionizer" in enable:
         from .section_detection import Sectionizer
+
         if load_rules:
-            sectionizer = Sectionizer(nlp,patterns="default")
+            sectionizer = Sectionizer(nlp, patterns="default")
         else:
             sectionizer = Sectionizer(nlp, patterns=None)
         nlp.add_pipe(sectionizer)
 
     if "context" in enable:
         from .context import ConTextComponent
+
         if load_rules:
-            context = ConTextComponent(nlp,rules="default")
+            context = ConTextComponent(nlp, rules="default")
         else:
             context = ConTextComponent(nlp, rules=None)
         nlp.add_pipe(context)
 
     if "postprocessor" in enable:
         from .postprocess import Postprocessor
+
         postprocessor = Postprocessor()
         nlp.add_pipe(postprocessor)
 

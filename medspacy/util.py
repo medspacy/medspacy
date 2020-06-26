@@ -1,4 +1,6 @@
-DEFAULT_PIPENAMES = {"tagger", "parser", "preprocessor", "sentencizer", "context",
+DEFAULT_PIPENAMES = {"tagger", "parser", "preprocessor",
+                     # "sentencizer",
+                     "context",
                      "target_matcher", "sectionizer", "postprocessor"}
 
 def load(model="default", enable=None, disable=None, load_rules=True):
@@ -59,21 +61,21 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
-    if "sentencizer" in enable:
-        from os import path
-        from pathlib import Path
-        pyrush_path = path.join(
-            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
-        )
-        from .sentence_splitter import PyRuSHSentencizer
-        pyrush = PyRuSHSentencizer(pyrush_path)
-        if "parser" in nlp.pipe_names:
-            if "tagger" in nlp.pipe_names:
-                nlp.add_pipe(pyrush, before="tagger")
-            else:
-                nlp.add_pipe(pyrush, before="parser")
-        else:
-            nlp.add_pipe(pyrush)
+    # if "sentencizer" in enable:
+    #     from os import path
+    #     from pathlib import Path
+    #     pyrush_path = path.join(
+    #         Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
+    #     )
+    #     from .sentence_splitting import PyRuSHSentencizer
+    #     pyrush = PyRuSHSentencizer(pyrush_path)
+    #     if "parser" in nlp.pipe_names:
+    #         if "tagger" in nlp.pipe_names:
+    #             nlp.add_pipe(pyrush, before="tagger")
+    #         else:
+    #             nlp.add_pipe(pyrush, before="parser")
+    #     else:
+    #         nlp.add_pipe(pyrush)
 
     if "target_matcher" in enable:
         from .ner import TargetMatcher

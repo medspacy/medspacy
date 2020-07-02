@@ -11,7 +11,7 @@ class TestMedSpaCy:
         expected_pipe_names = {
             "tagger",
             "parser",
-            # "sentencizer",
+            "sentencizer",
             "context",
             "target_matcher",
             "sectionizer",
@@ -33,7 +33,7 @@ class TestMedSpaCy:
     def test_load_disable(self):
         nlp = medspacy.load(disable=["tagger", "parser"])
         expected_pipe_names = {
-            # "sentencizer",
+            "sentencizer",
             "target_matcher",
             "context",
             "sectionizer",

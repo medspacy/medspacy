@@ -1,8 +1,11 @@
+from medspacy.visualization import visualize_ent
+from IPython.display import HTML, display
+
 DEFAULT_PIPENAMES = {
     "tagger",
     "parser",
     "preprocessor",
-    # "sentencizer",
+    "sentencizer",
     "context",
     "target_matcher",
     "sectionizer",
@@ -16,6 +19,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     and 'parser' pipeline components, followed by the following medSpaCy
     components:
         - preprocessor (set to be nlp.tokenizer)
+        - sentencizer
         - target_matcher
         - sectionizer
         - context
@@ -67,21 +71,21 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
-    # if "sentencizer" in enable:
-    #     from os import path
-    #     from pathlib import Path
-    #     pyrush_path = path.join(
-    #         Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
-    #     )
-    #     from .sentence_splitting import PyRuSHSentencizer
-    #     pyrush = PyRuSHSentencizer(pyrush_path)
-    #     if "parser" in nlp.pipe_names:
-    #         if "tagger" in nlp.pipe_names:
-    #             nlp.add_pipe(pyrush, before="tagger")
-    #         else:
-    #             nlp.add_pipe(pyrush, before="parser")
-    #     else:
-    #         nlp.add_pipe(pyrush)
+    if "sentencizer" in enable:
+        from os import path
+        from pathlib import Path
+        pyrush_path = path.join(
+            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
+        )
+        from .sentence_splitting import PyRuSHSentencizer
+        pyrush = PyRuSHSentencizer(pyrush_path)
+        if "parser" in nlp.pipe_names:
+            if "tagger" in nlp.pipe_names:
+                nlp.add_pipe(pyrush, before="tagger")
+            else:
+                nlp.add_pipe(pyrush, before="parser")
+        else:
+            nlp.add_pipe(pyrush)
 
     if "target_matcher" in enable:
         from .ner import TargetMatcher

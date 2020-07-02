@@ -15,33 +15,34 @@
 # *******************************************************************************/
 
 #this list is optimized for shorter rule length rules for semeval were added
-@maxRepeatLength:100
+@MaxRepeatLength	100
+@Version	1.0.3.4
 
 #stbegin is the marker for sentence begin, the span of sentence will start at the begin of the captured group
-#stbegin has two scores 0, 1: 0 for true sentence begin, 1 for false sentence begin which will overwrite 0 when they are overlapping
+#stbegin has two scores 0, 1: 0 for true sentence begin clues, 1 for false sentence begin clues which will overwrite 0-scored rules when they are overlapping.
 #stend is the marker for sentence begin, the span of sentence will end at the end of the captured group
-#stend has two scores 2, 3: 2 for true sentence end, 3 for false sentence end which will overwrite 2 when they are overlapping
+#stend also has two scores 2, 3: 2 for true sentence end clues, 3 for false sentence end clues which will overwrite 2-scored rules when they are overlapping
 
-# \d   A digit
-# \C   A capital letter
-# \c   A lowercase letter
-# \s   A whitespace
-# \a   A Non-whitespace character
-# \u   A unusual character: not a letter, not a number, not a punctuation, not a whitespace
-# \n   A return
-# (   Beginning of capturing a group
-# )   End of capturing a group
-# \p   A punctuation
-# <p>
-# \+   An addition symbol (to distinguish the "+" after a wildcard)
-# \(   A left parentheses symbol
-# \)   A right parentheses symbol
-# <p>
-# The wildcard plus "+": 1 or more wildcard
+# \b the begin of an input
+# \e the end of an input
+# \d A digit
+# \C A capital letter
+# \c A lowercase letter
+# \s A character of whitespace or tab or Unicode code point 160
+# \w A character of \s above or Unicode code greater than '~'
+# \a A Non-whitespace character
+# \u A unusual character: Unicode code greater than '~' (excluding Unicode 160)
+# \n A return ('\n' or '\r')
+# ( Beginning of capturing a group
+# ) End of capturing a group
+# \p A punctuation
+#
+# \+ An addition symbol (to distinguish the "+" after a wildcard)
+# \( A left parentheses symbol
+# \) A right parentheses symbol
+#
+#  A wildcard followed by a "+": 1 or more characters that match the wildcard
 
-\b(\a	0	stbegin
-\b(\d	0	stbegin
-\b\w+(\a	0	stbegin
 \c.\s+(\C)	0	stbegin
  mL.\s+(\C)	0	stbegin
 *)	1	stbegin
@@ -138,8 +139,6 @@
 \n\n(%)\C	0	stbegin
 \n\n(%)\s+\C	0	stbegin
 \n\n\s+(%)\s+\C	0	stbegin
-\b*\p+(\C)	0	stbegin
-\b\n*\p+(\C	0	stbegin
 \n\n*\p+(\C	0	stbegin
 \n\n*\p+\s+(\C	0	stbegin
 \n**\p+\s+(\C	0	stbegin
@@ -207,8 +206,8 @@
 #\n(\(+\)\s+\C	0	stbegin
 \n        (\d	0	stbegin
 \C:\n+(\d	0	stbegin
-\n(\d.\s+)\C	0	stbegin
-\n(\d.\C	0	stbegin
+\n(\d+).\s+\C	0	stbegin
+\n(\d+.\C	0	stbegin
 \n\s+(\d.\s+\C	0	stbegin
 \n\s+(\d\d.\s+\C	0	stbegin
 \n\d.\)\s+(\C	0	stbegin
@@ -302,34 +301,44 @@ from \d+ to \d+	3	stend
 \n(\(\d\)\s+\C	0	stbegin
 \n("\C	0	stbegin
 
-\a.\s+(This 	0	stbegin
-\a.\s+(That 	0	stbegin
-\a.\s+(The 	0	stbegin
-\a.\s+(She 	0	stbegin
-\a.\s+(He 	0	stbegin
-\a.\s+(Her 	0	stbegin
-\a.\s+(His 	0	stbegin
-\a.\s+(They 	0	stbegin
-\a.\s+(Their 	0	stbegin
-\a.\s+(But 	0	stbegin
-\a.\s+(Now 	0	stbegin
-\a.\s+(Discharge 	0	stbegin
 
 
 (\a)\s+\n+-	2	stend
 \c(\c)\n+ \C	2	stend
-\a(.)\s+This 	2	stend
-\a(.)\s+That 	2	stend
-\a(.)\s+The 	2	stend
-\a(.)\s+She 	2	stend
-\a(.)\s+He 	2	stend
-\a(.)\s+Her 	2	stend
-\a(.)\s+His 	2	stend
-\a(.)\s+They 	2	stend
-\a(.)\s+Their 	2	stend
-\a(.)\s+But 	2	stend
-\a(.)\s+Now 	2	stend
-\a(.)\s+Discharge 	2	stend
+\a(.) +	2	stend
+\sms. 	3	stend
+\sMs. 	3	stend
+\sDr. 	3	stend
+\sdr. 	3	stend
+\sMrs. 	3	stend
+\sMr. 	3	stend
+\smr. 	3	stend
+\smrs. 	3	stend
+\sphd. 	3	stend
+\sb.i.d.\s+\c 	3	stend
+\sB.i.d.\s+\c 	3	stend
+\sB.I.D.\s+\c 	3	stend
+\sbid.\s+\c 	3	stend
+\sBID.\s+\c 	3	stend
+\st.i.d.\s+\c 	3	stend
+\sT.i.d.\s+\c 	3	stend
+\sT.I.D.\s+\c 	3	stend
+\stid.\s+\c 	3	stend
+\sTID.\s+\c 	3	stend
+\sq.i.d.\s+\c 	3	stend
+\sQ.i.d.\s+\c 	3	stend
+\sQ.I.D.\s+\c 	3	stend
+\sqid.\s+\c 	3	stend
+\sQID.\s+\c 	3	stend
+\sq.d.\s+\c 	3	stend
+\sQ.d.\s+\c 	3	stend
+\sQ.D.\s+\c 	3	stend
+\sqd.\s+\c 	3	stend
+\sQD.\s+\c 	3	stend
+
+
+
+
  mL(.)\s+The 	2	stend
 \c(.)\s+I	2	stend
 \d(.)\s+\C	2	stend
@@ -342,9 +351,6 @@ from \d+ to \d+	3	stend
 \c(\c)\s+\n+\C	2	stend
 \a\s+\n\n	2	stend
 \a\n\n	2	stend
-\a\n\e	2	stend
-\a\s+\n\e	2	stend
-\a\n\n\e	2	stend
 \c)********	2	stend
 \c)**\n	2	stend
 \c)**\s+\n	2	stend
@@ -392,10 +398,7 @@ from \d+ to \d+	3	stend
 \C)\s+\n+\d\d.\s+\c	2	stend
 
 \c(\))\s+\n\n	2	stend
-\c(\c)\s+\n\e	2	stend
 \c\c(.)\s+\C	2	stend
-\c(.)\s+\e	2	stend
-\c(.)\s+\n\e	2	stend
 \c(.)\s+\n	2	stend
 \d(.)\n	2	stend
 \c(:)\n	2	stend
@@ -409,17 +412,8 @@ from \d+ to \d+	3	stend
 \)(.)\n	2	stend
 ](.)\n	2	stend
 \c(.)\n	2	stend
-\c(.)\e	2	stend
-\c\e	2	stend
-\C\e	2	stend
-\d\e	2	stend
-\p\e	2	stend
-\c\s+\e	2	stend
-\C\s+\e	2	stend
-\p\s+\e	2	stend
-\d\s+\e	2	stend
 
-\b\d(.)\s+\C	3	stend
+
 \n\d+(.)\s+\C	3	stend
 \d+.\C+(:)\s+\n	3	stend
 Mrs(.) 	3	stend
@@ -516,7 +510,7 @@ were:\s+\n+\s+\c	3	stend
  mL\s+\n+\s+\c\c	3	stend
 
 
- \n\n\n+ •  	2	stend
+\a)\s+\n\n\n+ •  	2	stend
 \s+\n\n+\s+\C	2	stend
 \d+.\s+\C+(:\s+\n\n+\s+\C\c+\s+\d+.	3	stend
 \d+.\s+\C\c+(:\s+\n\n+\s+\C\c+\s+\d+.	3	stend
@@ -949,6 +943,7 @@ HOSPITAL\w+.\w+(\C	0	stbegin
 .)\w+I 	2	stend
 .)\w+My 	2	stend
 
+.\w+(")	0	stbegin
 .\w+(He 	0	stbegin
 .\w+(His 	0	stbegin
 .\w+(Her 	0	stbegin
@@ -960,5 +955,20 @@ HOSPITAL\w+.\w+(\C	0	stbegin
 .\w+(Their 	0	stbegin
 .\w+(I 	0	stbegin
 .\w+(My 	0	stbegin
-
-
+.\w+(But 	0	stbegin
+.\w+(Now 	0	stbegin
+.\w+(Discharge 	0	stbegin
+.\w+(This 	0	stbegin
+.\w+(That 	0	stbegin
+.\w+(this 	0	stbegin
+.\w+(that 	0	stbegin
+.\w+(he 	0	stbegin
+.\w+(she 	0	stbegin
+.\w+(we 	0	stbegin
+.\w+(our 	0	stbegin
+.\w+(his 	0	stbegin
+.\w+(her 	0	stbegin
+.\w+(they 	0	stbegin
+.\w+(their 	0	stbegin
+.\w+(my 	0	stbegin
+.\w+(but 	0	stbegin

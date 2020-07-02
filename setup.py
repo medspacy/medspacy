@@ -9,7 +9,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="medspacy",
-    version="0.0.1",
+    version="0.0.1.1",
     description="Library for clinical NLP with spaCy.",
     author="medSpaCy",
     author_email="medspacy.dev@gmail.com",
@@ -17,10 +17,10 @@ setup(
     install_requires=[
         "spacy>=2.2.2,<2.3",
         "nlp_preprocessor>=0.0.1",
-        "PyRuSH>=1.0.3.2",
-        "cycontext>=1.0.3",
+        "PyRuSH>=1.0.3.5",
+        "cycontext>=1.0.3.1",
         "clinical_sectionizer>=0.1.1",
-        "target_matcher>=0.0.1",
+        "target_matcher>=0.0.3",
         "nlp_postprocessor>=0.0.1",
     ],
     long_description=long_description,

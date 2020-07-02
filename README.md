@@ -32,7 +32,7 @@ You can install `medspacy` using `setup.py`:
 python setup.py install
 ```
 
-~~Or with pip:~~
+Or with pip:
 ```bash
 pip install medspacy
 ```

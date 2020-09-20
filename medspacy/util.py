@@ -107,6 +107,22 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         else:
             sectionizer = Sectionizer(nlp, patterns=None)
         nlp.add_pipe(sectionizer)
+        
+    if "quickumls" in enable:
+        from os import path
+        from pathlib import Path
+        
+        if quickumls_path is None:
+            # let's use a default sample that we provide in medspacy...
+            quickumls_path = path.join(
+                Path(__file__).resolve().parents[1], "resources", "quickumls/QuickUMLS_SAMPLE_lowercase_unqlite"
+            )
+            print('Loading QuickUMLS resources from a default SAMPLE of UMLS data from here: {}'.format(quickumls_path))
+            
+        from quickumls.spacy_component import SpacyQuickUMLS
+        
+        quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
+        nlp.add_pipe(quickumls_component)
 
     if "context" in enable:
         from .context import ConTextComponent

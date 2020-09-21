@@ -70,6 +70,12 @@ def load(model="default", enable=None, disable=None, load_rules=True):
 
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
+        
+    if "tokenizer" in enable:
+        from .custom_tokenizer import create_medspacy_tokenizer
+        
+        tokenizer = create_medspacy_tokenizer(nlp)
+        nlp.tokenizer = tokenizer
 
     if "sentencizer" in enable:
         from os import path

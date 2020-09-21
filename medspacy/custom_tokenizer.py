@@ -37,4 +37,5 @@ def create_medspacy_tokenizer(nlp):
         infix_finditer=infix_re.finditer,
         token_match=nlp.tokenizer.token_match,
     )
+
     return tokenizer

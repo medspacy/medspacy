@@ -11,8 +11,6 @@ DEFAULT_PIPENAMES = {
 def load(model="default", enable=None, disable=None, load_rules=True):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be 'en_core_web_sm' with the following components:
-        - tokenizer: A custom tokenizer. This will always be loaded by default, regardless
-            of the pipeline names in 'enable' or 'disable'.
         - sentencizer: PyRuSH Sentencizer for sentence splitting
         - target_matcher: TargetMatcher for extended pattern matching
         - context: ConText for attribute assertion
@@ -62,8 +60,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     nlp = spacy.load(model, disable=disable)
 
     # Not allowing disabling the tokenizer for now
-    # if "medspacy_tokenizer" in enable:
-    if True:
+    if "tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
 
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)

@@ -10,7 +10,8 @@ DEFAULT_PIPENAMES = {
 
 def load(model="default", enable=None, disable=None, load_rules=True):
     """Load a spaCy language object with medSpaCy pipeline components.
-    By default, the base model will be 'en_core_web_sm' with the following components:
+    By default, the base model will be 'en_core_web_sm' with the
+    following components:
         - sentencizer: PyRuSH Sentencizer for sentence splitting
         - target_matcher: TargetMatcher for extended pattern matching
         - context: ConText for attribute assertion
@@ -69,10 +70,12 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     if "sentencizer" in enable:
         from os import path
         from pathlib import Path
+
         pyrush_path = path.join(
             Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
         )
         from .sentence_splitting import PyRuSHSentencizer
+
         pyrush = PyRuSHSentencizer(pyrush_path)
         if "parser" in nlp.pipe_names:
             if "tagger" in nlp.pipe_names:

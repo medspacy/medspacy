@@ -65,8 +65,8 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
     else:
         ents_data = sorted(ents_data, key=lambda x: x[0]["start"])
 
-        # If colors aren't defined, generate color mappings for each entity and modifier label
-        # And set all section titles to a light gray
+        # If colors aren't defined, generate color mappings for each entity
+        # and modifier label and set all section titles to a light gray
         if colors is None:
             labels = set()
             section_titles = set()
@@ -99,7 +99,8 @@ def _create_color_mapping(labels):
 
 
 def _create_color_generator():
-    """Create a generator which will cycle through a list of default matplotlib colors"""
+    """Create a generator which will cycle through a list of
+    default matplotlib colors"""
     from itertools import cycle
 
     colors = [
@@ -131,7 +132,9 @@ def visualize_dep(doc, jupyter=True):
 
     # Merge phrases
     targets_and_modifiers = [*doc._.context_graph.targets]
-    targets_and_modifiers += [mod.span for mod in doc._.context_graph.modifiers]
+    targets_and_modifiers += [
+        mod.span for mod in doc._.context_graph.modifiers
+    ]
     for span in targets_and_modifiers:
         first_token = span[0]
         data = token_data_mapping[first_token]
@@ -142,7 +145,8 @@ def visualize_dep(doc, jupyter=True):
 
         idx = data["index"]
         for other_token in span[1:]:
-            # Add the text to the display data for the first word and remove the subsequent token
+            # Add the text to the display data for the first word
+            # and remove the subsequent token
             data["text"] += " " + other_token.text
             # Remove this token from the list of display data
             token_data.pop(idx + 1)

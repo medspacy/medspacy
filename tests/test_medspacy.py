@@ -47,7 +47,7 @@ class TestMedSpaCy:
 
     def test_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer
-        custom_tokenizer = medspacy.load(enable=[]).tokenizer
+        custom_tokenizer = medspacy.load(enable=['tokenizer']).tokenizer
 
         text = r'Pt c\o n;v;d h\o chf+cp'
 
@@ -60,3 +60,21 @@ class TestMedSpaCy:
         joined_tokens = " ".join([token.text for token in medspacy_doc])
         assert "c \\ o" in joined_tokens
         assert "chf + cp" in joined_tokens
+
+    def test_medspacy_tokenizer_uppercase(self):
+        custom_tokenizer = medspacy.load(enable=['tokenizer']).tokenizer
+
+        # Issue 13: Ensure that uppercase tokens are not tokenized as each character
+        # https://github.com/medspacy/medspacy/issues/13
+        text = r'DO NOT BREAK ME UP'
+
+        medspacy_doc = custom_tokenizer(text)
+
+        tokens = [token.text for token in medspacy_doc]
+
+        assert len(tokens) == 5
+
+        # Check that some expected token boundries are generated
+        joined_tokens = " ".join(tokens)
+        assert "DO NOT BREAK ME UP" in joined_tokens
+        assert "B R E A K" not in joined_tokens

@@ -1,5 +1,8 @@
 from spacy.symbols import IS_PUNCT
 
+import re
+import string
+
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_prefix_regex, compile_infix_regex, compile_suffix_regex
 
@@ -16,7 +19,17 @@ def create_medspacy_tokenizer(nlp):
     """
     
     # augment the defaults
-    infixes = nlp.Defaults.infixes + (r'''[^a-z0-9]''',)
+    # this is not quite correct.  We do not want to break on uppercase and we do not
+    # want to break on all punctuation (periods)
+    # infixes = nlp.Defaults.infixes + (r'''[^a-z0-9]''',)
+    # escape all the punctuation we want to allow to allow to break up tokens
+
+    # get all python punctuation
+    punctuation_chars = string.punctuation
+    # remove periods so that we do not break up '1.5 mg' into '1 . 5 mg'
+    punctuation_chars = punctuation_chars.replace('.', '')
+
+    infixes = nlp.Defaults.infixes + (r'''[{}]'''.format(re.escape(punctuation_chars)),)
     prefixes = nlp.Defaults.prefixes
     suffixes = nlp.Defaults.suffixes
 

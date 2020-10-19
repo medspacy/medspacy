@@ -50,7 +50,8 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
                 ents_data.append((ent_data, "modifier"))
                 visualized_modifiers.add(modifier)
     if sections:
-        for (title, header, _, _) in doc._.sections:
+        for section_tup in doc._.sections:
+            title, header = section_tup[:2]
             if title is None:
                 continue
             ent_data = {

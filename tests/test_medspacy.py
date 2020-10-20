@@ -62,6 +62,15 @@ class TestMedSpaCy:
         # Check that the simstring database exists
         assert quickumls.quickumls.ss_db
 
+        # TODO -- Consider moving this and other extraction tests to separate tests from loading
+        doc = nlp('Decreased dipalmitoyllecithin content found in lung specimens')
+
+        assert len(doc.ents) == 1
+
+        entity_spans = [ent.text for ent in doc.ents]
+
+        assert 'dipalmitoyllecithin' in entity_spans
+
     def test_not_load_rules(self):
         nlp = medspacy.load(load_rules=False)
         context = nlp.get_pipe("context")

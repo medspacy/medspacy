@@ -52,6 +52,16 @@ class TestMedSpaCy:
         sectionizer = nlp.get_pipe("sectionizer")
         assert sectionizer.patterns
 
+    def test_load_quickumls(self):
+        # allow default QuickUMLS (very small sample data) to be loaded
+        nlp = medspacy.load(enable=["quickumls"])
+        quickumls = nlp.get_pipe("QuickUMLS matcher")
+        assert quickumls
+        # this is a member of the QuickUMLS algorithm inside the component
+        assert quickumls.quickumls
+        # Check that the simstring database exists
+        assert quickumls.quickumls.ss_db
+
     def test_not_load_rules(self):
         nlp = medspacy.load(load_rules=False)
         context = nlp.get_pipe("context")

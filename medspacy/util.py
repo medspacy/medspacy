@@ -13,7 +13,7 @@ DEFAULT_PIPENAMES = {
 }
 
 
-def load(model="default", enable=None, disable=None, load_rules=True):
+def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be 'en_core_web_sm' with the 'tagger'
     and 'parser' pipeline components, followed by the following medSpaCy
@@ -35,6 +35,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         load_rules (bool): Whether or not to include default rules for available components.
             If True, sectionizer and context will both be loaded with default rules.
             Default is True.
+        quickumls_path (string or None): Path to QuickUMLS resource
 
     Returns:
         nlp: a spaCy Language object

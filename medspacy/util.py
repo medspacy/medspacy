@@ -1,5 +1,4 @@
 from medspacy.visualization import visualize_ent
-from IPython.display import HTML, display
 
 DEFAULT_PIPENAMES = {
     "sentencizer",

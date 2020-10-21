@@ -39,6 +39,8 @@ jobs:
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
+        # install scispacy model as well to ensure compatibility
+        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
 
     - name: Lint with flake8
       run: |

@@ -29,6 +29,8 @@ jobs:
         # https://spacy.io/usage#source-ubuntu
         sudo apt-get -y install build-essential python-dev
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Install our package to make sure our setup works...
+        python setup.py install
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

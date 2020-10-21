@@ -27,7 +27,7 @@ jobs:
         sudo apt-get update
         # These are the required system level updates for Ubuntu and spacy:
         # https://spacy.io/usage#source-ubuntu
-        sudo apt-get -y build-essential python-dev
+        sudo apt-get -y install build-essential python-dev
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |

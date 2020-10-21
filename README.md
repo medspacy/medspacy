@@ -1,3 +1,5 @@
+![Build Status](https://github.com/medspacy/medspacy/workflows/medspacy/badge.svg)
+
 # medspacy
 Library for clinical NLP with spaCy. 
 

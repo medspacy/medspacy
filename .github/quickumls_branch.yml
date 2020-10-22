@@ -1,0 +1,91 @@
+# NOTE: This workflow might be temporary until the QuickUMLS work is integrated into master...
+
+name: quickumls_branch
+
+on:
+  push:
+    branches: [ issue_8_add_quickumls_to_pipeline ]
+  pull_request:
+    branches: [ issue_8_add_quickumls_to_pipeline ]
+
+jobs:
+  build:
+
+    # only run this on the branch
+    if: github.ref == 'refs/heads/issue_8_add_quickumls_to_pipeline'
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # removed 3.5 since there appears to be a failure with setuptools
+        #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
+        #os: [ubuntu-latest, macos-latest, windows-2019]
+        include:
+          - name: "Ubuntu Python 3.6"
+            os: ubuntu-latest
+            python-version: 3.6
+            addons:
+              apt:
+                update: true
+                packages:
+                  # These are the required system level updates for Ubuntu and spacy:
+                  # https://spacy.io/usage#source-ubuntu
+                  - build-essential
+                  - python-dev
+                  # NOTE : This will install libiconv which is needed for QuickUMLS
+                  - libc6-dev
+          - name: "MacOS Python 3.6"
+            os: macos-latest
+            python-version: 3.6
+          # Skipping Windows until this is running
+          #- name: "Windows Python 3.6"
+          #  os: windows-2019
+          #  python-version: 3.6
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python --version
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+
+        # Install our package to make sure our setup works...
+        python setup.py install
+
+        # set up all spacy language models that are used in our pytest tests
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # install scispacy model as well to ensure compatibility
+        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+
+        # get MOST of the QuickUMLS dependencies so that we can install
+        # the burgersmoke branch version below without dependencies
+        # https://github.com/Georgetown-IR-Lab/QuickUMLS/blob/master/requirements.txt
+        pip install leveldb>=0.193
+        pip install numpy>=1.8.2
+        pip install unidecode>=0.4.19
+        pip install nltk>=3.5
+        pip install unqlite>=0.8.1
+
+        # now get these specifically since they include changes
+        # not yet merged as pull requests by GeorgetownIR
+        pip install pip install git+https://github.com/burgersmoke/simstring.git
+        # now this can run with --no-deps
+        pip install --no-deps git+https://github.com/burgersmoke/quickumls.git@issue_60_spacy_entity_overlap
+
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest

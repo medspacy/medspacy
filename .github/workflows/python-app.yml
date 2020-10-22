@@ -17,10 +17,12 @@ jobs:
     strategy:
       matrix:
         # removed 3.5 since there appears to be a failure with setuptools
-        python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
-        os: [ubuntu-latest, macos-latest, windows-2019]
+        #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
+        #os: [ubuntu-latest, macos-latest, windows-2019]
         include:
-          os: ubuntu-latest
+          - name: "Ubuntu Python 3.6"
+            os: ubuntu-latest
+            python-version: 3.6
             addons:
               apt:
                 update: true
@@ -29,8 +31,12 @@ jobs:
                   # https://spacy.io/usage#source-ubuntu
                   - build-essential
                   - python-dev
-          os: macos-latest
-          os: windows-2019
+          - name: "MacOS Python 3.6"
+            os: macos-latest
+            python-version: 3.6
+          - name: "Windows Python 3.6"
+            os: windows-2019
+            python-version: 3.6
 
     steps:
     - uses: actions/checkout@v2

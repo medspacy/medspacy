@@ -9,15 +9,6 @@ on:
   pull_request:
     branches: [ master ]
 
-addons:
-  apt:
-    update: true
-    packages:
-      # These are the required system level updates for Ubuntu and spacy:
-      # https://spacy.io/usage#source-ubuntu
-      - build-essential
-      - python-dev
-
 jobs:
   build:
 
@@ -30,6 +21,14 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-2019]
         include:
           os: ubuntu-latest
+            addons:
+              apt:
+                update: true
+                packages:
+                  # These are the required system level updates for Ubuntu and spacy:
+                  # https://spacy.io/usage#source-ubuntu
+                  - build-essential
+                  - python-dev
           os: macos-latest
           os: windows-2019
 

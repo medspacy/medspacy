@@ -1,6 +1,5 @@
 import pytest
 
-import nlp_preprocessor
 import medspacy
 import spacy
 
@@ -39,6 +38,7 @@ class TestMedSpaCy:
         assert set(nlp.pipe_names) == expected_pipe_names
 
     def test_load_sci(self):
+        # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         assert medspacy.load("en_core_sci_sm")
 
     def test_load_rules(self):

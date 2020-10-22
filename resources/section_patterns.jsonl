@@ -1,0 +1,112 @@
+{"section_title": "addendum", "pattern": "ADDENDUM:"}
+{"section_title": "addendum", "pattern": "Addendum:"}
+{"section_title": "allergies", "pattern": "ALLERGIC REACTIONS:"}
+{"section_title": "allergies", "pattern": "ALLERGIES:"}
+{"section_title": "chief_complaint", "pattern": "CC:"}
+{"section_title": "chief_complaint", "pattern": "CHIEF COMPLAINT:"}
+{"section_title": "chief_complaint", "pattern": "Chief Complaint:"}
+{"section_title": "comments", "pattern": "COMMENTS:"}
+{"section_title": "diagnoses", "pattern": "ADMISSION DIAGNOSES:"}
+{"section_title": "diagnoses", "pattern": "DIAGNOSES:"}
+{"section_title": "diagnoses", "pattern": "Primary Diagnosis:"}
+{"section_title": "diagnoses", "pattern": "Primary:"}
+{"section_title": "diagnoses", "pattern": "SECONDARY DIAGNOSES:"}
+{"section_title": "diagnoses", "pattern": "Secondary Diagnoses:"}
+{"section_title": "diagnoses", "pattern": "Secondary Diagnosis:"}
+{"section_title": "diagnoses", "pattern": "Secondary:"}
+{"section_title": "family_history", "pattern": "Family History:"}
+{"section_title": "family_history", "pattern": "FAMILY HISTORY:"}
+{"section_title": "history_of_present_illness", "pattern": "HISTORY OF PRESENT ILLNESS:"}
+{"section_title": "hospital_course", "pattern": "Brief Hospital Course:"}
+{"section_title": "hospital_course", "pattern": "CONCISE SUMMARY OF HOSPITAL COURSE BY ISSUE/SYSTEM:"}
+{"section_title": "hospital_course", "pattern": "HOSPITAL COURSE:"}
+{"section_title": "hospital_course", "pattern": "SUMMARY OF HOSPITAL COURSE:"}
+{"section_title": "imaging", "pattern": "IMAGING:"}
+{"section_title": "imaging", "pattern": "INTERPRETATION:"}
+{"section_title": "imaging", "pattern": "Imaging:"}
+{"section_title": "imaging", "pattern": "MRI:"}
+{"section_title": "imaging", "pattern": "Radiology:"}
+{"section_title": "labs_and_studies", "pattern": "ADMISSION LABS:"}
+{"section_title": "labs_and_studies", "pattern": "Admission Labs:"}
+{"section_title": "labs_and_studies", "pattern": "Discharge Labs:"}
+{"section_title": "labs_and_studies", "pattern": "ECHO:"}
+{"section_title": "labs_and_studies", "pattern": "FINDINGS:"}
+{"section_title": "labs_and_studies", "pattern": "Findings:"}
+{"section_title": "labs_and_studies", "pattern": "INDICATION:"}
+{"section_title": "labs_and_studies", "pattern": "LABS:"}
+{"section_title": "labs_and_studies", "pattern": "Labs:"}
+{"section_title": "labs_and_studies", "pattern": "MICRO:"}
+{"section_title": "labs_and_studies", "pattern": "Micro:"}
+{"section_title": "labs_and_studies", "pattern": "Microbiology:"}
+{"section_title": "labs_and_studies", "pattern": "Pertinent Results:"}
+{"section_title": "labs_and_studies", "pattern": "STUDIES:"}
+{"section_title": "labs_and_studies", "pattern": "Studies:"}
+{"section_title": "medications", "pattern": "ACTIVE MEDICATIONS LIST:"}
+{"section_title": "medications", "pattern": "ACTIVE MEDICATIONS:"}
+{"section_title": "medications", "pattern": "ADMISSION MEDICATIONS:"}
+{"section_title": "medications", "pattern": "CURRENT MEDICATIONS:"}
+{"section_title": "medications", "pattern": "DISCHARGE MEDICATIONS:"}
+{"section_title": "medications", "pattern": "Discharge Medications:"}
+{"section_title": "medications", "pattern": "HOME MEDICATIONS:"}
+{"section_title": "medications", "pattern": "MEDICATIONS AT HOME:"}
+{"section_title": "medications", "pattern": "MEDICATIONS LIST:"}
+{"section_title": "medications", "pattern": "MEDICATIONS ON ADMISSION:"}
+{"section_title": "medications", "pattern": "MEDICATIONS ON DISCHARGE:"}
+{"section_title": "medications", "pattern": "MEDICATIONS ON TRANSFER:"}
+{"section_title": "medications", "pattern": "MEDICATIONS PRIOR TO ADMISSION:"}
+{"section_title": "medications", "pattern": "MEDICATIONS:"}
+{"section_title": "medications", "pattern": "MEDICATIONS:"}
+{"section_title": "neurological", "pattern": "Neuro:"}
+{"section_title": "observation_and_plan", "pattern": "A/P:"}
+{"section_title": "observation_and_plan", "pattern": "ASSESSMENT/PLAN:"}
+{"section_title": "observation_and_plan", "pattern": "ASSESSMENT:"}
+{"section_title": "observation_and_plan", "pattern": "Assessment/Plan:"}
+{"section_title": "observation_and_plan", "pattern": "Clinical Impression:"}
+{"section_title": "observation_and_plan", "pattern": "DISCHARGE DIAGNOSES:"}
+{"section_title": "observation_and_plan", "pattern": "DISCHARGE DIAGNOSIS:"}
+{"section_title": "observation_and_plan", "pattern": "Discharge Condition:"}
+{"section_title": "observation_and_plan", "pattern": "Discharge Diagnoses:"}
+{"section_title": "observation_and_plan", "pattern": "Discharge Diagnosis:"}
+{"section_title": "observation_and_plan", "pattern": "Discharge Disposition:"}
+{"section_title": "observation_and_plan", "pattern": "FINAL DIAGNOSES:"}
+{"section_title": "observation_and_plan", "pattern": "FINAL DIAGNOSIS:"}
+{"section_title": "observation_and_plan", "pattern": "IMPRESSION:"}
+{"section_title": "observation_and_plan", "pattern": "Impression and Plan:"}
+{"section_title": "observation_and_plan", "pattern": "Impression and Recommendation:"}
+{"section_title": "other", "pattern": "Facility:"}
+{"section_title": "other", "pattern": "Service:"}
+{"section_title": "past_medical_history", "pattern": "Current Medical Problems:"}
+{"section_title": "past_medical_history", "pattern": "History of Chronic Illness:"}
+{"section_title": "past_medical_history", "pattern": "MHx:"}
+{"section_title": "past_medical_history", "pattern": "PAST HISTORY:"}
+{"section_title": "past_medical_history", "pattern": "PAST MEDICAL HISTORY:"}
+{"section_title": "past_medical_history", "pattern": "PAST MEDICAL Hx:"}
+{"section_title": "past_medical_history", "pattern": "PAST SURGICAL HISTORY:"}
+{"section_title": "past_medical_history", "pattern": "PMH:"}
+{"section_title": "past_medical_history", "pattern": "PMHx:"}
+{"section_title": "past_medical_history", "pattern": "Past Medical History:"}
+{"section_title": "past_medical_history", "pattern": "UNDERLYING MEDICAL CONDITION:"}
+{"section_title": "patient_education", "pattern": "Education:"}
+{"section_title": "patient_education", "pattern": "Patient Education:"}
+{"section_title": "patient_instructions", "pattern": "DISCHARGE INSTRUCTIONS/FOLLOWUP:"}
+{"section_title": "patient_instructions", "pattern": "DISCHARGE INSTRUCTIONS:"}
+{"section_title": "patient_instructions", "pattern": "Discharge Instructions:"}
+{"section_title": "patient_instructions", "pattern": "Followup Instructions:"}
+{"section_title": "physical_exam", "pattern": "PE:"}
+{"section_title": "physical_exam", "pattern": "PHYSICAL EXAM:"}
+{"section_title": "physical_exam", "pattern": "PHYSICAL EXAMINATION:"}
+{"section_title": "physical_exam", "pattern": "Physical Exam:"}
+{"section_title": "problem_list", "pattern": "Active Problem List:"}
+{"section_title": "problem_list", "pattern": "Current Problems:"}
+{"section_title": "problem_list", "pattern": "Medical Problems:"}
+{"section_title": "problem_list", "pattern": "PROBLEM LIST:"}
+{"section_title": "problem_list", "pattern": "Problem List:"}
+{"section_title": "reason_for_examination", "pattern": "REASON FOR THIS EXAMINATION:"}
+{"section_title": "signature", "pattern": "Electronic Signature:"}
+{"section_title": "signature", "pattern": "Signed electronically by:"}
+{"section_title": "social_history", "pattern": "PMHSx:"}
+{"section_title": "social_history", "pattern": "PSH:"}
+{"section_title": "social_history", "pattern": "SH:"}
+{"section_title": "social_history", "pattern": "Sexual History:"}
+{"section_title": "social_history", "pattern": "Social History:"}
+{"section_title": "social_history", "pattern" : "SOCIAL HISTORY:"}

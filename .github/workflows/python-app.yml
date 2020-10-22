@@ -12,12 +12,31 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         # removed 3.5 since there appears to be a failure with setuptools
         python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
+        include:
+          - name: ubuntu
+            os: ubuntu-latest
+            before_install: |
+
+              sudo apt-get update
+              # These are the required system level updates for Ubuntu and spacy:
+              # https://spacy.io/usage#source-ubuntu
+              sudo apt-get -y install build-essential python-dev
+
+          - name: macos
+            os: macos-10.15
+            # Spacy requires XCode and its comment line tools:
+            # https://spacy.io/usage#source-osx
+            #with:
+            #  xcode-version: latest-stable
+          #- name: windows
+          #  os: windows-2019
+
 
     steps:
     - uses: actions/checkout@v2
@@ -30,11 +49,6 @@ jobs:
         python --version
         python -m pip install --upgrade pip
         pip install flake8 pytest
-
-        sudo apt-get update
-        # These are the required system level updates for Ubuntu and spacy:
-        # https://spacy.io/usage#source-ubuntu
-        sudo apt-get -y install build-essential python-dev
 
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 

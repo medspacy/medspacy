@@ -1,0 +1,71 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: medspacy
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # removed 3.5 since there appears to be a failure with setuptools
+        #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
+        #os: [ubuntu-latest, macos-latest, windows-2019]
+        include:
+          - name: "Ubuntu Python 3.6"
+            os: ubuntu-latest
+            python-version: 3.6
+            addons:
+              apt:
+                update: true
+                packages:
+                  # These are the required system level updates for Ubuntu and spacy:
+                  # https://spacy.io/usage#source-ubuntu
+                  - build-essential
+                  - python-dev
+          - name: "MacOS Python 3.6"
+            os: macos-latest
+            python-version: 3.6
+          - name: "Windows Python 3.6"
+            os: windows-2019
+            python-version: 3.6
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python --version
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+
+        # Install our package to make sure our setup works...
+        python setup.py install
+
+        # set up all spacy language models that are used in our pytest tests
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # install scispacy model as well to ensure compatibility
+        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest

@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Build Status](https://github.com/medspacy/medspacy/workflows/medspacy/badge.svg)
+
 # medspacy
 Library for clinical NLP with spaCy. 
 
@@ -47,7 +50,7 @@ If you download other models, you can use them by providing the model name to `m
 
 ### Requirements
 The following packages are required and installed when `medspacy` is installed:
-- spaCy 2.2.2
+- spaCy 2.3
 - Other core medSpaCy packages:
     - [nlp_preprocessor](https://github.com/medspacy/nlp_preprocessor)
     - [pyrush](https://github.com/medspacy/PyRuSH)

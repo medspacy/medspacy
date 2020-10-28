@@ -5,12 +5,15 @@ name: medspacy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build:
+  
+    # only run on allowed branches
+    if: github.ref in ('refs/heads/master', refs/heads/develop')
 
     runs-on: ${{ matrix.os }}
 

@@ -6,6 +6,12 @@ import spacy
 
 
 class TestMedSpaCy:
+    def test_default_build_pipe_names(self):
+        model, enable, disable = medspacy.util._build_pipe_names("default", enable=None, disable=None)
+        assert model == "en_core_web_sm"
+        assert enable == {"tokenizer", "sentencizer", "target_matcher", "context"}
+        assert disable == {"parser", "tagger", "ner"}
+
     def test_default_load(self):
         nlp = medspacy.load()
         expected_pipe_names = {
@@ -16,9 +22,9 @@ class TestMedSpaCy:
         assert set(nlp.pipe_names) == expected_pipe_names
 
     def test_load_enable(self):
-        nlp = medspacy.load(enable=["target_matcher"])
-        assert len(nlp.pipeline) == 1
-        assert "target_matcher" in nlp.pipe_names
+        nlp = medspacy.load(enable={"target_matcher", "sectionizer"})
+        assert len(nlp.pipeline) == 2
+        assert set(nlp.pipe_names) == {"target_matcher", "sectionizer"}
 
     def test_nlp(self):
         nlp = medspacy.load()
@@ -62,6 +68,17 @@ class TestMedSpaCy:
         assert "n / v / d" in joined_tokens
         assert "chf + cp" in joined_tokens
 
+    def test_disable_medspacy_tokenizer(self):
+        default_tokenizer = spacy.blank("en").tokenizer
+        custom_tokenizer = medspacy.load(disable=['tokenizer']).tokenizer
+
+        text = r'Pt c\o n;v;d h\o chf+cp n/v/d'
+
+        default_doc = default_tokenizer(text)
+        medspacy_doc = custom_tokenizer(text)
+
+        assert [token.text for token in default_doc] == [token.text for token in medspacy_doc]
+
     def test_medspacy_tokenizer_uppercase(self):
         custom_tokenizer = medspacy.load(enable=['tokenizer']).tokenizer
 
@@ -95,3 +112,4 @@ class TestMedSpaCy:
         joined_tokens = " ".join(tokens)
         assert "1.5" in joined_tokens
         assert "1 . 5" not in joined_tokens
+

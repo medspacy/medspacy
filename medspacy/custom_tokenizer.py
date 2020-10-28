@@ -6,6 +6,7 @@ import string
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_prefix_regex, compile_infix_regex, compile_suffix_regex
 
+
 def create_medspacy_tokenizer(nlp):
     """Generates a custom tokenizer to augment the default spacy tokenizer 
         for situations commonly seen in clinical text.
@@ -14,10 +15,9 @@ def create_medspacy_tokenizer(nlp):
                 For example, this allows the following examples to be more aggresively tokenized as :
                     "Patient complains of c/o" -> [..., 'c', '/', 'o']
                     "chf+cp" -> ['chf', '+', 'cp']
-
        @param nlp: Spacy language model
     """
-    
+
     # augment the defaults
     # this is not quite correct.  We do not want to break on uppercase and we do not
     # want to break on all punctuation (periods)
@@ -37,10 +37,10 @@ def create_medspacy_tokenizer(nlp):
     infix_re = compile_infix_regex(infixes)
     prefix_re = compile_prefix_regex(prefixes)
     suffix_re = compile_suffix_regex(suffixes)
-    
+
     # Default exceptions could be extended later
     tokenizer_exceptions = nlp.Defaults.tokenizer_exceptions.copy()
-    
+
     # now create this
     tokenizer = Tokenizer(
         nlp.vocab,

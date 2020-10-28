@@ -13,7 +13,7 @@ jobs:
   build:
   
     # only run on allowed branches
-    if: github.ref in ('refs/heads/master', refs/heads/develop')
+    if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
 
     runs-on: ${{ matrix.os }}
 

@@ -12,7 +12,7 @@ jobs:
   build:
 
     # only run this on the branch
-    if: github.ref == 'refs/heads/issue_8_add_quickumls_to_pipeline'
+    if: github.ref != 'refs/heads/master'
 
     runs-on: ${{ matrix.os }}
 

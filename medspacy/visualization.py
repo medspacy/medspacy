@@ -185,6 +185,7 @@ class MedspaCyVisualizerWidget:
 
         Parameters:
             docs: A list of docs processed by a medspaCy pipeline
+
         """
 
         import ipywidgets as widgets
@@ -218,9 +219,14 @@ class MedspaCyVisualizerWidget:
             layout=self.layout
         )
 
-        display(self.box)
+        self.display()
         with self.output:
             self._visualize_doc()
+
+    def display(self):
+        """Display the Box widget in the current IPython cell."""
+        from IPython.display import display as ipydisplay
+        ipydisplay(self.box)
 
     def _change_handler(self, change):
 

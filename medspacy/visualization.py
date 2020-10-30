@@ -169,5 +169,76 @@ def visualize_dep(doc, jupyter=True):
                 "dir": "right" if target > modifier.span else "left",
             }
         )
-    displacy.render(dep_data, manual=True, jupyter=jupyter)
-    return
+    return displacy.render(dep_data, manual=True, jupyter=jupyter)
+
+
+class MedspaCyVisualizerWidget:
+
+    def __init__(self, docs):
+
+        """Create an IPython Widget Box displaying medspaCy's visualizers.
+        The widget allows selecting visualization style ("Ent", "Dep", or "Both")
+        and a slider for selecting the index of docs.
+
+        For more information on IPython widgets, see:
+            https://ipywidgets.readthedocs.io/en/latest/index.html
+
+        Parameters:
+            docs: A list of docs processed by a medspaCy pipeline
+        """
+
+        import ipywidgets as widgets
+        from IPython.display import display
+
+        self.docs = docs
+        self.slider = widgets.IntSlider(
+            value=0,
+            min=0,
+            max=len(docs) - 1,
+            step=1,
+            description='Doc:',
+            disabled=False,
+            continuous_update=False,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
+        self.radio = widgets.RadioButtons(options=["Ent", "Dep", "Both"])
+        self.layout = widgets.Layout(display='flex',
+                                     flex_flow='column',
+                                     align_items='stretch',
+                                     width='100%')
+        self.radio.observe(self._change_handler)
+        self.slider.observe(self._change_handler)
+        self.output = widgets.Output()
+        self.box = widgets.Box(
+            [self.radio,
+             self.slider,
+             self.output],
+            layout=self.layout
+        )
+
+        display(self.box)
+        with self.output:
+            self._visualize_doc()
+
+    def _change_handler(self, change):
+
+        with self.output:
+            self._visualize_doc()
+
+    def _visualize_doc(self):
+        self.output.clear_output()
+        doc = self.docs[self.slider.value]
+        if self.radio.value.lower() in ("dep", "both"):
+            visualize_dep(doc)
+        if self.radio.value.lower() in ("ent", "both"):
+            visualize_ent(doc)
+
+    def set_docs(self, docs):
+        "Replace the list of docs to be visualized."
+        self.docs = docs
+        self._visualize_doc(self.docs[0])
+
+
+

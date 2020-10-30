@@ -22,9 +22,23 @@ def load(model="default", enable=None, disable=None, load_rules=True):
             from "en_core_web_sm".
         enable (iterable or None): A list of component names to include in the pipeline.
             If None, will include all pipeline components listed above.
+            If a list or other iterable, will load the specified pipeline components.
+            Note that if using enable, *all* desired pipeline component names must be included.
             Pipeline components could also be instantiated separately and added using the `nlp.add_pipe` method.
-            In addition to the default values above, the following components may also be added:
-                - "sectionizer": A SectionDetection component
+            In addition to the default values above, the following medspaCy components may also be added:
+                - "sectionizer": A SectionDetection component.
+                    See medspacy.section_detection.Sectionizer
+                - "preprocessor": A wrapper around the tokenizer for destructive preprocessing.
+                    Rules added to the preprocessor will modify the underlying text.
+                    This component will be set as nlp.tokenizer and will not be listed with nlp.pipe_names.
+                    See medspacy.preprocess.Preprocessor
+                - "postprocessor": A component for implementing custom business logic at the end of the pipeline
+                    and modifying entities by removing them from doc.ents or setting attributes.
+                    See medspacy.postprocess.Postprocessor
+            Any additional component names (ie., not a medspaCy component) will be passed into
+                spacy.load(model_name, enable=enable) and will apply to the base model.
+                ie., medspacy.load("en_core_web_sm", enable=["tagger", "parser", "context"])
+                will load the tagger and parser from en_core_web_sm and then add context.
         disable (iterable or None): A list of component names to exclude.
             Cannot be set if `enable` is not None.
         load_rules (bool): Whether or not to include default rules for available components.
@@ -44,6 +58,12 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         from .custom_tokenizer import create_medspacy_tokenizer
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)
         nlp.tokenizer = medspacy_tokenizer
+
+    if "preprocessor" in enable:
+        from .preprocess import Preprocessor
+        preprocessor = Preprocessor(nlp.tokenizer)
+        nlp.tokenizer = preprocessor
+
 
     if "sentencizer" in enable:
         from os import path
@@ -86,6 +106,12 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         else:
             sectionizer = Sectionizer(nlp, patterns=None)
         nlp.add_pipe(sectionizer)
+
+    if "postprocessor" in enable:
+        from .postprocess import Postprocessor
+        postprocessor = Postprocessor()
+        nlp.add_pipe(postprocessor)
+
     return nlp
 
 

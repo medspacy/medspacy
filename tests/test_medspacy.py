@@ -37,6 +37,18 @@ class TestMedSpaCy:
         }
         assert set(nlp.pipe_names) == expected_pipe_names
 
+    def test_load_all_components(self):
+        full_pipe_names = [
+            "sentencizer",
+            "target_matcher",
+            "context",
+            "sectionizer",
+            "postprocessor"
+        ]
+
+        nlp = medspacy.load(enable=["tokenizer", "preprocessor"] + full_pipe_names)
+        assert nlp.pipe_names == full_pipe_names
+
     def test_load_sci(self):
         # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         assert medspacy.load("en_core_sci_sm")

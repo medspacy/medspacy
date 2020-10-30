@@ -211,9 +211,13 @@ class MedspaCyVisualizerWidget:
                                      width='100%')
         self.radio.observe(self._change_handler)
         self.slider.observe(self._change_handler)
+        self.next_button = widgets.Button(description="Next")
+        self.next_button.on_click(self._on_click_next)
+        self.previous_button = widgets.Button(description="Previous")
+        self.previous_button.on_click(self._on_click_prev)
         self.output = widgets.Output()
         self.box = widgets.Box(
-            [self.radio,
+            [widgets.HBox([self.radio, self.previous_button,self.next_button]),
              self.slider,
              self.output],
             layout=self.layout
@@ -240,6 +244,14 @@ class MedspaCyVisualizerWidget:
             visualize_dep(doc)
         if self.radio.value.lower() in ("ent", "both"):
             visualize_ent(doc)
+
+    def _on_click_next(self, b):
+        if self.slider.value < len(self.docs) - 1:
+            self.slider.value += 1
+
+    def _on_click_prev(self, b):
+        if self.slider.value > 0:
+            self.slider.value -= 1
 
     def set_docs(self, docs):
         "Replace the list of docs to be visualized."

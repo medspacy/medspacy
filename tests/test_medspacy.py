@@ -46,8 +46,9 @@ class TestMedSpaCy:
             "postprocessor"
         ]
 
-        nlp = medspacy.load(enable=["tokenizer", "preprocessor"] + full_pipe_names)
+        nlp = medspacy.load(enable="all")
         assert nlp.pipe_names == full_pipe_names
+        assert isinstance(nlp.tokenizer, medspacy.preprocess.Preprocessor)
 
     def test_load_sci(self):
         # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz

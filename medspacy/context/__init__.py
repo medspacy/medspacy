@@ -1,4 +1,4 @@
-from .context_component import ConTextComponent, DEFAULT_RULES_FILEPATH
+from .context_component import ConTextComponent, DEFAULT_RULES_FILEPATH, DEFAULT_ATTRS
 from .context_item import ConTextItem
 from ._version import __version__
 

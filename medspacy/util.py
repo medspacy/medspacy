@@ -8,6 +8,16 @@ DEFAULT_PIPENAMES = {
     "tokenizer",
 }
 
+ALL_PIPE_NAMES = {
+    "sentencizer",
+    "target_matcher",
+    "context",
+    "tokenizer",
+    "preprocessor",
+    "postprocessor",
+    "sectionizer"
+}
+
 
 def load(model="default", enable=None, disable=None, load_rules=True):
     """Load a spaCy language object with medSpaCy pipeline components.
@@ -20,12 +30,14 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     Args:
         model: The name of the base spaCy model to load. Default 'language' will load the tagger and parser
             from "en_core_web_sm".
-        enable (iterable or None): A list of component names to include in the pipeline.
+        enable (iterable, str, or None): A string or list of component names to include in the pipeline.
             If None, will include all pipeline components listed above.
+            If "all", will load all medspaCy components.
             If a list or other iterable, will load the specified pipeline components.
             Note that if using enable, *all* desired pipeline component names must be included.
             Pipeline components could also be instantiated separately and added using the `nlp.add_pipe` method.
-            In addition to the default values above, the following medspaCy components may also be added:
+            In addition to the default values above, the following medspaCy components may also be added
+            and will be added if enable="all":
                 - "sectionizer": A SectionDetection component.
                     See medspacy.section_detection.Sectionizer
                 - "preprocessor": A wrapper around the tokenizer for destructive preprocessing.
@@ -53,7 +65,6 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     import spacy
     nlp = spacy.load(model, disable=disable)
 
-    # Not allowing disabling the tokenizer for now
     if "tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)
@@ -122,6 +133,7 @@ def _build_pipe_names(model, enable=None, disable=None):
     """
     if enable is not None and disable is not None:
         raise ValueError("Either `enable` or `disable` must be None.")
+
     if disable is not None:
         # If there's a single pipe name, next it in a set
         if isinstance(disable, str):
@@ -130,8 +142,12 @@ def _build_pipe_names(model, enable=None, disable=None):
             disable = set(disable)
         enable = DEFAULT_PIPENAMES.difference(set(disable))
     elif enable is not None:
+
         if isinstance(enable, str):
-            enable = {enable}
+            if enable == "all":
+                enable = ALL_PIPE_NAMES.copy()
+            else:
+                enable = {enable}
         else:
             enable = set(enable)
         disable = set(DEFAULT_PIPENAMES).difference(enable)

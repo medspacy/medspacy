@@ -5,9 +5,9 @@ from os import path
 from pathlib import Path
 
 DEFAULT_RULES_FILEPATH = path.join(
-    Path(__file__).resolve().parents[1],
+    Path(__file__).resolve().parents[2],
     "resources",
-    "text_section_patterns.jsonl",
+    "section_patterns.jsonl",
 )
 
 

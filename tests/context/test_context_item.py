@@ -64,9 +64,6 @@ class TestItemData:
     def test_from_json(self, from_json_file):
         assert ConTextItem.from_json(from_json_file)
 
-    def test_from_yaml(self, from_yaml_file):
-        assert ConTextItem.from_yaml(from_yaml_file)
-
     def test_to_dict(self):
         literal = "no evidence of"
         category = "definite_negated_existence"
@@ -130,32 +127,4 @@ def from_json_file():
         json.dump({"item_data": item_data}, f)
 
     yield json_filepath
-    # os.remove(json_filepath)
-
-@pytest.fixture
-def from_yaml_file():
-    import yaml, os
-
-    yaml_filepath = os.path.join(tmpdirname.name, "test_modifiers.yaml")
-
-    item_data = [
-        {
-            "literal": "are ruled out",
-            "category": "DEFINITE_NEGATED_EXISTENCE",
-            "pattern": None,
-            "rule": "backward",
-        },
-        {
-            "literal": "is negative",
-            "category": "DEFINITE_NEGATED_EXISTENCE",
-            "pattern": [{"LEMMA": "be"}, {"LOWER": "negative"}],
-            "rule": "backward",
-        },
-    ]
-
-    # Save dicts to a temporary file
-    with open(yaml_filepath, "w") as f:
-        yaml.safe_dump_all(item_data, f)
-
-    yield yaml_filepath
     # os.remove(json_filepath)

@@ -33,6 +33,8 @@ setup(
         # "clinical_sectionizer>=0.1.1",
         # "target_matcher>=0.0.3",
         # "nlp_postprocessor>=0.0.1",
+        "jsonschema",
+        "pyyaml"
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",

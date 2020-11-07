@@ -27,12 +27,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "spacy>=2.3.0,<3.0.0",
-        # "nlp_preprocessor>=0.0.1",
         "PyRuSH>=1.0.3.5",
-        # "cycontext>=1.0.3.1",
-        # "clinical_sectionizer>=0.1.1",
-        # "target_matcher>=0.0.3",
-        # "nlp_postprocessor>=0.0.1",
         "jsonschema"
     ],
     long_description=long_description,

@@ -50,9 +50,9 @@ class TestMedSpaCy:
         assert nlp.pipe_names == full_pipe_names
         assert isinstance(nlp.tokenizer, medspacy.preprocess.Preprocessor)
 
-    def test_load_sci(self):
-        # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
-        assert medspacy.load("en_core_sci_sm")
+    # def test_load_sci(self):
+    #     # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+    #     assert medspacy.load("en_core_sci_sm")
 
     def test_load_rules(self):
         nlp = medspacy.load(load_rules=True)

@@ -1,4 +1,4 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup, find_packages
 
 # read the contents of the README file
 from os import path
@@ -24,7 +24,7 @@ setup(
     description="Library for clinical NLP with spaCy.",
     author="medSpaCy",
     author_email="medspacy.dev@gmail.com",
-    packages=["medspacy"],
+    packages=find_packages(),
     install_requires=[
         "spacy>=2.3.0,<3.0.0",
         # "nlp_preprocessor>=0.0.1",

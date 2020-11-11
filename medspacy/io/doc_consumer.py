@@ -25,7 +25,7 @@ class DocConsumer(object):
 
         if self.attrs is None:
             # basic ent attrs
-            self.attrs = ["text", "start_char", "end_char", "label", "label_"]
+            self.attrs = ["text", "start_char", "end_char", "label_"]
 
             if self.context:
                 self.attrs += ["is_negated", "is_uncertain", "is_historical", "is_hypothetical", "is_family"]
@@ -52,11 +52,13 @@ class DocConsumer(object):
         for ent in doc.ents:
             for attr in self.attrs:
                 try:
-                    val = doc.get(attr)
+                    val = getattr(ent, attr)
                 except AttributeError:
                     try:
-                        val = doc._.get(attr)
+                        val = getattr(ent._, attr)
                     except AttributeError:
+                        # warn here ?
+                        print("failed to get {0}".format(attr))
                         val = None
                 self._ent_data[attr].append(val)
         doc._.ent_data = self._ent_data

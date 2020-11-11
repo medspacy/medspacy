@@ -74,3 +74,30 @@ class TestDocConsumer:
         data = doc._.get_data("ent")
         assert data is not None
         assert set(data.keys()) == set(consumer.attrs)
+
+    def test_default_data(self):
+        consumer = DocConsumer(nlp)
+        doc = consumer(simple_doc)
+        data = doc._.get_data("ent")
+        assert data["text"] == ["cough"]
+        assert data["label_"] == ["PROBLEM"]
+        assert data["start_char"] == [14]
+        assert data["end_char"] == [19]
+
+    def test_context_data(self):
+        consumer = DocConsumer(nlp, context=True)
+        doc = consumer(context_doc)
+        data = doc._.get_data("ent")
+        assert data["is_family"] == [False]
+        assert data["is_hypothetical"] == [False]
+        assert data["is_historical"] == [False]
+        assert data["is_uncertain"] == [False]
+        assert data["is_negated"] == [True]
+
+    # this is failing for some reason
+    def test_section_data_ent(self):
+        consumer = DocConsumer(nlp, sectionizer=True)
+        doc = consumer(context_doc)
+        data = doc._.get_data("ent")
+        assert data["section_title"] == ["section"]
+        assert data["section_parent"] == [None]

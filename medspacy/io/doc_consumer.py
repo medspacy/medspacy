@@ -20,8 +20,6 @@ class DocConsumer(object):
         self.section_attrs = []
         self.sectionizer = sectionizer
         self.context = context
-        self._ent_data = {}
-        self._section_data = {}
 
         if self.attrs is None:
             # basic ent attrs
@@ -42,13 +40,14 @@ class DocConsumer(object):
                     "section_text_end_char",
                     "section_parent",
                 ]
-                for attr in self.section_attrs:
-                    self._section_data[attr] = []
-
-        for attr in self.attrs:
-            self._ent_data[attr] = []
 
     def __call__(self, doc):
+        section_data = {}
+        for attr in self.section_attrs:
+            section_data[attr] = []
+        ent_data = {}
+        for attr in self.attrs:
+            ent_data[attr] = []
         for ent in doc.ents:
             for attr in self.attrs:
                 try:
@@ -59,22 +58,22 @@ class DocConsumer(object):
                     except AttributeError:
                         print("failed to get {0}".format(attr))
                         val = None
-                self._ent_data[attr].append(val)
-        doc._.ent_data = self._ent_data
+                ent_data[attr].append(val)
+        doc._.ent_data = ent_data
         if self.sectionizer:
             for (title, title_text, parent, section) in doc._.sections:
-                self._section_data["section_title"].append(title)
+                section_data["section_title"].append(title)
                 if title is not None:
-                    self._section_data["section_title_text"].append(title_text.text)
-                    self._section_data["section_title_start_char"].append(title_text.start_char)
-                    self._section_data["section_title_end_char"].append(title_text.end_char)
+                    section_data["section_title_text"].append(title_text.text)
+                    section_data["section_title_start_char"].append(title_text.start_char)
+                    section_data["section_title_end_char"].append(title_text.end_char)
                 else:
-                    self._section_data["section_title_text"].append(None)
-                    self._section_data["section_title_start_char"].append(0)
-                    self._section_data["section_title_end_char"].append(0)
-                self._section_data["section_text"].append(section.text)
-                self._section_data["section_text_start_char"].append(section.start_char)
-                self._section_data["section_text_end_char"].append(section.end_char)
-                self._section_data["section_parent"].append(parent)
-            doc._.section_data = self._section_data
+                    section_data["section_title_text"].append(None)
+                    section_data["section_title_start_char"].append(0)
+                    section_data["section_title_end_char"].append(0)
+                section_data["section_text"].append(section.text)
+                section_data["section_text_start_char"].append(section.start_char)
+                section_data["section_text_end_char"].append(section.end_char)
+                section_data["section_parent"].append(parent)
+            doc._.section_data = section_data
         return doc

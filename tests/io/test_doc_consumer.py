@@ -29,11 +29,13 @@ context_text = "Patient has no cough."
 section_text = "Section 1: Patient has a cough"
 section_parent_text = """Section 1: comment
 Section 2: Patient has a cough"""
+many_concept_texts = ["cough " * i for i in range(10)]
 
 simple_doc = nlp(simple_text)
 context_doc = nlp(context_text)
 section_doc = nlp(section_text)
 section_parent_doc = nlp(section_parent_text)
+many_concept_docs = [nlp(t) for t in many_concept_texts]
 
 
 class TestDocConsumer:
@@ -134,3 +136,16 @@ class TestDocConsumer:
         assert data["section_text_start_char"][0] == section.start_char
         assert data["section_text_end_char"][0] == section.end_char
         assert data["section_parent"][0] == parent
+
+    def test_ten_concepts(self):
+        consumer = DocConsumer(nlp)
+        docs = [consumer(d) for d in many_concept_docs]
+        for doc in docs:
+            print(doc)
+            num_concepts = len(doc.ents)
+            data = doc._.get_data("ent")
+            for key in data.keys():
+                print(key)
+                print(num_concepts)
+                print(data[key])
+                assert num_concepts == len(data[key])

@@ -26,12 +26,14 @@ nlp.add_pipe(sectionizer)
 
 simple_text = "Patient has a cough."
 context_text = "Patient has no cough."
-section_text = """Section 1: comment
+section_text = "Section 1: Patient has a cough"
+section_parent_text = """Section 1: comment
 Section 2: Patient has a cough"""
 
 simple_doc = nlp(simple_text)
 context_doc = nlp(context_text)
 section_doc = nlp(section_text)
+section_parent_doc = nlp(section_parent_text)
 
 
 class TestDocConsumer:
@@ -86,26 +88,49 @@ class TestDocConsumer:
         consumer = DocConsumer(nlp)
         doc = consumer(simple_doc)
         data = doc._.get_data("ent")
-        assert data["text"] == ["cough"]
-        assert data["label_"] == ["PROBLEM"]
-        assert data["start_char"] == [14]
-        assert data["end_char"] == [19]
+        ent = doc.ents[0]
+        assert data["text"][0] == ent.text
+        assert data["label_"][0] == ent.label_
+        assert data["start_char"][0] == ent.start_char
+        assert data["end_char"][0] == ent.end_char
 
     def test_context_data(self):
         consumer = DocConsumer(nlp, context=True)
         doc = consumer(context_doc)
         data = doc._.get_data("ent")
-        assert data["is_family"] == [False]
-        assert data["is_hypothetical"] == [False]
-        assert data["is_historical"] == [False]
-        assert data["is_uncertain"] == [False]
-        assert data["is_negated"] == [True]
+        ent = doc.ents[0]
+        assert data["is_family"][0] == ent._.is_family
+        assert data["is_hypothetical"][0] == ent._.is_hypothetical
+        assert data["is_historical"][0] == ent._.is_historical
+        assert data["is_uncertain"][0] == ent._.is_uncertain
+        assert data["is_negated"][0] == ent._.is_negated
 
-    # this is failing for some reason
     def test_section_data_ent(self):
         consumer = DocConsumer(nlp, sectionizer=True)
         doc = consumer(section_doc)
         data = doc._.get_data("ent")
-        print(type(data["section_parent"][0]))
-        assert data["section_title"] == ["section2"]
-        assert data["section_parent"] == ["section1"]
+        ent = doc.ents[0]
+        assert data["section_title"][0] == ent._.section_title
+        assert data["section_parent"][0] == ent._.section_parent
+
+    def test_section_data_ent_parent(self):
+        consumer = DocConsumer(nlp, sectionizer=True)
+        doc = consumer(section_parent_doc)
+        data = doc._.get_data("ent")
+        ent = doc.ents[0]
+        assert data["section_title"][0] == ent._.section_title
+        assert data["section_parent"][0] == ent._.section_parent
+
+    def test_section_data_section(self):
+        consumer = DocConsumer(nlp, sectionizer=True)
+        doc = consumer(section_doc)
+        data = doc._.get_data("section")
+        title, title_text, parent, section = doc._.sections[0]
+        assert data["section_title"][0] == title
+        assert data["section_title_text"][0] == title_text.text
+        assert data["section_title_start_char"][0] == title_text.start_char
+        assert data["section_title_end_char"][0] == title_text.end_char
+        assert data["section_text"][0] == section.text
+        assert data["section_text_start_char"][0] == section.start_char
+        assert data["section_text_end_char"][0] == section.end_char
+        assert data["section_parent"][0] == parent

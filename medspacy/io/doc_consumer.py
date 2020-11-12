@@ -74,7 +74,7 @@ class DocConsumer(object):
                     self._section_data["section_title_end_char"].append(0)
                 self._section_data["section_text"].append(section.text)
                 self._section_data["section_text_start_char"].append(section.start_char)
-                self._section_data["section_text_start_char"].append(section.end_char)
+                self._section_data["section_text_end_char"].append(section.end_char)
                 self._section_data["section_parent"].append(parent)
             doc._.section_data = self._section_data
         return doc

@@ -18,13 +18,13 @@ destination_table = "table_name"
 create_table = True
 drop_existing = True
 write_batch_size = 25
-row_type = "ents"  # 'ents' or 'sections'
+row_type = "ent"  # 'ents' or 'sections'
 
 # column specifier, not fully fleshed out
-if row_type == "ents":
+if row_type == "ent":
     cols = ["id", "text_", "start_char", "end_char", "label", "label_"]
     col_types = ["bigint", "varchar(50)", "int", "int", "varchar(50)"]
-elif row_type == "sections":
+elif row_type == "section":
     cols = [
         "id",
         "section_title",

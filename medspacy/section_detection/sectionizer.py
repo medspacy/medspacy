@@ -11,13 +11,9 @@ from . import util
 
 Doc.set_extension("sections", default=list(), force=True)
 Doc.set_extension("section_titles", getter=util.get_section_titles, force=True)
-Doc.set_extension(
-    "section_headers", getter=util.get_section_headers, force=True
-)
+Doc.set_extension("section_headers", getter=util.get_section_headers, force=True)
 Doc.set_extension("section_spans", getter=util.get_section_spans, force=True)
-Doc.set_extension(
-    "section_parents", getter=util.get_section_parents, force=True
-)
+Doc.set_extension("section_parents", getter=util.get_section_parents, force=True)
 
 Token.set_extension("section_span", default=None, force=True)
 Token.set_extension("section_title", default=None, force=True)
@@ -26,24 +22,12 @@ Token.set_extension("section_parent", default=None, force=True)
 
 # Set span attributes to the attribute of the first token
 # in case there is some overlap between a span and a new section header
-Span.set_extension(
-    "section_span", getter=lambda x: x[0]._.section_span, force=True
-)
-Span.set_extension(
-    "section_title", getter=lambda x: x[0]._.section_title, force=True
-)
-Span.set_extension(
-    "section_header", getter=lambda x: x[0]._.section_header, force=True
-)
-Span.set_extension(
-    "section_parent", getter=lambda x: x[0]._.section_header, force=True
-)
+Span.set_extension("section_span", getter=lambda x: x[0]._.section_span, force=True)
+Span.set_extension("section_title", getter=lambda x: x[0]._.section_title, force=True)
+Span.set_extension("section_header", getter=lambda x: x[0]._.section_header, force=True)
+Span.set_extension("section_parent", getter=lambda x: x[0]._.section_parent, force=True)
 
-DEFAULT_RULES_FILEPATH = path.join(
-    Path(__file__).resolve().parents[2],
-    "resources",
-    "section_patterns.jsonl",
-)
+DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.jsonl",)
 
 DEFAULT_ATTRS = {
     "past_medical_history": {"is_historical": True},
@@ -54,10 +38,8 @@ DEFAULT_ATTRS = {
     "allergy": {"is_hypothetical": True},
 }
 from collections import namedtuple
-Section = namedtuple("Section", field_names=["section_title",
-                                            "section_header",
-                                            "section_parent",
-                                            "section_span"])
+
+Section = namedtuple("Section", field_names=["section_title", "section_header", "section_parent", "section_span"])
 
 
 class Sectionizer:
@@ -122,9 +104,7 @@ class Sectionizer:
         self.add_attrs = add_attrs
         self.matcher = Matcher(nlp.vocab)
         self.max_scope = max_scope
-        self.phrase_matcher = PhraseMatcher(
-            nlp.vocab, attr=phrase_matcher_attr
-        )
+        self.phrase_matcher = PhraseMatcher(nlp.vocab, attr=phrase_matcher_attr)
         self.require_start_line = require_start_line
         self.require_end_line = require_end_line
         self.newline_pattern = re.compile(newline_pattern)
@@ -165,19 +145,13 @@ class Sectionizer:
                 attr_dict = add_attrs[modifier]
                 for attr_name, attr_value in attr_dict.items():
                     if not Span.has_extension(attr_name):
-                        raise ValueError(
-                            "Custom extension {0} has not been set. Call Span.set_extension."
-                        )
+                        raise ValueError("Custom extension {0} has not been set. Call Span.set_extension.")
 
             self.add_attrs = True
             self.assertion_attributes_mapping = add_attrs
 
         else:
-            raise ValueError(
-                "add_attrs must be either True (default), False, or a dictionary, not {0}".format(
-                    add_attrs
-                )
-            )
+            raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
 
     @property
     def patterns(self):
@@ -269,10 +243,7 @@ class Sectionizer:
             else:
                 self._parent_sections[name] = set(parents)
 
-            if (
-                name in self._parent_required.keys()
-                and self._parent_required[name] != parent_required
-            ):
+            if name in self._parent_required.keys() and self._parent_required[name] != parent_required:
                 warnings.warn(
                     "Duplicate section title {0} has different parent_required option. Setting parent_required to False.".format(
                         name
@@ -307,9 +278,7 @@ class Sectionizer:
                 identified_parent = None
                 for parent in parents:
                     # go backwards through the section "tree" until you hit a root or the start of the list
-                    candidate = self.nlp.vocab.strings[
-                        sections_final[i_a - 1][0]
-                    ]
+                    candidate = self.nlp.vocab.strings[sections_final[i_a - 1][0]]
                     candidates_parent = sections_final[i_a - 1][3]
                     candidate_i = i_a - 1
                     while candidate:
@@ -326,17 +295,12 @@ class Sectionizer:
                                 candidate = None
                                 continue
                             # otherwise get the previous item in the list
-                            temp = self.nlp.vocab.strings[
-                                sections_final[candidate_i - 1][0]
-                            ]
+                            temp = self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]
                             temp_parent = sections_final[candidate_i - 1][3]
                             # if the previous item is the parent of the current item
                             # OR if the previous item is a sibling of the current item
                             # continue to search
-                            if (
-                                temp == candidates_parent
-                                or temp_parent == candidates_parent
-                            ):
+                            if temp == candidates_parent or temp_parent == candidates_parent:
                                 candidate = temp
                                 candidates_parent = temp_parent
                                 candidate_i -= 1
@@ -349,9 +313,7 @@ class Sectionizer:
                     # if the parent is identified, add section
                     # if the parent is not required, add section
                     # if parent is not identified and required, do not add the section
-                    sections_final.append(
-                        (match_id, start, end, identified_parent)
-                    )
+                    sections_final.append((match_id, start, end, identified_parent))
                 else:
                     removed_sections += 1
         return sections_final
@@ -365,9 +327,7 @@ class Sectionizer:
         """
         for ent in ents:
             if ent._.section_title in self.assertion_attributes_mapping:
-                attr_dict = self.assertion_attributes_mapping[
-                    ent._.section_title
-                ]
+                attr_dict = self.assertion_attributes_mapping[ent._.section_title]
                 for (attr_name, attr_value) in attr_dict.items():
                     setattr(ent._, attr_name, attr_value)
 
@@ -397,27 +357,19 @@ class Sectionizer:
             # If this is the last match, it should include the rest of the doc
             if i == len(matches) - 1:
                 if self.max_scope is None:
-                    section_spans.append(
-                        Section(name, section_header, parent, doc[start:])
-                    )
+                    section_spans.append(Section(name, section_header, parent, doc[start:]))
                 else:
                     scope_end = min(end + self.max_scope, doc[-1].i)
-                    section_spans.append(
-                        Section(name, section_header, parent, doc[start:scope_end])
-                    )
+                    section_spans.append(Section(name, section_header, parent, doc[start:scope_end]))
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
                 _, next_start, _, _ = next_match
                 if self.max_scope is None:
-                    section_spans.append(
-                        Section(name, section_header, parent, doc[start:next_start])
-                    )
+                    section_spans.append(Section(name, section_header, parent, doc[start:next_start]))
                 else:
                     scope_end = min(end + self.max_scope, next_start)
-                    section_spans.append(
-                        Section(name, section_header, parent, doc[start:scope_end])
-                    )
+                    section_spans.append(Section(name, section_header, parent, doc[start:scope_end]))
 
         # section_spans_with_parent = self.set_parent_sections(section_spans)
 
@@ -443,19 +395,11 @@ class Sectionizer:
 
     def filter_start_lines(self, doc, matches):
         "Filter a list of matches to only contain spans where the start token is the beginning of a new line."
-        return [
-            m
-            for m in matches
-            if util.is_start_line(m[1], doc, self.newline_pattern)
-        ]
+        return [m for m in matches if util.is_start_line(m[1], doc, self.newline_pattern)]
 
     def filter_end_lines(self, doc, matches):
         "Filter a list of matches to only contain spans where the start token is followed by a new line."
-        return [
-            m
-            for m in matches
-            if util.is_end_line(m[2] - 1, doc, self.newline_pattern)
-        ]
+        return [m for m in matches if util.is_end_line(m[2] - 1, doc, self.newline_pattern)]
 
 
 def prune_overlapping_matches(matches, strategy="longest"):
@@ -479,9 +423,7 @@ def prune_overlapping_matches(matches, strategy="longest"):
         # Check if they overlap
         if overlaps(curr_match, next_match):
             # Choose the larger span
-            longer_span = max(
-                curr_match, next_match, key=lambda x: (x[2] - x[1])
-            )
+            longer_span = max(curr_match, next_match, key=lambda x: (x[2] - x[1]))
             pruned.append(longer_span)
             if len(unpruned) == 0:
                 break

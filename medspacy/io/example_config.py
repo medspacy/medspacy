@@ -51,11 +51,12 @@ consumer = DocConsumer(nlp)
 nlp.add_pipe(consumer)
 
 # make db connection
-db_conn = DbConnect(driver, server, db, user, pwd)
+db_read_conn = DbConnect(driver, server, db, user, pwd)
+db_write_conn = DbConnect(driver, server, db, user, pwd)
 
 # make db read/write
-db_reader = DbReader(db_conn, read_query, start, end, read_batch_size)
-db_writer = DbWriter(db_conn, destination_table, create_table, drop_existing, write_batch_size, cols, col_types)
+db_reader = DbReader(db_read_conn, read_query, start, end, read_batch_size)
+db_writer = DbWriter(db_write_conn, destination_table, create_table, drop_existing, write_batch_size, cols, col_types)
 
 # make final pipeline
 pipeline = Pipeline(db_reader, db_writer, nlp, row_type)

@@ -23,6 +23,7 @@ class DbConnect:
             raise err
         else:
             self.conn.commit()
+            print("Created table {0} with query: {1}".format(table_name, query))
 
     def write(self, query, data):
         try:
@@ -33,11 +34,15 @@ class DbConnect:
             raise err
         else:
             self.conn.commit()
+            print("Wrote {0} rows with query: {1}".format(len(data), query))
 
     def read(self, query):
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        result = self.cursor.fetchall()
+        print("Read {0} rows with query: {1}".format(len(result), query))
+        return result
 
     def close(self):
         self.conn.commit()
         self.conn.close()
+        print("Connection closed.")

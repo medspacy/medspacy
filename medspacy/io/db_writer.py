@@ -33,3 +33,6 @@ class DbWriter:
 
     def write(self, data):
         self.db.write(self.insert_query, data[self.cols].values.tolist())
+
+    def close(self):
+        self.db.close()

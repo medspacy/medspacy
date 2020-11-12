@@ -6,6 +6,7 @@ from medspacy.context import ConTextComponent
 from medspacy.section_detection import Sectionizer
 
 nlp = spacy.load("en_core_web_sm")
+nlp.remove_pipe("ner")
 
 matcher = EntityRuler(nlp)
 matcher.add_patterns([{"label": "PROBLEM", "pattern": "cough"}])
@@ -15,16 +16,22 @@ context = ConTextComponent(nlp)
 nlp.add_pipe(context)
 
 sectionizer = Sectionizer(nlp)
-sectionizer.add([{"section_title": "section", "pattern": "Section 1:"}])
+sectionizer.add(
+    [
+        {"section_title": "section1", "pattern": "Section 1:"},
+        {"section_title": "section2", "pattern": "Section 2:", "parents": ["section1"]},
+    ]
+)
 nlp.add_pipe(sectionizer)
 
 simple_text = "Patient has a cough."
 context_text = "Patient has no cough."
-section_text = """Section 1: Patient has a cough"""
+section_text = """Section 1: comment
+Section 2: Patient has a cough"""
 
 simple_doc = nlp(simple_text)
 context_doc = nlp(context_text)
-section_text = nlp(section_text)
+section_doc = nlp(section_text)
 
 
 class TestDocConsumer:
@@ -97,7 +104,8 @@ class TestDocConsumer:
     # this is failing for some reason
     def test_section_data_ent(self):
         consumer = DocConsumer(nlp, sectionizer=True)
-        doc = consumer(context_doc)
+        doc = consumer(section_doc)
         data = doc._.get_data("ent")
-        assert data["section_title"] == ["section"]
-        assert data["section_parent"] == [None]
+        print(type(data["section_parent"][0]))
+        assert data["section_title"] == ["section2"]
+        assert data["section_parent"] == ["section1"]

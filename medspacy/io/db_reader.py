@@ -17,3 +17,6 @@ class DbReader:
         else:
             result = self.db.read(self.read_query.format(self.start, self.start + self.batch_size))
         return result
+
+    def close(self):
+        self.db.close()

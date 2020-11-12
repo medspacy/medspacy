@@ -57,7 +57,6 @@ class DocConsumer(object):
                     try:
                         val = getattr(ent._, attr)
                     except AttributeError:
-                        # warn here ?
                         print("failed to get {0}".format(attr))
                         val = None
                 self._ent_data[attr].append(val)

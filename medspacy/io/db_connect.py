@@ -2,10 +2,8 @@ import pyodbc
 
 
 class DbConnect:
-    def __init__(self, server, db, user, pwd):
-        self.conn = pyodbc.connect(
-            "DRIVER={SQL Server};SERVER={0};DATABASE={1};USER={2};PWD={3}".format(server, db, user, pwd)
-        )
+    def __init__(self, driver, server, db, user, pwd):
+        self.conn = pyodbc.connect("DRIVER={0};SERVER={1};DATABASE={2};USER={3};PWD={4}".format(driver, server, db, user, pwd))
         self.cursor = self.conn.cursor()
         print("Opened connection to {0}.{1}".format(server, db))
 
@@ -39,3 +37,7 @@ class DbConnect:
     def read(self, query):
         self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def close(self):
+        self.conn.commit()
+        self.conn.close()

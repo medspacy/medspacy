@@ -53,11 +53,7 @@ class DocConsumer(object):
                 try:
                     val = getattr(ent, attr)
                 except AttributeError:
-                    try:
-                        val = getattr(ent._, attr)
-                    except AttributeError:
-                        print("failed to get {0}".format(attr))
-                        val = None
+                    val = getattr(ent._, attr)
                 ent_data[attr].append(val)
         doc._.ent_data = ent_data
         if self.sectionizer:

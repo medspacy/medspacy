@@ -6,7 +6,8 @@ class DbWriter:
     def __init__(self, db_conn, destination_table, create_table, drop_existing, write_batch_size, cols, col_types):
         self.db = db_conn
         self.destination_table = destination_table
-        self.create_table = drop_existing
+        self._create_table = create_table
+        self.drop_existing = drop_existing
         self.cols = cols
         self.col_types = col_types
         self.batch_size = write_batch_size
@@ -20,7 +21,7 @@ class DbWriter:
         query = "CREATE TABLE {0} (".format(self.destination_table)
         for i, col in enumerate(self.cols):
             query += "{0} {1}".format(col, self.col_types[i])
-            if i < len(self.cols - 1):
+            if i < len(self.cols) - 1:
                 query += ", "
             else:
                 query += ")"

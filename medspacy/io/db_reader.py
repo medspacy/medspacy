@@ -8,15 +8,21 @@ class DbReader:
         self.start = start
         self.end = end
         self.batch_size = read_batch_size
+        self.read_complete = False
 
     def read(self):
-        if self.read_batch_size < 0:
-            result = self.db.read(self.read_query)
-        elif self.start >= self.end:
-            result = None
+        if not self.read_complete:
+            if self.batch_size < 0:
+                result = self.db.read(self.read_query)
+                self.read_complete = True
+            else:
+                result = self.db.read(self.read_query.format(self.start, self.start + self.batch_size))
+                self.start += self.batch_size
+                if self.start >= self.end:
+                    self.read_complete = True
+            return result
         else:
-            result = self.db.read(self.read_query.format(self.start, self.start + self.batch_size))
-        return result
+            return None
 
     def close(self):
         self.db.close()

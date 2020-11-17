@@ -3,6 +3,7 @@
 from spacy.tokens import Token
 from spacy.tokens import Span
 from spacy.matcher import Matcher, PhraseMatcher
+from .regex_matcher import RegexMatcher
 
 Token.set_extension("ignore", default=False, force=True)
 Span.set_extension("target_attributes", default=None, force=True)
@@ -22,6 +23,7 @@ class TargetMatcher:
 
         self.matcher = Matcher(self.nlp.vocab)
         self.phrase_matcher = PhraseMatcher(self.nlp.vocab, attr="LOWER")
+        self.regex_matcher = RegexMatcher(self.nlp.vocab)
 
     def add(self, rules):
         """Add a list of targetRules to the matcher."""
@@ -34,14 +36,22 @@ class TargetMatcher:
             rule._rule_id = rule_id
             self._rule_item_mapping[rule_id] = rule
             if rule.pattern is not None:
-                self.matcher.add(rule_id, [rule.pattern], on_match=rule.on_match)
+                # If it's a string, add a RegEx
+                if isinstance(rule.pattern, str):
+                    self.regex_matcher.add(rule_id, [rule.pattern], rule.on_match)
+                # If it's a list, add a pattern dictionary
+                elif isinstance(rule.pattern, list):
+                    self.matcher.add(rule_id, [rule.pattern], on_match=rule.on_match)
+                else:
+                    raise ValueError("The pattern argument must be either a string or a list, not {0}".format(type(rule.pattern)))
             else:
-                self.phrase_matcher.add(rule_id, rule.on_match, self.nlp.make_doc(rule.literal.lower()))
+                self.phrase_matcher.add(rule_id, [self.nlp.make_doc(rule.literal.lower())], on_match=rule.on_match)
             i += 1
 
     def __call__(self, doc):
         matches = self.matcher(doc)
         matches += self.phrase_matcher(doc)
+        matches += self.regex_matcher(doc)
         matches = prune_overlapping_matches(matches)
         spans = []
         for (rule_id, start, end) in matches:
@@ -62,7 +72,7 @@ class TargetMatcher:
                     doc.ents += (span,)
                 # spaCy will raise a value error if the token in span are already
                 # part of an entity (ie., as part of an upstream component
-                # In that case, let the existing span supercede this one
+                # In that case, let the existing span supersede this one
                 except ValueError as e:
                     # raise e
                     pass

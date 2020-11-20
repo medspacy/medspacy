@@ -58,7 +58,7 @@ class ConTextItem:
             literal (str): The actual string of a concept. If pattern is None,
                 this string will be lower-cased and matched to the lower-case string.
             category (str): The semantic class of the item.
-            pattern (list or None): A spaCy pattern to match using token attributes.
+            pattern (str, list or None): A spaCy pattern to match using token attributes.
                 See https://spacy.io/usage/rule-based-matching.
             rule (str): The directionality or action of a modifier. This defines which part
                 of a sentence a modifier will include as its scope. Entities within

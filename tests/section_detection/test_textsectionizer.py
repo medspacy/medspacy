@@ -1,5 +1,3 @@
-import pytest
-
 from medspacy.section_detection import TextSectionizer
 
 

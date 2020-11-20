@@ -11,6 +11,8 @@ from .tag_object import TagObject
 from .context_graph import ConTextGraph
 from .context_item import ConTextItem
 
+from ..target_matcher.regex_matcher import RegexMatcher
+
 #
 DEFAULT_ATTRS = {
     "NEGATED_EXISTENCE": {"is_negated": True},
@@ -147,6 +149,7 @@ class ConTextComponent:
             nlp.vocab, attr=phrase_matcher_attr, validate=True
         )  # TODO: match on custom attributes
         self.matcher = Matcher(nlp.vocab, validate=True)
+        self.regex_matcher = RegexMatcher(nlp.vocab)
 
         self.register_graph_attributes()
         if add_attrs is False:
@@ -299,10 +302,14 @@ class ConTextComponent:
                     on_match=item.on_match,
                 )
             else:
-
-                self.matcher.add(
-                    str(self._i), [item.pattern], on_match=item.on_match
-                )
+                if isinstance(item.pattern, str):
+                    self.regex_matcher.add(str(self._i), [item.pattern], on_match=item.on_match)
+                elif isinstance(item.pattern, list):
+                    self.matcher.add(
+                        str(self._i), [item.pattern], on_match=item.on_match
+                    )
+                else:
+                    raise ValueError("The pattern argument must be either a string or a list, not {0}".format(type(item.pattern)))
             self._modifier_item_mapping[uid] = item
             self._i += 1
             self._categories.add(item.category)
@@ -396,6 +403,7 @@ class ConTextComponent:
 
         matches = self.phrase_matcher(doc)
         matches += self.matcher(doc)
+        matches += self.regex_matcher(doc)
 
         # Sort matches
         matches = sorted(matches, key=lambda x: x[1])

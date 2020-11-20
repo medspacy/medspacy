@@ -332,3 +332,16 @@ class TestConTextComponent:
         exception_info.match(
             "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None"
         )
+
+    def test_regex_pattern(self):
+        item_data = [
+            ConTextItem("no history of", "NEGATED_EXISTENCE", rule="FORWARD", pattern="no (history|hx) of"),
+        ]
+        context = ConTextComponent(nlp, rules=None)
+        context.add(item_data)
+
+        doc = nlp("No history of afib. No hx of MI.")
+        context(doc)
+        assert len(doc._.context_graph.modifiers) == 2
+
+

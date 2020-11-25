@@ -27,8 +27,8 @@ setup(
     author_email="medspacy.dev@gmail.com",
     packages=["medspacy"],
     install_requires=[
-        #"spacy>=2.2.2,<2.3",
-        "spacy>=2.3.0,<3.0.0",
+        # NOTE: spacy imports numpy to bootstrap its own setup.py in 2.3.2
+        "spacy>=2.3.0,<=2.3.2",
         "nlp_preprocessor>=0.0.1",
         "PyRuSH>=1.0.3.5",
         "cycontext>=1.0.3.1",

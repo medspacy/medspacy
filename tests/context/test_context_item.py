@@ -4,6 +4,7 @@ import tempfile
 tmpdirname = tempfile.TemporaryDirectory()
 
 from medspacy.context import ConTextItem
+from medspacy.common.base_rule import BaseRule
 
 
 class TestItemData:
@@ -12,6 +13,13 @@ class TestItemData:
         category = "DEFINITE_NEGATED_EXISTENCE"
         rule = "forward"
         assert ConTextItem(literal, category, rule)
+
+    def test_context_item_inherits_base_rule(self):
+        literal = "no evidence of"
+        category = "DEFINITE_NEGATED_EXISTENCE"
+        rule = "forward"
+        item = ConTextItem(literal, category, rule)
+        assert isinstance(item, BaseRule)
 
     def test_context_item_category_upper(self):
         """Test that a ConTextItem category is always upper"""

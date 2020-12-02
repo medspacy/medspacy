@@ -1,7 +1,7 @@
 from ..common.base_rule import BaseRule
 
 class TargetRule(BaseRule):
-    def __init__(self, literal, category, pattern=None, on_match=None, meta=None, attributes=None):
+    def __init__(self, literal, category, pattern=None, on_match=None, metadata=None, attributes=None):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
             literal (str): The actual string of a concept. If pattern is None,
@@ -26,7 +26,7 @@ class TargetRule(BaseRule):
                 For example, if attributes={'is_historical':True}, then any spans matched by this rule
                 will have span._.is_historical = True
         """
-        super().__init__(literal, category, pattern, on_match, meta)
+        super().__init__(literal, category, pattern, on_match, metadata)
         self.attributes = attributes
         self._rule_id = None
 

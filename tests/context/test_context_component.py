@@ -108,7 +108,7 @@ class TestConTextComponent:
     def test_custom_rules_match(self):
         item = ConTextItem("no evidence of", "NEGATED_EXISTENCE", "forward")
         context = ConTextComponent(nlp, rules="other", rule_list=[item])
-        matcher = context.phrase_matcher
+        matcher = context.matcher
         assert matcher(nlp("no evidence of"))
 
     def test_is_negated(self):

@@ -56,7 +56,8 @@ class TargetMatcher:
         In addition to extracting spans of text and setting labels, TargetRules
         can also define setting custom attributes and metadata. Additionally,
         each resulting span has an attribute span._.target_rule which maps
-        a span to the TargetRule which set it."""
+        a span to the TargetRule which set it.
+        """
         matches = self.matcher(doc)
         spans = []
         for (rule_id, start, end) in matches:
@@ -76,7 +77,7 @@ class TargetMatcher:
                 try:
                     doc.ents += (span,)
                 # spaCy will raise a value error if the token in span are already
-                # part of an entity (ie., as part of an upstream component
+                # part of an entity (ie., as part of an upstream component)
                 # In that case, let the existing span supersede this one
                 except ValueError as e:
                     # raise e

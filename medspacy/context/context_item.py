@@ -1,7 +1,9 @@
 import json
 
+from ..common.base_rule import BaseRule
 
-class ConTextItem:
+
+class ConTextItem(BaseRule):
     """A ConTextItem defines a ConText modifier. ConTextItems are rules define
     which spans are extracted as modifiers and how they behave, such as the phrase to be matched,
     the category/semantic class, the direction of the modifier in the text, and what types of target
@@ -57,7 +59,7 @@ class ConTextItem:
         Args:
             literal (str): The actual string of a concept. If pattern is None,
                 this string will be lower-cased and matched to the lower-case string.
-            category (str): The semantic class of the modifier.
+            category (str): The semantic class of the modifier. Case insensitive.
             pattern (list, str, or None): A pattern to use for matching rather than `literal`.
                 If a list, will use spaCy dictionary pattern matching to match using token attributes.
                 See https://spacy.io/usage/rule-based-matching.
@@ -124,11 +126,8 @@ class ConTextItem:
         Returns:
             item: a ConTextItem
         """
-        self.literal = literal.lower()
-        self.category = category.upper()
-        self.pattern = pattern
+        super().__init__(literal, category.upper(), pattern, on_match, metadata)
         self.rule = rule.upper()
-        self.on_match = on_match
         self.on_modifies = on_modifies
 
         if allowed_types is not None and excluded_types is not None:

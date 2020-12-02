@@ -12,6 +12,7 @@ from .context_graph import ConTextGraph
 from .context_item import ConTextItem
 
 from ..target_matcher.regex_matcher import RegexMatcher
+from ..common.medspacy_matcher import MedspacyMatcher
 
 #
 DEFAULT_ATTRS = {
@@ -141,15 +142,17 @@ class ConTextComponent:
         self._i = 0
         self._categories = set()
 
+
+        self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
         # _modifier_item_mapping: A mapping from spaCy Matcher match_ids to ConTextItem
         # This allows us to use spaCy Matchers while still linking back to the ConTextItem
         # To get the rule and category
-        self._modifier_item_mapping = dict()
-        self.phrase_matcher = PhraseMatcher(
-            nlp.vocab, attr=phrase_matcher_attr, validate=True
-        )  # TODO: match on custom attributes
-        self.matcher = Matcher(nlp.vocab, validate=True)
-        self.regex_matcher = RegexMatcher(nlp.vocab)
+        self._modifier_item_mapping = self.matcher._rule_item_mapping
+        # self.phrase_matcher = PhraseMatcher(
+        #     nlp.vocab, attr=phrase_matcher_attr, validate=True
+        # )  # TODO: match on custom attributes
+        # self.matcher = Matcher(nlp.vocab, validate=True)
+        # self.regex_matcher = RegexMatcher(nlp.vocab)
 
         self.register_graph_attributes()
         if add_attrs is False:
@@ -276,9 +279,6 @@ class ConTextComponent:
 
         Args:
             item_data: a list of ConTextItems to add.
-
-        Raises:
-            TypeError: if item_data contains an object that is not a ConTextItem.
         """
         try:
             self._item_data += item_data
@@ -287,31 +287,8 @@ class ConTextComponent:
                 "item_data must be a list of ConText items. If you're just passing in a single ConText Item, "
                 "make sure to wrap the item in a list: `context.add([item])`"
             )
-
+        self.matcher.add(item_data)
         for item in item_data:
-
-            # UID is the hash which we'll use to retrieve the ConTextItem from a spaCy match
-            # And will be a key in self._modifier_item_mapping
-            uid = self.nlp.vocab.strings[str(self._i)]
-            # If no pattern is defined,
-            # match on the literal phrase.
-            if item.pattern is None:
-                self.phrase_matcher.add(
-                    str(self._i),
-                    [self.nlp.make_doc(item.literal)],
-                    on_match=item.on_match,
-                )
-            else:
-                if isinstance(item.pattern, str):
-                    self.regex_matcher.add(str(self._i), [item.pattern], on_match=item.on_match)
-                elif isinstance(item.pattern, list):
-                    self.matcher.add(
-                        str(self._i), [item.pattern], on_match=item.on_match
-                    )
-                else:
-                    raise ValueError("The pattern argument must be either a string or a list, not {0}".format(type(item.pattern)))
-            self._modifier_item_mapping[uid] = item
-            self._i += 1
             self._categories.add(item.category)
 
             # If global attributes like allowed_types and max_scope are defined,
@@ -400,16 +377,11 @@ class ConTextComponent:
         context_graph.targets = targets
 
         context_graph.modifiers = []
+        matches = self.matcher(doc)
 
-        matches = self.phrase_matcher(doc)
-        matches += self.matcher(doc)
-        matches += self.regex_matcher(doc)
-
-        # Sort matches
-        matches = sorted(matches, key=lambda x: x[1])
         for (match_id, start, end) in matches:
             # Get the ConTextItem object defining this modifier
-            item_data = self._modifier_item_mapping[match_id]
+            item_data = self._modifier_item_mapping[self.nlp.vocab[match_id].text]
             tag_object = TagObject(
                 item_data, start, end, doc, self.use_context_window
             )

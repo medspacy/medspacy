@@ -2,7 +2,7 @@ import json
 
 
 class ConTextItem:
-    """An ConTextItem defines a ConText modifier. ConTextItems are rules define
+    """A ConTextItem defines a ConText modifier. ConTextItems are rules define
     which spans are extracted as modifiers and how they behave, such as the phrase to be matched,
     the category/semantic class, the direction of the modifier in the text, and what types of target
     spans can be modfified.
@@ -57,9 +57,14 @@ class ConTextItem:
         Args:
             literal (str): The actual string of a concept. If pattern is None,
                 this string will be lower-cased and matched to the lower-case string.
-            category (str): The semantic class of the item.
-            pattern (str, list or None): A spaCy pattern to match using token attributes.
+            category (str): The semantic class of the modifier.
+            pattern (list, str, or None): A pattern to use for matching rather than `literal`.
+                If a list, will use spaCy dictionary pattern matching to match using token attributes.
                 See https://spacy.io/usage/rule-based-matching.
+                If a string, will use regular expression matching on the underlying text of a doc.
+                Note that regular-expression matching is not natively supported by spaCy and could
+                result in unexpected matched spans if match boundaries do not align with token boundaries.
+                If None, `literal` will be matched exactly.
             rule (str): The directionality or action of a modifier. This defines which part
                 of a sentence a modifier will include as its scope. Entities within
                 the scope will be considered to be modified.

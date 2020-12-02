@@ -79,7 +79,6 @@ class RegexMatcher:
             for pattern in patterns:
                 on_match = self._callbacks[match_id]
                 for re_match in pattern.finditer(doc.text_with_ws):
-                    print(re_match)
                     span = doc.char_span(re_match.start(), re_match.end())
                     if span is None:
                         start = get_token_for_char(doc, re_match.start(), resolve=self.resolve_start)

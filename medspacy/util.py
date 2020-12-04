@@ -1,4 +1,5 @@
 from medspacy.visualization import visualize_ent
+import spacy
 
 DEFAULT_PIPENAMES = {
     "sentencizer",
@@ -20,15 +21,22 @@ ALL_PIPE_NAMES = {
 
 def load(model="default", enable=None, disable=None, load_rules=True):
     """Load a spaCy language object with medSpaCy pipeline components.
-    By default, the base model will be 'en_core_web_sm' with the
+    By default, the base model will be a blank 'en' model with the
     following components:
         - "tokenizer": A customized tokenizer (set to be nlp.tokenizer)
         - "sentencizer": PyRuSH Sentencizer for sentence splitting
         - "target_matcher": TargetMatcher for extended pattern matching
         - "context": ConText for attribute assertion
     Args:
-        model: The name of the base spaCy model to load. Default 'language' will load the tagger and parser
-            from "en_core_web_sm".
+        model: (str or spaCy Lang model) The base spaCy model to load.
+            If 'default', will instantiate from a blank 'en' model.
+            Otherwise, if it is a string it will call `spacy.load(model)` along with the enable and disable
+                arguments and then add medspaCy pipeline components.
+            If it is a spaCy language model, then it will simply add medspaCy components to the existing pipeline.
+            Examples:
+                >>> nlp = medspacy.load()
+                >>> nlp = medspacy.load("en_core_web_sm", disable={"ner"})
+                >>> nlp = spacy.load("en_core_web_sm", disable={"ner"}); nlp = medspacy.load(nlp)
         enable (iterable, str, or None): A string or list of component names to include in the pipeline.
             If None, will include all pipeline components listed above.
             If "all", will load all medspaCy components.
@@ -59,10 +67,19 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     Returns:
         nlp: a spaCy Language object
     """
-
-    model, enable, disable = _build_pipe_names(model, enable, disable)
+    enable, disable = _build_pipe_names(enable, disable)
     import spacy
-    nlp = spacy.load(model, disable=disable)
+    if isinstance(model, str):
+        if model == "default":
+            nlp = spacy.blank("en")
+        else:
+            nlp = spacy.load(model, disable=disable)
+    # Check if it is a spaCy model
+    elif "spacy.lang" in str(type(model)):
+        nlp = model
+    else:
+        raise ValueError("model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
+                         "You passed in", type(model))
 
     if "tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
@@ -85,13 +102,8 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         from .sentence_splitting import PyRuSHSentencizer
 
         pyrush = PyRuSHSentencizer(pyrush_path)
-        if "parser" in nlp.pipe_names:
-            if "tagger" in nlp.pipe_names:
-                nlp.add_pipe(pyrush, before="tagger")
-            else:
-                nlp.add_pipe(pyrush, before="parser")
-        else:
-            nlp.add_pipe(pyrush)
+
+        nlp.add_pipe(pyrush)
 
     if "target_matcher" in enable:
         from .ner import TargetMatcher
@@ -125,7 +137,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
     return nlp
 
 
-def _build_pipe_names(model, enable=None, disable=None):
+def _build_pipe_names(enable=None, disable=None):
     """Implement logic based on the pipenames defined in 'enable' and 'disable'.
     If enable and disable are both None, then it will load the default pipenames.
     Otherwise, will allow custom selection of components.
@@ -153,9 +165,5 @@ def _build_pipe_names(model, enable=None, disable=None):
     else:
         enable = DEFAULT_PIPENAMES
         disable = set()
-    # We'll eventually have an actual medSpaCy model here
-    # but for now we're basing it off of "en_core_web_sm"
-    if model == "default":
-        model = "en_core_web_sm"
-        disable.update({"ner", "tagger", "parser"})
-    return model, enable, disable
+
+    return enable, disable

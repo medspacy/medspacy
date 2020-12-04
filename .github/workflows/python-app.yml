@@ -25,7 +25,7 @@ jobs:
         include:
           - name: "Ubuntu Python 3.6"
             os: ubuntu-latest
-            python-version: 3.6
+            python-version: 3.7
             addons:
               apt:
                 update: true
@@ -36,10 +36,10 @@ jobs:
                   - python-dev
           - name: "MacOS Python 3.6"
             os: macos-latest
-            python-version: 3.6
+            python-version: 3.7
           - name: "Windows Python 3.6"
             os: windows-2019
-            python-version: 3.6
+            python-version: 3.7
 
     steps:
     - uses: actions/checkout@v2

@@ -108,7 +108,7 @@ class TestConTextComponent:
     def test_custom_rules_match(self):
         item = ConTextItem("no evidence of", "NEGATED_EXISTENCE", "forward")
         context = ConTextComponent(nlp, rules="other", rule_list=[item])
-        matcher = context.phrase_matcher
+        matcher = context.matcher
         assert matcher(nlp("no evidence of"))
 
     def test_is_negated(self):
@@ -332,3 +332,16 @@ class TestConTextComponent:
         exception_info.match(
             "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None"
         )
+
+    def test_regex_pattern(self):
+        item_data = [
+            ConTextItem("no history of", "NEGATED_EXISTENCE", rule="FORWARD", pattern="no (history|hx) of"),
+        ]
+        context = ConTextComponent(nlp, rules=None)
+        context.add(item_data)
+
+        doc = nlp("No history of afib. No hx of MI.")
+        context(doc)
+        assert len(doc._.context_graph.modifiers) == 2
+
+

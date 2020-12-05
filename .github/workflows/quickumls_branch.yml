@@ -22,9 +22,9 @@ jobs:
         #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
         #os: [ubuntu-latest, macos-latest, windows-2019]
         include:
-          - name: "Ubuntu Python 3.6"
+          - name: "Ubuntu Python 3.7"
             os: ubuntu-latest
-            python-version: 3.6
+            python-version: 3.7
             addons:
               apt:
                 update: true
@@ -35,13 +35,13 @@ jobs:
                   - python-dev
                   # NOTE : This will install libiconv which is needed for QuickUMLS
                   - libc6-dev
-          - name: "MacOS Python 3.6"
+          - name: "MacOS Python 3.7"
             os: macos-latest
-            python-version: 3.6
+            python-version: 3.7
           # Skipping Windows until this is running
-          #- name: "Windows Python 3.6"
+          #- name: "Windows Python 3.7"
           #  os: windows-2019
-          #  python-version: 3.6
+          #  python-version: 3.7
 
     steps:
     - uses: actions/checkout@v2

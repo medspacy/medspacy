@@ -51,7 +51,7 @@ nlp = spacy.load("en_core_web_sm", disable={"ner"})
 nlp = medspacy.load(nlp)
 
 # Option 3: Load from model name
-nlp = medspacy.load("en_core_web_sm", disable={"nergi"})
+nlp = medspacy.load("en_core_web_sm", disable={"ner"})
 ```
 
 ### Requirements

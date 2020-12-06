@@ -42,9 +42,6 @@ class TestMedSpaCy:
         assert set(nlp.pipe_names) == expected_pipe_names
         assert isinstance(nlp.tokenizer, nlp_preprocessor.Preprocessor)
 
-    def test_load_de(self):
-        assert medspacy.load("de_core_news_sm")
-
     def test_load_rules(self):
         nlp = medspacy.load(load_rules=True)
         context = nlp.get_pipe("context")

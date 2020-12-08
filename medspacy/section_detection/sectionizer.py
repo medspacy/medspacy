@@ -257,7 +257,7 @@ class Sectionizer:
     def set_parent_sections(self, sections):
         """Determine the legal parent-child section relationships from the list
         of in-order sections of a document and the possible parents of each
-        section as specified during rule creation.
+        section as specified during direction creation.
 
         Args:
             sections: a list of spacy match tuples found in the doc

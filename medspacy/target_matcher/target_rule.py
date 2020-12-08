@@ -7,7 +7,7 @@ class TargetRule(BaseRule):
             literal (str): The actual string of a concept. If pattern is None,
                 this string will be lower-cased and matched to the lower-case string.
                 If `pattern` is not None, this argument will not be used for actual matching
-                but can be used as a reference as the rule name.
+                but can be used as a reference as the direction name.
             category (str): The semantic class of the matched span. This corresponds to the `label_`
                 attribute of an entity.
             pattern (list, str, or None): A pattern to use for matching rather than `literal`.
@@ -21,9 +21,9 @@ class TargetRule(BaseRule):
                 (matcher, doc, i, matches)
                 For more information, see https://spacy.io/usage/rule-based-matching#on_match
             meta (dict or None): Optional dictionary of metadata.
-            attributes (dict or None): Optional custom attribute names to set for a Span matched by the rule.
+            attributes (dict or None): Optional custom attribute names to set for a Span matched by the direction.
                 These attribute names are stored under Span._.<attribute_name>.
-                For example, if attributes={'is_historical':True}, then any spans matched by this rule
+                For example, if attributes={'is_historical':True}, then any spans matched by this direction
                 will have span._.is_historical = True
         """
         super().__init__(literal, category, pattern, on_match, metadata)

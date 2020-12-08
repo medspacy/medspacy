@@ -1,19 +1,19 @@
-class TagObject:
+class ConTextModifier:
     """Represents a concept found by ConText in a document.
-    Is the result of ConTextItem matching a span of text in a Doc.
+    Is the result of ConTextRule matching a span of text in a Doc.
     """
 
     def __init__(
-        self, context_item, start, end, doc, _use_context_window=False
+        self, context_rule, start, end, doc, _use_context_window=False
     ):
-        """Create a new TagObject from a document span.
+        """Create a new ConTextModifier from a document span.
 
-        context_item (int): The ConTextItem object which defines the modifier.
+        context_item (int): The ConTextRule object which defines the modifier.
         start (int): The start token index.
         end (int): The end token index (non-inclusive).
         doc (Doc): The spaCy Doc which contains this span.
         """
-        self.context_item = context_item
+        self._context_rule = context_rule
         self.start = start
         self.end = end
         self.doc = doc
@@ -34,13 +34,17 @@ class TagObject:
 
     @property
     def rule(self):
-        """Returns the associated rule."""
-        return self.context_item.rule
+        """Returns the associated direction."""
+        return self._context_rule
+
+    @property
+    def direction(self):
+        return self.rule.direction
 
     @property
     def category(self):
         """Returns the associated category."""
-        return self.context_item.category
+        return self.rule.category
 
     @property
     def scope(self):
@@ -50,12 +54,12 @@ class TagObject:
     @property
     def allowed_types(self):
         """Returns the associated allowed types."""
-        return self.context_item.allowed_types
+        return self.rule.allowed_types
 
     @property
     def excluded_types(self):
         """Returns the associated excluded types."""
-        return self.context_item.excluded_types
+        return self.rule.excluded_types
 
     @property
     def num_targets(self):
@@ -65,20 +69,20 @@ class TagObject:
     @property
     def max_targets(self):
         """Returns the associated maximum number of targets."""
-        return self.context_item.max_targets
+        return self.rule.max_targets
 
     @property
     def max_scope(self):
         """Returns the associated maximum scope."""
-        return self.context_item.max_scope
+        return self.rule.max_scope
 
     def set_scope(self):
-        """Applies the rule of the ConTextItem which generated
-        this TagObject to define a scope.
+        """Applies the direction of the ConTextRule which generated
+        this ConTextModifier to define a scope.
         If self.max_scope is None, then the default scope is the sentence which it occurs in
-        in whichever direction defined by self.rule.
-        For example, if the rule is "forward", the scope will be [self.end: sentence.end].
-        If the rule is "backward", it will be [self.start: sentence.start].
+        in whichever direction defined by self.direction.
+        For example, if the direction is "forward", the scope will be [self.end: sentence.end].
+        If the direction is "backward", it will be [self.start: sentence.start].
 
         If self.max_scope is not None and the length of the default scope is longer than self.max_scope,
         it will be reduced to self.max_scope.
@@ -89,11 +93,11 @@ class TagObject:
         if self._use_context_window:
             # Up to the beginning of the doc
             full_scope_start = max(
-                (0, self.start - self.context_item.max_scope)
+                (0, self.start - self.rule.max_scope)
             )
             # Up to the end of the doc
             full_scope_end = min(
-                (len(self.span.doc), self.end + self.context_item.max_scope)
+                (len(self.span.doc), self.end + self.rule.max_scope)
             )
             full_scope_span = self.span.doc[full_scope_start:full_scope_end]
         # Otherwise, use the sentence
@@ -106,7 +110,7 @@ class TagObject:
                     "boundaries or initialize ConTextComponent with 'use_context_window=True.'"
                 )
 
-        if self.rule.lower() == "forward":
+        if self.direction.lower() == "forward":
             self._scope_start, self._scope_end = self.end, full_scope_span.end
             if (
                 self.max_scope is not None
@@ -114,7 +118,7 @@ class TagObject:
             ):
                 self._scope_end = self.end + self.max_scope
 
-        elif self.rule.lower() == "backward":
+        elif self.direction.lower() == "backward":
             self._scope_start, self._scope_end = (
                 full_scope_span.start,
                 self.start,
@@ -163,18 +167,18 @@ class TagObject:
         'terminate' modifiers limit the scope of a modifier
         like 'no evidence of' in 'no evidence of CHF, **but** there is pneumonia'
 
-        other (TagObject)
+        other (ConTextModifier)
         Returns True if obj modfified the scope of self
         """
         if self.span.sent != other.span.sent:
             return False
-        if self.rule.upper() == "TERMINATE":
+        if self.direction.upper() == "TERMINATE":
             return False
         # Check if the other modifier is a type which can modify self
         # or if they are the same category. If not, don't reduce scope.
         if (
-            (other.rule.upper() != "TERMINATE")
-            and (other.category.upper() not in self.context_item.terminated_by)
+            (other.direction.upper() != "TERMINATE")
+            and (other.category.upper() not in self.rule.terminated_by)
             and (other.category.upper() != self.category.upper())
         ):
             return False
@@ -188,10 +192,10 @@ class TagObject:
             return False
 
         orig_scope = self.scope
-        if self.rule.lower() in ("forward", "bidirectional"):
+        if self.direction.lower() in ("forward", "bidirectional"):
             if other > self:
                 self._scope_end = min(self._scope_end, other.start)
-        if self.rule.lower() in ("backward", "bidirectional"):
+        if self.direction.lower() in ("backward", "bidirectional"):
             if other < self:
                 self._scope_start = max(self._scope_start, other.end)
         return orig_scope != self.scope
@@ -208,7 +212,7 @@ class TagObject:
 
         if self.overlaps_target(target):
             return False
-        if self.rule in ("TERMINATE", "PSEUDO"):
+        if self.direction in ("TERMINATE", "PSEUDO"):
             return False
         if not self.allows(target.label_.upper()):
             return False
@@ -237,17 +241,17 @@ class TagObject:
         return True
 
     def on_modifies(self, target):
-        """If the ConTextItem used to define a TagObject has an on_modifies callback function,
+        """If the ConTextRule used to define a ConTextModifier has an on_modifies callback function,
         evaluate and return either True or False.
         If on_modifies is None, return True.
         """
-        if self.context_item.on_modifies is None:
+        if self.rule.on_modifies is None:
             return True
         # Find the span in between the target and modifier
         start = min(target.end, self.span.end)
         end = max(target.start, self.span.start)
         span_between = target.doc[start:end]
-        rslt = self.context_item.on_modifies(target, self.span, span_between)
+        rslt = self.rule.on_modifies(target, self.span, span_between)
         if rslt not in (True, False):
             raise ValueError(
                 "The on_modifies function must return either True or False indicating "
@@ -319,4 +323,4 @@ class TagObject:
         return len(self.span)
 
     def __repr__(self):
-        return f"<TagObject> [{self.span}, {self.category}]"
+        return f"<ConTextModifier> [{self.span}, {self.category}]"

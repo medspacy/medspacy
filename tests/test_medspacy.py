@@ -56,12 +56,12 @@ class TestMedSpaCy:
     def test_load_rules(self):
         nlp = medspacy.load(load_rules=True)
         context = nlp.get_pipe("context")
-        assert context.item_data
+        assert context.rules
 
     def test_not_load_rules(self):
         nlp = medspacy.load(load_rules=False)
         context = nlp.get_pipe("context")
-        assert not context.item_data
+        assert not context.rules
 
     def test_load_lang_model(self):
         nlp = spacy.load("en_core_web_sm", disable={"ner"})

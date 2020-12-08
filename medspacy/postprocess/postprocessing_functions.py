@@ -25,7 +25,7 @@ def is_family(span):
     return span._.is_family
 
 def is_modified_by_category(span, category):
-    """Returns True if a span is modified by a cycontext TagObject
+    """Returns True if a span is modified by a cycontext ConTextModifier
     modifier with a certain category. Case insensitive.
     """
     for modifier in span._.modifiers:

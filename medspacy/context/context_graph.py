@@ -6,15 +6,15 @@ class ConTextGraph:
         self.remove_overlapping_modifiers = remove_overlapping_modifiers
 
     def update_scopes(self):
-        """Update the scope of all TagObjects.
+        """Update the scope of all ConTextModifier.
 
-        For each modifier in a list of TagObjects, check against each other
+        For each modifier in a list of ConTextModifiers, check against each other
         modifier to see if one of the modifiers should update the other. 
         This allows neighboring similar modifiers to extend each other's 
         scope and allows "terminate" modifiers to end a modifier's scope.
 
         Args:
-            marked_modifiers: A list of TagObjects in a Doc.
+            marked_modifiers: A list of ConTextModifiers in a Doc.
         """
         for i in range(len(self.modifiers) - 1):
             modifier1 = self.modifiers[i]
@@ -30,7 +30,7 @@ class ConTextGraph:
 
         Args:
             marked_targets: A list of Spans
-            marked_modifiers: A list of TagObjects
+            marked_modifiers: A list of ConTextModifiers
 
         RETURNS 
             edges: A list of tuples consisting of target/modifier pairs

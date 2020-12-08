@@ -12,7 +12,7 @@ Span.set_extension("target_rule", default=None, force=True)
 
 
 class TargetMatcher:
-    """TargetMatcher is a component for advanced rule-based text extraction.
+    """TargetMatcher is a component for advanced direction-based text extraction.
     Rules are defined using medspacy.target_matcher.TargetRule.
     """
     name = "target_matcher"

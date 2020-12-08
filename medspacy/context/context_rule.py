@@ -3,8 +3,8 @@ import json
 from ..common.base_rule import BaseRule
 
 
-class ConTextItem(BaseRule):
-    """A ConTextItem defines a ConText modifier. ConTextItems are rules define
+class ConTextRule(BaseRule):
+    """A ConTextRule defines a ConText modifier. ConTextRules are rules which define
     which spans are extracted as modifiers and how they behave, such as the phrase to be matched,
     the category/semantic class, the direction of the modifier in the text, and what types of target
     spans can be modfified.
@@ -33,7 +33,7 @@ class ConTextItem(BaseRule):
         self,
         literal,
         category,
-        rule="BIDIRECTIONAL",
+        direction="BIDIRECTIONAL",
         pattern=None,
         on_match=None,
         on_modifies=None,
@@ -45,10 +45,7 @@ class ConTextItem(BaseRule):
         metadata=None,
         filtered_types=None,
     ):
-        """
-        Warning: Deprecated.
-        ConTextItem has been replaced with ConTextRule.
-        Create an ConTextItem object.
+        """Create an ConTextRule object.
         The primary arguments of `literal` `category`, and `direction` define
         the span of text to be matched, the semantic category, and the direction
         within the sentence in which the modifier operates.
@@ -70,7 +67,7 @@ class ConTextItem(BaseRule):
                 Note that regular-expression matching is not natively supported by spaCy and could
                 result in unexpected matched spans if match boundaries do not align with token boundaries.
                 If None, `literal` will be matched exactly.
-            rule (str): The directionality or action of a modifier. This defines which part
+            direction (str): The directionality or action of a modifier. This defines which part
                 of a sentence a modifier will include as its scope. Entities within
                 the scope will be considered to be modified.
                 Valid values are:
@@ -117,7 +114,7 @@ class ConTextItem(BaseRule):
                 If None, will modify all targets in its scope.
             terminated_by (iterable or None): An optional array of other modifier categories which will
                 terminate the scope of this modifier. If None, only "TERMINATE" will do this.
-                Example: if a ConTextItem defining "positive for" has terminated_by={"NEGATED_EXISTENCE"},
+                Example: if a ConTextRule defining "positive for" has terminated_by={"NEGATED_EXISTENCE"},
                 then in the sentence "positive for flu, negative for RSV", the positive modifier
                 will modify "flu" but will be terminated by "negative for" and will not modify "RSV".
                 This helps prevent multiple conflicting modifiers from distributing too far across
@@ -127,16 +124,15 @@ class ConTextItem(BaseRule):
                 Default None.
 
         Returns:
-            item: a ConTextItem
+            direction: a ConTextRule
         """
-        raise DeprecationWarning("ConTextItem has been replaced with ConTextRule and will throw an error in the future.")
         super().__init__(literal, category.upper(), pattern, on_match, metadata)
-        self.rule = rule.upper()
+        self.direction = direction.upper()
         self.on_modifies = on_modifies
 
         if allowed_types is not None and excluded_types is not None:
             raise ValueError(
-                "A ConTextItem was instantiated with non-null values for both allowed_types and excluded_types. "
+                "A ConTextRule was instantiated with non-null values for both allowed_types and excluded_types. "
                 "Only one of these can be non-null, since cycontext either explicitly includes or excludes target types."
             )
         if allowed_types is not None:
@@ -171,10 +167,10 @@ class ConTextItem(BaseRule):
 
         self.metadata = metadata
 
-        if self.rule not in self._ALLOWED_RULES:
+        if self.direction not in self._ALLOWED_RULES:
             raise ValueError(
                 "Rule {0} not recognized. Must be one of: {1}".format(
-                    self.rule, self._ALLOWED_RULES
+                    self.direction, self._ALLOWED_RULES
                 )
             )
 
@@ -186,10 +182,10 @@ class ConTextItem(BaseRule):
             filepath: the .yaml file containing modifier rules
 
         Returns:
-            context_item: a list of ConTextItem objects
+            context_rule: a list of ConTextRule objects
         Raises:
             KeyError: if the dictionary contains any keys other than
-                those accepted by ConTextItem.__init__
+                those accepted by ConTextRule.__init__
         """
 
         import yaml
@@ -201,11 +197,11 @@ class ConTextItem(BaseRule):
             return urllib.request.urlopen(_file, data=None)
 
         f0 = _get_fileobj(_file)
-        context_items = [
-            ConTextItem.from_dict(data) for data in yaml.safe_load_all(f0)
+        context_rules = [
+            ConTextRule.from_dict(data) for data in yaml.safe_load_all(f0)
         ]
         f0.close()
-        return {"item_data": context_items}
+        return {"item_data": context_rules}
 
     @classmethod
     def from_json(cls, filepath):
@@ -215,37 +211,37 @@ class ConTextItem(BaseRule):
             filepath: the .json file containing modifier rules
 
         Returns:
-            context_item: a list of ConTextItem objects
+            context_item: a list of ConTextRule objects
         Raises:
             KeyError: if the dictionary contains any keys other than
-                those accepted by ConTextItem.__init__
+                those accepted by ConTextRule.__init__
         """
 
         with open(filepath) as file:
             modifier_data = json.load(file)
-        item_data = []
-        for data in modifier_data["item_data"]:
-            item_data.append(ConTextItem.from_dict(data))
-        return item_data
+        context_rules = []
+        for data in modifier_data["context_rules"]:
+            context_rules.append(ConTextRule.from_dict(data))
+        return context_rules
 
     @classmethod
-    def from_dict(cls, item_dict):
-        """Reads a dictionary into a ConTextItem. Used when reading from a json file.
+    def from_dict(cls, rule_dict):
+        """Reads a dictionary into a ConTextRule. Used when reading from a json file.
 
         Args:
             item_dict: the dictionary to convert
 
         Returns:
-            item: the ConTextItem created from the dictionary
+            item: the ConTextRule created from the dictionary
 
         Raises:
             ValueError: if the json is invalid
         """
         try:
-            item = ConTextItem(**item_dict)
+            item = ConTextRule(**rule_dict)
         except Exception as err:
             print(err)
-            keys = set(item_dict.keys())
+            keys = set(rule_dict.keys())
             invalid_keys = keys.difference(cls._ALLOWED_KEYS)
             msg = (
                 "JSON object contains invalid keys: {0}.\n"
@@ -256,7 +252,7 @@ class ConTextItem(BaseRule):
         return item
 
     @classmethod
-    def to_json(cls, item_data, filepath):
+    def to_json(cls, context_rules, filepath):
         """Writes ConTextItems to a json file.
 
         Args:
@@ -264,20 +260,20 @@ class ConTextItem(BaseRule):
             filepath: the .json file to contain modifier rules
         """
 
-        data = {"item_data": [item.to_dict() for item in item_data]}
+        data = {"context_rules": [rule.to_dict() for rule in context_rules]}
         with open(filepath, "w") as file:
             json.dump(data, file, indent=4)
 
     def to_dict(self):
-        """Converts ConTextItems to a python dictionary. Used when writing context items to a json file.
+        """Converts ConTextItems to a python dictionary. Used when writing context rules to a json file.
 
         Returns:
-            item_dict: the dictionary containing the ConTextItem info.
+            rule_dict: the dictionary containing the ConTextRule info.
         """
-        item_dict = {}
+        rule_dict = {}
         for key in self._ALLOWED_KEYS:
-            item_dict[key] = self.__dict__.get(key)
-        return item_dict
+            rule_dict[key] = self.__dict__.get(key)
+        return rule_dict
 
     def __repr__(self):
-        return f"ConTextItem(literal='{self.literal}', category='{self.category}', pattern={self.pattern}, direction='{self.rule}')"
+        return f"ConTextRule(literal='{self.literal}', category='{self.category}', pattern={self.pattern}, direction='{self.direction}')"

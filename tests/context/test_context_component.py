@@ -2,7 +2,7 @@ import spacy
 from spacy.tokens import Span
 
 from medspacy.context import ConTextComponent
-from medspacy.context import ConTextItem
+from medspacy.context import ConTextRule
 
 import pytest
 import os
@@ -17,25 +17,25 @@ class TestConTextComponent:
     def test_default_patterns(self):
         """Test that default rules are loaded"""
         context = ConTextComponent(nlp)
-        assert context.item_data
+        assert context.rules
 
     def test_empty_patterns(self):
         """Test that no rules are loaded"""
         context = ConTextComponent(nlp, rules=None)
-        assert not context.item_data
+        assert not context.rules
 
     def test_custom_patterns_json(self):
         """Test that rules are loaded from a json"""
         context = ConTextComponent(
             nlp, rules="other", rule_list=os.path.abspath("resources/context_rules.json")
         )
-        assert context.item_data
+        assert context.rules
 
     def test_custom_patterns_list(self):
         """Test that rules are loaded from a list"""
-        item = ConTextItem("evidence of", "DEFINITE_EXISTENCE", "forward")
-        context = ConTextComponent(nlp, rules="other", rule_list=[item])
-        assert context.item_data
+        rule = ConTextRule("evidence of", "DEFINITE_EXISTENCE", "forward")
+        context = ConTextComponent(nlp, rules="other", rule_list=[rule])
+        assert context.rules
 
     def test_bad_rules_arg(self):
         with pytest.raises(ValueError):
@@ -49,7 +49,7 @@ class TestConTextComponent:
         with pytest.raises(ValueError):
             ConTextComponent(nlp, rules="other", rule_list=[])
 
-    def test_bad_rule_list_items(self):
+    def test_bad_rule_list(self):
         with pytest.raises(ValueError):
             ConTextComponent(nlp, rules="other", rule_list=["list of strings"])
 
@@ -106,16 +106,16 @@ class TestConTextComponent:
         assert matcher(nlp("no evidence of"))
 
     def test_custom_rules_match(self):
-        item = ConTextItem("no evidence of", "NEGATED_EXISTENCE", "forward")
-        context = ConTextComponent(nlp, rules="other", rule_list=[item])
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "forward")
+        context = ConTextComponent(nlp, rules="other", rule_list=[rule])
         matcher = context.matcher
         assert matcher(nlp("no evidence of"))
 
     def test_is_negated(self):
         doc = nlp("There is no evidence of pneumonia.")
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
-        item_data = [ConTextItem("no evidence of", "NEGATED_EXISTENCE", rule="forward")]
-        context.add(item_data)
+        rules = [ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="forward")]
+        context.add(rules)
         doc.ents = (doc[-2:-1],)
         context(doc)
 
@@ -124,8 +124,8 @@ class TestConTextComponent:
     def test_is_historical(self):
         doc = nlp("History of pneumonia.")
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
-        item_data = [ConTextItem("history of", "HISTORICAL", rule="forward")]
-        context.add(item_data)
+        rules = [ConTextRule("history of", "HISTORICAL", direction="forward")]
+        context.add(rules)
         doc.ents = (doc[-2:-1],)
         context(doc)
 
@@ -134,8 +134,8 @@ class TestConTextComponent:
     def test_is_family(self):
         doc = nlp("Family history of breast cancer.")
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
-        item_data = [ConTextItem("family history of", "FAMILY", rule="forward")]
-        context.add(item_data)
+        rules = [ConTextRule("family history of", "FAMILY", direction="forward")]
+        context.add(rules)
         doc.ents = (doc[-3:-1],)
         context(doc)
 
@@ -171,7 +171,7 @@ class TestConTextComponent:
         except:
             pass
         context = ConTextComponent(nlp, add_attrs=custom_attrs)
-        context.add([ConTextItem("no evidence of", "NEGATED_EXISTENCE", "FORWARD")])
+        context.add([ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD")])
         doc = nlp("There is no evidence of pneumonia.")
         doc.ents = (doc[-2:-1],)
         context(doc)
@@ -188,7 +188,7 @@ class TestConTextComponent:
             pass
         context = ConTextComponent(nlp, add_attrs=custom_attrs)
         context.add(
-            [ConTextItem("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")]
+            [ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")]
         )
         doc = nlp("There is no evidence of pneumonia.")
         doc.ents = (doc[-2:-1],)
@@ -206,7 +206,7 @@ class TestConTextComponent:
 
         context.add(
             [
-                ConTextItem(
+                ConTextRule(
                     "no evidence of",
                     "NEGATED_EXISTENCE",
                     "FORWARD",
@@ -222,72 +222,72 @@ class TestConTextComponent:
 
     def test_global_allowed_types1(self):
         """Check that if the ConTextComponent has allowed_types defined
-        and a ConTextItem does not, the ConTextItem will receive the component's
+        and a ConTextRule does not, the ConTextRule will receive the component's
         value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types={"PROBLEM"})
-        item = ConTextItem(
+        rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types=None
         )
-        context.add([item])
-        assert item.allowed_types == {"PROBLEM"}
+        context.add([rule])
+        assert rule.allowed_types == {"PROBLEM"}
 
     def test_global_allowed_types2(self):
         """Check that if the ConTextComponent does not have allowed_types defined
-        and a ConTextItem does, the ConTextItem will not receive the component's
+        and a ConTextRule does, the ConTextRule will not receive the component's
         value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types=None)
-        item = ConTextItem(
+        rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"}
         )
-        context.add([item])
-        assert item.allowed_types == {"PROBLEM"}
+        context.add([rule])
+        assert rule.allowed_types == {"PROBLEM"}
 
     def test_global_allowed_types2(self):
-        """Check that if both the ConTextComponent and a ConTextItem have allowed_types defined,
-        the ConTextItem will not receive the component's value.
+        """Check that if both the ConTextComponent and a ConTextRule have allowed_types defined,
+        the ConTextRule will not receive the component's value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types={"TREATMENT"})
-        item = ConTextItem(
+        rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"}
         )
-        context.add([item])
-        assert item.allowed_types == {"PROBLEM"}
+        context.add([rule])
+        assert rule.allowed_types == {"PROBLEM"}
 
     def test_context_modifier_termination(self):
         context = ConTextComponent(nlp, rules=None, terminations={"NEGATED_EXISTENCE": ["POSITIVE_EXISTENCE", "UNCERTAIN"]})
-        item = ConTextItem(
+        rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
         )
-        context.add([item])
-        assert item.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
+        context.add([rule])
+        assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
-    def test_item_modifier_termination(self):
+    def test_rule_modifier_termination(self):
         context = ConTextComponent(nlp, rules=None,
                                    terminations=None)
-        item = ConTextItem(
+        rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE", "UNCERTAIN"}
         )
-        context.add([item])
-        assert item.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
+        context.add([rule])
+        assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
     def test_null_modifier_termination(self):
         context = ConTextComponent(nlp, rules=None,
                                    terminations=None)
-        item = ConTextItem(
+        rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
         )
-        context.add([item])
-        assert item.terminated_by == set()
+        context.add([rule])
+        assert rule.terminated_by == set()
 
     def test_on_modifies_true(self):
         def on_modifies(target, modifier, span_between):
             return True
 
         context = ConTextComponent(nlp, rules=None)
-        item = ConTextItem("no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies)
-        context.add([item])
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies)
+        context.add([rule])
         doc = nlp("There is no evidence of pneumonia or chf.")
         doc.ents = (doc[5:6], doc[7:8])
         context(doc)
@@ -300,8 +300,8 @@ class TestConTextComponent:
             return False
 
         context = ConTextComponent(nlp, rules=None)
-        item = ConTextItem("no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies)
-        context.add([item])
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies)
+        context.add([rule])
         doc = nlp("There is no evidence of pneumonia or chf.")
         doc.ents = (doc[5:6], doc[7:8])
         context(doc)
@@ -310,12 +310,12 @@ class TestConTextComponent:
             assert len(ent._.modifiers) == 0
 
     def test_pseudo_modifier(self):
-        item_data = [
-            ConTextItem("negative", "NEGATED_EXISTENCE"),
-            ConTextItem("negative attitude", "PSEUDO_NEGATED_EXISTENCE", rule="PSEUDO"),
+        rules = [
+            ConTextRule("negative", "NEGATED_EXISTENCE"),
+            ConTextRule("negative attitude", "PSEUDO_NEGATED_EXISTENCE", direction="PSEUDO"),
         ]
         context = ConTextComponent(nlp, rules=None)
-        context.add(item_data)
+        context.add(rules)
 
         doc = nlp("She has a negative attitude about her treatment.")
         doc.ents = (doc[-2:-1],)
@@ -334,11 +334,11 @@ class TestConTextComponent:
         )
 
     def test_regex_pattern(self):
-        item_data = [
-            ConTextItem("no history of", "NEGATED_EXISTENCE", rule="FORWARD", pattern="no (history|hx) of"),
+        rules = [
+            ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD", pattern="no (history|hx) of"),
         ]
         context = ConTextComponent(nlp, rules=None)
-        context.add(item_data)
+        context.add(rules)
 
         doc = nlp("No history of afib. No hx of MI.")
         context(doc)

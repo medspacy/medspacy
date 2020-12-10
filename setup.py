@@ -2,6 +2,7 @@ from setuptools import setup, find_packages
 from sys import platform
 
 # read the contents of the README file
+import os
 from os import path
 
 this_directory = path.abspath(path.dirname(__file__))

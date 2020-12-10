@@ -17,6 +17,19 @@ else:
     # since QuickUMLS has not made a release with some recent MedSpacy contributions...
     platform_dependency_links.append('https://github.com/Georgetown-IR-Lab/QuickUMLS/tarball/master#egg=999.0.0')
 
+
+# function to recursively get files for resourcee
+def package_files(directory):
+    paths = []
+    for (path, directories, filenames) in os.walk(directory):
+        for filename in filenames:
+            paths.append(os.path.join('..', path, filename))
+    return paths
+
+
+# get all files recursively from /resources
+resource_files = package_files('./resources')
+
 def get_version():
     """Load the version from version.py, without importing it.
     This function assumes that the last line in the file contains a variable defining the
@@ -44,5 +57,5 @@ setup(
     dependency_links = platform_dependency_links,
     long_description=long_description,
     long_description_content_type="text/markdown",
-    package_data={"medspacy": ["../resources/*"]},
+    package_data={"medspacy": resource_files},
 )

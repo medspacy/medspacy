@@ -1,6 +1,9 @@
 import json
-
 from ..common.base_rule import BaseRule
+
+import warnings
+warnings.simplefilter('always')
+
 
 
 class ConTextRule(BaseRule):
@@ -10,7 +13,7 @@ class ConTextRule(BaseRule):
     spans can be modfified.
     """
 
-    _ALLOWED_RULES = (
+    _ALLOWED_DIRECTIONS = (
         "FORWARD",
         "BACKWARD",
         "BIDIRECTIONAL",
@@ -44,6 +47,7 @@ class ConTextRule(BaseRule):
         terminated_by=None,
         metadata=None,
         filtered_types=None,
+        **kwargs
     ):
         """Create an ConTextRule object.
         The primary arguments of `literal` `category`, and `direction` define
@@ -127,7 +131,16 @@ class ConTextRule(BaseRule):
             direction: a ConTextRule
         """
         super().__init__(literal, category.upper(), pattern, on_match, metadata)
-        self.direction = direction.upper()
+        # 'direction' used to be called 'rule', so we'll handle that here and raise a warning
+        if "rule" in kwargs:
+            warnings.warn("The 'rule' argument from ConTextItem has been replaced with 'direction' "
+                                     "in ConTextRule. In the future please use 'direction': "
+                                     "ConTextItem(literal, category, direction=...)",
+                          DeprecationWarning)
+            self.direction = kwargs["rule"].upper()
+        else:
+            self.direction = direction.upper()
+
         self.on_modifies = on_modifies
 
         if allowed_types is not None and excluded_types is not None:
@@ -167,12 +180,19 @@ class ConTextRule(BaseRule):
 
         self.metadata = metadata
 
-        if self.direction not in self._ALLOWED_RULES:
+        if self.direction not in self._ALLOWED_DIRECTIONS:
             raise ValueError(
-                "Rule {0} not recognized. Must be one of: {1}".format(
-                    self.direction, self._ALLOWED_RULES
+                "Direction {0} not recognized. Must be one of: {1}".format(
+                    self.direction, self._ALLOWED_DIRECTIONS
                 )
             )
+
+
+    @property
+    def rule(self):
+        "Deprecated attribute name from ConTextItem. Now `direction`."
+        warnings.warn("The 'rule' attribute has been replaced with 'direction'.", DeprecationWarning)
+        return self.direction
 
     @classmethod
     def from_yaml(cls, _file):
@@ -237,19 +257,16 @@ class ConTextRule(BaseRule):
         Raises:
             ValueError: if the json is invalid
         """
-        try:
-            item = ConTextRule(**rule_dict)
-        except Exception as err:
-            print(err)
-            keys = set(rule_dict.keys())
-            invalid_keys = keys.difference(cls._ALLOWED_KEYS)
+        keys = set(rule_dict.keys())
+        invalid_keys = keys.difference(cls._ALLOWED_KEYS)
+        if invalid_keys:
             msg = (
                 "JSON object contains invalid keys: {0}.\n"
                 "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
             )
             raise ValueError(msg)
-
-        return item
+        rule = ConTextRule(**rule_dict)
+        return rule
 
     @classmethod
     def to_json(cls, context_rules, filepath):

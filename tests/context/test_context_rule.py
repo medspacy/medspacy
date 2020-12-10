@@ -117,6 +117,18 @@ class TestItemData:
             "ConTextItem has been deprecated and replaced with ConTextRule."
         )
 
+    def test_deprecated_rule_argument_raises_warrning(self):
+        with pytest.warns(DeprecationWarning) as warning_info:
+            ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
+        assert "The 'rule' argument from ConTextItem has been replaced with 'direction'" in warning_info[0].message.args[0]
+
+    def test_deprecated_rule_attribute_raises_warrning(self):
+        with pytest.warns(DeprecationWarning) as warning_info:
+            rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE")
+            rule.rule
+        assert "The 'rule' attribute has been replaced with 'direction'." in warning_info[0].message.args[0]
+
+
 
 @pytest.fixture
 def from_json_file():

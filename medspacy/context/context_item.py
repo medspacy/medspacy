@@ -14,4 +14,5 @@ class ConTextItem:
         """
         raise NotImplementedError("ConTextItem has been deprecated and replaced with ConTextRule. "
                                   "Please import ConTextRule as: "
-                                  "`from medspacy.context import ConTextRule`")
+                                  "`from medspacy.context import ConTextRule`;"
+                                  " ConTextRule(literal, category, pattern, direction)")

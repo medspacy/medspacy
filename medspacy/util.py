@@ -17,8 +17,7 @@ ALL_PIPE_NAMES = {
     "tokenizer",
     "preprocessor",
     "postprocessor",
-    "sectionizer",
-    "quickumls"
+    "sectionizer"
 }
 
 

@@ -16,7 +16,7 @@ else:
     # Using a trick from StackOverflow to set an impossibly high version number
     # to force getting latest from GitHub as opposed to PyPi
     # since QuickUMLS has not made a release with some recent MedSpacy contributions...
-    quickumls_package = 'medspacy_quickumls>=2.3'
+    quickumls_package = 'medspacy_quickumls>=2.4'
     additional_installs.append(quickumls_package)
     print('Attempting to install quickumls package: {}'.format(quickumls_package))
 

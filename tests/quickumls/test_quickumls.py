@@ -9,16 +9,8 @@ class TestQuickUMLS:
     @staticmethod
     def can_test_quickumls():
         if platform.startswith("win"):
-            import imp
-            try:
-                imp.find_module('quickumls')
-                found = True
-            except ImportError:
-                found = False
-
-            if not found:
-                # we're done here for now...
-                return False
+            # we're done here for now...
+            return False
 
         return True
 

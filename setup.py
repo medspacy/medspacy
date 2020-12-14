@@ -56,7 +56,6 @@ setup(
         "PyRuSH>=1.0.3.5",
         "jsonschema"
     ] + additional_installs,
-    dependency_links = dependency_links,
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},

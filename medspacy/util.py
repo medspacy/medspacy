@@ -151,7 +151,7 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
             )
             print('Loading QuickUMLS resources from a default SAMPLE of UMLS data from here: {}'.format(quickumls_path))
 
-        from quickumls.spacy_component import SpacyQuickUMLS
+        from medspacy_quickumls.spacy_component import SpacyQuickUMLS
 
         quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
         nlp.add_pipe(quickumls_component)

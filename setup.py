@@ -9,16 +9,16 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
-dependency_links = []
+additional_installs = []
 if platform.startswith('win'):
     print('Not installing QuickUMLS for Windows since it currently requires conda (as opposed to just pip)')
 else:
     # Using a trick from StackOverflow to set an impossibly high version number
     # to force getting latest from GitHub as opposed to PyPi
     # since QuickUMLS has not made a release with some recent MedSpacy contributions...
-    quickumls_github_url = 'git+https://github.com/Georgetown-IR-Lab/QuickUMLS/tarball/master#egg=999.0.0'
-    dependency_links.append(quickumls_github_url)
-    print('Attempting to install quickumls from GitHub at : {}'.format(quickumls_github_url))
+    quickumls_package = 'medspacy_quickumls>=2.1'
+    additional_installs.append(quickumls_package)
+    print('Attempting to install quickumls package: {}'.format(quickumls_package))
 
 # function to recursively get files for resourcee
 def package_files(directory):
@@ -55,7 +55,7 @@ setup(
         "spacy>=2.3.0,<=2.3.2",
         "PyRuSH>=1.0.3.5",
         "jsonschema"
-    ],
+    ] + additional_installs,
     dependency_links = dependency_links,
     long_description=long_description,
     long_description_content_type="text/markdown",

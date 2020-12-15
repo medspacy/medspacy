@@ -25,8 +25,10 @@ for detecting semantic modifiers and attributes of entities, including negation 
 - `medspacy.section_detection`: Clinical section detection and segmentation
 - `medspacy.postprocess`: Flexible framework for modifying and removing extracted entities
 - `medspacy.visualization`: Utilities for visualizing concepts and relationships extracted from text
+- `SpacyQuickUMLS`: UMLS concept extraction compatible with spacy and medspacy implemented by [QuickUMLS]
+	- NOTE: This component is installed by default on MacOS and Linux but not Windows.  For more defails and Windows installation: [QuickUMLS on Windows](windows_and_quickumls.md)
 
-Future work could include I/O, UMLS matching, relations extraction, and pre-trained clinical models.
+Future work could include I/O, relations extraction, and pre-trained clinical models.
 
 # Usage
 ## Installation

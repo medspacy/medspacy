@@ -113,8 +113,25 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
 
         target_matcher = TargetMatcher(nlp)
         nlp.add_pipe(target_matcher)
-        
-    # If we add QuickUMLS concepts, it should process before context (added below)
+
+    if "context" in enable:
+        from .context import ConTextComponent
+
+        if load_rules:
+            context = ConTextComponent(nlp, rules="default")
+        else:
+            context = ConTextComponent(nlp, rules=None)
+        nlp.add_pipe(context)
+
+    if "sectionizer" in enable:
+        from .section_detection import Sectionizer
+
+        if load_rules:
+            sectionizer = Sectionizer(nlp, patterns="default")
+        else:
+            sectionizer = Sectionizer(nlp, patterns=None)
+        nlp.add_pipe(sectionizer)
+
     if "quickumls" in enable:
         from os import path
         from pathlib import Path
@@ -137,24 +154,6 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
 
         quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
         nlp.add_pipe(quickumls_component)
-
-    if "context" in enable:
-        from .context import ConTextComponent
-
-        if load_rules:
-            context = ConTextComponent(nlp, rules="default")
-        else:
-            context = ConTextComponent(nlp, rules=None)
-        nlp.add_pipe(context)
-
-    if "sectionizer" in enable:
-        from .section_detection import Sectionizer
-
-        if load_rules:
-            sectionizer = Sectionizer(nlp, patterns="default")
-        else:
-            sectionizer = Sectionizer(nlp, patterns=None)
-        nlp.add_pipe(sectionizer)
 
     if "postprocessor" in enable:
         from .postprocess import Postprocessor

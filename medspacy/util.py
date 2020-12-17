@@ -102,8 +102,15 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         from .sentence_splitting import PyRuSHSentencizer
 
         pyrush = PyRuSHSentencizer(pyrush_path)
-
-        nlp.add_pipe(pyrush)
+        # If there is a dependency parser already in the pipeline,
+        # adding a sentencizer after will throw an error
+        if "parser" in nlp.pipe_names:
+            if "tagger" in nlp.pipe_names:
+                nlp.add_pipe(pyrush, before="tagger")
+            else:
+                nlp.add_pipe(pyrush, before="parser")
+        else:
+            nlp.add_pipe(pyrush)
 
     if "target_matcher" in enable:
         from .ner import TargetMatcher

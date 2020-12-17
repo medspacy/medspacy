@@ -13,7 +13,7 @@ class MedspacyMatcher:
                 result in unexpected matched spans if match boundaries do not align with token boundaries.
     Rules can be defined by any class which inherits from medspacy.common.BaseRule, such as:
         medspacy.target_matcher.TargetRule
-        medspacy.context.ConTextItem
+        medspacy.context.ConTextRule
     """
 
     name = "medspacy_matcher"
@@ -37,7 +37,7 @@ class MedspacyMatcher:
 
     def add(self, rules):
         """Add a list of rules to the matcher. Rules must inherit from medspacy.common.BaseRule,
-        such as medspacy.target_matcher.TargetRule or medspacy.context.ConTextItem."""
+        such as medspacy.target_matcher.TargetRule or medspacy.context.ConTextRule."""
         i = len(self._rules)
         self._rules += rules
 

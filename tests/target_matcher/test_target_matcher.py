@@ -14,7 +14,7 @@ class TestTargetMatcher:
     def test_add(self):
         matcher = TargetMatcher(nlp)
         matcher.add(
-            [TargetRule("my rule", "RULE")]
+            [TargetRule("my direction", "RULE")]
         )
         assert matcher._rules
 

@@ -11,11 +11,11 @@ class PostprocessingRule:
                 ent: the spacy span
                 i: the index of ent in doc.ents
             Additional positional arguments can be provided in action_args.
-        name (str): Optional name of rule.
-        description (str): Optional description of the rule.
+        name (str): Optional name of direction.
+        description (str): Optional description of the direction.
         action_args (tuple or None): Optional tuple of positional arguments
             to pass to action() if all patterns pass. Default is None,
-            in which case the rule will call action(ent, i).
+            in which case the direction will call action(ent, i).
 
         """
         self.patterns = patterns
@@ -68,5 +68,5 @@ def _raise_action_error(func, args):
     raise ValueError("The action function {0} does not have the correct number of arguments. "
                      "Any action function must start with two arguments: (ent, i) - the span and the index of "
                      "the span in doc.ents. Any additional arguments must be provided in a tuple "
-                     "in `rule.action_args`. "
+                     "in `direction.action_args`. "
                      "Actual arguments passed in: {1} ".format(func, args))

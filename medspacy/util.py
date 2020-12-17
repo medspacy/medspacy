@@ -1,3 +1,5 @@
+from sys import platform
+
 from medspacy.visualization import visualize_ent
 import spacy
 
@@ -19,7 +21,7 @@ ALL_PIPE_NAMES = {
 }
 
 
-def load(model="default", enable=None, disable=None, load_rules=True):
+def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be a blank 'en' model with the
     following components:
@@ -63,6 +65,7 @@ def load(model="default", enable=None, disable=None, load_rules=True):
         load_rules (bool): Whether or not to include default rules for available components.
             If True, sectionizer and context will both be loaded with default rules.
             Default is True.
+        quickumls_path (string or None): Path to QuickUMLS resource
 
     Returns:
         nlp: a spaCy Language object
@@ -117,6 +120,29 @@ def load(model="default", enable=None, disable=None, load_rules=True):
 
         target_matcher = TargetMatcher(nlp)
         nlp.add_pipe(target_matcher)
+        
+    if "quickumls" in enable:
+        from os import path
+        from pathlib import Path
+
+        if quickumls_path is None:
+            # let's use a default sample that we provide in medspacy
+            # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
+            # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
+
+            quickumls_platform_dir = 'QuickUMLS_SAMPLE_lowercase_POSIX_unqlite'
+            if platform.startswith("win"):
+                quickumls_platform_dir = 'QuickUMLS_SAMPLE_lowercase_Windows_unqlite'
+
+            quickumls_path = path.join(
+                Path(__file__).resolve().parents[1], "resources", "quickumls/{0}".format(quickumls_platform_dir)
+            )
+            print('Loading QuickUMLS resources from a default SAMPLE of UMLS data from here: {}'.format(quickumls_path))
+
+        from quickumls.spacy_component import SpacyQuickUMLS
+
+        quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
+        nlp.add_pipe(quickumls_component)
 
     if "context" in enable:
         from .context import ConTextComponent

@@ -1,6 +1,15 @@
 from ..common.base_rule import BaseRule
 
 class TargetRule(BaseRule):
+
+    _ALLOWED_KEYS = {
+        "literal",
+        "pattern",
+        "category",
+        "metadata",
+        "attributes",
+    }
+
     def __init__(self, literal, category, pattern=None, on_match=None, metadata=None, attributes=None):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
@@ -30,7 +39,76 @@ class TargetRule(BaseRule):
         self.attributes = attributes
         self._rule_id = None
 
+    @classmethod
+    def from_json(cls, filepath):
+        """Read in a lexicon of modifiers from a JSON file.
 
-        
+        Args:
+            filepath: the .json file containing modifier rules
+
+        Returns:
+            context_item: a list of ConTextRule objects
+        Raises:
+            KeyError: if the dictionary contains any keys other than
+                those accepted by ConTextRule.__init__
+        """
+        import json
+        with open(filepath) as file:
+            target_data = json.load(file)
+        target_rules = []
+        for data in target_data["target_rules"]:
+            target_rules.append(TargetRule.from_dict(data))
+        return target_rules
+
+    @classmethod
+    def from_dict(cls, rule_dict):
+        """Reads a dictionary into a ConTextRule. Used when reading from a json file.
+
+        Args:
+            item_dict: the dictionary to convert
+
+        Returns:
+            item: the ConTextRule created from the dictionary
+
+        Raises:
+            ValueError: if the json is invalid
+        """
+        keys = set(rule_dict.keys())
+        invalid_keys = keys.difference(cls._ALLOWED_KEYS)
+        if invalid_keys:
+            msg = (
+                "JSON object contains invalid keys: {0}.\n"
+                "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
+            )
+            raise ValueError(msg)
+        rule = TargetRule(**rule_dict)
+        return rule
+
+
+    @classmethod
+    def to_json(cls, target_rules, filepath):
+        """Writes ConTextItems to a json file.
+
+        Args:
+            target_rules: a list of TargetRules that will be written to a file.
+            filepath: the .json file to contain modifier rules
+        """
+        import json
+        data = {"target_rules": [rule.to_dict() for rule in target_rules]}
+        with open(filepath, "w") as file:
+            json.dump(data, file, indent=4)
+
+    def to_dict(self):
+        """Converts TargetRules to a python dictionary. Used when writing target rules to a json file.
+
+        Returns:
+            rule_dict: the dictionary containing the TargetRule info.
+        """
+        rule_dict = {}
+        for key in self._ALLOWED_KEYS:
+            rule_dict[key] = self.__dict__.get(key)
+        return rule_dict
+
+
     def __repr__(self):
         return f"""TargetRule(literal="{self.literal}", category="{self.category}", pattern={self.pattern}, attributes={self.attributes}, on_match={self.on_match})"""

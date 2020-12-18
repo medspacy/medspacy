@@ -273,7 +273,7 @@ class ConTextRule(BaseRule):
         """Writes ConTextItems to a json file.
 
         Args:
-            item_data: a list of ConTextItems that will be written to a file.
+            context_rules: a list of ConTextRules that will be written to a file.
             filepath: the .json file to contain modifier rules
         """
 

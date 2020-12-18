@@ -59,13 +59,7 @@ nlp = medspacy.load("en_core_web_sm", disable={"ner"})
 ### Requirements
 The following packages are required and installed when `medspacy` is installed:
 - spaCy 2.3
-- Other core medSpaCy packages:
-    - [nlp_preprocessor](https://github.com/medspacy/nlp_preprocessor)
-    - [pyrush](https://github.com/medspacy/PyRuSH)
-    - [target_matcher](https://github.com/medspacy/target_matcher)
-    - [sectionizer](https://github.com/medspacy/sectionizer)
-    - [cycontext](https://github.com/medspacy/cycontext)
-    - [nlp_postprocessor](https://github.com/medspacy/nlp_postprocessor)
+- [pyrush](https://github.com/medspacy/PyRuSH)
     
 ## Basic Usage
 Here is a simple example showing how to implement and visualize a simple rule-based pipeline using `medspacy`:

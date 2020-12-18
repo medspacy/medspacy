@@ -46,6 +46,11 @@ class TargetMatcher:
             if not isinstance(rule, TargetRule):
                 raise ValueError("Rules must be TargetRule, not", type(rule))
 
+    @property
+    def rules(self):
+        return self._rules
+
+
     def __call__(self, doc):
         """Call TargetMatcher on a doc. If `add_ents=True`, then matched
         spans will be merged in to doc.ents and `doc` will be returned.

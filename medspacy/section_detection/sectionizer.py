@@ -9,23 +9,7 @@ import warnings
 
 from . import util
 
-Doc.set_extension("sections", default=list(), force=True)
-Doc.set_extension("section_titles", getter=util.get_section_titles, force=True)
-Doc.set_extension("section_headers", getter=util.get_section_headers, force=True)
-Doc.set_extension("section_spans", getter=util.get_section_spans, force=True)
-Doc.set_extension("section_parents", getter=util.get_section_parents, force=True)
 
-Token.set_extension("section_span", default=None, force=True)
-Token.set_extension("section_title", default=None, force=True)
-Token.set_extension("section_header", default=None, force=True)
-Token.set_extension("section_parent", default=None, force=True)
-
-# Set span attributes to the attribute of the first token
-# in case there is some overlap between a span and a new section header
-Span.set_extension("section_span", getter=lambda x: x[0]._.section_span, force=True)
-Span.set_extension("section_title", getter=lambda x: x[0]._.section_title, force=True)
-Span.set_extension("section_header", getter=lambda x: x[0]._.section_header, force=True)
-Span.set_extension("section_parent", getter=lambda x: x[0]._.section_parent, force=True)
 
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.jsonl",)
 

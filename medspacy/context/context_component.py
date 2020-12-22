@@ -160,7 +160,6 @@ class ConTextComponent:
         elif add_attrs is True:
             self.add_attrs = True
             self.context_attributes_mapping = DEFAULT_ATTRS
-            self.register_default_attributes()
         elif isinstance(add_attrs, dict):
             # Check that each of the attributes being added has been set
             for modifier in add_attrs.keys():
@@ -311,20 +310,6 @@ class ConTextComponent:
             if rule.category.upper() in self.terminations:
                 for other_modifier in self.terminations[rule.category.upper()]:
                     rule.terminated_by.add(other_modifier.upper())
-
-    def register_default_attributes(self):
-        """Register the default values for the Span attributes defined in DEFAULT_ATTRS."""
-        for attr_name in [
-            "is_negated",
-            "is_uncertain",
-            "is_historical",
-            "is_hypothetical",
-            "is_family",
-        ]:
-            try:
-                Span.set_extension(attr_name, default=False)
-            except ValueError:  # Extension already set
-                pass
 
     def register_graph_attributes(self):
         """Register spaCy container custom attribute extensions.

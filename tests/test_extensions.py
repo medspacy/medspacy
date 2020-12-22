@@ -77,10 +77,19 @@ class TestMedSpaCy:
         span = doc[3:5]
         assert span._.any_context_attributes is False
 
-    def test_span_not_any_context_attributes(self):
+    def test_span_any_context_attributes(self):
         span = doc[3:5]
         span._.is_negated = True
         assert span._.any_context_attributes is True
 
+    def test_span_contains(self):
+        span = doc[3:6]
+        assert span._.contains(r"of\s+pneumonia")
 
+    def test_span_contains_regex_false(self):
+        span = doc[3:6]
+        assert not span._.contains(r"of\s+pneumonia", regex=False)
 
+    def test_span_contains_list(self):
+        span = doc[3:6]
+        assert span._.contains(["pna", "pneumonia"])

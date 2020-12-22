@@ -108,11 +108,11 @@ def prune_overlapping_matches(matches, strategy="longest"):
         return prune_overlapping_matches(pruned)
 
 def overlaps(a, b):
-    if _span_overlaps(a, b) or _span_overlaps(b, a):
+    if _match_overlaps(a, b) or _match_overlaps(b, a):
         return True
     return False
 
-def _span_overlaps(a, b):
+def _match_overlaps(a, b):
     _, a_start, a_end = a
     _, b_start, b_end = b
     if a_start >= b_start and a_start < b_end:

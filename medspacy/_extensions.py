@@ -1,7 +1,9 @@
 """This module will set extension attributes and methods for medspaCy. Examples include custom methods like span._.window()"""
 from spacy.tokens import Doc, Span, Token
+from .common .util import span_contains
 
 def set_extensions():
+    "Set custom medspaCy extensions for Token, Span, and Doc classes."
     set_token_extensions()
     set_span_extensions()
     set_doc_extensions()
@@ -66,7 +68,7 @@ def get_window_token(token, n=1, left=True, right=True):
         end = token.i+1
     return token.doc[start:end]
 
-def get_window_span(span, window=1, left=True, right=True):
+def get_window_span(span, n=1, left=True, right=True):
     """Get a Span of a window of text containing a span.
     Args:
         n (int): Number of tokens on each side of a span to return.
@@ -79,11 +81,11 @@ def get_window_span(span, window=1, left=True, right=True):
         a spaCy Span
     """
     if left:
-        start = max((span.start-window, 0))
+        start = max((span.start-n, 0))
     else:
         start = span.start
     if right:
-        end = min((span.end+window, len(span.doc)))
+        end = min((span.end+n, len(span.doc)))
     else:
         end = span.end
     return span.doc[start:end]
@@ -138,6 +140,7 @@ _span_extensions = {
     "section_title": {"getter":lambda x: x[0]._.section_title},
     "section_header": {"getter":lambda x: x[0]._.section_header},
     "section_parent": {"getter":lambda x: x[0]._.section_parent},
+    "contains": {"method": span_contains},
     **_context_attributes
 
 }

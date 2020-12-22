@@ -366,10 +366,7 @@ class Sectionizer:
             name, header, parent, section = section_tuple
             doc._.sections.append(section_tuple)
             for token in section:
-                token._.section_span = section
-                token._.section_title = name
-                token._.section_header = header
-                token._.section_parent = parent
+                token._.section = section_tuple
 
         # If it is specified to add assertion attributes,
         # iterate through the entities in doc and add them

@@ -104,23 +104,45 @@ def any_context_attribute(span):
     return any(span._.context_attributes.values())
 
 def get_section_titles(doc):
-    return [section.title for section in doc._.sections]
+    return [section.section_title for section in doc._.sections]
 
 def get_section_headers(doc):
-    return [section.header for section in doc._.sections]
+    return [section.section_header for section in doc._.sections]
 
 def get_section_parents(doc):
-    return [section.parent for section in doc._.sections]
+    return [section.section_parent for section in doc._.sections]
 
 def get_section_spans(doc):
-    return [section.span for section in doc._.sections]
+    return [section.section_span for section in doc._.sections]
+
+def get_section_span_token(token):
+    if token._.section is None:
+        return None
+    return token._.section.section_span
+
+def get_section_title_token(token):
+    if token._.section is None:
+        return None
+    return token._.section.section_title
+
+def get_section_header_token(token):
+    if token._.section is None:
+        return None
+    return token._.section.section_header
+
+def get_section_parent_token(token):
+    if token._.section is None:
+        return None
+    return token._.section.section_parent
+
 
 _token_extensions = {
    "window": {"method": get_window_token},
-   "section_span": {"default": None},
-   "section_title": {"default": None},
-   "section_header": {"default": None},
-   "section_parent": {"default": None},
+    "section": {"default": None},
+   "section_span": {"getter": get_section_span_token},
+   "section_title": {"getter": get_section_title_token},
+   "section_header": {"getter": get_section_header_token},
+   "section_parent": {"getter": get_section_parent_token},
 }
 
 _context_attributes = {
@@ -136,17 +158,18 @@ _span_extensions = {
     "window": {"method": get_window_span},
     "context_attributes": {"getter": get_context_attributes},
     "any_context_attributes": {"getter": any_context_attribute},
+    "section": {"getter":lambda x: x[0]._.section},
     "section_span": {"getter":lambda x: x[0]._.section_span},
     "section_title": {"getter":lambda x: x[0]._.section_title},
     "section_header": {"getter":lambda x: x[0]._.section_header},
     "section_parent": {"getter":lambda x: x[0]._.section_parent},
     "contains": {"method": span_contains},
+    "target_rule": {"default": None},
     **_context_attributes
 
 }
 
 _doc_extensions = {
-    "window": {"method": get_window_span},
     "sections": {"default": list()},
     "section_titles": {"getter": get_section_titles},
     "section_headers": {"getter": get_section_headers},

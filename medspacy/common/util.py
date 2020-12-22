@@ -1,7 +1,7 @@
 """Module for utility functions contained by multiple components of medspaCy."""
 import re
 
-def span_contains(span, target, regex=True):
+def span_contains(span, target, regex=True, case_insensitive=True):
     """Return True if a Span object contains a target phrase.
     Case insensitive.
     span: A spaCy Span, such as an entity in doc.ents
@@ -10,9 +10,15 @@ def span_contains(span, target, regex=True):
         a literal string. Default True.
     """
     if regex is True:
-        func = lambda x: re.search(x, span.lower_, re.IGNORECASE) is not None
+        if case_insensitive:
+            func = lambda x: re.search(x, span.text, flags=re.IGNORECASE) is not None
+        else:
+            func = lambda x: re.search(x, span.text) is not None
     else:
-        func = lambda x: x.lower() in span.lower_
+        if case_insensitive:
+            func = lambda x: x.lower() in span.lower_
+        else:
+            func = lambda x: x in span.text
 
     if isinstance(target, str):
         return func(target)

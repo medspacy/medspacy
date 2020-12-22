@@ -5,10 +5,6 @@ from spacy.tokens import Span
 from .target_rule import TargetRule
 from ..common.medspacy_matcher import MedspacyMatcher
 
-Token.set_extension("ignore", default=False, force=True)
-Span.set_extension("target_attributes", default=None, force=True)
-Span.set_extension("target_rule", default=None, force=True)
-Span.set_extension("target_rule", default=None, force=True)
 
 
 class TargetMatcher:
@@ -75,7 +71,6 @@ class TargetMatcher:
                         setattr(span._, attribute, value)
                     except AttributeError as e:
                         raise e
-                span._.target_attributes = rule.attributes
             spans.append(span)
         if self.add_ents is True:
             for span in spans:

@@ -1,13 +1,16 @@
 from spacy.tokens import Doc, Token, Span
-from spacy.matcher import Matcher, PhraseMatcher
 
 # Filepath to default rules which are included in package
 from os import path
 from pathlib import Path
+from collections import namedtuple
 import re
 import warnings
 
 from . import util
+from .section_rule import SectionRule
+from ..common.medspacy_matcher import MedspacyMatcher
+from ..common.base_rule import BaseRule
 
 Doc.set_extension("sections", default=list(), force=True)
 Doc.set_extension("section_titles", getter=util.get_section_titles, force=True)
@@ -27,7 +30,7 @@ Span.set_extension("section_title", getter=lambda x: x[0]._.section_title, force
 Span.set_extension("section_header", getter=lambda x: x[0]._.section_header, force=True)
 Span.set_extension("section_parent", getter=lambda x: x[0]._.section_parent, force=True)
 
-DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.jsonl",)
+DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
 
 DEFAULT_ATTRS = {
     "past_medical_history": {"is_historical": True},
@@ -37,7 +40,6 @@ DEFAULT_ATTRS = {
     "education": {"is_hypothetical": True},
     "allergy": {"is_hypothetical": True},
 }
-from collections import namedtuple
 
 Section = namedtuple("Section", field_names=["section_title", "section_header", "section_parent", "section_span"])
 
@@ -51,6 +53,7 @@ class Sectionizer:
         patterns="default",
         add_attrs=False,
         max_scope=None,
+        include_title=False,
         phrase_matcher_attr="LOWER",
         require_start_line=False,
         require_end_line=False,
@@ -93,6 +96,7 @@ class Sectionizer:
                 which can be included in a section. This can be useful if you think your section patterns are incomplete
                 and want to prevent sections from running too long in the note. Default is None, meaning that the scope
                 of a section will be until either the next section header or the end of the document.
+            include_title (bool): whether the section title is included in the section text
             phrase_matcher_attr (str): The name of the token attribute which will be used by the PhraseMatcher
                 for any patterns with a "pattern" value of a string.
             require_start_line (bool): Optionally require a section header to start on a new line. Default False.
@@ -102,17 +106,15 @@ class Sectionizer:
         """
         self.nlp = nlp
         self.add_attrs = add_attrs
-        self.matcher = Matcher(nlp.vocab)
+        self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
         self.max_scope = max_scope
-        self.phrase_matcher = PhraseMatcher(nlp.vocab, attr=phrase_matcher_attr)
         self.require_start_line = require_start_line
         self.require_end_line = require_end_line
         self.newline_pattern = re.compile(newline_pattern)
         self.assertion_attributes_mapping = None
-        self._patterns = []
-        self._section_titles = set()
         self._parent_sections = {}
         self._parent_required = {}
+        self._rule_item_mapping = self.matcher._rule_item_mapping
 
         if patterns is not None:
             if patterns == "default":
@@ -124,15 +126,13 @@ class Sectionizer:
                         "add patterns manually or add a jsonl file to the following location: ",
                         DEFAULT_RULES_FILEPATH,
                     )
-                self.add(self.load_patterns_from_jsonl(DEFAULT_RULES_FILEPATH))
+                self.add(SectionRule.from_json(DEFAULT_RULES_FILEPATH))
             # If a list, add each of the patterns in the list
             elif isinstance(patterns, list):
                 self.add(patterns)
             elif isinstance(patterns, str):
-                import os
-
-                assert os.path.exists(patterns)
-                self.add(self.load_patterns_from_jsonl(patterns))
+                path.exists(patterns)
+                self.add(SectionRule.from_json(patterns))
 
         if add_attrs is False:
             self.add_attrs = False
@@ -152,28 +152,6 @@ class Sectionizer:
 
         else:
             raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
-
-    @property
-    def patterns(self):
-        return self._patterns
-
-    @property
-    def section_titles(self):
-        return self._section_titles
-
-    @classmethod
-    def load_patterns_from_jsonl(self, filepath):
-
-        import json
-
-        patterns = []
-        with open(filepath) as f:
-            for line in f:
-                if line.startswith("//"):
-                    continue
-                patterns.append(json.loads(line))
-
-        return patterns
 
     def register_default_attributes(self):
         """Register the default values for the Span attributes defined in DEFAULT_ATTRS."""
@@ -208,29 +186,15 @@ class Sectionizer:
            ]
        >>> clinical_sectionizer.add(patterns)
        """
-        for pattern_dict in patterns:
-            name = pattern_dict["section_title"]
-            pattern = pattern_dict["pattern"]
-            parents = []
-            parent_required = False
-            if "parents" in pattern_dict.keys():
-                parents = pattern_dict["parents"]
+        if not isinstance(patterns, list):
+            patterns = [patterns]
 
-            if "parent_required" in pattern_dict.keys():
-                if not parents:
-                    raise ValueError(
-                        "Jsonl file incorrectly formatted for pattern name {0}. If parents are required, then at least one parent must be specified.".format(
-                            name
-                        )
-                    )
-                parent_required = pattern_dict["parent_required"]
+        self.matcher.add(patterns)
 
-            if isinstance(pattern, str):
-                self.phrase_matcher.add(name, None, self.nlp.make_doc(pattern))
-            else:
-                self.matcher.add(name, [pattern])
-            self._patterns.append(pattern_dict)
-            self._section_titles.add(name)
+        for pattern in patterns:
+            name = pattern.category
+            parents = pattern.parents
+            parent_required = pattern.parent_required
 
             if name in self._parent_sections.keys() and parents != []:
                 warnings.warn(
@@ -265,7 +229,7 @@ class Sectionizer:
         sections_final = []
         removed_sections = 0
         for i, (match_id, start, end) in enumerate(sections):
-            name = self.nlp.vocab.strings[match_id]
+            name = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
             required = self._parent_required[name]
             i_a = i - removed_sections  # adjusted index for removed values
             if required and i_a == 0:
@@ -333,27 +297,30 @@ class Sectionizer:
 
     def __call__(self, doc):
         matches = self.matcher(doc)
-        matches += self.phrase_matcher(doc)
         if self.require_start_line:
             matches = self.filter_start_lines(doc, matches)
         if self.require_end_line:
             matches = self.filter_end_lines(doc, matches)
-        matches = prune_overlapping_matches(matches)
         matches = self.set_parent_sections(matches)
+
         # If this has already been processed by the sectionizer, reset the sections
         doc._.sections = []
+        # if there were no matches, return the doc as one section
         if len(matches) == 0:
             doc._.sections.append((None, None, None, doc[0:]))
             return doc
 
-        first_match = matches[0]
         section_spans = []
+        # if the firt match does not begin at token 0, handle the first section
+        first_match = matches[0]
         if first_match[1] != 0:
             section_spans.append(Section(None, None, None, doc[0 : first_match[1]]))
+
+        # handle section spans
         for i, match in enumerate(matches):
             (match_id, start, end, parent) = match
             section_header = doc[start:end]
-            name = self.nlp.vocab.strings[match_id]
+            name = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
             # If this is the last match, it should include the rest of the doc
             if i == len(matches) - 1:
                 if self.max_scope is None:
@@ -400,67 +367,3 @@ class Sectionizer:
     def filter_end_lines(self, doc, matches):
         "Filter a list of matches to only contain spans where the start token is followed by a new line."
         return [m for m in matches if util.is_end_line(m[2] - 1, doc, self.newline_pattern)]
-
-
-def prune_overlapping_matches(matches, strategy="longest"):
-    if strategy != "longest":
-        raise NotImplementedError()
-
-    # Make a copy and sort
-    unpruned = sorted(matches, key=lambda x: (x[1], x[2]))
-    pruned = []
-    num_matches = len(matches)
-    if num_matches == 0:
-        return matches
-    curr_match = unpruned.pop(0)
-
-    while True:
-        if len(unpruned) == 0:
-            pruned.append(curr_match)
-            break
-        next_match = unpruned.pop(0)
-
-        # Check if they overlap
-        if overlaps(curr_match, next_match):
-            # Choose the larger span
-            longer_span = max(curr_match, next_match, key=lambda x: (x[2] - x[1]))
-            pruned.append(longer_span)
-            if len(unpruned) == 0:
-                break
-            curr_match = unpruned.pop(0)
-        else:
-            pruned.append(curr_match)
-            curr_match = next_match
-    # Recursive base point
-    if len(pruned) == num_matches:
-        return pruned
-    # Recursive function call
-    else:
-        return prune_overlapping_matches(pruned)
-
-
-def overlaps(a, b):
-    if _span_overlaps(a, b) or _span_overlaps(b, a):
-        return True
-    return False
-
-
-def _span_overlaps(a, b):
-    _, a_start, a_end = a
-    _, b_start, b_end = b
-    if a_start >= b_start and a_start < b_end:
-        return True
-    if a_end > b_start and a_end <= b_end:
-        return True
-    return False
-
-
-def matches_to_spans(doc, matches, set_label=True):
-    spans = []
-    for (rule_id, start, end) in matches:
-        if set_label:
-            label = doc.vocab.strings[rule_id]
-        else:
-            label = None
-        spans.append(Span(doc, start=start, end=end, label=label))
-    return spans

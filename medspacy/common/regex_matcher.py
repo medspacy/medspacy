@@ -1,10 +1,10 @@
 import re
 import warnings
 
-warnings.filterwarnings('once', "You are using a TargetRule with a regex pattern.*")
+warnings.filterwarnings("once", "You are using a TargetRule with a regex pattern.*")
+
 
 class RegexMatcher:
-
     def __init__(self, vocab, flags=re.IGNORECASE, resolve_start="left", resolve_end="right"):
         """Create a new RegexMatcher. The RegexMatcher is an alternative to spaCy's native
         Matcher and PhraseMatcher classes and allows matching based on typical regular expressions
@@ -62,7 +62,8 @@ class RegexMatcher:
             "natively supported in spacy and may lead to unexpected match spans. "
             "Consider using a list of dicts pattern instead. "
             "See https://spacy.io/usage/rule-based-matching",
-            RuntimeWarning)
+            RuntimeWarning,
+        )
         if match_id not in self.vocab:
             self.vocab.strings.add(match_id)
         self._patterns.setdefault(self.vocab.strings[match_id], [])
@@ -87,7 +88,7 @@ class RegexMatcher:
                             end_index = len(doc)
                         else:
                             end_index = end.i
-                        span = doc[start.i:end_index]
+                        span = doc[start.i : end_index]
                     # If it's an empty span, then that means that the token resolution
                     # must have resulted in no tokens being included.
                     # Don't add the match
@@ -107,8 +108,7 @@ def get_token_for_char(doc, char_idx, resolve="left"):
     if char_idx < 0:
         return ValueError("char_idx must be > 0")
     if char_idx > len(doc.text_with_ws) - 1:
-        return ValueError(
-            "char_idx {0} is out of range for text with length {1}".format(char_idx, len(doc.text_with_ws)))
+        return ValueError("char_idx {0} is out of range for text with length {1}".format(char_idx, len(doc.text_with_ws)))
     for i, token in enumerate(doc):
         if char_idx > token.idx:
             continue

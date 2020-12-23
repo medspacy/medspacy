@@ -1,8 +1,9 @@
 from spacy.matcher import Matcher, PhraseMatcher
-from ..target_matcher.regex_matcher import RegexMatcher
+from .regex_matcher import RegexMatcher
 from .base_rule import BaseRule
 
 from spacy.tokens import Span
+
 
 class MedspacyMatcher:
     """MedspacyMatcher is a class which combines spaCy's Matcher and PhraseMatcher classes
@@ -34,7 +35,6 @@ class MedspacyMatcher:
         self.phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=phrase_matcher_attr)
         self.regex_matcher = RegexMatcher(self.nlp.vocab)
 
-
     def add(self, rules):
         """Add a list of rules to the matcher. Rules must inherit from medspacy.common.BaseRule,
         such as medspacy.target_matcher.TargetRule or medspacy.context.ConTextRule."""
@@ -43,8 +43,9 @@ class MedspacyMatcher:
 
         for rule in rules:
             if not isinstance(rule, BaseRule):
-                raise ValueError("Rules must inherit from medspacy.common.BaseRule, "
-                                 "such as medspacy.target_matcher.TargetRule.")
+                raise ValueError(
+                    "Rules must inherit from medspacy.common.BaseRule, " "such as medspacy.target_matcher.TargetRule."
+                )
             self.labels.add(rule.category)
             rule_id = f"{rule.category}_{i}"
             rule._rule_id = rule_id
@@ -57,7 +58,9 @@ class MedspacyMatcher:
                 elif isinstance(rule.pattern, list):
                     self.matcher.add(rule_id, [rule.pattern], on_match=rule.on_match)
                 else:
-                    raise ValueError("The pattern argument must be either a string or a list, not {0}".format(type(rule.pattern)))
+                    raise ValueError(
+                        "The pattern argument must be either a string or a list, not {0}".format(type(rule.pattern))
+                    )
             else:
                 self.phrase_matcher.add(rule_id, [self.nlp.make_doc(rule.literal.lower())], on_match=rule.on_match)
             i += 1
@@ -70,6 +73,7 @@ class MedspacyMatcher:
         matches += self.regex_matcher(doc)
         matches = prune_overlapping_matches(matches)
         return matches
+
 
 def prune_overlapping_matches(matches, strategy="longest"):
     if strategy != "longest":
@@ -107,10 +111,12 @@ def prune_overlapping_matches(matches, strategy="longest"):
     else:
         return prune_overlapping_matches(pruned)
 
+
 def overlaps(a, b):
     if _span_overlaps(a, b) or _span_overlaps(b, a):
         return True
     return False
+
 
 def _span_overlaps(a, b):
     _, a_start, a_end = a
@@ -121,6 +127,7 @@ def _span_overlaps(a, b):
         return True
     return False
 
+
 def matches_to_spans(doc, matches, set_label=True):
     spans = []
     for (rule_id, start, end) in matches:
@@ -130,4 +137,3 @@ def matches_to_spans(doc, matches, set_label=True):
             label = None
         spans.append(Span(doc, start=start, end=end, label=label))
     return spans
-

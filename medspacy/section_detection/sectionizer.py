@@ -316,19 +316,19 @@ class Sectionizer:
             # If this is the last match, it should include the rest of the doc
             if i == len(matches) - 1:
                 if self.max_scope is None:
-                    section_list.append(Section(doc, category, start, end, start, len(doc) - 1, parent, rule))
+                    section_list.append(Section(doc, category, start, end, end, len(doc), parent, rule))
                 else:
                     scope_end = min(end + self.max_scope, doc[-1].i)
-                    section_list.append(Section(doc, category, start, end, start, scope_end, parent, rule))
+                    section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
                 _, next_start, _, _ = next_match
                 if self.max_scope is None:
-                    section_list.append(Section(doc, category, start, end, start, next_start, parent, rule))
+                    section_list.append(Section(doc, category, start, end, end, next_start, parent, rule))
                 else:
                     scope_end = min(end + self.max_scope, next_start)
-                    section_list.append(Section(doc, category, start, end, start, scope_end, parent, rule))
+                    section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
 
         for section in section_list:
             doc._.sections.append(section)

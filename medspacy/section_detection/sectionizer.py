@@ -3,32 +3,25 @@ from spacy.tokens import Doc, Token, Span
 # Filepath to default rules which are included in package
 from os import path
 from pathlib import Path
-from collections import namedtuple
 import re
 import warnings
 
 from . import util
 from .section_rule import SectionRule
+from .section import Section
 from ..common.medspacy_matcher import MedspacyMatcher
-from ..common.base_rule import BaseRule
 
 Doc.set_extension("sections", default=list(), force=True)
-Doc.set_extension("section_titles", getter=util.get_section_titles, force=True)
-Doc.set_extension("section_headers", getter=util.get_section_headers, force=True)
-Doc.set_extension("section_spans", getter=util.get_section_spans, force=True)
+Doc.set_extension("section_categories", getter=util.get_section_categories, force=True)
+Doc.set_extension("section_titles", getter=util.get_section_title_spans, force=True)
+Doc.set_extension("section_bodies", getter=util.get_section_body_spans, force=True)
 Doc.set_extension("section_parents", getter=util.get_section_parents, force=True)
 
-Token.set_extension("section_span", default=None, force=True)
-Token.set_extension("section_title", default=None, force=True)
-Token.set_extension("section_header", default=None, force=True)
-Token.set_extension("section_parent", default=None, force=True)
+Token.set_extension("section", default=None, force=True)
 
 # Set span attributes to the attribute of the first token
 # in case there is some overlap between a span and a new section header
-Span.set_extension("section_span", getter=lambda x: x[0]._.section_span, force=True)
-Span.set_extension("section_title", getter=lambda x: x[0]._.section_title, force=True)
-Span.set_extension("section_header", getter=lambda x: x[0]._.section_header, force=True)
-Span.set_extension("section_parent", getter=lambda x: x[0]._.section_parent, force=True)
+Span.set_extension("section", getter=lambda x: x[0]._.section_category, force=True)
 
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
 
@@ -41,8 +34,6 @@ DEFAULT_ATTRS = {
     "allergy": {"is_hypothetical": True},
 }
 
-Section = namedtuple("Section", field_names=["section_title", "section_header", "section_parent", "section_span"])
-
 
 class Sectionizer:
     name = "sectionizer"
@@ -53,7 +44,7 @@ class Sectionizer:
         patterns="default",
         add_attrs=False,
         max_scope=None,
-        include_title=False,
+        include_header=False,
         phrase_matcher_attr="LOWER",
         require_start_line=False,
         require_end_line=False,
@@ -76,7 +67,7 @@ class Sectionizer:
                 - section_parent
                 - section_span.
             A Doc will also have attributes corresponding to lists of each
-                (ie., Doc._.section_titles, Doc._.section_headers, Doc._.section_parents, Doc._.section_spans)
+                (ie., Doc._.section_titles, Doc._.section_headers, Doc._.section_parents, Doc._.section_list)
             (Span|Token)._.section_title
             (Span|Token)._.section_header
             (Span|Token)._.section_parent
@@ -115,6 +106,7 @@ class Sectionizer:
         self._parent_sections = {}
         self._parent_required = {}
         self._rule_item_mapping = self.matcher._rule_item_mapping
+        self.include_header = include_header
 
         if patterns is not None:
             if patterns == "default":
@@ -310,49 +302,38 @@ class Sectionizer:
             doc._.sections.append((None, None, None, doc[0:]))
             return doc
 
-        section_spans = []
+        section_list = []
         # if the firt match does not begin at token 0, handle the first section
         first_match = matches[0]
         if first_match[1] != 0:
-            section_spans.append(Section(None, None, None, doc[0 : first_match[1]]))
+            section_list.append(Section(doc, None, 0, 0, 0, first_match[1], None, None))
 
         # handle section spans
         for i, match in enumerate(matches):
             (match_id, start, end, parent) = match
-            section_header = doc[start:end]
-            name = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
+            rule = self._rule_item_mapping[self.nlp.vocab.strings[match_id]]
+            category = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
             # If this is the last match, it should include the rest of the doc
             if i == len(matches) - 1:
                 if self.max_scope is None:
-                    section_spans.append(Section(name, section_header, parent, doc[start:]))
+                    section_list.append(Section(doc, category, start, end, start, len(doc) - 1, parent, rule))
                 else:
                     scope_end = min(end + self.max_scope, doc[-1].i)
-                    section_spans.append(Section(name, section_header, parent, doc[start:scope_end]))
+                    section_list.append(Section(doc, category, start, end, start, scope_end, parent, rule))
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
                 _, next_start, _, _ = next_match
                 if self.max_scope is None:
-                    section_spans.append(Section(name, section_header, parent, doc[start:next_start]))
+                    section_list.append(Section(doc, category, start, end, start, next_start, parent, rule))
                 else:
                     scope_end = min(end + self.max_scope, next_start)
-                    section_spans.append(Section(name, section_header, parent, doc[start:scope_end]))
+                    section_list.append(Section(doc, category, start, end, start, scope_end, parent, rule))
 
-        # section_spans_with_parent = self.set_parent_sections(section_spans)
-
-        # if there are no sections after required rules remove them, add one section over the entire document and exit
-        # if len(section_spans_with_parent) == 0:
-        #     doc._.sections.append((None, None, None, doc[0:]))
-        #     return doc
-
-        for section_tuple in section_spans:
-            name, header, parent, section = section_tuple
-            doc._.sections.append(section_tuple)
-            for token in section:
-                token._.section_span = section
-                token._.section_title = name
-                token._.section_header = header
-                token._.section_parent = parent
+        for section in section_list:
+            doc._.sections.append(section)
+            for token in section.section_span:
+                token._.section = section
 
         # If it is specified to add assertion attributes,
         # iterate through the entities in doc and add them

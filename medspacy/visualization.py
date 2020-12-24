@@ -50,14 +50,14 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
                 ents_data.append((ent_data, "modifier"))
                 visualized_modifiers.add(modifier)
     if sections:
-        for section_tup in doc._.sections:
-            title, header = section_tup[:2]
-            if title is None:
+        for section in doc._.sections:
+            category = section.category
+            if category is None:
                 continue
             ent_data = {
-                "start": header.start_char,
-                "end": header.end_char,
-                "label": f"<< {title.upper()} >>",
+                "start": section.title_span.start_char,
+                "end": section.title_span.end_char,
+                "label": f"<< {category.upper()} >>",
             }
             ents_data.append((ent_data, "section"))
     if len(ents_data) == 0:  # No data to display
@@ -85,9 +85,7 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
         options = {
             "colors": colors,
         }
-    return displacy.render(
-        viz_data, style="ent", manual=True, options=options, jupyter=jupyter
-    )
+    return displacy.render(viz_data, style="ent", manual=True, options=options, jupyter=jupyter)
 
 
 def _create_color_mapping(labels):
@@ -133,9 +131,7 @@ def visualize_dep(doc, jupyter=True):
 
     # Merge phrases
     targets_and_modifiers = [*doc._.context_graph.targets]
-    targets_and_modifiers += [
-        mod.span for mod in doc._.context_graph.modifiers
-    ]
+    targets_and_modifiers += [mod.span for mod in doc._.context_graph.modifiers]
     for span in targets_and_modifiers:
         first_token = span[0]
         data = token_data_mapping[first_token]
@@ -173,7 +169,6 @@ def visualize_dep(doc, jupyter=True):
 
 
 class MedspaCyVisualizerWidget:
-
     def __init__(self, docs):
 
         """Create an IPython Widget Box displaying medspaCy's visualizers.
@@ -197,18 +192,15 @@ class MedspaCyVisualizerWidget:
             min=0,
             max=len(docs) - 1,
             step=1,
-            description='Doc:',
+            description="Doc:",
             disabled=False,
             continuous_update=False,
-            orientation='horizontal',
+            orientation="horizontal",
             readout=True,
-            readout_format='d'
+            readout_format="d",
         )
         self.radio = widgets.RadioButtons(options=["Ent", "Dep", "Both"])
-        self.layout = widgets.Layout(display='flex',
-                                     flex_flow='column',
-                                     align_items='stretch',
-                                     width='100%')
+        self.layout = widgets.Layout(display="flex", flex_flow="column", align_items="stretch", width="100%")
         self.radio.observe(self._change_handler)
         self.slider.observe(self._change_handler)
         self.next_button = widgets.Button(description="Next")
@@ -217,10 +209,7 @@ class MedspaCyVisualizerWidget:
         self.previous_button.on_click(self._on_click_prev)
         self.output = widgets.Output()
         self.box = widgets.Box(
-            [widgets.HBox([self.radio, self.previous_button,self.next_button]),
-             self.slider,
-             self.output],
-            layout=self.layout
+            [widgets.HBox([self.radio, self.previous_button, self.next_button]), self.slider, self.output], layout=self.layout
         )
 
         self.display()
@@ -230,6 +219,7 @@ class MedspaCyVisualizerWidget:
     def display(self):
         """Display the Box widget in the current IPython cell."""
         from IPython.display import display as ipydisplay
+
         ipydisplay(self.box)
 
     def _change_handler(self, change):
@@ -257,6 +247,3 @@ class MedspaCyVisualizerWidget:
         "Replace the list of docs to be visualized."
         self.docs = docs
         self._visualize_doc(self.docs[0])
-
-
-

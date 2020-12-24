@@ -12,6 +12,7 @@ from .section import Section
 from ..common.medspacy_matcher import MedspacyMatcher
 
 Doc.set_extension("sections", default=list(), force=True)
+Doc.set_extension("section_spans", getter=util.get_section_spans, force=True)
 Doc.set_extension("section_categories", getter=util.get_section_categories, force=True)
 Doc.set_extension("section_titles", getter=util.get_section_title_spans, force=True)
 Doc.set_extension("section_bodies", getter=util.get_section_body_spans, force=True)
@@ -21,7 +22,7 @@ Token.set_extension("section", default=None, force=True)
 
 # Set span attributes to the attribute of the first token
 # in case there is some overlap between a span and a new section header
-Span.set_extension("section", getter=lambda x: x[0]._.section_category, force=True)
+Span.set_extension("section", getter=lambda x: x[0]._.section, force=True)
 
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
 
@@ -235,12 +236,17 @@ class Sectionizer:
                 for parent in parents:
                     # go backwards through the section "tree" until you hit a root or the start of the list
                     candidate = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[i_a - 1][0]]].category
-                    candidates_parent = sections_final[i_a - 1][3]
+                    candidates_parent_idx = sections_final[i_a - 1][3]
+                    if candidates_parent_idx is not None:
+                        candidates_parent = self._rule_item_mapping[
+                            self.nlp.vocab.strings[sections_final[candidates_parent_idx][0]]
+                        ].category
+                    else:
+                        candidates_parent = None
                     candidate_i = i_a - 1
                     while candidate:
                         if candidate == parent:
-                            # identified_parent = parent
-                            identified_parent = i_a - 1
+                            identified_parent = candidate_i
                             candidate = None
                         else:
                             # if you are at the end of the list... no parent
@@ -252,8 +258,14 @@ class Sectionizer:
                                 candidate = None
                                 continue
                             # otherwise get the previous item in the list
-                            temp = self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]
-                            temp_parent = sections_final[candidate_i - 1][3]
+                            temp = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]].category
+                            temp_parent_idx = sections_final[candidate_i - 1][3]
+                            if temp_parent_idx is not None:
+                                temp_parent = self._rule_item_mapping[
+                                    self.nlp.vocab.strings[sections_final[temp_parent_idx][0]]
+                                ].category
+                            else:
+                                temp_parent = None
                             # if the previous item is the parent of the current item
                             # OR if the previous item is a sibling of the current item
                             # continue to search
@@ -283,8 +295,8 @@ class Sectionizer:
 
         """
         for ent in ents:
-            if ent._.section_title in self.assertion_attributes_mapping:
-                attr_dict = self.assertion_attributes_mapping[ent._.section_title]
+            if ent._.section.category in self.assertion_attributes_mapping:
+                attr_dict = self.assertion_attributes_mapping[ent._.section.category]
                 for (attr_name, attr_value) in attr_dict.items():
                     setattr(ent._, attr_name, attr_value)
 

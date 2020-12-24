@@ -1,4 +1,4 @@
-class Section:
+class Section(object):
     def __init__(self, doc, category, title_start, title_end, body_start, body_end, parent=None, rule=None):
         self.doc = doc
         self.category = category
@@ -8,6 +8,9 @@ class Section:
         self.body_end = body_end
         self.parent = parent
         self.rule = rule
+
+    def __repr__(self):
+        return f"""Section(category={self.category}, title={self.title_span}, body={self.body_span}, parent={self.parent}, rule={self.rule})"""
 
     @property
     def title_span(self):

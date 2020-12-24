@@ -234,12 +234,13 @@ class Sectionizer:
                 identified_parent = None
                 for parent in parents:
                     # go backwards through the section "tree" until you hit a root or the start of the list
-                    candidate = self.nlp.vocab.strings[sections_final[i_a - 1][0]]
+                    candidate = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[i_a - 1][0]]].category
                     candidates_parent = sections_final[i_a - 1][3]
                     candidate_i = i_a - 1
                     while candidate:
                         if candidate == parent:
-                            identified_parent = parent
+                            # identified_parent = parent
+                            identified_parent = i_a - 1
                             candidate = None
                         else:
                             # if you are at the end of the list... no parent
@@ -299,18 +300,22 @@ class Sectionizer:
         doc._.sections = []
         # if there were no matches, return the doc as one section
         if len(matches) == 0:
-            doc._.sections.append((None, None, None, doc[0:]))
+            doc._.sections.append(Section(doc, None, 0, 0, 0, len(doc)))
             return doc
 
         section_list = []
         # if the firt match does not begin at token 0, handle the first section
         first_match = matches[0]
         if first_match[1] != 0:
-            section_list.append(Section(doc, None, 0, 0, 0, first_match[1], None, None))
+            section_list.append(Section(doc, None, 0, 0, 0, first_match[1]))
 
         # handle section spans
         for i, match in enumerate(matches):
-            (match_id, start, end, parent) = match
+            (match_id, start, end, parent_idx) = match
+            if parent_idx is not None:
+                parent = section_list[parent_idx]
+            else:
+                parent = None
             rule = self._rule_item_mapping[self.nlp.vocab.strings[match_id]]
             category = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
             # If this is the last match, it should include the rest of the doc

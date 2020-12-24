@@ -91,15 +91,16 @@ class ConTextModifier:
         """
         # If ConText is set to use defined windows, do that instead of sentence splitting
         if self._use_context_window:
-            # Up to the beginning of the doc
-            full_scope_start = max(
-                (0, self.start - self.rule.max_scope)
-            )
-            # Up to the end of the doc
-            full_scope_end = min(
-                (len(self.span.doc), self.end + self.rule.max_scope)
-            )
-            full_scope_span = self.span.doc[full_scope_start:full_scope_end]
+            full_scope_span = self.span._.window(n=self.rule.max_scope)
+            # # Up to the beginning of the doc
+            # full_scope_start = max(
+            #     (0, self.start - self.rule.max_scope)
+            # )
+            # # Up to the end of the doc
+            # full_scope_end = min(
+            #     (len(self.span.doc), self.end + self.rule.max_scope)
+            # )
+            # full_scope_span = self.span.doc[full_scope_start:full_scope_end]
         # Otherwise, use the sentence
         else:
             full_scope_span = self.doc[self.start].sent

@@ -11,19 +11,6 @@ from .section_rule import SectionRule
 from .section import Section
 from ..common.medspacy_matcher import MedspacyMatcher
 
-Doc.set_extension("sections", default=list(), force=True)
-Doc.set_extension("section_spans", getter=util.get_section_spans, force=True)
-Doc.set_extension("section_categories", getter=util.get_section_categories, force=True)
-Doc.set_extension("section_titles", getter=util.get_section_title_spans, force=True)
-Doc.set_extension("section_bodies", getter=util.get_section_body_spans, force=True)
-Doc.set_extension("section_parents", getter=util.get_section_parents, force=True)
-
-Token.set_extension("section", default=None, force=True)
-
-# Set span attributes to the attribute of the first token
-# in case there is some overlap between a span and a new section header
-Span.set_extension("section", getter=lambda x: x[0]._.section, force=True)
-
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
 
 DEFAULT_ATTRS = {
@@ -351,6 +338,7 @@ class Sectionizer:
             doc._.sections.append(section)
             for token in section.section_span:
                 token._.section = section
+
 
         # If it is specified to add assertion attributes,
         # iterate through the entities in doc and add them

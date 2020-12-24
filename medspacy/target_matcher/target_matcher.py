@@ -15,6 +15,7 @@ class TargetMatcher:
     """TargetMatcher is a component for advanced direction-based text extraction.
     Rules are defined using medspacy.target_matcher.TargetRule.
     """
+
     name = "target_matcher"
 
     def __init__(self, nlp, add_ents=True, phrase_matcher_attr="LOWER"):
@@ -49,7 +50,6 @@ class TargetMatcher:
     @property
     def rules(self):
         return self._rules
-
 
     def __call__(self, doc):
         """Call TargetMatcher on a doc. If `add_ents=True`, then matched
@@ -90,4 +90,3 @@ class TargetMatcher:
             return doc
         else:
             return spans
-

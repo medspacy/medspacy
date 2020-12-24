@@ -11,7 +11,7 @@ from .context_modifier import ConTextModifier
 from .context_graph import ConTextGraph
 from .context_rule import ConTextRule
 
-from ..target_matcher.regex_matcher import RegexMatcher
+from ..common.regex_matcher import RegexMatcher
 from ..common.medspacy_matcher import MedspacyMatcher
 
 #
@@ -23,9 +23,7 @@ DEFAULT_ATTRS = {
     "FAMILY": {"is_family": True},
 }
 
-DEFAULT_RULES_FILEPATH = path.join(
-    Path(__file__).resolve().parents[2], "resources", "context_rules.json"
-)
+DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "context_rules.json")
 
 
 class ConTextComponent:
@@ -142,7 +140,6 @@ class ConTextComponent:
         self._i = 0
         self._categories = set()
 
-
         self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
         # _modifier_rule_mapping: A mapping from spaCy Matcher match_ids to ConTextRule
         # This allows us to use spaCy Matchers while still linking back to the ConTextRule
@@ -167,35 +164,21 @@ class ConTextComponent:
                 attr_dict = add_attrs[modifier]
                 for attr_name, attr_value in attr_dict.items():
                     if not Span.has_extension(attr_name):
-                        raise ValueError(
-                            "Custom extension {0} has not been set. Call Span.set_extension.".format(
-                                attr_name
-                            )
-                        )
+                        raise ValueError("Custom extension {0} has not been set. Call Span.set_extension.".format(attr_name))
 
             self.add_attrs = True
             self.context_attributes_mapping = add_attrs
 
         else:
-            raise ValueError(
-                "add_attrs must be either True (default), False, or a dictionary, not {0}".format(
-                    add_attrs
-                )
-            )
+            raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
         if use_context_window is True:
             if not isinstance(max_scope, int) or max_scope < 1:
                 raise ValueError(
-                    "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, "
-                    "not {0}".format(max_scope)
+                    "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, " "not {0}".format(max_scope)
                 )
         self.use_context_window = use_context_window
-        if max_scope is not None and (
-            not isinstance(max_scope, int) or max_scope < 1
-        ):
-            raise ValueError(
-                "'max_scope' must be None or an integer greater 1, "
-                "not {0}".format(max_scope)
-            )
+        if max_scope is not None and (not isinstance(max_scope, int) or max_scope < 1):
+            raise ValueError("'max_scope' must be None or an integer greater 1, " "not {0}".format(max_scope))
         self.max_scope = max_scope
 
         self.allowed_types = allowed_types
@@ -219,18 +202,12 @@ class ConTextComponent:
                     try:
                         rule_list = ConTextRule.from_yaml(rule_list)
                     except:
-                        raise ValueError(
-                            "direction list {0} could not be read".format(rule_list)
-                        )
+                        raise ValueError("direction list {0} could not be read".format(rule_list))
                 elif path.exists(rule_list):
                     rules = ConTextRule.from_json(rule_list)
                     self.add(rules)
                 else:
-                    raise ValueError(
-                        "rule_list must be a valid path. Currently is: {0}".format(
-                            rule_list
-                        )
-                    )
+                    raise ValueError("rule_list must be a valid path. Currently is: {0}".format(rule_list))
 
             elif isinstance(rule_list, list):
                 # otherwise it is a list of contextrules
@@ -240,17 +217,13 @@ class ConTextComponent:
                     # check that all rules are contextrules
                     if not isinstance(rule, ConTextRule):
                         raise ValueError(
-                            "rule_list must contain only ContextItems. Currently contains: {0}".format(
-                                type(rule)
-                            )
+                            "rule_list must contain only ContextItems. Currently contains: {0}".format(type(rule))
                         )
                 self.add(rule_list)
 
             else:
                 raise ValueError(
-                    "rule_list must be a valid path or list of ContextItems. Currenty is: {0}".format(
-                        type(rule_list)
-                    )
+                    "rule_list must be a valid path or list of ContextItems. Currenty is: {0}".format(type(rule_list))
                 )
 
         elif not rules:
@@ -260,9 +233,7 @@ class ConTextComponent:
 
         else:
             # loading from json path or list is possible later
-            raise ValueError(
-                "rules must either be 'default' (default), 'other' or None."
-            )
+            raise ValueError("rules must either be 'default' (default), 'other' or None.")
 
     @property
     def rules(self):
@@ -302,9 +273,7 @@ class ConTextComponent:
                 value = getattr(self, attr)
                 if value is None:  # No global value set
                     continue
-                if (
-                    getattr(rule, attr) is None
-                ):  # If the direction itself has it defined, don't override
+                if getattr(rule, attr) is None:  # If the direction itself has it defined, don't override
                     setattr(rule, attr, value)
 
             # Check custom termination points
@@ -370,9 +339,7 @@ class ConTextComponent:
 
         # Store data in ConTextGraph object
         # TODO: move some of this over to ConTextGraph
-        context_graph = ConTextGraph(
-            remove_overlapping_modifiers=self.remove_overlapping_modifiers
-        )
+        context_graph = ConTextGraph(remove_overlapping_modifiers=self.remove_overlapping_modifiers)
 
         context_graph.targets = targets
 
@@ -382,9 +349,7 @@ class ConTextComponent:
         for (match_id, start, end) in matches:
             # Get the ConTextRule object defining this modifier
             rules = self._modifier_rule_mapping[self.nlp.vocab[match_id].text]
-            modifier = ConTextModifier(
-                rules, start, end, doc, self.use_context_window
-            )
+            modifier = ConTextModifier(rules, start, end, doc, self.use_context_window)
             context_graph.modifiers.append(modifier)
 
         if self.prune:

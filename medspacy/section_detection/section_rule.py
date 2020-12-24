@@ -1,17 +1,13 @@
 from ..common.base_rule import BaseRule
 
 
-class TargetRule(BaseRule):
+class SectionRule(BaseRule):
 
-    _ALLOWED_KEYS = {
-        "literal",
-        "pattern",
-        "category",
-        "metadata",
-        "attributes",
-    }
+    _ALLOWED_KEYS = {"literal", "pattern", "category", "metadata", "parents", "parent_required"}
 
-    def __init__(self, literal, category, pattern=None, on_match=None, metadata=None, attributes=None):
+    def __init__(
+        self, literal, category, pattern=None, on_match=None, metadata=None, parents=[], parent_required=False,
+    ):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
             literal (str): The actual string of a concept. If pattern is None,
@@ -31,14 +27,19 @@ class TargetRule(BaseRule):
                 (matcher, doc, i, matches)
                 For more information, see https://spacy.io/usage/rule-based-matching#on_match
             meta (dict or None): Optional dictionary of metadata.
-            attributes (dict or None): Optional custom attribute names to set for a Span matched by the direction.
-                These attribute names are stored under Span._.<attribute_name>.
-                For example, if attributes={'is_historical':True}, then any spans matched by this direction
-                will have span._.is_historical = True
+            parents (list or None): a list of candidate parents for determining subsections
+            parent_required (bool): whether a parent is required for the section to exist in the final output
         """
         super().__init__(literal, category, pattern, on_match, metadata)
-        self.attributes = attributes
-        self._rule_id = None
+        self.parents = parents
+        if parent_required:
+            if not parents:
+                raise ValueError(
+                    "Jsonl file incorrectly formatted for pattern name {0}. If parents are required, then at least one parent must be specified.".format(
+                        category
+                    )
+                )
+        self.parent_required = parent_required
 
     @classmethod
     def from_json(cls, filepath):
@@ -48,29 +49,29 @@ class TargetRule(BaseRule):
             filepath: the .json file containing modifier rules
 
         Returns:
-            context_item: a list of ConTextRule objects
+            section_rules: a list of SectionRule objects
         Raises:
             KeyError: if the dictionary contains any keys other than
-                those accepted by ConTextRule.__init__
+                those accepted by SectionRule.__init__
         """
         import json
 
         with open(filepath) as file:
             target_data = json.load(file)
-        target_rules = []
-        for data in target_data["target_rules"]:
-            target_rules.append(TargetRule.from_dict(data))
-        return target_rules
+        section_rules = []
+        for data in target_data["section_rules"]:
+            section_rules.append(SectionRule.from_dict(data))
+        return section_rules
 
     @classmethod
     def from_dict(cls, rule_dict):
-        """Reads a dictionary into a ConTextRule. Used when reading from a json file.
+        """Reads a dictionary into a SectionRule list. Used when reading from a json file.
 
         Args:
             item_dict: the dictionary to convert
 
         Returns:
-            item: the ConTextRule created from the dictionary
+            item: the SectionRule created from the dictionary
 
         Raises:
             ValueError: if the json is invalid
@@ -80,12 +81,12 @@ class TargetRule(BaseRule):
         if invalid_keys:
             msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
             raise ValueError(msg)
-        rule = TargetRule(**rule_dict)
+        rule = SectionRule(**rule_dict)
         return rule
 
     @classmethod
     def to_json(cls, target_rules, filepath):
-        """Writes ConTextItems to a json file.
+        """Writes SectionRules to a json file.
 
         Args:
             target_rules: a list of TargetRules that will be written to a file.
@@ -109,4 +110,4 @@ class TargetRule(BaseRule):
         return rule_dict
 
     def __repr__(self):
-        return f"""TargetRule(literal="{self.literal}", category="{self.category}", pattern={self.pattern}, attributes={self.attributes}, on_match={self.on_match})"""
+        return f"""SectionRule(literal="{self.literal}", category="{self.category}", pattern={self.pattern}, on_match={self.on_match}, parents={self.parents}, parent_required={self.parent_required})"""

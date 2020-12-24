@@ -10,19 +10,14 @@ class TestTargetMatcher:
     def test_initiate(self):
         assert TargetMatcher(nlp)
 
-
     def test_add(self):
         matcher = TargetMatcher(nlp)
-        matcher.add(
-            [TargetRule("my direction", "RULE")]
-        )
+        matcher.add([TargetRule("my direction", "RULE")])
         assert matcher._rules
 
     def test_basic_rule(self):
         matcher = TargetMatcher(nlp)
-        matcher.add(
-            [TargetRule("PE", "CONDITION")]
-        )
+        matcher.add([TargetRule("PE", "CONDITION")])
         doc = nlp("Past Medical History: PE")
         matcher(doc)
         assert len(doc.ents) == 1
@@ -31,9 +26,7 @@ class TestTargetMatcher:
 
     def test_add_ents_false(self):
         matcher = TargetMatcher(nlp, add_ents=False)
-        matcher.add(
-            [TargetRule("PE", "CONDITION")]
-        )
+        matcher.add([TargetRule("PE", "CONDITION")])
         doc = nlp("Past Medical History: PE")
         spans = matcher(doc)
 
@@ -44,9 +37,7 @@ class TestTargetMatcher:
 
     def test_add_rule_pattern(self):
         matcher = TargetMatcher(nlp)
-        matcher.add(
-            [TargetRule("PE", "CONDITION", pattern=[{"LOWER": "pe"}])]
-        )
+        matcher.add([TargetRule("PE", "CONDITION", pattern=[{"LOWER": "pe"}])])
         doc = nlp("Past Medical History: Pe")
         matcher(doc)
         assert len(doc.ents) == 1
@@ -55,9 +46,7 @@ class TestTargetMatcher:
 
     def test_add_rule_regex(self):
         matcher = TargetMatcher(nlp)
-        matcher.add(
-            [TargetRule("PE", "CONDITION", pattern="pulmonary embolisms?")]
-        )
+        matcher.add([TargetRule("PE", "CONDITION", pattern="pulmonary embolisms?")])
         doc = nlp("Past Medical History: Pulmonary embolism")
         matcher(doc)
         assert len(doc.ents) == 1

@@ -12,23 +12,83 @@ class TestSectionizer:
         assert Sectionizer(nlp)
 
     def test_initiate_no_patterns(self):
-        assert Sectionizer(nlp, patterns=None)
+        assert Sectionizer(nlp, rules=None)
+
+    def test_doc_attributes(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        doc = nlp("Past Medical History: PE")
+        sectionizer(doc)
+
+        assert len(doc._.sections)
+        assert len(doc._.section_categories)
+        assert len(doc._.section_titles)
+        assert len(doc._.section_spans)
+        assert len(doc._.section_bodies)
+
+    def test_section(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        rule = SectionRule(category="past_medical_history", literal="Past Medical History:")
+        sectionizer.add(rule)
+        doc = nlp("Past Medical History: PE")
+        sectionizer(doc)
+
+        section = doc._.sections[0]
+        assert section.category == "past_medical_history"
+        assert section.section_span == doc[0:]
+        assert section.title_span == doc[0:-1]
+        assert section.body_span == doc[-1:]
+        assert section.parent is None
+        assert section.rule is rule
+
+    def test_token_attributes(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        rule = SectionRule(category="past_medical_history", literal="Past Medical History:")
+        sectionizer.add(rule)
+        doc = nlp("Past Medical History: PE")
+        sectionizer(doc)
+
+        token = doc[-1]
+        assert token._.section is doc._.sections[0]
+        assert token._.section_category == "past_medical_history"
+        assert token._.section_span == doc[0:]
+        assert token._.section_title == doc[0:-1]
+        assert token._.section_body == doc[-1:]
+        assert token._.section_parent is None
+        assert token._.section_rule is rule
+
+    def test_span_attributes(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        rule = SectionRule(category="past_medical_history", literal="Past Medical History:")
+        sectionizer.add(rule)
+        doc = nlp("Past Medical History: PE")
+        sectionizer(doc)
+
+        span = doc[-1:]
+        assert span._.section is doc._.sections[0]
+        assert span._.section_category == "past_medical_history"
+        assert span._.section_span == doc[0:]
+        assert span._.section_title == doc[0:-1]
+        assert span._.section_body == doc[-1:]
+        assert span._.section_parent is None
+        assert span._.section_rule is rule
+
 
     # def test_load_default_rules(self):
-    #     sectionizer = Sectionizer(nlp, patterns="default")
-    #     assert sectionizer.patterns
+    #     sectionizer = Sectionizer(nlp, rules="default")
+    #     assert sectionizer.rules
 
     # def test_load_no_rules(self):
-    #     sectionizer = Sectionizer(nlp, patterns=None)
-    #     assert sectionizer.patterns == []
+    #     sectionizer = Sectionizer(nlp, rules=None)
+    #     assert sectionizer.rules == []
 
     # def test_add(self):
-    #     sectionizer = Sectionizer(nlp, patterns=None)
+    #     sectionizer = Sectionizer(nlp, rules=None)
     #     sectionizer.add([{"section_title": "section", "pattern": "my pattern"}])
-    #     assert sectionizer.patterns
+    #     assert sectionizer.rules
 
     def test_num_sections(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
@@ -39,7 +99,7 @@ class TestSectionizer:
         assert len(doc._.sections) == 1
 
     def test_string_match(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
@@ -49,7 +109,7 @@ class TestSectionizer:
         assert section.section_span.text == "Past Medical History: PE"
 
         # def test_list_pattern_match(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             SectionRule(
                 category="past_medical_history",
@@ -65,7 +125,7 @@ class TestSectionizer:
         assert section.section_span.text == "Past Medical History: PE"
 
     def test_document_starts_no_header(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
         doc = nlp("This is separate. Past Medical History: PE")
         sectionizer(doc)
@@ -81,7 +141,7 @@ class TestSectionizer:
         assert section.section_span.text == "Past Medical History: PE"
 
     # def test_max_scope_none(self):
-    #     sectionizer = Sectionizer(nlp, patterns=None, max_scope=None)
+    #     sectionizer = Sectionizer(nlp, rules=None, max_scope=None)
     #     sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
     #     doc = nlp("Past Medical History: This is the sentence.")
     #     sectionizer(doc)
@@ -90,7 +150,7 @@ class TestSectionizer:
     #     assert section[len(header) - 1 + 3]._.section_title == "past_medical_history"
 
     # def test_max_scope(self):
-    #     sectionizer = Sectionizer(nlp, patterns=None, max_scope=2)
+    #     sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
     #     sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
     #     doc = nlp("Past Medical History: This is the sentence.")
     #     sectionizer(doc)
@@ -99,7 +159,7 @@ class TestSectionizer:
     #     assert section[len(header) - 1 + 3]._.section_title is None
 
     def test_start_line(self):
-        sectionizer = Sectionizer(nlp, patterns=None, require_start_line=True)
+        sectionizer = Sectionizer(nlp, rules=None, require_start_line=True)
         sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
         text = "\n\n Past Medical History: The patient has a Past Medical History:"
         doc = nlp(text)
@@ -107,7 +167,7 @@ class TestSectionizer:
         assert len(doc._.sections) == 2
 
     def test_end_line(self):
-        sectionizer = Sectionizer(nlp, patterns=None, require_end_line=True)
+        sectionizer = Sectionizer(nlp, rules=None, require_end_line=True)
         sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
         text = "\n\n Past Medical History:\n The patient has a Past Medical History: this"
         doc = nlp(text)
@@ -115,7 +175,7 @@ class TestSectionizer:
         assert len(doc._.sections) == 2
 
     def test_parent_section(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
@@ -132,7 +192,7 @@ class TestSectionizer:
         assert explanation.parent.category == "past_medical_history"
 
     def test_parent_section_multiple_candidates(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
@@ -149,7 +209,7 @@ class TestSectionizer:
         assert explanation.parent.category == "past_medical_history"
 
     def test_parent_section_candidate_after_section(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
@@ -169,7 +229,7 @@ class TestSectionizer:
         assert allergies.parent is None
 
     def test_parent_section_duplicate_sections_different_parents(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
@@ -191,7 +251,7 @@ class TestSectionizer:
         assert explanation2.parent.category == "allergies"
 
     def test_parent_section_no_valid_parent(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
@@ -211,7 +271,7 @@ class TestSectionizer:
         assert explanation.parent is None
 
     def test_parent_section_parent_required(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
@@ -230,7 +290,7 @@ class TestSectionizer:
         assert section.parent is None
 
     def test_parent_section_chain(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="s1", literal="section 1:"),
@@ -250,7 +310,7 @@ class TestSectionizer:
         assert s3.parent.category == "s2"
 
     def test_parent_section_chain_backtracking(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="s1", literal="section 1:"),
@@ -273,7 +333,7 @@ class TestSectionizer:
         assert s4.parent.category == "s1"
 
     def test_parent_section_chain_backtracking_interrupted(self):
-        sectionizer = Sectionizer(nlp, patterns=None)
+        sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(
             [
                 SectionRule(category="s1", literal="section 1:"),
@@ -298,7 +358,7 @@ class TestSectionizer:
 
     def test_duplicate_parent_definitions(self):
         with warnings.catch_warnings(record=True) as w:
-            sectionizer = Sectionizer(nlp, patterns=None)
+            sectionizer = Sectionizer(nlp, rules=None)
             sectionizer.add(
                 [
                     SectionRule(category="s1", literal="section 1:"),
@@ -321,3 +381,5 @@ class TestSectionizer:
             assert s2.parent.category == "s1"
             assert s3.parent is None
             assert s2_2.parent.category == "s3"
+
+

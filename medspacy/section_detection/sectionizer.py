@@ -29,7 +29,7 @@ class Sectionizer:
     def __init__(
         self,
         nlp,
-        patterns="default",
+        rules="default",
         add_attrs=False,
         max_scope=None,
         include_header=False,
@@ -39,12 +39,12 @@ class Sectionizer:
         newline_pattern=r"[\n\r]+[\s]*$",
     ):
         """Create a new Sectionizer component. The sectionizer will search for spans in the text which
-        match section header patterns, such as 'Past Medical History:'. Sections will be represented
+        match section header rules, such as 'Past Medical History:'. Sections will be represented
         in custom attributes as:
-            section_title (str): A normalized title of the section. Example: 'past_medical_history'
-            section_header (Span): The Span of the doc which was matched as a section header.
+            category (str): A normalized title of the section. Example: 'past_medical_history'
+            section_title (Span): The Span of the doc which was matched as a section header.
                 Example: 'Past Medical History:'
-            section (Span): The entire section of the note, starting with section_header and up until the end
+            section_span (Span): The entire section of the note, starting with section_header and up until the end
                 of the section, which will be either the start of the next section header of some pre-specified
                 scope. Example: 'Past Medical History: Type II DM'
 
@@ -63,21 +63,21 @@ class Sectionizer:
 
         Args:
             nlp: A SpaCy language model object
-            patterns (str, list, or None): Where to read patterns from. Default is "default", which will
-                load the default patterns provided by medSpaCy, which are derived from MIMIC-II.
+            rules (str, list, or None): Where to read rules from. Default is "default", which will
+                load the default rules provided by medSpaCy, which are derived from MIMIC-II.
                 If a list, should be a list of pattern dicts following these conventional spaCy formats:
                     [
                         {"section_title": "past_medical_history", "pattern": "Past Medical History:"},
                         {"section_title": "problem_list", "pattern": [{"TEXT": "PROBLEM"}, {"TEXT": "LIST"}, {"TEXT": ":"}]}
                     ]
-                If a string other than "default", should be a path to a jsonl file containing patterns.
+                If a string other than "default", should be a path to a jsonl file containing rules.
             max_scope (None or int): Optional argument specifying the maximum number of tokens following a section header
-                which can be included in a section. This can be useful if you think your section patterns are incomplete
+                which can be included in a section. This can be useful if you think your section rules are incomplete
                 and want to prevent sections from running too long in the note. Default is None, meaning that the scope
                 of a section will be until either the next section header or the end of the document.
             include_title (bool): whether the section title is included in the section text
             phrase_matcher_attr (str): The name of the token attribute which will be used by the PhraseMatcher
-                for any patterns with a "pattern" value of a string.
+                for any rules with a "pattern" value of a string.
             require_start_line (bool): Optionally require a section header to start on a new line. Default False.
             require_end_line (bool): Optionally require a section header to end with a new line. Default False.
             newline_pattern (str): Regular expression to match the new line either preceding or following a header
@@ -94,25 +94,26 @@ class Sectionizer:
         self._parent_sections = {}
         self._parent_required = {}
         self._rule_item_mapping = self.matcher._rule_item_mapping
+        self._rules = []
         self.include_header = include_header
 
-        if patterns is not None:
-            if patterns == "default":
+        if rules is not None:
+            if rules == "default":
                 import os
 
                 if not os.path.exists(DEFAULT_RULES_FILEPATH):
                     raise FileNotFoundError(
-                        "The expected location of the default patterns file cannot be found. Please either "
-                        "add patterns manually or add a jsonl file to the following location: ",
+                        "The expected location of the default rules file cannot be found. Please either "
+                        "add rules manually or add a jsonl file to the following location: ",
                         DEFAULT_RULES_FILEPATH,
                     )
                 self.add(SectionRule.from_json(DEFAULT_RULES_FILEPATH))
-            # If a list, add each of the patterns in the list
-            elif isinstance(patterns, list):
-                self.add(patterns)
-            elif isinstance(patterns, str):
-                path.exists(patterns)
-                self.add(SectionRule.from_json(patterns))
+            # If a list, add each of the rules in the list
+            elif isinstance(rules, list):
+                self.add(rules)
+            elif isinstance(rules, str):
+                path.exists(rules)
+                self.add(SectionRule.from_json(rules))
 
         if add_attrs is False:
             self.add_attrs = False
@@ -133,6 +134,12 @@ class Sectionizer:
         else:
             raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
 
+    @property
+    def rules(self):
+        """Returns list of ConTextItems"""
+        return self._rules
+
+
     def register_default_attributes(self):
         """Register the default values for the Span attributes defined in DEFAULT_ATTRS."""
         for attr_name in [
@@ -147,34 +154,36 @@ class Sectionizer:
             except ValueError:  # Extension already set
                 pass
 
-    def add(self, patterns):
-        """Add a list of patterns to the clinical_sectionizer. Each pattern should be a dictionary with
-       two keys:
-           'section': The normalized section name of the section, such as 'pmh'.
-           'pattern': The spaCy pattern matching a span of text.
-               Either a string for exact matching (case insensitive)
-               or a list of dicts.
-
+    def add(self, rules):
+        """Add a list of SectionRules to the clinical_sectionizer.
        Example:
-       >>> patterns = [ \
-           {"section_title": "past_medical_history", "pattern": "pmh"}\
-           {"section_title": "past_medical_history", "pattern": [{"LOWER": "past", "OP": "?"}, \
-               {"LOWER": "medical"}, \
-               {"LOWER": "history"}]\
-               },\
-           {"section_title": "assessment_and_plan", "pattern": "a/p:"}\
+       >>> rules = [ \
+            SectionRule("pmh", "past_medical_history"),\
+            SectionRule("pmh", "past_medical_history", \
+                pattern=[{"LOWER": "past","OP": "?"}, {"LOWER":"medical"}, {"LOWER": "history"}]),\
+            SectionRule("a/p:", "assessment_and_plan", pattern=r"a[/&]p:")]\
            ]
-       >>> clinical_sectionizer.add(patterns)
+       >>> sectionizer.add(rules)
        """
-        if not isinstance(patterns, list):
-            patterns = [patterns]
+        if not isinstance(rules, list):
+            rules = [rules]
 
-        self.matcher.add(patterns)
+        if not isinstance(rules[0], SectionRule):
+            if isinstance(rules[0], dict):
+                raise TypeError("Dictionary patterns are no longer supported. You should now add rules using the "
+                                "`SectionRule` class: `from medspacy.section_detection import SectionRule`. "
+                                "You can migrate old patterns to the new rule format by using: "
+                                "`from medspacy.section_dection import section_patterns_to_rules; "
+                                "rules = section_patterns_to_rules(patterns)`")
+            else:
+                raise TypeError("Rules must be of class SectionRule, not", type(rules[0]))
 
-        for pattern in patterns:
-            name = pattern.category
-            parents = pattern.parents
-            parent_required = pattern.parent_required
+        self.matcher.add(rules)
+
+        for rule in rules:
+            name = rule.category
+            parents = rule.parents
+            parent_required = rule.parent_required
 
             if name in self._parent_sections.keys() and parents != []:
                 warnings.warn(
@@ -197,6 +206,8 @@ class Sectionizer:
                 self._parent_required[name] = False
             else:
                 self._parent_required[name] = parent_required
+
+            self._rules.append(rule)
 
     def set_parent_sections(self, sections):
         """Determine the legal parent-child section relationships from the list

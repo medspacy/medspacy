@@ -103,46 +103,61 @@ def any_context_attribute(span):
     "Return True if any of the ConText assertion attributes (is_negated, is_historical, etc.) is True."
     return any(span._.context_attributes.values())
 
-def get_section_titles(doc):
-    return [section.section_title for section in doc._.sections]
+def get_section_title_spans(doc):
+    return [section.title_span for section in doc._.sections]
 
-def get_section_headers(doc):
-    return [section.section_header for section in doc._.sections]
+def get_section_categories(doc):
+    return [section.category for section in doc._.sections]
 
 def get_section_parents(doc):
-    return [section.section_parent for section in doc._.sections]
+    return [section.parent for section in doc._.sections]
 
 def get_section_spans(doc):
     return [section.section_span for section in doc._.sections]
+
+def get_section_body_spans(doc):
+    return [section.body_span for section in doc._.sections]
 
 def get_section_span_token(token):
     if token._.section is None:
         return None
     return token._.section.section_span
 
-def get_section_title_token(token):
+def get_section_category_token(token):
     if token._.section is None:
         return None
-    return token._.section.section_title
+    return token._.section.category
 
-def get_section_header_token(token):
+def get_section_title_span_token(token):
     if token._.section is None:
         return None
-    return token._.section.section_header
+    return token._.section.title_span
+
+def get_section_body_span_token(token):
+    if token._.section is None:
+        return None
+    return token._.section.body_span
 
 def get_section_parent_token(token):
     if token._.section is None:
         return None
-    return token._.section.section_parent
+    return token._.section.parent
+
+def get_section_rule_token(token):
+    if token._.section is None:
+        return None
+    return token._.section.rule
 
 
 _token_extensions = {
    "window": {"method": get_window_token},
     "section": {"default": None},
    "section_span": {"getter": get_section_span_token},
-   "section_title": {"getter": get_section_title_token},
-   "section_header": {"getter": get_section_header_token},
+   "section_category": {"getter": get_section_category_token},
+   "section_title": {"getter": get_section_title_span_token},
+   "section_body": {"getter": get_section_body_span_token},
    "section_parent": {"getter": get_section_parent_token},
+   "section_rule": {"getter": get_section_rule_token},
 }
 
 _context_attributes = {
@@ -160,9 +175,11 @@ _span_extensions = {
     "any_context_attributes": {"getter": any_context_attribute},
     "section": {"getter":lambda x: x[0]._.section},
     "section_span": {"getter":lambda x: x[0]._.section_span},
+    "section_category": {"getter":lambda x: x[0]._.section_category},
     "section_title": {"getter":lambda x: x[0]._.section_title},
-    "section_header": {"getter":lambda x: x[0]._.section_header},
+    "section_body": {"getter":lambda x: x[0]._.section_body},
     "section_parent": {"getter":lambda x: x[0]._.section_parent},
+    "section_rule": {"getter":lambda x: x[0]._.section_rule},
     "contains": {"method": span_contains},
     "target_rule": {"default": None},
     **_context_attributes
@@ -171,13 +188,12 @@ _span_extensions = {
 
 _doc_extensions = {
     "sections": {"default": list()},
-    "section_titles": {"getter": get_section_titles},
-    "section_headers": {"getter": get_section_headers},
+    "section_titles": {"getter": get_section_title_spans},
+    "section_categories": {"getter": get_section_categories},
     "section_spans": {"getter": get_section_spans},
     "section_parents": {"getter": get_section_parents},
+    "section_bodies": {"getter": get_section_body_spans}
 }
-
-
 
 
 

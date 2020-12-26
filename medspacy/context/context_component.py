@@ -227,7 +227,7 @@ class ConTextComponent:
         elif not rules:
             # otherwise leave the list empty.
             # do nothing
-            self._rules = []
+            pass
 
         else:
             # loading from json path or list is possible later
@@ -249,15 +249,14 @@ class ConTextComponent:
         Args:
             rules: a list of ConTextItems to add.
         """
-        try:
-            self._rules += rules
-        except TypeError:
-            raise TypeError(
-                "rules must be a list of ConText rules. If you're just passing in a single ConText Item, "
-                "make sure to wrap the direction in a list: `context.add([direction])`"
-            )
+        if not isinstance(rules, list):
+            rules = [rules]
         self.matcher.add(rules)
         for rule in rules:
+            if not isinstance(rule, ConTextRule):
+                raise TypeError(
+                    "rules must be a list of ConTextRules."
+                )
             self._categories.add(rule.category)
 
             # If global attributes like allowed_types and max_scope are defined,
@@ -278,6 +277,9 @@ class ConTextComponent:
             if rule.category.upper() in self.terminations:
                 for other_modifier in self.terminations[rule.category.upper()]:
                     rule.terminated_by.add(other_modifier.upper())
+
+            self._rules.append(rule)
+
 
     def register_graph_attributes(self):
         """Register spaCy container custom attribute extensions.

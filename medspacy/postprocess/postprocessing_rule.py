@@ -2,9 +2,9 @@ class PostprocessingRule:
 
     def __init__(self, patterns, action, name=None, description=None, action_args=None):
         """A PostprocessingRule checks conditions of a spaCy Span entity
-        and executes some action if all patterns are met.
+        and executes some action if all rules are met.
 
-        patterns (list): A list of PostprocessingPatterns,
+        rules (list): A list of PostprocessingPatterns,
             each of which check a condition of an entity.
         action (function): A function to call with the entity as an argument.
             This function should take ay least the following two arguments:
@@ -14,7 +14,7 @@ class PostprocessingRule:
         name (str): Optional name of direction.
         description (str): Optional description of the direction.
         action_args (tuple or None): Optional tuple of positional arguments
-            to pass to action() if all patterns pass. Default is None,
+            to pass to action() if all rules pass. Default is None,
             in which case the direction will call action(ent, i).
 
         """
@@ -25,7 +25,7 @@ class PostprocessingRule:
         self.action_args = action_args
 
     def __call__(self, ent, i, debug=False):
-        """Iterate through all of the patterns in self.rules.
+        """Iterate through all of the rules in self.rules.
         If any pattern does not pass (ie., return True), then returns False.
         If they all pass, execute self.action and return True.
         """

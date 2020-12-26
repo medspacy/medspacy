@@ -21,3 +21,28 @@ def is_end_line(idx, doc, pattern):
         return True
     following_text = doc[idx + 1].text_with_ws
     return pattern.search(following_text) is not None
+
+def section_patterns_to_rules(patterns):
+    """Convert a list of dictionary-based patterns of the old Sectionizer API
+    to a list of SectionRules.
+    """
+    _ALLOWED_KEYS = {"category", "metadata", "parents", "parent_required"}
+    from .section_rule import SectionRule
+
+    rules = []
+    for pattern in patterns:
+        refactored = {}
+        if isinstance(pattern["pattern"], str):
+            refactored["literal"] = pattern["pattern"]
+            refactored["pattern"] = None
+        elif isinstance(pattern["pattern"], list):
+            refactored["literal"] = str(pattern["pattern"])
+            refactored["pattern"] = pattern["pattern"]
+
+        refactored["category"] = pattern["section_title"]
+        for key in _ALLOWED_KEYS:
+            if key in pattern:
+                refactored[key] = pattern[key]
+        rule = SectionRule(**refactored)
+        rules.append(rule)
+    return rules

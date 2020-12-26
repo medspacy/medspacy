@@ -157,9 +157,9 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         from .section_detection import Sectionizer
 
         if load_rules:
-            sectionizer = Sectionizer(nlp, patterns="default")
+            sectionizer = Sectionizer(nlp, rules="default")
         else:
-            sectionizer = Sectionizer(nlp, patterns=None)
+            sectionizer = Sectionizer(nlp, rules=None)
         nlp.add_pipe(sectionizer)
 
     if "postprocessor" in enable:

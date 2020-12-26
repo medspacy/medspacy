@@ -1,5 +1,5 @@
 """This module contains functions to be used both as action and condition functions
-for postprocessing patterns.
+for postprocessing rules.
 """
 from ..common.util import span_contains
 

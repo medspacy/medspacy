@@ -36,7 +36,8 @@ class TargetMatcher:
 
     def add(self, rules):
         """Add a list of targetRules to the matcher."""
-        i = len(self._rules)
+        if not isinstance(rules, list):
+            rules = [rules]
         self._rules += rules
         self.matcher.add(rules)
         for rule in rules:

@@ -36,6 +36,19 @@ ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
 - Updated jupyter notebooks with working examples using the adjusted API for `Section` objects.
 
 ## `quickumls` changes
+- Native support for integration with [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS) for concept extraction and UMLS linking.
+- Requires some [additional setup for Windows users](windows_and_quickumls.md), as well as for building the resource files.
+- We'll add additional documentation throughout, but there is a very simple notebook in the `notebooks/` folder to get you started
+- MedspaCy comes with a sample of UMLS resource files, but for the entire UMLS you'll need to download and build the resource files. Will add additional documentation soon.
+
+```python
+import medspacy
+QUICKUMLS_PATH = "/path/to/umls/resources"
+
+nlp = medspacy.load(enable = {"quickumls"}, 
+                    quickumls_path=QUICKUMLS_PATH # Can also be None to load 
+                   )
+```
 
 ```python
 from medspacy.section_detection import Sectionizer, SectionRule

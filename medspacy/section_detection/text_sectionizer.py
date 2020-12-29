@@ -7,7 +7,7 @@ from pathlib import Path
 DEFAULT_RULES_FILEPATH = path.join(
     Path(__file__).resolve().parents[2],
     "resources",
-    "section_patterns.jsonl",
+    "section_rules.json",
 )
 
 
@@ -15,6 +15,7 @@ class TextSectionizer:
     name = "text_sectionizer"
 
     def __init__(self, patterns="default"):
+        raise NotImplementedError("The TextSectionizer is not currently supported and will be available in a future release.")
         self._patterns = []
         self._compiled_patterns = dict()
         self._section_titles = set()
@@ -25,12 +26,12 @@ class TextSectionizer:
 
                 if not os.path.exists(DEFAULT_RULES_FILEPATH):
                     raise FileNotFoundError(
-                        "The expected location of the default patterns file cannot be found. Please either "
-                        "add patterns manually or add a jsonl file to the following location: ",
+                        "The expected location of the default rules file cannot be found. Please either "
+                        "add rules manually or add a jsonl file to the following location: ",
                         DEFAULT_RULES_FILEPATH,
                     )
                 self.add(self.load_patterns_from_jsonl(DEFAULT_RULES_FILEPATH))
-            # If a list, add each of the patterns in the list
+            # If a list, add each of the rules in the list
             elif isinstance(patterns, list):
                 self.add(patterns)
             elif isinstance(patterns, str):
@@ -41,10 +42,10 @@ class TextSectionizer:
 
     def add(self, patterns, cflags=None):
         """
-        Add compiled regular expressions defined in patterns
+        Add compiled regular expressions defined in rules
 
         Positional arguments:
-        - patterns --
+        - rules --
 
         Keyword arguments:
         - cflags -- a list of regular expression compile flags
@@ -70,7 +71,7 @@ class TextSectionizer:
                     _mycomp(pattern, flags=cflags)
                 )
             else:
-                # TODO: Change the default patterns
+                # TODO: Change the default rules
                 # continue
                 raise ValueError(
                     "Patterns added to the TextSectionizer must be strings",

@@ -25,8 +25,10 @@ for detecting semantic modifiers and attributes of entities, including negation 
 - `medspacy.section_detection`: Clinical section detection and segmentation
 - `medspacy.postprocess`: Flexible framework for modifying and removing extracted entities
 - `medspacy.visualization`: Utilities for visualizing concepts and relationships extracted from text
+- `SpacyQuickUMLS`: UMLS concept extraction compatible with spacy and medspacy implemented by [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS)
+	- NOTE: This component is installed by default on MacOS and Linux but not Windows.  For more defails and Windows installation: [QuickUMLS on Windows](windows_and_quickumls.md)
 
-Future work could include I/O, UMLS matching, relations extraction, and pre-trained clinical models.
+Future work could include I/O, relations extraction, and pre-trained clinical models.
 
 # Usage
 ## Installation
@@ -40,13 +42,19 @@ Or with pip:
 pip install medspacy
 ```
 
-After installing medSpaCy, you'll need to download a spaCy model to use as a base model. 
-The default in medSpaCy is`en_core_web_sm`, which you can download as:
-```bash
-python -m spacy download en_core_web_sm
-```
+If you download other models, you can use them by providing the model itself or model name to `medspacy.load(model_name)`:
+```python
+import spacy; import medspacy
+# Option 1: Load default
+nlp = medspacy.load()
 
-If you download other models, you can use them by providing the model name to `medspacy.load(model_name)`.
+# Option 2: Load from existing model
+nlp = spacy.load("en_core_web_sm", disable={"ner"})
+nlp = medspacy.load(nlp)
+
+# Option 3: Load from model name
+nlp = medspacy.load("en_core_web_sm", disable={"ner"})
+```
 
 ### Requirements
 The following packages are required and installed when `medspacy` is installed:

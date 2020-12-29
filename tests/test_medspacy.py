@@ -6,10 +6,9 @@ import spacy
 
 class TestMedSpaCy:
     def test_default_build_pipe_names(self):
-        model, enable, disable = medspacy.util._build_pipe_names("default", enable=None, disable=None)
-        assert model == "en_core_web_sm"
+        enable, disable = medspacy.util._build_pipe_names(enable=None, disable=None)
         assert enable == {"tokenizer", "sentencizer", "target_matcher", "context"}
-        assert disable == {"parser", "tagger", "ner"}
+        assert disable == set()
 
     def test_default_load(self):
         nlp = medspacy.load()
@@ -57,12 +56,17 @@ class TestMedSpaCy:
     def test_load_rules(self):
         nlp = medspacy.load(load_rules=True)
         context = nlp.get_pipe("context")
-        assert context.item_data
+        assert context.rules
 
     def test_not_load_rules(self):
         nlp = medspacy.load(load_rules=False)
         context = nlp.get_pipe("context")
-        assert not context.item_data
+        assert not context.rules
+
+    def test_load_lang_model(self):
+        nlp = spacy.load("en_core_web_sm", disable={"ner"})
+        nlp = medspacy.load(nlp)
+        assert {"tagger", "parser"}.intersection(set(nlp.pipe_names))
 
     def test_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer

@@ -7,12 +7,12 @@ class PreprocessingRule:
         self.desc = desc
 
     def __call__(self, text):
-        """Apply a preprocessing rule. If the callback attribute of rule is None,
-        then it will return a string using the rule pattern.sub method.
+        """Apply a preprocessing direction. If the callback attribute of direction is None,
+        then it will return a string using the direction pattern.sub method.
         If callback is not None, then then callback function will be executed using
         the the resulting match as an argument.
         """
-        # If the rule just has a repl attribute,
+        # If the direction just has a repl attribute,
         # Just return a simple re.sub
         if self.callback is None:
             return self.pattern.sub(self.repl, text)

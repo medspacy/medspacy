@@ -1,6 +1,7 @@
 """This module contains functions to be used both as action and condition functions
-for postprocessing patterns.
+for postprocessing rules.
 """
+from ..common.util import span_contains
 
 # Condition functions
 
@@ -25,7 +26,7 @@ def is_family(span):
     return span._.is_family
 
 def is_modified_by_category(span, category):
-    """Returns True if a span is modified by a cycontext TagObject
+    """Returns True if a span is modified by a cycontext ConTextModifier
     modifier with a certain category. Case insensitive.
     """
     for modifier in span._.modifiers:
@@ -78,29 +79,6 @@ def is_followed_by(ent, target, window=1):
         return target.lower() in following_string
     for string in target:
         if string.lower() in following_string:
-            return True
-    return False
-
-def span_contains(span, target, regex=True):
-    """Return True if a Span object contains a target phrase.
-    Case insensitive.
-    span: A spaCy Span, such as an entity in doc.ents
-    target: A target phrase or iterable of phrases to check in span.lower_.
-    regex (bool): Whether to search the span using a regular expression rather than
-        a literal string. Default True.
-    """
-    if regex is True:
-        import re
-        func = lambda x: re.search(x, span.lower_, re.IGNORECASE) is not None
-    else:
-        func = lambda x: x.lower() in span.lower_
-
-    if isinstance(target, str):
-        return func(target)
-
-    # If it's an iterable, check if any of the strings are in sent
-    for string in target:
-        if func(string):
             return True
     return False
 

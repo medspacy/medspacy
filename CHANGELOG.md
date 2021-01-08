@@ -1,5 +1,23 @@
 # Version 0.1.0.0
-## Regular expression support
+This new release includes a lot of new functionality and improvements such as more consistent renaming. 
+## Summary
+- Support for `QuickUMLS` component for concept extraction and UMLS linking
+- Regular expression support in main rule-based components (`TargetMatcher), `ConTextComponent`, and `Sectionizer`)
+- New extensions of spaCy `Doc`, `Span`, and `Token` classes
+- Refactored rules in for context and section detection
+- New notebooks for demonstration
+
+There are some breaking changes to be aware of:
+- For ConText, `ConTextItem` has been refactored to `ConTextRule` to define context rules
+- For section detection, lists of dictionary patterns have been replaced with lists of `SectionRule` objects to define sectionizer rules
+- Renamed section attributes (old -> new):
+    - `section_title` -> `section_category`
+    - `section_header` -> `section_title`
+    - See `notebooks/section_detection` for examples of the new API
+
+##  Details
+
+### Regular expression support
 - Added `RegexMatcher` to allow span matching on `Doc` objects using regular expressions
 - Created the common `MedspacyMatcher` class to wrap up `Matcher`, `PhraseMatcher`, and `RegexMatcher` functionality
 - Updated `ConTextComponent`, `Sectionizer` to use the same API for matching using literal strings, spaCy patterns, or regular expressions
@@ -9,7 +27,7 @@ from medspacy.context import ConTextRule
 rule = ConTextRule("no history of", "NEGATED_EXISTENCE", pattern=r"no( medical)? history of")
 ```
 
-## `context`
+### `context`
 - Refactored `ConTextItem` to be `ConTextRule` and all relevant attributes to reflect new naming
 - Changed the `rule` argument in `ConTextItem` which defines directionality to be `direction`
 
@@ -23,7 +41,7 @@ from medspacy.context import ConTextRule
 ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
 ```
 
-## `section_detection` changes
+### `section_detection` changes
 - Sectionizer now creates sections with three core components. This should help clarify ambiguity between previous naming conventions.
     - `category` the normalized type of the whole section, formerly `section_title`
     - `title` the actual covered text and span matched with the rules, formerly `section_header`
@@ -34,21 +52,6 @@ ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
 - Some sectionizer tests remain commented out. These tests no longer apply to the current API and need some reworking at a later date to develop tests for the same concepts. These mostly have to do with the new method of storing and creating rules, which may involve more sophisticated testing of the MedspacyMatcher in general
 - Updated visualizer to reflect use of `Section` objects
 - Updated jupyter notebooks with working examples using the adjusted API for `Section` objects.
-
-## `quickumls` changes
-- Native support for integration with [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS) for concept extraction and UMLS linking.
-- Requires some [additional setup for Windows users](windows_and_quickumls.md), as well as for building the resource files.
-- We'll add additional documentation throughout, but there is a very simple notebook in the `notebooks/` folder to get you started
-- MedspaCy comes with a sample of UMLS resource files, but for the entire UMLS you'll need to download and build the resource files. Will add additional documentation soon.
-
-```python
-import medspacy
-QUICKUMLS_PATH = "/path/to/umls/resources"
-
-nlp = medspacy.load(enable = {"quickumls"}, 
-                    quickumls_path=QUICKUMLS_PATH # Can also be None to load 
-                   )
-```
 
 ```python
 from medspacy.section_detection import Sectionizer, SectionRule
@@ -67,7 +70,22 @@ sectionizer.add([rule]) # medspacy.section_detection.section.Section
 print(doc._.sections[0]) # medspacy.section_detection.section.Section
 ```
 
-## Extensions
+### `quickumls` changes
+- Native support for integration with [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS) for concept extraction and UMLS linking.
+- Requires some [additional setup for Windows users](windows_and_quickumls.md), as well as for building the resource files.
+- We'll add additional documentation throughout, but there is a very simple notebook in the `notebooks/` folder to get you started
+- MedspaCy comes with a sample of UMLS resource files, but for the entire UMLS you'll need to download and build the resource files. Will add additional documentation soon.
+
+```python
+import medspacy
+QUICKUMLS_PATH = "/path/to/umls/resources"
+
+nlp = medspacy.load(enable = {"quickumls"}, 
+                    quickumls_path=QUICKUMLS_PATH # Can also be None to load sample
+                   )
+```
+
+### Extensions
 - Declare all custom attributes and methods in `medspacy._extensions`
 - Add top-level functions to get extension name and default values:
     - `set_extensions, get_extensions, get_doc_extensions, get_span_extensions, get_token_extensions`

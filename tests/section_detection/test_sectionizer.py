@@ -26,6 +26,36 @@ class TestSectionizer:
         assert len(doc._.section_spans)
         assert len(doc._.section_bodies)
 
+    def test_span_attributes(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        doc = nlp("Past Medical History: PE")
+        sectionizer(doc)
+
+        span = doc[2:5]
+
+        assert len(span._.section)
+        assert len(span._.section_category)
+        assert len(doc._.section_title)
+        assert len(doc._.section_span)
+        assert len(doc._.section_body)
+        assert len(doc._.section_rule)
+
+    def test_span_attributes(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        doc = nlp("Past Medical History: PE")
+        sectionizer(doc)
+
+        token = doc[-1]
+
+        assert len(token._.section)
+        assert len(token._.section_category)
+        assert len(token._.section_title)
+        assert len(token._.section_span)
+        assert len(token._.section_body)
+        assert len(token._.section_rule)
+
     def test_section(self):
         sectionizer = Sectionizer(nlp, rules=None)
         rule = SectionRule(category="past_medical_history", literal="Past Medical History:")
@@ -140,23 +170,34 @@ class TestSectionizer:
         assert section.title_span.text == "Past Medical History:"
         assert section.section_span.text == "Past Medical History: PE"
 
-    # def test_max_scope_none(self):
-    #     sectionizer = Sectionizer(nlp, rules=None, max_scope=None)
-    #     sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
-    #     doc = nlp("Past Medical History: This is the sentence.")
-    #     sectionizer(doc)
-    #     title, header, parent, section = doc._.sections[0]
-    #     assert section[len(header) - 1 + 2]._.section_title == "past_medical_history"
-    #     assert section[len(header) - 1 + 3]._.section_title == "past_medical_history"
+    def test_max_scope_none(self):
+        sectionizer = Sectionizer(nlp, rules=None, max_scope=None)
+        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        doc = nlp("Past Medical History: This is the sentence.")
+        sectionizer(doc)
+        assert doc[-1]._.section_category == "past_medical_history"
 
-    # def test_max_scope(self):
-    #     sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
-    #     sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
-    #     doc = nlp("Past Medical History: This is the sentence.")
-    #     sectionizer(doc)
-    #     title, header, parent, section = doc._.sections[0]
-    #     assert section[len(header) - 1 + 2]._.section_title == "past_medical_history"
-    #     assert section[len(header) - 1 + 3]._.section_title is None
+
+    def test_max_scope(self):
+        sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
+        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        doc = nlp("Past Medical History: This is the sentence.")
+        sectionizer(doc)
+        section = doc._.sections[0]
+        assert section.body_span[0]._.section_category == "past_medical_history"
+        # This should be out of range of the section scope
+        assert section.body_span[3]._.section_category is None
+
+    def test_max_scope_rule(self):
+        sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
+        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:", max_scope=100))
+        doc = nlp("Past Medical History: This is the sentence.")
+        sectionizer(doc)
+        section = doc._.sections[-1]
+        token = doc[-1]
+        assert section.category == "past_medical_history"
+        assert token in section.section_span
+        assert token._.section_category == "past_medical_history"
 
     def test_start_line(self):
         sectionizer = Sectionizer(nlp, rules=None, require_start_line=True)
@@ -382,4 +423,11 @@ class TestSectionizer:
             assert s3.parent is None
             assert s2_2.parent.category == "s3"
 
-
+    def test_context_attributes(self):
+        sectionizer = Sectionizer(nlp, rules=None, add_attrs={"past_medical_history": {"is_negated": True}})
+        sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
+        doc = nlp("Past Medical History: Pneumonia")
+        from spacy.tokens import Span
+        doc.ents = (Span(doc, 4, 5),)
+        sectionizer(doc)
+        assert doc.ents[0]._.is_negated is True

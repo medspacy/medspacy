@@ -18,6 +18,10 @@ class TestSectionizer:
             assert isinstance(rule, SectionRule)
             assert isinstance(rule, BaseRule)
 
+    def test_max_scope(self):
+        rule = SectionRule(category="past_medical_history", literal="Past Medical History:", max_scope=100)
+        assert rule.max_scope == 100
+
     def test_patterns_to_rules(self):
         from medspacy.section_detection import section_patterns_to_rules
         patterns = [

@@ -327,22 +327,31 @@ class Sectionizer:
             else:
                 parent = None
             rule = self._rule_item_mapping[self.nlp.vocab.strings[match_id]]
-            category = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
+            category = rule.category
             # If this is the last match, it should include the rest of the doc
             if i == len(matches) - 1:
-                if self.max_scope is None:
+                # If there is no scope limitation, go until the end of the doc
+                if self.max_scope is None and rule.max_scope is None:
                     section_list.append(Section(doc, category, start, end, end, len(doc), parent, rule))
                 else:
-                    scope_end = min(end + self.max_scope, doc[-1].i)
+                    # If the rule has a max_scope, use that as a precedence
+                    if rule.max_scope is not None:
+                        scope_end = min(end + rule.max_scope, doc[-1].i+1)
+                    else:
+                        scope_end = min(end + self.max_scope, doc[-1].i+1)
+
                     section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
                 _, next_start, _, _ = next_match
-                if self.max_scope is None:
+                if self.max_scope is None and rule.max_scope is None:
                     section_list.append(Section(doc, category, start, end, end, next_start, parent, rule))
                 else:
-                    scope_end = min(end + self.max_scope, next_start)
+                    if rule.max_scope is not None:
+                        scope_end = min(end + rule.max_scope, next_start)
+                    else:
+                        scope_end = min(end + self.max_scope, next_start)
                     section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
 
         for section in section_list:

@@ -3,10 +3,11 @@ from ..common.base_rule import BaseRule
 
 class SectionRule(BaseRule):
 
-    _ALLOWED_KEYS = {"literal", "pattern", "category", "metadata", "parents", "parent_required"}
+    _ALLOWED_KEYS = {"literal", "pattern", "category", "metadata", "parents", "parent_required", "max_scope"}
 
     def __init__(
-        self, literal, category, pattern=None, on_match=None, metadata=None, parents=[], parent_required=False,
+        self, literal, category, pattern=None, on_match=None, max_scope=None,
+            parents=[], parent_required=False, metadata=None
     ):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
@@ -26,11 +27,24 @@ class SectionRule(BaseRule):
             on_match (callable or None): An optional callback function or other callable which takes 4 arguments:
                 (matcher, doc, i, matches)
                 For more information, see https://spacy.io/usage/rule-based-matching#on_match
-            meta (dict or None): Optional dictionary of metadata.
+            max_scope (int or None): A number of tokens to explicitly limit the size of a section body.
+                If None, the scope will include the entire doc up until either the next section header or the end
+                of the doc. This variable can also be set at a global level as `Sectionizer(nlp, max_scope=...)`,
+                but if the attribute is set here, the rule scope will take precedence.
+                If not None, this will be the number of tokens following the matched section header
+                    Example:
+                        In the text "Past Medical History: Pt has hx of pneumonia",
+                        SectionRule("Past Medical History:", "pmh", max_scope=None) will include the entire doc, but
+                        SectionRule("Past Medical History:", "pmh", max_scope=2) will limit the section
+                            to be "Past Medical History: Pt has"
+                This can be useful for limiting certain sections which are known to be short or allowing others
+                to be longer than the regular global max_scope.
             parents (list or None): a list of candidate parents for determining subsections
             parent_required (bool): whether a parent is required for the section to exist in the final output
+            metadata (dict or None): Optional dictionary of metadata.
         """
         super().__init__(literal, category, pattern, on_match, metadata)
+        self.max_scope = max_scope
         self.parents = parents
         if parent_required:
             if not parents:

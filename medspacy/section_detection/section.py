@@ -1,3 +1,5 @@
+import json
+
 class Section(object):
     def __init__(self, doc, category, title_start, title_end, body_start, body_end, parent=None, rule=None):
         self.doc = doc
@@ -23,3 +25,19 @@ class Section(object):
     @property
     def section_span(self):
         return self.doc[self.title_start : self.body_end]
+
+    def save(self, *args, **kwargs):
+        raise ValueError
+
+    def to_disk(self, path, **kwargs):
+        # This will receive the directory path + /my_component
+        data_path = path / "section.json"
+        with data_path.open("w", encoding="utf8") as f:
+            f.write(json.dumps(self.data))
+
+    def from_disk(self, path, **cfg):
+        # This will receive the directory path + /my_component
+        data_path = path / "section.json"
+        with data_path.open("r", encoding="utf8") as f:
+            self.data = json.loads(f)
+        return self

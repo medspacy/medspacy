@@ -105,7 +105,9 @@ class TargetRule(BaseRule):
         """
         rule_dict = {}
         for key in self._ALLOWED_KEYS:
-            rule_dict[key] = self.__dict__.get(key)
+            value = self.__dict__.get(key)
+            if value is not None:
+                rule_dict[key] = value
         return rule_dict
 
     def __repr__(self):

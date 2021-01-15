@@ -293,7 +293,7 @@ class Sectionizer:
 
         """
         for ent in ents:
-            if ent._.section.category in self.assertion_attributes_mapping:
+            if ent._.section and ent._.section.category in self.assertion_attributes_mapping:
                 attr_dict = self.assertion_attributes_mapping[ent._.section.category]
                 for (attr_name, attr_value) in attr_dict.items():
                     setattr(ent._, attr_name, attr_value)

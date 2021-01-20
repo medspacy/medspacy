@@ -8,7 +8,7 @@ from medspacy._extensions import _token_extensions, _span_extensions, _doc_exten
 nlp = spacy.blank("en")
 doc = nlp("There is no evidence of pneumonia in the chest x-ray.")
 
-class TestMedSpaCy:
+class TestMedSpaCyExtensions:
     def test_token_attributes(self):
         for attr in _token_extensions.keys():
             assert hasattr(doc[0]._, attr)

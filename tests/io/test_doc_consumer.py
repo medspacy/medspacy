@@ -3,7 +3,7 @@ from spacy.pipeline import EntityRuler
 
 from medspacy.io import DocConsumer
 from medspacy.context import ConTextComponent
-from medspacy.section_detection import Sectionizer
+from medspacy.section_detection import Sectionizer, SectionRule
 
 nlp = spacy.load("en_core_web_sm")
 nlp.remove_pipe("ner")
@@ -18,8 +18,8 @@ nlp.add_pipe(context)
 sectionizer = Sectionizer(nlp)
 sectionizer.add(
     [
-        {"section_title": "section1", "pattern": "Section 1:"},
-        {"section_title": "section2", "pattern": "Section 2:", "parents": ["section1"]},
+        SectionRule("Section 1:", "section1"),
+        SectionRule("Section 2:", "section2", parents=["section1"]),
     ]
 )
 nlp.add_pipe(sectionizer)
@@ -127,15 +127,15 @@ class TestDocConsumer:
         consumer = DocConsumer(nlp, sectionizer=True)
         doc = consumer(section_doc)
         data = doc._.get_data("section")
-        title, title_text, parent, section = doc._.sections[0]
-        assert data["section_title"][0] == title
-        assert data["section_title_text"][0] == title_text.text
-        assert data["section_title_start_char"][0] == title_text.start_char
-        assert data["section_title_end_char"][0] == title_text.end_char
-        assert data["section_text"][0] == section.text
-        assert data["section_text_start_char"][0] == section.start_char
-        assert data["section_text_end_char"][0] == section.end_char
-        assert data["section_parent"][0] == parent
+        section = doc._.sections[0]
+        assert data["section_category"][0] == section.category
+        assert data["section_title_text"][0] == section.title_span.text
+        assert data["section_title_start_char"][0] == section.title_span.start_char
+        assert data["section_title_end_char"][0] == section.title_span.end_char
+        assert data["section_text"][0] == section.section_span.text
+        assert data["section_text_start_char"][0] == section.section_span.start_char
+        assert data["section_text_end_char"][0] == section.section_span.end_char
+        assert data["section_parent"][0] == section.parent
 
     def test_ten_concepts(self):
         consumer = DocConsumer(nlp)

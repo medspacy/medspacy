@@ -112,7 +112,7 @@ class TestDocConsumer:
         doc = consumer(section_doc)
         data = doc._.get_data("ent")
         ent = doc.ents[0]
-        assert data["section_title"][0] == ent._.section_title
+        assert data["section_category"][0] == ent._.section_category
         assert data["section_parent"][0] == ent._.section_parent
 
     def test_section_data_ent_parent(self):
@@ -120,7 +120,7 @@ class TestDocConsumer:
         doc = consumer(section_parent_doc)
         data = doc._.get_data("ent")
         ent = doc.ents[0]
-        assert data["section_title"][0] == ent._.section_title
+        assert data["section_category"][0] == ent._.section_category
         assert data["section_parent"][0] == ent._.section_parent
 
     def test_section_data_section(self):

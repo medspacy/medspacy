@@ -31,7 +31,7 @@ class DocConsumer(object):
                 self.attrs += ["is_negated", "is_uncertain", "is_historical", "is_hypothetical", "is_family"]
 
             if self.sectionizer:
-                self.attrs += ["section_title", "section_parent"]
+                self.attrs += ["section_category", "section_parent"]
                 self.section_attrs += [
                     "section_category",
                     "section_title_text",

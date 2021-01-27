@@ -431,3 +431,8 @@ class TestSectionizer:
         doc.ents = (Span(doc, 4, 5),)
         sectionizer(doc)
         assert doc.ents[0]._.is_negated is True
+
+    def test_section_categories(self):
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
+        assert sectionizer.section_categories == ["past_medical_history"]

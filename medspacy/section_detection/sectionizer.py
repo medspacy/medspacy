@@ -11,7 +11,7 @@ from .section_rule import SectionRule
 from .section import Section
 from ..common.medspacy_matcher import MedspacyMatcher
 
-DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
+DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json", )
 
 DEFAULT_ATTRS = {
     "past_medical_history": {"is_historical": True},
@@ -27,16 +27,16 @@ class Sectionizer:
     name = "sectionizer"
 
     def __init__(
-        self,
-        nlp,
-        rules="default",
-        add_attrs=False,
-        max_scope=None,
-        include_header=False,
-        phrase_matcher_attr="LOWER",
-        require_start_line=False,
-        require_end_line=False,
-        newline_pattern=r"[\n\r]+[\s]*$",
+            self,
+            nlp,
+            rules="default",
+            add_attrs=False,
+            max_scope=None,
+            include_header=False,
+            phrase_matcher_attr="LOWER",
+            require_start_line=False,
+            require_end_line=False,
+            newline_pattern=r"[\n\r]+[\s]*$",
     ):
         """Create a new Sectionizer component. The sectionizer will search for spans in the text which
         match section header rules, such as 'Past Medical History:'. Sections will be represented
@@ -95,6 +95,7 @@ class Sectionizer:
         self._parent_required = {}
         self._rule_item_mapping = self.matcher._rule_item_mapping
         self._rules = []
+        self._section_categories = set()
         self.include_header = include_header
 
         if rules is not None:
@@ -132,13 +133,18 @@ class Sectionizer:
             self.assertion_attributes_mapping = add_attrs
 
         else:
-            raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
+            raise ValueError(
+                "add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
 
     @property
     def rules(self):
-        """Returns list of ConTextItems"""
+        """Returns list of SectionRules"""
         return self._rules
 
+    @property
+    def section_categories(self):
+        """Returns a list of categories used in the Sectionizer."""
+        return list(sorted(self._section_categories))
 
     def register_default_attributes(self):
         """Register the default values for the Span attributes defined in DEFAULT_ATTRS."""
@@ -208,6 +214,7 @@ class Sectionizer:
                 self._parent_required[name] = parent_required
 
             self._rules.append(rule)
+            self._section_categories.add(rule.category)
 
     def set_parent_sections(self, sections):
         """Determine the legal parent-child section relationships from the list
@@ -256,7 +263,8 @@ class Sectionizer:
                                 candidate = None
                                 continue
                             # otherwise get the previous item in the list
-                            temp = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]].category
+                            temp = self._rule_item_mapping[
+                                self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]].category
                             temp_parent_idx = sections_final[candidate_i - 1][3]
                             if temp_parent_idx is not None:
                                 temp_parent = self._rule_item_mapping[
@@ -336,9 +344,9 @@ class Sectionizer:
                 else:
                     # If the rule has a max_scope, use that as a precedence
                     if rule.max_scope is not None:
-                        scope_end = min(end + rule.max_scope, doc[-1].i+1)
+                        scope_end = min(end + rule.max_scope, doc[-1].i + 1)
                     else:
-                        scope_end = min(end + self.max_scope, doc[-1].i+1)
+                        scope_end = min(end + self.max_scope, doc[-1].i + 1)
 
                     section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
             # Otherwise, go until the next section header
@@ -358,7 +366,6 @@ class Sectionizer:
             doc._.sections.append(section)
             for token in section.section_span:
                 token._.section = section
-
 
         # If it is specified to add assertion attributes,
         # iterate through the entities in doc and add them

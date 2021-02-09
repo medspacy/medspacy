@@ -19,21 +19,30 @@ class MedspacyMatcher:
 
     name = "medspacy_matcher"
 
-    def __init__(self, nlp, phrase_matcher_attr="LOWER"):
+    def __init__(self, nlp, phrase_matcher_attr="LOWER", prune=True):
         """Create a MedspacyMatcher.
         Params:
             nlp: A spaCy Language model.
             phrase_matcher_attr: The attribute to use for spaCy's PhraseMatcher (default is 'LOWER')
+            prune: Whether or not to prune matches which overlap or are substrings of another match.
+                For example, if "no history of" and "history of" are both matches, setting prune to True
+                would drop "history of".
+                Default True.
         """
         self.nlp = nlp
         self._rule_ids = set()
         self._rules = list()
         self.labels = set()
         self._rule_item_mapping = dict()
+        self.prune = prune
 
         self.matcher = Matcher(self.nlp.vocab)
         self.phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=phrase_matcher_attr)
         self.regex_matcher = RegexMatcher(self.nlp.vocab)
+
+    @property
+    def rules(self):
+        return self._rules
 
     def add(self, rules):
         """Add a list of rules to the matcher. Rules must inherit from medspacy.common.BaseRule,
@@ -66,12 +75,13 @@ class MedspacyMatcher:
             i += 1
 
     def __call__(self, doc):
-        """Call MedspacyMatcher on a doc and return a single list of matches. If rules result in multiple
-        overlapping matches, the longest will be returned."""
+        """Call MedspacyMatcher on a doc and return a single list of matches. If self.prune is True,
+        in the case of overlapping matches the longest will be returned."""
         matches = self.matcher(doc)
         matches += self.phrase_matcher(doc)
         matches += self.regex_matcher(doc)
-        matches = prune_overlapping_matches(matches)
+        if self.prune:
+            matches = prune_overlapping_matches(matches)
         return matches
 
 

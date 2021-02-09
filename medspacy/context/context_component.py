@@ -139,7 +139,7 @@ class ConTextComponent:
         self._i = 0
         self._categories = set()
 
-        self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
+        self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr, prune=prune)
         # _modifier_rule_mapping: A mapping from spaCy Matcher match_ids to ConTextRule
         # This allows us to use spaCy Matchers while still linking back to the ConTextRule
         # To get the direction and category
@@ -338,8 +338,6 @@ class ConTextComponent:
             modifier = ConTextModifier(rules, start, end, doc, self.use_context_window)
             context_graph.modifiers.append(modifier)
 
-        if self.prune:
-            context_graph.prune_modifiers()
         context_graph.update_scopes()
         context_graph.apply_modifiers()
 

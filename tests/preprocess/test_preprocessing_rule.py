@@ -65,7 +65,7 @@ class TestMedSpaCyExtensions:
     def test_from_json(self):
         import os, json
         dname = os.path.join(tmpdirname.name, "test_preprocess_rules.json")
-        dname = os.path.join(".", "test_preprocess_rules.json")
+        # dname = os.path.join(".", "test_preprocess_rules.json")
         data = {
             "preprocessing_rules": [
                 {

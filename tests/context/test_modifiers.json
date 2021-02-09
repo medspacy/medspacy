@@ -1,0 +1,9 @@
+{
+    "context_rules": [
+        {
+            "category": "DEFINITE_NEGATED_EXISTENCE",
+            "direction": "FORWARD",
+            "literal": "no evidence of"
+        }
+    ]
+}

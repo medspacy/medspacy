@@ -21,7 +21,7 @@ ALL_PIPE_NAMES = {
 }
 
 
-def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None):
+def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None, **kwags):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be a blank 'en' model with the
     following components:
@@ -66,6 +66,7 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
             If True, sectionizer and context will both be loaded with default rules.
             Default is True.
         quickumls_path (string or None): Path to QuickUMLS resource
+        **kwags: QuickUMLS keyword arguments (see QuickUMLS in core.py in QuickUMLS repo)
 
     Returns:
         nlp: a spaCy Language object
@@ -141,7 +142,7 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
 
         from quickumls.spacy_component import SpacyQuickUMLS
 
-        quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
+        quickumls_component = SpacyQuickUMLS(nlp, quickumls_path, **kwags)
         nlp.add_pipe(quickumls_component)
 
     if "context" in enable:

@@ -1,6 +1,7 @@
 """This module will set extension attributes and methods for medspaCy. Examples include custom methods like span._.window()"""
 from spacy.tokens import Doc, Span, Token
-from .common .util import span_contains
+from .common.util import span_contains
+from .io.doc_consumer import ALLOWED_DATA_TYPES
 
 def set_extensions():
     "Set custom medspaCy extensions for Token, Span, and Doc classes."
@@ -148,6 +149,33 @@ def get_section_rule_token(token):
         return None
     return token._.section.rule
 
+def get_data(doc, data_type=None, as_rows=False):
+    if data_type is None:
+        if as_rows is True:
+            raise ValueError("as_rows can only be True if data_type is data_type is not None.")
+        return doc._.data
+    if data_type in ALLOWED_DATA_TYPES:
+        data = doc._.data.get(data_type, list())
+        if as_rows:
+            data = data_to_rows(data)
+        return data
+    else:
+        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(data_type, ALLOWED_DATA_TYPES))
+
+def data_to_rows(data):
+    """Unzip column-wise data from doc._.data into rows"""
+    col_data = [data[key] for key in data.keys()]
+    row_data = list(zip(*col_data))
+    return row_data
+
+def to_dataframe(doc, data_type="ent"):
+    if data_type not in ALLOWED_DATA_TYPES:
+        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(data_type, ALLOWED_DATA_TYPES))
+    import pandas as pd
+    doc_data = pd.DataFrame(data=doc._.get_data(data_type))
+    return doc_data
+
+
 
 _token_extensions = {
    "window": {"method": get_window_token},
@@ -192,7 +220,13 @@ _doc_extensions = {
     "section_categories": {"getter": get_section_categories},
     "section_spans": {"getter": get_section_spans},
     "section_parents": {"getter": get_section_parents},
-    "section_bodies": {"getter": get_section_body_spans}
+    "section_bodies": {"getter": get_section_body_spans},
+    "get_data": {"method": get_data},
+    "data": {"default": None},
+    "ent_data": {"getter": lambda doc: get_data(doc, "ent")},
+    "section_data": {"getter": lambda doc: get_data(doc, "section")},
+    "doc_data": {"getter": lambda doc: get_data(doc, "doc")},
+    "to_dataframe": {"method": to_dataframe}
 }
 
 

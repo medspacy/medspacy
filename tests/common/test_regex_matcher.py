@@ -3,7 +3,7 @@ import warnings
 
 from medspacy.common.regex_matcher import RegexMatcher
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
 
 class TestTargetMatcher:

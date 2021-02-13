@@ -6,6 +6,7 @@ from pathlib import Path
 
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
+from spacy.language import Language
 
 from .context_modifier import ConTextModifier
 from .context_graph import ConTextGraph
@@ -25,14 +26,14 @@ DEFAULT_ATTRS = {
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "context_rules.json")
 
 
+@Language.factory("context")
 class ConTextComponent:
     """The ConTextComponent for spaCy processing."""
-
-    name = "context"
 
     def __init__(
         self,
         nlp,
+        name="context",
         targets="ents",
         add_attrs=True,
         phrase_matcher_attr="LOWER",
@@ -129,6 +130,7 @@ class ConTextComponent:
         """
 
         self.nlp = nlp
+        self.name = name
         if targets != "ents":
             raise NotImplementedError()
         self._target_attr = targets

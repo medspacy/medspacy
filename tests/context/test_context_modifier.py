@@ -5,7 +5,7 @@ from spacy.tokens import Span, Doc
 from medspacy.context import ConTextRule, ConTextComponent
 from medspacy.context.context_modifier import ConTextModifier
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
 
 class TestConTextModifier:

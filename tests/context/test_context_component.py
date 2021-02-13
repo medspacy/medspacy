@@ -7,7 +7,7 @@ from medspacy.context import ConTextRule
 import pytest
 import os
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_sm", disable=["ner"])
 
 
 class TestConTextComponent:
@@ -66,7 +66,7 @@ class TestConTextComponent:
     def test_registers_attributes(self):
         """Test that the default ConText attributes are set on ."""
         doc = nlp("There is consolidation.")
-        doc.ents = (doc[-2:-1],)
+        doc.set_ents(Span(2, 3, "CONDITION"))
         context = ConTextComponent(nlp)
         doc = context(doc)
         assert hasattr(doc._, "context_graph")

@@ -1,5 +1,6 @@
 import spacy
 from spacy.tokens import Doc, Span, Token
+from spacy.language import Language
 
 from . import util
 
@@ -9,15 +10,16 @@ Doc.set_extension("section_data", default=dict(), force=True)
 
 Doc.set_extension("get_data", method=util.get_data, force=True)
 
-
+@Language.factory("doc_consumer")
 class DocConsumer(object):
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
     
-    name = "doc_consumer"
 
-    def __init__(self, nlp, attrs=None, sectionizer=False, context=False):
+
+    def __init__(self, nlp, name="doc_consumer", attrs=None, sectionizer=False, context=False):
         super(DocConsumer, self).__init__()
         self.nlp = nlp
+        self.name = name
         self.attrs = attrs
         self.section_attrs = []
         self.sectionizer = sectionizer

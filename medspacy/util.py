@@ -94,8 +94,8 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
-
     if "sentencizer" in enable:
+        raise NotImplementedError()
         from os import path
         from pathlib import Path
 
@@ -116,12 +116,10 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
             nlp.add_pipe(pyrush)
 
     if "target_matcher" in enable:
-        from .ner import TargetMatcher
-
-        target_matcher = TargetMatcher(nlp)
-        nlp.add_pipe(target_matcher)
+        nlp.add_pipe("target_matcher")
         
     if "quickumls" in enable:
+        raise NotImplementedError()
         from os import path
         from pathlib import Path
 
@@ -145,27 +143,25 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.add_pipe(quickumls_component)
 
     if "context" in enable:
-        from .context import ConTextComponent
+
 
         if load_rules:
-            context = ConTextComponent(nlp, rules="default")
+            cfg = {"rules": "default"}
         else:
-            context = ConTextComponent(nlp, rules=None)
-        nlp.add_pipe(context)
+            cfg = {"rules": None}
+        nlp.add_pipe("context", config=cfg)
 
     if "sectionizer" in enable:
         from .section_detection import Sectionizer
 
         if load_rules:
-            sectionizer = Sectionizer(nlp, rules="default")
+            cfg = {"rules": "default"}
         else:
-            sectionizer = Sectionizer(nlp, rules=None)
-        nlp.add_pipe(sectionizer)
+            cfg = {"rules": None}
+        nlp.add_pipe("sectionizer", config=cfg)
 
     if "postprocessor" in enable:
-        from .postprocess import Postprocessor
-        postprocessor = Postprocessor()
-        nlp.add_pipe(postprocessor)
+        nlp.add_pipe("postprocessor")
 
     return nlp
 

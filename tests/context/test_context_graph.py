@@ -8,7 +8,7 @@ from medspacy.context.context_graph import ConTextGraph
 from spacy.tokens import Span
 from medspacy.context.context_graph import overlap_target_modifiers
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
 
 class TestConTextGraph:

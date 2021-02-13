@@ -4,7 +4,7 @@ import warnings
 from medspacy.section_detection import Sectionizer
 from medspacy.section_detection import SectionRule
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
 
 class TestSectionizer:
@@ -428,7 +428,7 @@ class TestSectionizer:
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         doc = nlp("Past Medical History: Pneumonia")
         from spacy.tokens import Span
-        doc.ents = (Span(doc, 4, 5),)
+        doc.set_ents([Span(doc, 4, 5, "CONDITION")])
         sectionizer(doc)
         assert doc.ents[0]._.is_negated is True
 

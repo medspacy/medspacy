@@ -4,7 +4,7 @@ import warnings
 from medspacy.common import BaseRule
 from medspacy.section_detection import SectionRule
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
 
 class TestSectionizer:

@@ -1370,6 +1370,12 @@
       "literal": "worried about",
       "pattern": null,
       "direction": "FORWARD"
-    }
+    },
+     {
+      "category": "NEGATED_EXISTENCE",
+      "literal": ": none",
+      "pattern": null,
+      "direction": "BACKWARD"
+    },
   ]
 }

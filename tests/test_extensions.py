@@ -17,6 +17,7 @@ class TestMedSpaCyExtensions:
         for attr in _span_extensions.keys():
             assert hasattr(doc[0:1]._, attr)
 
+    # Not sure why this is failing - manually checking this shows it works
     def test_doc_attributes(self):
         for attr in _doc_extensions.keys():
             assert hasattr(doc._, attr)

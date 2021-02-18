@@ -2,6 +2,7 @@ import spacy
 from spacy.pipeline import EntityRuler
 
 from medspacy.io import DocConsumer
+from medspacy.io.doc_consumer import DEFAULT_ENT_ATTRS, DEFAULT_DOC_ATTRS, ALLOWED_CONTEXT_ATTRS, ALLOWED_SECTION_ATTRS, ALLOWED_DATA_TYPES
 from medspacy.context import ConTextComponent
 from medspacy.section_detection import Sectionizer, SectionRule
 
@@ -40,51 +41,39 @@ many_concept_docs = [nlp(t) for t in many_concept_texts]
 
 class TestDocConsumer:
     def test_init_default(self):
+        doc_consumer = DocConsumer(nlp)
         assert DocConsumer(nlp)
+        assert doc_consumer.dtypes == ("ent",)
 
     def test_init_context(self):
-        assert DocConsumer(nlp, context=True)
-
-    def test_init_sections(self):
-        assert DocConsumer(nlp, sectionizer=True)
-
-    def test_init_all(self):
-        assert DocConsumer(nlp, context=True, sectionizer=True)
+        doc_consumer = DocConsumer(nlp, dtypes=("context",))
+        assert doc_consumer.dtypes == ("context",)
 
     def test_default_cols(self):
         consumer = DocConsumer(nlp)
         doc = consumer(simple_doc)
         data = doc._.get_data("ent")
         assert data is not None
-        assert set(data.keys()) == set(consumer.attrs)
+        assert set(data.keys()) == set(consumer.dtype_attrs["ent"])
+        assert set(data.keys()) == set(DEFAULT_ENT_ATTRS)
 
     def test_context_cols(self):
-        consumer = DocConsumer(nlp, context=True)
+        consumer = DocConsumer(nlp, dtypes=("context",))
         doc = consumer(context_doc)
-        data = doc._.get_data("ent")
+        data = doc._.get_data("context")
         assert data is not None
-        assert set(data.keys()) == set(consumer.attrs)
+        assert set(data.keys()) == set(ALLOWED_CONTEXT_ATTRS)
 
-    def test_section_cols_ent(self):
-        consumer = DocConsumer(nlp, sectionizer=True)
-        doc = consumer(context_doc)
-        data = doc._.get_data("ent")
-        assert data is not None
-        assert set(data.keys()) == set(consumer.attrs)
-
-    def test_section_cols_section(self):
-        consumer = DocConsumer(nlp, sectionizer=True)
+    def test_section_cols(self):
+        consumer = DocConsumer(nlp, dtypes=("section",))
         doc = consumer(context_doc)
         data = doc._.get_data("section")
         assert data is not None
-        assert set(data.keys()) == set(consumer.section_attrs)
+        assert set(data.keys()) == set(ALLOWED_SECTION_ATTRS)
 
-    def test_all_cols(self):
-        consumer = DocConsumer(nlp, sectionizer=True, context=True)
-        doc = consumer(context_doc)
-        data = doc._.get_data("ent")
-        assert data is not None
-        assert set(data.keys()) == set(consumer.attrs)
+    def test_all_dtypes(self):
+        consumer = DocConsumer(nlp, dtypes="all")
+        assert consumer.dtypes == ALLOWED_DATA_TYPES
 
     def test_default_data(self):
         consumer = DocConsumer(nlp)
@@ -97,7 +86,7 @@ class TestDocConsumer:
         assert data["end_char"][0] == ent.end_char
 
     def test_context_data(self):
-        consumer = DocConsumer(nlp, context=True)
+        consumer = DocConsumer(nlp)
         doc = consumer(context_doc)
         data = doc._.get_data("ent")
         ent = doc.ents[0]
@@ -108,7 +97,7 @@ class TestDocConsumer:
         assert data["is_negated"][0] == ent._.is_negated
 
     def test_section_data_ent(self):
-        consumer = DocConsumer(nlp, sectionizer=True)
+        consumer = DocConsumer(nlp)
         doc = consumer(section_doc)
         data = doc._.get_data("ent")
         ent = doc.ents[0]
@@ -116,7 +105,7 @@ class TestDocConsumer:
         assert data["section_parent"][0] == ent._.section_parent
 
     def test_section_data_ent_parent(self):
-        consumer = DocConsumer(nlp, sectionizer=True)
+        consumer = DocConsumer(nlp)
         doc = consumer(section_parent_doc)
         data = doc._.get_data("ent")
         ent = doc.ents[0]
@@ -124,7 +113,7 @@ class TestDocConsumer:
         assert data["section_parent"][0] == ent._.section_parent
 
     def test_section_data_section(self):
-        consumer = DocConsumer(nlp, sectionizer=True)
+        consumer = DocConsumer(nlp, dtypes=("section",))
         doc = consumer(section_doc)
         data = doc._.get_data("section")
         section = doc._.sections[0]

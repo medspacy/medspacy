@@ -226,6 +226,7 @@ _doc_extensions = {
     "ent_data": {"getter": lambda doc: get_data(doc, "ent")},
     "section_data": {"getter": lambda doc: get_data(doc, "section")},
     "doc_data": {"getter": lambda doc: get_data(doc, "doc")},
+    "context_data": {"getter": lambda doc: get_data(doc, "context")},
     "to_dataframe": {"method": to_dataframe}
 }
 

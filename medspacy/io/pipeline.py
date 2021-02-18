@@ -21,7 +21,7 @@ class Pipeline:
 
                 for i, doc in enumerate(docs):
                     id = ids[i]
-                    doc_data = pd.DataFrame(data=doc._.get_data(self.data_type))
+                    doc_data = pd.DataFrame(data=doc._.to_dataframe(self.data_type))
                     doc_data.insert(0, self.writer.cols[0], [id for j in range(doc_data.shape[0])])
 
                     if data is None:

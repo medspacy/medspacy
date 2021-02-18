@@ -3,7 +3,8 @@ import pandas as pd
 
 
 class DbWriter:
-    def __init__(self, db_conn, destination_table, create_table, drop_existing, write_batch_size, cols, col_types):
+    def __init__(self, db_conn, destination_table, cols, col_types,
+                 create_table=False, drop_existing=False,write_batch_size=100):
         self.db = db_conn
         self.destination_table = destination_table
         self._create_table = create_table
@@ -32,8 +33,8 @@ class DbWriter:
         q_list = ", ".join(["?" for col in self.cols])
         self.insert_query = "INSERT INTO {0} ({1}) VALUES ({2})".format(self.destination_table, col_list, q_list)
 
-    def write(self, data):
-        self.db.write(self.insert_query, data[self.cols].values.tolist())
+    def write(self, data_df):
+        self.db.write(self.insert_query, data_df[self.cols].values.tolist())
 
     def close(self):
         self.db.close()

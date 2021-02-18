@@ -1,8 +1,27 @@
 from collections import OrderedDict
 
-ALLOWED_DATA_TYPES = ("ent", "section", "doc")
+ALLOWED_DATA_TYPES = ("ent", "context", "section", "doc")
 
-ALLOWED_SECTION_ATTRS = {
+DEFAULT_ENT_ATTRS = (
+    "text",
+    "start_char",
+    "end_char",
+    "label_",
+    "is_negated",
+    "is_uncertain",
+    "is_historical",
+    "is_hypothetical",
+    "is_family",
+    "section_category",
+    "section_parent",
+
+)
+
+DEFAULT_DOC_ATTRS = (
+    "text",
+)
+
+ALLOWED_SECTION_ATTRS = (
             "section_category",
             "section_title_text",
             "section_title_start_char",
@@ -14,53 +33,56 @@ ALLOWED_SECTION_ATTRS = {
             "section_text_start_char",
             "section_text_end_char",
             "section_parent",
+)
 
-
-        }
-
+ALLOWED_CONTEXT_ATTRS = (
+    "ent_text",
+    "ent_label_",
+    "ent_start_char",
+    "ent_end_char",
+    "modifier_text",
+    "modifier_category",
+    "modifier_direction",
+    "modifier_start_char",
+    "modifier_end_char",
+    "modifier_scope_start_char",
+    "modifier_scope_end_char",
+)
 
 class DocConsumer:
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
     
     name = "doc_consumer"
 
-    def __init__(self, nlp, data_types=("ent",), attrs=None, sectionizer=False, context=False):
+    def __init__(self, nlp, dtypes=("ent",), dtype_attrs=None):
         self.nlp = nlp
-        for dtype in data_types:
+        if not isinstance(dtypes, tuple):
+            if dtypes == "all":
+                dtypes = tuple(ALLOWED_DATA_TYPES)
+            else:
+                raise ValueError("dtypes must be either 'all' or a tuple, not {0}".format(dtypes))
+        for dtype in dtypes:
             if dtype not in ALLOWED_DATA_TYPES:
-                raise ValueError("Invalid data_types. Supported data_types are {0}, not {1}".format(ALLOWED_DATA_TYPES, dtype))
+                raise ValueError("Invalid dtypes. Supported dtypes are {0}, not {1}".format(ALLOWED_DATA_TYPES, dtype))
             if dtype == "section":
-                self.validate_section_attrs(attrs)
-        self.data_types = data_types
-        self.attrs = attrs
-        # self.section_attrs = []
-        self.sectionizer = sectionizer
-        self.context = context
+                self.validate_section_attrs(dtype_attrs)
+        self.dtypes = dtypes
+        self.dtype_attrs = dtype_attrs
 
-        if self.attrs is None:
-            # basic ent attrs
-            self.attrs = {dtype: list() for dtype in data_types}
-            if "ent" in self.attrs:
-                self.attrs["ent"] = ["text", "start_char", "end_char", "label_"]
+        if self.dtype_attrs is None:
+            self.set_default_attrs()
 
-                if self.context:
-                    self.attrs["ent"] += ["is_negated", "is_uncertain", "is_historical", "is_hypothetical", "is_family"]
-
-                if self.sectionizer:
-                    self.attrs["ent"] += ["section_category", "section_parent"]
-            if "section" in self.attrs:
-                self.attrs["section"] += [
-                    "section_category",
-                    "section_title_text",
-                    "section_title_start_char",
-                    "section_title_end_char",
-                    "section_text",
-                    "section_text_start_char",
-                    "section_text_end_char",
-                    "section_parent",
-                ]
-            if "doc" in self.attrs:
-                self.attrs["doc"] += ["text"]
+    def set_default_attrs(self):
+        # basic ent dtype_attrs
+        self.dtype_attrs = {dtype: list() for dtype in self.dtypes}
+        if "ent" in self.dtype_attrs:
+            self.dtype_attrs["ent"] = list(DEFAULT_ENT_ATTRS)
+        if "context" in self.dtype_attrs:
+            self.dtype_attrs["context"] = list(ALLOWED_CONTEXT_ATTRS)
+        if "section" in self.dtype_attrs:
+            self.dtype_attrs["section"] += list(ALLOWED_SECTION_ATTRS)
+        if "doc" in self.dtype_attrs:
+            self.dtype_attrs["doc"] += list(DEFAULT_DOC_ATTRS)
 
     def validate_section_attrs(self, attrs):
         """Validate that section attributes are either not specified or are valid attribute names."""
@@ -70,29 +92,31 @@ class DocConsumer:
             return True
         diff = set(attrs["section"]).difference(ALLOWED_SECTION_ATTRS)
         if diff:
-            raise ValueError("Invalid section attrs specified: {0}".format(diff))
+            raise ValueError("Invalid section dtype_attrs specified: {0}".format(diff))
         return True
 
     def __call__(self, doc):
         data = dict()
-        for dtype, attrs in self.attrs.items():
+        for dtype, attrs in self.dtype_attrs.items():
             data.setdefault(dtype, OrderedDict())
             for attr in attrs:
                 data[dtype][attr] = list()
-        if "ent" in self.data_types:
+        if "ent" in self.dtypes:
             for ent in doc.ents:
-                for attr in self.attrs["ent"]:
+                for attr in self.dtype_attrs["ent"]:
                     try:
                         val = getattr(ent, attr)
                     except AttributeError:
                         val = getattr(ent._, attr)
                     data["ent"][attr].append(val)
-
-        if "section" in self.data_types:
+        if "context" in self.dtypes:
+            for (ent, modifier) in doc._.context_graph.edges:
+                self.add_context_edge_attributes(ent, modifier, data["context"])
+        if "section" in self.dtypes:
             for section in doc._.sections:
                 self.add_section_attributes(section, data["section"])
-        if "doc" in self.data_types:
-            for attr in self.attrs["doc"]:
+        if "doc" in self.dtypes:
+            for attr in self.dtype_attrs["doc"]:
                 try:
                     val = getattr(doc, attr)
                 except AttributeError:
@@ -102,55 +126,53 @@ class DocConsumer:
         doc._.data = data
         return doc
 
+    def add_context_edge_attributes(self, ent, modifier, context_data):
+        if "ent_text" in self.dtype_attrs["context"]:
+            context_data["ent_text"].append(ent.text)
+        if "ent_label_" in self.dtype_attrs["context"]:
+            context_data["ent_label_"].append(ent.label_)
+        if "ent_start_char" in self.dtype_attrs["context"]:
+            context_data["ent_start_char"].append(ent.start_char)
+        if "ent_end_char" in self.dtype_attrs["context"]:
+            context_data["ent_end_char"].append(ent.end_char)
+        if "modifier_text" in self.dtype_attrs["context"]:
+            context_data["modifier_text"].append(modifier.span.text)
+        if "modifier_category" in self.dtype_attrs["context"]:
+            context_data["modifier_category"].append(modifier.category)
+        if "modifier_direction" in self.dtype_attrs["context"]:
+            context_data["modifier_direction"].append(modifier.direction)
+        if "modifier_start_char" in self.dtype_attrs["context"]:
+            context_data["modifier_start_char"].append(modifier.span.start_char)
+        if "modifier_end_char" in self.dtype_attrs["context"]:
+            context_data["modifier_end_char"].append(modifier.span.end_char)
+        if "modifier_scope_start_char" in self.dtype_attrs["context"]:
+            context_data["modifier_scope_start_char"].append(modifier.scope.start_char)
+        if "modifier_scope_end_char" in self.dtype_attrs["context"]:
+            context_data["modifier_scope_end_char"].append(modifier.span.end_char)
+
     def add_section_attributes(self, section, section_data):
         # Allow for null sections
-        section_data["section_category"].append(section.category)
+        if "section_category" in self.dtype_attrs["section"]:
+            section_data["section_category"].append(section.category)
         if section.category is not None:
-            section_data["section_title_text"].append(section.title_span.text)
-            section_data["section_title_start_char"].append(section.title_span.start_char)
-            section_data["section_title_end_char"].append(section.title_span.end_char)
+            if "section_title_text" in self.dtype_attrs["section"]:
+                section_data["section_title_text"].append(section.title_span.text)
+            if "section_title_start_char" in self.dtype_attrs["section"]:
+                section_data["section_title_start_char"].append(section.title_span.start_char)
+            if "section_title_end_char" in self.dtype_attrs["section"]:
+                section_data["section_title_end_char"].append(section.title_span.end_char)
         else:
-            section_data["section_title_text"].append(None)
-            section_data["section_title_start_char"].append(0)
-            section_data["section_title_end_char"].append(0)
-        section_data["section_text"].append(section.section_span.text)
-        section_data["section_text_start_char"].append(section.section_span.start_char)
-        section_data["section_text_end_char"].append(section.section_span.end_char)
-        section_data["section_parent"].append(section.parent)
-
-
-
-
-
-
-        # for attr in self.section_attrs:
-        #     section_data[attr] = []
-        # ent_data = {}
-        # for attr in self.attrs:
-        #     ent_data[attr] = []
-        # for ent in doc.ents:
-        #     for attr in self.attrs:
-        #         try:
-        #             val = getattr(ent, attr)
-        #         except AttributeError:
-        #             val = getattr(ent._, attr)
-        #         ent_data[attr].append(val)
-        # doc._.ent_data = ent_data
-        # if self.sectionizer:
-        #
-        #     for section in doc._.sections:
-        #         section_data["section_category"].append(section.category)
-        #         if section.category is not None:
-        #             section_data["section_title_text"].append(section.title_span.text)
-        #             section_data["section_title_start_char"].append(section.title_span.start_char)
-        #             section_data["section_title_end_char"].append(section.title_span.end_char)
-        #         else:
-        #             section_data["section_title_text"].append(None)
-        #             section_data["section_title_start_char"].append(0)
-        #             section_data["section_title_end_char"].append(0)
-        #         section_data["section_text"].append(section.section_span.text)
-        #         section_data["section_text_start_char"].append(section.section_span.start_char)
-        #         section_data["section_text_end_char"].append(section.section_span.end_char)
-        #         section_data["section_parent"].append(section.parent)
-        #     doc._.section_data = section_data
-        # return doc
+            if "section_title_text" in self.dtype_attrs["section"]:
+                section_data["section_title_text"].append(None)
+            if "section_title_start_char" in self.dtype_attrs["section"]:
+                section_data["section_title_start_char"].append(0)
+            if "section_title_end_char" in self.dtype_attrs["section"]:
+                section_data["section_title_end_char"].append(0)
+        if "section_text" in self.dtype_attrs["section"]:
+            section_data["section_text"].append(section.section_span.text)
+        if "section_text_start_char" in self.dtype_attrs["section"]:
+            section_data["section_text_start_char"].append(section.section_span.start_char)
+        if "section_text_end_char" in self.dtype_attrs["section"]:
+            section_data["section_text_end_char"].append(section.section_span.end_char)
+        if "section_parent" in self.dtype_attrs["section"]:
+            section_data["section_parent"].append(section.parent)

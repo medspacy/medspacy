@@ -1,12 +1,26 @@
-import pyodbc
-
-
 class DbConnect:
+    """DbConnect is a wrapper for either a pyodbc or sqlite3 connection. It can then be
+    passed into the DbReader and DbWriter classes to retrieve/store document data.
+    """
     def __init__(self, driver=None, server=None, db=None, user=None, pwd=None, conn=None):
+        """Create a new DbConnect object. You can pass in either information for a pyodbc connection string
+        or directly pass in a sqlite or pyodbc connection object.
+
+        If conn is None, all other arguments must be supplied. If conn is passed in, all other arguments will be ignored.
+
+        Args:
+            driver
+            server
+            db:
+            user
+            pwd
+            conn
+        """
         if conn is None:
             if not all([driver, server, db, user, pwd]):
                 raise ValueError("If you are not passing in a connection object, "
                                  "you must pass in all other arguments to create a DB connection.")
+            import pyodbc
             self.conn = pyodbc.connect("DRIVER={0};SERVER={1};DATABASE={2};USER={3};PWD={4}".format(driver, server, db, user, pwd))
         else:
             self.conn = conn
@@ -16,17 +30,17 @@ class DbConnect:
     def create_table(self, query, table_name, drop_existing):
         if drop_existing:
             try:
-                self.cursor.execute("drop table {0}".format(table_name))
+                self.cursor.execute("drop table if exists {0}".format(table_name))
             except pyodbc.DatabaseError:
-                print("Cannot drop {0}. Table does not exist.".format(table_name))
+                pass
             else:
                 self.conn.commit()
         try:
             self.cursor.execute(query)
-        except pyodbc.DatabaseError as err:
+        except Exception as e:
             self.conn.rollback()
             self.conn.close()
-            raise err
+            raise e
         else:
             self.conn.commit()
             print("Created table {0} with query: {1}".format(table_name, query))
@@ -34,10 +48,10 @@ class DbConnect:
     def write(self, query, data):
         try:
             self.cursor.executemany(query, data)
-        except pyodbc.DatabaseError as err:
+        except Exception as e:
             self.conn.rollback()
             self.conn.close()
-            raise err
+            raise e
         else:
             self.conn.commit()
             print("Wrote {0} rows with query: {1}".format(len(data), query))

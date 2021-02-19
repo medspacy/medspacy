@@ -149,18 +149,18 @@ def get_section_rule_token(token):
         return None
     return token._.section.rule
 
-def get_data(doc, data_type=None, as_rows=False):
-    if data_type is None:
+def get_data(doc, dtype=None, as_rows=False):
+    if dtype is None:
         if as_rows is True:
-            raise ValueError("as_rows can only be True if data_type is data_type is not None.")
+            raise ValueError("as_rows can only be True if dtype is dtype is not None.")
         return doc._.data
-    if data_type in ALLOWED_DATA_TYPES:
-        data = doc._.data.get(data_type, list())
+    if dtype in ALLOWED_DATA_TYPES:
+        data = doc._.data.get(dtype, list())
         if as_rows:
             data = data_to_rows(data)
         return data
     else:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(data_type, ALLOWED_DATA_TYPES))
+        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(dtype, ALLOWED_DATA_TYPES))
 
 def data_to_rows(data):
     """Unzip column-wise data from doc._.data into rows"""

@@ -17,7 +17,8 @@ ALL_PIPE_NAMES = {
     "tokenizer",
     "preprocessor",
     "postprocessor",
-    "sectionizer"
+    "sectionizer",
+    "doc_consumer"
 }
 
 
@@ -166,6 +167,11 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         from .postprocess import Postprocessor
         postprocessor = Postprocessor()
         nlp.add_pipe(postprocessor)
+
+    if "doc_consumer" in enable:
+        from .io import DocConsumer
+        doc_consumer = DocConsumer(nlp)
+        nlp.add_pipe(doc_consumer)
 
     return nlp
 

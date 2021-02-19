@@ -2,11 +2,11 @@ import pandas as pd
 
 
 class Pipeline:
-    def __init__(self, reader, writer, nlp, data_type):
+    def __init__(self, reader, writer, nlp, dtype):
         self.reader = reader
         self.writer = writer
         self.nlp = nlp
-        self.data_type = data_type
+        self.dtype = dtype
 
     def process(self):
         query_result = self.reader.read()
@@ -21,7 +21,7 @@ class Pipeline:
 
                 for i, doc in enumerate(docs):
                     id = ids[i]
-                    doc_data = pd.DataFrame(data=doc._.to_dataframe(self.data_type))
+                    doc_data = pd.DataFrame(data=doc._.get_data(self.dtype, dtype=self.dtype))
                     doc_data.insert(0, self.writer.cols[0], [id for j in range(doc_data.shape[0])])
 
                     if data is None:

@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-ALLOWED_DATA_TYPES = ("ent", "context", "section", "doc")
+ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
 
 DEFAULT_ENT_ATTRS = (
     "text",
@@ -54,7 +54,36 @@ class DocConsumer:
     
     name = "doc_consumer"
 
-    def __init__(self, nlp, dtypes=("ent",), dtype_attrs=None):
+    def __init__(self, nlp, dtypes=("ent", "section", "context", "doc"), dtype_attrs=None):
+        """Create a new DocConsumer.
+
+        This component extracts structured information from a Doc. Information is stored in
+        doc._.data, which is a nested dictionary. The outer keys represent the data type of
+        can be either:
+            - "ent": data about the spans in doc.ents such as the text, label,
+                context attributes, section information, or custom attributes
+            - "section": data about the sections within the notes, such as the
+                section text and category
+            - "context": data about entity-modifier pairs extracted by ConText
+            - "doc": a single doc-level representation. By default only doc.text is extracted,
+                but other attributes may be specified
+
+        Once processed, a doc's data can be accessed either by:
+            - doc._.data
+            - doc._.get_data(dtype=...)
+            - doc._.ent_data
+            - doc._.to_dataframe(dtype=...)
+
+        Args:
+            nlp: A spaCy model
+            dtypes (tuple or str): Either a tuple of data types to collect or the string "all".
+                Valid options are ("ent", "section", "context", "doc")
+            dtype_attrs(dict or None): An optional dictionary mapping the data types in dtypes to a list
+                of attributes. If None, will set defaults for each dtype. Attributes for "ent" and "doc"
+                may be customized be adding either native or custom attributes (ie., ent._....)
+                "context" and "section" may only include the attributes contained in the default.
+                Default values for each dtype can be retrieved by the class method DocConsumer.get_default_attrs()
+        """
         self.nlp = nlp
         if not isinstance(dtypes, tuple):
             if dtypes == "all":
@@ -72,17 +101,25 @@ class DocConsumer:
         if self.dtype_attrs is None:
             self.set_default_attrs()
 
+    @classmethod
+    def get_default_attrs(cls, dtypes=None):
+        if dtypes is None:
+            dtypes = ALLOWED_DATA_TYPES
+        dtype_attrs = {dtype: list() for dtype in dtypes}
+        if "ent" in dtype_attrs:
+            dtype_attrs["ent"] = list(DEFAULT_ENT_ATTRS)
+        if "context" in dtype_attrs:
+            dtype_attrs["context"] = list(ALLOWED_CONTEXT_ATTRS)
+        if "section" in dtype_attrs:
+            dtype_attrs["section"] += list(ALLOWED_SECTION_ATTRS)
+        if "doc" in dtype_attrs:
+            dtype_attrs["doc"] += list(DEFAULT_DOC_ATTRS)
+        return dtype_attrs
+
+
     def set_default_attrs(self):
-        # basic ent dtype_attrs
-        self.dtype_attrs = {dtype: list() for dtype in self.dtypes}
-        if "ent" in self.dtype_attrs:
-            self.dtype_attrs["ent"] = list(DEFAULT_ENT_ATTRS)
-        if "context" in self.dtype_attrs:
-            self.dtype_attrs["context"] = list(ALLOWED_CONTEXT_ATTRS)
-        if "section" in self.dtype_attrs:
-            self.dtype_attrs["section"] += list(ALLOWED_SECTION_ATTRS)
-        if "doc" in self.dtype_attrs:
-            self.dtype_attrs["doc"] += list(DEFAULT_DOC_ATTRS)
+        self.dtype_attrs = self.get_default_attrs(self.dtypes)
+
 
     def validate_section_attrs(self, attrs):
         """Validate that section attributes are either not specified or are valid attribute names."""

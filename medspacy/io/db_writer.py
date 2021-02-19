@@ -1,16 +1,27 @@
-import pyodbc
-import pandas as pd
-
-
 class DbWriter:
-    def __init__(self, db_conn, destination_table, cols, col_types,
+    """DbWriter is a utility class for writing structured data back to a database.
+    """
+    def __init__(self, db_conn, destination_table, cols, col_types, doc_dtype="ent",
                  create_table=False, drop_existing=False,write_batch_size=100):
+        """Create a new DbWriter object.
+
+        Args:
+            db_conn: A medspacy.io.DbConnect object
+            destination_table: The name of the table to write to
+            cols: The names of the columns of the destination table
+            col_types: The sql data types of the table columns
+            doc_dtype: The type of data from DocConsumer to write from a doc.
+                Either ("ent", "section", "context", or "doc")
+            create_table (bool): Whether to create a table
+
+        """
         self.db = db_conn
         self.destination_table = destination_table
         self._create_table = create_table
         self.drop_existing = drop_existing
         self.cols = cols
         self.col_types = col_types
+        self.doc_dtype = doc_dtype
         self.batch_size = write_batch_size
 
         self.insert_query = ""
@@ -33,8 +44,10 @@ class DbWriter:
         q_list = ", ".join(["?" for col in self.cols])
         self.insert_query = "INSERT INTO {0} ({1}) VALUES ({2})".format(self.destination_table, col_list, q_list)
 
-    def write(self, data_df):
-        self.db.write(self.insert_query, data_df[self.cols].values.tolist())
+    def write(self, doc):
+        """Write a doc to a database."""
+        data = doc._.get_data(self.doc_dtype, as_rows=True)
+        self.db.write(self.insert_query, data)
 
     def close(self):
         self.db.close()

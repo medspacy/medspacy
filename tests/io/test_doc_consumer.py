@@ -43,7 +43,7 @@ class TestDocConsumer:
     def test_init_default(self):
         doc_consumer = DocConsumer(nlp)
         assert DocConsumer(nlp)
-        assert doc_consumer.dtypes == ("ent",)
+        assert doc_consumer.dtypes == ("ent", "section", "context", "doc")
 
     def test_init_context(self):
         doc_consumer = DocConsumer(nlp, dtypes=("context",))
@@ -127,7 +127,7 @@ class TestDocConsumer:
         assert data["section_parent"][0] == section.parent
 
     def test_ten_concepts(self):
-        consumer = DocConsumer(nlp)
+        consumer = DocConsumer(nlp, dtypes=("ent",))
         docs = [consumer(d) for d in many_concept_docs]
         for doc in docs:
             print(doc)
@@ -138,3 +138,11 @@ class TestDocConsumer:
                 print(num_concepts)
                 print(data[key])
                 assert num_concepts == len(data[key])
+
+    def test_get_default_attrs(self):
+        attrs = DocConsumer.get_default_attrs()
+        assert set(attrs.keys()) == {"ent", "context", "section", "doc"}
+        assert set(attrs["ent"]) == set(DEFAULT_ENT_ATTRS)
+        assert set(attrs["section"]) == set(ALLOWED_SECTION_ATTRS)
+        assert set(attrs["context"]) == set(ALLOWED_CONTEXT_ATTRS)
+        assert set(attrs["doc"]) == set(DEFAULT_DOC_ATTRS)

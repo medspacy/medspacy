@@ -1371,11 +1371,17 @@
       "pattern": null,
       "direction": "FORWARD"
     },
-     {
+    {
       "category": "NEGATED_EXISTENCE",
       "literal": ": none",
       "pattern": null,
       "direction": "BACKWARD"
     },
+    {
+      "category": "NEGATED_EXISTENCE",
+      "literal": ": no",
+      "pattern": null,
+      "direction": "BACKWARD"
+    }
   ]
 }

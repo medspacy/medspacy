@@ -25,19 +25,35 @@ class DbConnect:
         else:
             self.conn = conn
         self.cursor = self.conn.cursor()
+        import sqlite3
+        if isinstance(self.conn, sqlite3.Connection):
+            self.db_lib = "sqlite3"
+            self.database_exception = sqlite3.DatabaseError
+        else:
+            import pyodbc
+            if isinstance(self.conn, pyodbc.Connection):
+                self.db_lib = "pyodbc"
+                self.database_exception = pyodbc.DatabaseError
+            else:
+                raise ValueError("conn must be either a sqlite3 or pyodbc Connection object, not {0}".format(type(self.conn)))
+
+
         print("Opened connection to {0}.{1}".format(server, db))
+
+
 
     def create_table(self, query, table_name, drop_existing):
         if drop_existing:
             try:
                 self.cursor.execute("drop table if exists {0}".format(table_name))
-            except pyodbc.DatabaseError:
+            # except pyodbc.DatabaseError:
+            except self.database_exception as e:
                 pass
             else:
                 self.conn.commit()
         try:
             self.cursor.execute(query)
-        except Exception as e:
+        except self.database_exception as e:
             self.conn.rollback()
             self.conn.close()
             raise e
@@ -48,7 +64,7 @@ class DbConnect:
     def write(self, query, data):
         try:
             self.cursor.executemany(query, data)
-        except Exception as e:
+        except self.database_exception as e:
             self.conn.rollback()
             self.conn.close()
             raise e

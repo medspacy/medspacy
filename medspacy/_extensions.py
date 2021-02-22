@@ -150,6 +150,9 @@ def get_section_rule_token(token):
     return token._.section.rule
 
 def get_data(doc, dtype=None, as_rows=False):
+    if doc._.data is None:
+        raise ValueError("doc._.data is None, which might mean that you haven't processed your doc with a DocConsumer yet.\n"
+                         "Make sure you've processed a doc by either calling doc_consumer(doc) or nlp.add_pipe(doc_consumer)")
     if dtype is None:
         if as_rows is True:
             raise ValueError("as_rows can only be True if dtype is dtype is not None.")

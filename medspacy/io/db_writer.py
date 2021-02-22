@@ -47,6 +47,9 @@ class DbWriter:
     def write(self, doc):
         """Write a doc to a database."""
         data = doc._.get_data(self.doc_dtype, as_rows=True)
+        self.write_data(data)
+
+    def write_data(self, data):
         self.db.write(self.insert_query, data)
 
     def close(self):

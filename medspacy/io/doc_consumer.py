@@ -54,7 +54,7 @@ class DocConsumer:
     
     name = "doc_consumer"
 
-    def __init__(self, nlp, dtypes=("ent", "section", "context", "doc"), dtype_attrs=None):
+    def __init__(self, nlp, dtypes=("ent", ), dtype_attrs=None):
         """Create a new DocConsumer.
 
         This component extracts structured information from a Doc. Information is stored in
@@ -77,7 +77,9 @@ class DocConsumer:
         Args:
             nlp: A spaCy model
             dtypes (tuple or str): Either a tuple of data types to collect or the string "all".
+                Default ("ent",)
                 Valid options are ("ent", "section", "context", "doc")
+
             dtype_attrs(dict or None): An optional dictionary mapping the data types in dtypes to a list
                 of attributes. If None, will set defaults for each dtype. Attributes for "ent" and "doc"
                 may be customized be adding either native or custom attributes (ie., ent._....)

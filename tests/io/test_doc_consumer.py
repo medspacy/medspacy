@@ -43,7 +43,7 @@ class TestDocConsumer:
     def test_init_default(self):
         doc_consumer = DocConsumer(nlp)
         assert DocConsumer(nlp)
-        assert doc_consumer.dtypes == ("ent", "section", "context", "doc")
+        assert doc_consumer.dtypes == ("ent", )
 
     def test_init_context(self):
         doc_consumer = DocConsumer(nlp, dtypes=("context",))

@@ -34,7 +34,7 @@ class TestDbWriter:
         from medspacy.io.db_writer import DbWriter
         writer = DbWriter(db_conn, "ents", doc_consumer.dtype_attrs["ent"], db_dtypes,
                           create_table=True, drop_existing=False)
-        writer.write(doc._.to_dataframe("ent"))
+        writer.write(doc)
         cursor.execute("SELECT * FROM ents;")
         rslts = cursor.fetchone()
         assert rslts == ("pneumonia", "CONDITION", True, None)

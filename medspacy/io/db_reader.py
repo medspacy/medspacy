@@ -1,6 +1,3 @@
-import pyodbc
-
-
 class DbReader:
     def __init__(self, db_conn, read_query, start=-1, end=-1, read_batch_size=-1):
         self.db = db_conn

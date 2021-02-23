@@ -42,7 +42,8 @@ class TestMedSpaCy:
             "target_matcher",
             "context",
             "sectionizer",
-            "postprocessor"
+            "postprocessor",
+            "doc_consumer"
         ]
 
         nlp = medspacy.load(enable="all")

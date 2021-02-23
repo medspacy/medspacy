@@ -1,7 +1,7 @@
 """Module for utility functions contained by multiple components of medspaCy."""
 import re
 
-def span_contains(span, target, regex=True, case_insensitive=True):
+def span_contains(span, target, regex=True, case_insensitive=False):
     """Return True if a Span object contains a target phrase.
     Case insensitive.
     span: A spaCy Span, such as an entity in doc.ents

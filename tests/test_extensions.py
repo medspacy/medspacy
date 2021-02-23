@@ -8,7 +8,7 @@ from medspacy._extensions import _token_extensions, _span_extensions, _doc_exten
 nlp = spacy.blank("en")
 doc = nlp("There is no evidence of pneumonia in the chest x-ray.")
 
-class TestMedSpaCy:
+class TestMedSpaCyExtensions:
     def test_token_attributes(self):
         for attr in _token_extensions.keys():
             assert hasattr(doc[0]._, attr)
@@ -17,6 +17,8 @@ class TestMedSpaCy:
         for attr in _span_extensions.keys():
             assert hasattr(doc[0:1]._, attr)
 
+    # @pytest.mark.skip(reason="Not sure why this is failing - manually checking this shows it works. "
+    #              "Skipping for now.")
     def test_doc_attributes(self):
         for attr in _doc_extensions.keys():
             assert hasattr(doc._, attr)

@@ -41,12 +41,6 @@ class TestConTextGraph:
         graph.apply_modifiers()
         assert len(graph.edges) == 2
 
-    def test_prune_modifiers(self):
-        doc, graph = self.context_graph()
-        graph.targets = [doc[5:6]]  # "pneumonia"
-        graph.prune_modifiers()
-        assert len(graph.modifiers) == 2
-
     def test_update_scopes(self):
         doc, graph = self.context_graph()
         graph.targets = [doc[5:6]]  # "pneumonia"
@@ -65,7 +59,6 @@ class TestConTextGraph:
 
         graph.modifiers = [tag_object]
         graph.targets = doc.ents
-        graph.prune_modifiers()
         graph.apply_modifiers()
 
         assert overlap_target_modifiers(tag_object.span, doc.ents[0])
@@ -81,7 +74,6 @@ class TestConTextGraph:
 
         graph.modifiers = [tag_object]
         graph.targets = doc.ents
-        graph.prune_modifiers()
         graph.apply_modifiers()
 
         assert overlap_target_modifiers(tag_object.span, doc.ents[0])

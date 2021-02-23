@@ -58,60 +58,6 @@ class ConTextGraph:
 
         self.edges = edges
 
-    def prune_modifiers(self):
-        """Prune overlapping modifiers so that only the longest span is kept.
-
-        For example, if "no" and "no evidence of" are both tagged as modifiers,
-        only "no evidence of" will be kept.
-
-        Additionally, this removes any modifiers which overlap with a target.
-        For example, if doc.ents contains a span "does not know" and "not" is tagged by
-        context as a modifier, "not" will be removed.
-
-        # TODO: Consider only removing modifiers which are subspans.
-        """
-
-        unpruned = sorted(self.modifiers, key=lambda x: (x.end - x.end))
-        if len(unpruned) > 0:
-            rslt = self.prune_overlapping_modifiers(unpruned)
-            self.modifiers = rslt
-
-    def prune_overlapping_modifiers(self, modifiers):
-        # Don't prune a single modifier
-        if len(modifiers) == 1:
-            return modifiers
-
-        # Make a copy
-        unpruned = list(modifiers)
-        pruned = []
-        num_mods = len(unpruned)
-        curr_mod = unpruned.pop(0)
-
-        while True:
-            if len(unpruned) == 0:
-                pruned.append(curr_mod)
-                break
-            # if len(unpruned) == 1:
-            #     pruned.append(unpruned.pop(0))
-            #     break
-            next_mod = unpruned.pop(0)
-
-            # Check if they overlap
-            if curr_mod.overlaps(next_mod):
-                # Choose the larger
-                longer_span = max(curr_mod, next_mod, key=lambda x: (x.end - x.start))
-
-                pruned.append(longer_span)
-                if len(unpruned) == 0:
-                    break
-                curr_mod = unpruned.pop(0)
-            else:
-                pruned.append(curr_mod)
-                curr_mod = next_mod
-        # Recursion base point
-        if len(pruned) == num_mods:
-            return pruned
-        return self.prune_overlapping_modifiers(pruned)
 
     def __repr__(self):
         return "<ConTextGraph> with {0} targets and {1} modifiers".format(

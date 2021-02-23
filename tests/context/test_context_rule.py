@@ -82,13 +82,14 @@ class TestItemData:
     def test_to_json(self):
         import json, os
 
-        dname = os.path.join(tmpdirname.name, "test_modifiers.json")
+        dname = os.path.join(tmpdirname.name, "tmp_test_modifiers.json")
 
         literal = "no evidence of"
         category = "definite_negated_existence"
         rule = "forward"
         item = ConTextRule(literal, category, rule)
         ConTextRule.to_json([item], dname)
+
 
         with open(dname) as f:
             data = json.load(f)

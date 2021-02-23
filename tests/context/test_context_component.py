@@ -26,8 +26,12 @@ class TestConTextComponent:
 
     def test_custom_patterns_json(self):
         """Test that rules are loaded from a json"""
+        if os.path.exists("./resources/context_rules.json"):
+            filepath = "./resources/context_rules.json"
+        else:
+            filepath = "../../resources/context_rules.json"
         context = ConTextComponent(
-            nlp, rules="other", rule_list=os.path.abspath("resources/context_rules.json")
+            nlp, rules="other", rule_list=os.path.abspath(filepath)
         )
         assert context.rules
 
@@ -342,6 +346,34 @@ class TestConTextComponent:
 
         doc = nlp("No history of afib. No hx of MI.")
         context(doc)
+        assert len(doc._.context_graph.modifiers) == 2
+
+    def test_prune(self):
+        rules = [
+            ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
+            ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD"),
+        ]
+        context = ConTextComponent(nlp, rules=None, prune=True)
+        context.add(rules)
+
+        doc = nlp("No history of afib.")
+        context(doc)
+
+        assert len(doc._.context_graph.modifiers) == 1
+        modifier = doc._.context_graph.modifiers[0]
+        assert modifier.span.text.lower() == "no history of"
+
+    def test_prune_false(self):
+        rules = [
+            ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
+            ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD"),
+        ]
+        context = ConTextComponent(nlp, rules=None, prune=False)
+        context.add(rules)
+
+        doc = nlp("No history of afib.")
+        context(doc)
+
         assert len(doc._.context_graph.modifiers) == 2
 
 

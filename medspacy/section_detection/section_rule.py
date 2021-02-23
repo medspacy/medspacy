@@ -71,9 +71,9 @@ class SectionRule(BaseRule):
         import json
 
         with open(filepath) as file:
-            target_data = json.load(file)
+            section_data = json.load(file)
         section_rules = []
-        for data in target_data["section_rules"]:
+        for data in section_data["section_rules"]:
             section_rules.append(SectionRule.from_dict(data))
         return section_rules
 
@@ -99,28 +99,30 @@ class SectionRule(BaseRule):
         return rule
 
     @classmethod
-    def to_json(cls, target_rules, filepath):
+    def to_json(cls, section_rules, filepath):
         """Writes SectionRules to a json file.
 
         Args:
-            target_rules: a list of TargetRules that will be written to a file.
+            section_rules: a list of SectionRules that will be written to a file.
             filepath: the .json file to contain modifier rules
         """
         import json
 
-        data = {"target_rules": [rule.to_dict() for rule in target_rules]}
+        data = {"section_rules": [rule.to_dict() for rule in section_rules]}
         with open(filepath, "w") as file:
             json.dump(data, file, indent=4)
 
     def to_dict(self):
-        """Converts TargetRules to a python dictionary. Used when writing target rules to a json file.
+        """Converts TargetRules to a python dictionary. Used when writing section rules to a json file.
 
         Returns:
             rule_dict: the dictionary containing the TargetRule info.
         """
         rule_dict = {}
         for key in self._ALLOWED_KEYS:
-            rule_dict[key] = self.__dict__.get(key)
+            value = self.__dict__.get(key)
+            if value is not None:
+                rule_dict[key] = value
         return rule_dict
 
     def __repr__(self):

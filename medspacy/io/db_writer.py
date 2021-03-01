@@ -1,8 +1,61 @@
+from .doc_consumer import DEFAULT_DOC_ATTRS, DEFAULT_ENT_ATTRS, ALLOWED_CONTEXT_ATTRS, ALLOWED_SECTION_ATTRS
+
+DEFAULT_COLS = {
+    "ent": list(DEFAULT_ENT_ATTRS),
+    "doc": list(DEFAULT_DOC_ATTRS),
+    "context": list(ALLOWED_CONTEXT_ATTRS),
+    "section": list(ALLOWED_SECTION_ATTRS)
+}
+
+DEFAULT_COL_TYPES = {
+    "ent": {
+        "text": "varchar(50)",
+        "start_char": "int",
+        "end_char": "int",
+        "label_": "varchar(50)",
+        "is_negated": "int",
+        "is_uncertain": "int",
+        "is_historical": "int",
+        "is_hypothetical": "int",
+        "is_family": "int",
+        "section_category": "int",
+        "section_parent": "int",
+    },
+    "doc": {
+        "text": "varchar(max)"
+    },
+    "section": {
+        "section_category": "varchar(50)",
+        "section_title_text": "varchar(50)",
+        "section_title_start_char": "int",
+        "section_title_end_char": "int",
+        "section_text": "varchar(max)",
+        "section_text_start_char": "int",
+        "section_text_end_char": "int",
+        "section_parent": "varchar(50)",
+    },
+    "context": {
+        "ent_text": "varchar(50)",
+        "ent_label_": "varchar(50)",
+        "ent_start_char": "int",
+        "ent_end_char": "int",
+        "modifier_text": "varchar(50",
+        "modifier_category": "varchar(50)",
+        "modifier_direction": "varchar(50)",
+        "modifier_start_char": "int",
+        "modifier_end_char": "int",
+        "modifier_scope_start_char": "int",
+        "modifier_scope_end_char": "int",
+    }
+}
+
+
+
 class DbWriter:
     """DbWriter is a utility class for writing structured data back to a database.
     """
-    def __init__(self, db_conn, destination_table, cols, col_types, doc_dtype="ent",
-                 create_table=False, drop_existing=False,write_batch_size=100):
+    def __init__(self, db_conn, destination_table, cols=None, col_types=None, doc_dtype="ent",
+                 create_table=False, drop_existing=False, write_batch_size=100):
         """Create a new DbWriter object.
 
         Args:
@@ -19,6 +72,11 @@ class DbWriter:
         self.destination_table = destination_table
         self._create_table = create_table
         self.drop_existing = drop_existing
+        if cols is None and col_types is None:
+            cols = DEFAULT_COLS[doc_dtype]
+            col_types = [DEFAULT_COL_TYPES[doc_dtype][col] for col in cols]
+        elif cols is None and col_types is not None:
+            raise ValueError("cols must be specified if col_types is not None.")
         self.cols = cols
         self.col_types = col_types
         self.doc_dtype = doc_dtype
@@ -46,7 +104,7 @@ class DbWriter:
 
     def write(self, doc):
         """Write a doc to a database."""
-        data = doc._.get_data(self.doc_dtype, as_rows=True)
+        data = doc._.get_data(self.doc_dtype, attrs=self.cols, as_rows=True)
         self.write_data(data)
 
     def write_data(self, data):

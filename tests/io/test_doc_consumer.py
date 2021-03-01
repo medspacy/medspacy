@@ -146,3 +146,9 @@ class TestDocConsumer:
         assert set(attrs["section"]) == set(ALLOWED_SECTION_ATTRS)
         assert set(attrs["context"]) == set(ALLOWED_CONTEXT_ATTRS)
         assert set(attrs["doc"]) == set(DEFAULT_DOC_ATTRS)
+
+    def test_get_data_attrs_not_none(self):
+        consumer = DocConsumer(nlp)
+        doc = consumer(simple_doc)
+        data = doc._.get_data("ent", attrs=["label_", "is_negated"])
+        assert set(data.keys()) == {"label_", "is_negated"}

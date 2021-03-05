@@ -100,6 +100,15 @@ def get_context_attributes(span):
         attr_dict[attr] = span._.get(attr)
     return attr_dict
 
+def get_span_literal(span):
+    """Get the literal value from an entity's TargetRule, which is set when an entity is extracted by TargetMatcher.
+    If the span does not have a TargetRule, it returns the lower-cased text.
+    """
+    target_rule = span._.target_rule
+    if target_rule is None:
+        return span.lower_
+    return target_rule.literal
+
 def any_context_attribute(span):
     "Return True if any of the ConText assertion attributes (is_negated, is_historical, etc.) is True."
     return any(span._.context_attributes.values())
@@ -149,7 +158,7 @@ def get_section_rule_token(token):
         return None
     return token._.section.rule
 
-def get_data(doc, dtype=None, as_rows=False):
+def get_data(doc, dtype=None, attrs=None ,as_rows=False):
     if doc._.data is None:
         import warnings
         warnings.warn("doc._.data is None, which might mean that you haven't processed your doc with a DocConsumer yet.\n"
@@ -164,6 +173,14 @@ def get_data(doc, dtype=None, as_rows=False):
         return doc._.data
     if dtype in ALLOWED_DATA_TYPES:
         data = doc._.data.get(dtype, list())
+        if attrs is not None:
+            from collections import OrderedDict
+            selected_data = OrderedDict()
+            for key in attrs:
+                if key not in data:
+                    raise ValueError("Invalid attr value:", key)
+                selected_data[key] = data[key]
+            data = selected_data
         if as_rows:
             data = data_to_rows(data)
         return data
@@ -218,6 +235,7 @@ _span_extensions = {
     "section_rule": {"getter":lambda x: x[0]._.section_rule},
     "contains": {"method": span_contains},
     "target_rule": {"default": None},
+    "literal": {"getter": get_span_literal},
     **_context_attributes
 
 }

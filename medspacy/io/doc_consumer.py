@@ -46,6 +46,14 @@ ALLOWED_CONTEXT_ATTRS = (
     "modifier_scope_end_char",
 )
 
+DEFAULT_ATTRS = {
+    "ent": DEFAULT_ENT_ATTRS,
+    "section": ALLOWED_SECTION_ATTRS,
+    "context": ALLOWED_CONTEXT_ATTRS,
+    "doc": DEFAULT_DOC_ATTRS
+
+}
+
 class DocConsumer:
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
     
@@ -104,15 +112,13 @@ class DocConsumer:
     def get_default_attrs(cls, dtypes=None):
         if dtypes is None:
             dtypes = ALLOWED_DATA_TYPES
-        dtype_attrs = {dtype: list() for dtype in dtypes}
-        if "ent" in dtype_attrs:
-            dtype_attrs["ent"] = list(DEFAULT_ENT_ATTRS)
-        if "context" in dtype_attrs:
-            dtype_attrs["context"] = list(ALLOWED_CONTEXT_ATTRS)
-        if "section" in dtype_attrs:
-            dtype_attrs["section"] += list(ALLOWED_SECTION_ATTRS)
-        if "doc" in dtype_attrs:
-            dtype_attrs["doc"] += list(DEFAULT_DOC_ATTRS)
+        else:
+            if isinstance(dtypes, str):
+                dtypes = (dtypes,)
+            for dtype in dtypes:
+                if dtype not in ALLOWED_DATA_TYPES:
+                    raise ValueError("Invalid dtype,", dtype)
+        dtype_attrs = {dtype: list(attrs) for (dtype, attrs) in DEFAULT_ATTRS.items() if dtype in dtypes}
         return dtype_attrs
 
 

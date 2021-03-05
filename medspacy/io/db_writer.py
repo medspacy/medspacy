@@ -61,8 +61,12 @@ class DbWriter:
         Args:
             db_conn: A medspacy.io.DbConnect object
             destination_table: The name of the table to write to
-            cols: The names of the columns of the destination table
-            col_types: The sql data types of the table columns
+            cols (opt): The names of the columns of the destination table. These should align with attributes extracted
+                by DocConsumer and stored in doc._.data. A set of default values can be accessed by:
+                >>> DbWriter.get_default_cols()
+            col_types (opt): The sql data types of the table columns. They should correspond 1:1 with cols.
+                A set of default values can be accesed by:
+                >>> DbWriter.get_default_col_types()
             doc_dtype: The type of data from DocConsumer to write from a doc.
                 Either ("ent", "section", "context", or "doc")
             create_table (bool): Whether to create a table
@@ -79,6 +83,7 @@ class DbWriter:
             raise ValueError("cols must be specified if col_types is not None.")
         self.cols = cols
         self.col_types = col_types
+        _validate_dtypes((doc_dtype,))
         self.doc_dtype = doc_dtype
         self.batch_size = write_batch_size
 
@@ -86,6 +91,33 @@ class DbWriter:
         if create_table:
             self.create_table()
         self.make_insert_query()
+
+    @classmethod
+    def get_default_col_types(cls, dtypes=None):
+
+        if dtypes is None:
+            dtypes = tuple(DEFAULT_COL_TYPES.keys())
+        else:
+            if isinstance(dtypes, str):
+                dtypes = (dtypes,)
+
+        _validate_dtypes(dtypes)
+        dtype_col_types = {dtype: col_types for (dtype, col_types) in DEFAULT_COL_TYPES.items() if dtype in dtypes}
+        return dtype_col_types
+
+    @classmethod
+    def get_default_cols(cls, dtypes=None):
+        if dtypes is None:
+            dtypes = tuple(DEFAULT_COL_TYPES.keys())
+        else:
+            if isinstance(dtypes, str):
+                dtypes = (dtypes,)
+        _validate_dtypes(dtypes)
+
+        dtype_cols = {dtype: cols for (dtype, cols) in DEFAULT_COL_TYPES.items() if dtype in dtypes}
+        return dtype_cols
+
+
 
     def create_table(self):
         query = "CREATE TABLE {0} (".format(self.destination_table)
@@ -112,3 +144,8 @@ class DbWriter:
 
     def close(self):
         self.db.close()
+
+def _validate_dtypes(dtypes):
+    for dtype in dtypes:
+        if dtype not in DEFAULT_COL_TYPES:
+            raise ValueError("Invalid doc dtype:", dtype)

@@ -77,6 +77,10 @@
       "category": "history_of_present_illness"
     },
     {
+      "literal": "HPI:",
+      "category": "history_of_present_illness"
+    },
+    {
       "literal": "Brief Hospital Course:",
       "category": "hospital_course"
     },

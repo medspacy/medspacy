@@ -4,7 +4,7 @@ DEFAULT_COLS = {
     "ent": list(DEFAULT_ENT_ATTRS),
     "doc": list(DEFAULT_DOC_ATTRS),
     "context": list(ALLOWED_CONTEXT_ATTRS),
-    "section": list(ALLOWED_SECTION_ATTRS)
+    "section": list(ALLOWED_SECTION_ATTRS),
 }
 
 DEFAULT_COL_TYPES = {
@@ -21,9 +21,7 @@ DEFAULT_COL_TYPES = {
         "section_category": "int",
         "section_parent": "int",
     },
-    "doc": {
-        "text": "varchar(max)"
-    },
+    "doc": {"text": "varchar(max)"},
     "section": {
         "section_category": "varchar(50)",
         "section_title_text": "varchar(50)",
@@ -46,16 +44,25 @@ DEFAULT_COL_TYPES = {
         "modifier_end_char": "int",
         "modifier_scope_start_char": "int",
         "modifier_scope_end_char": "int",
-    }
+    },
 }
-
 
 
 class DbWriter:
     """DbWriter is a utility class for writing structured data back to a database.
     """
-    def __init__(self, db_conn, destination_table, cols=None, col_types=None, doc_dtype="ent",
-                 create_table=False, drop_existing=False, write_batch_size=100):
+
+    def __init__(
+        self,
+        db_conn,
+        destination_table,
+        cols=None,
+        col_types=None,
+        doc_dtype="ent",
+        create_table=False,
+        drop_existing=False,
+        write_batch_size=100,
+    ):
         """Create a new DbWriter object.
 
         Args:
@@ -117,8 +124,6 @@ class DbWriter:
         dtype_cols = {dtype: cols for (dtype, cols) in DEFAULT_COL_TYPES.items() if dtype in dtypes}
         return dtype_cols
 
-
-
     def create_table(self):
         query = "CREATE TABLE {0} (".format(self.destination_table)
         for i, col in enumerate(self.cols):
@@ -144,6 +149,7 @@ class DbWriter:
 
     def close(self):
         self.db.close()
+
 
 def _validate_dtypes(dtypes):
     for dtype in dtypes:

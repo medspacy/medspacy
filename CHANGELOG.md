@@ -1,3 +1,15 @@
+# Version 0.1.0.1
+This release includes a new subpackage `medspacy.io` which includes utilities for converting docs into structured data which can then be written back to a relational database.
+## medspacy.io
+- `DocConsumer`: A pipeline component which extracts structured data from a doc and stores it in a dictionary which can be accessed through `doc._.get_data()`. Docs processed by `DocConsumer` can then be written to a database or transformed into a pandas database. The following types of data can be extracted from a doc:
+    - **"ent"**: The text, label, character offsets, and custom attributes from entities in `doc.ents`: `[("pneumonia", "CONDITION", 5, 15, ...), ...]`
+    - **"section"**: Extract the sections of a note: `[("past_medical_history", "PMH: The patient has a hx of..." ...), ...]`
+    - **"context"**: Extract entity/modifier pairs extracted by ConText: `[("pneumonia", "no evidence of", "NEGATED_EXISTENCE", ...)]`
+    - **"doc"**: Extract the doc text and any specified doc attributes
+- `DbConnect` / `DbReader` / `DbWriter`: Utilities for connecting to a database using either sqlite3 or pyodbc, loading texts, and writing back docs processed by `DocConsumer`
+- `Pipeline`: A single class which wraps up the `DbReader` and `DbWriter` for processing and saving a series of texts
+- `doc._.to_dataframe()`: Convert a doc processed by `DocConsumer` to a pandas DataFrame
+
 # Version 0.1.0.0
 This new release includes a lot of new functionality and improvements such as more consistent renaming. 
 ## Summary

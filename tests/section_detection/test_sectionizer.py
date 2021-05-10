@@ -103,7 +103,6 @@ class TestSectionizer:
         assert span._.section_parent is None
         assert span._.section_rule is rule
 
-
     # def test_load_default_rules(self):
     #     sectionizer = Sectionizer(nlp, rules="default")
     #     assert sectionizer.rules
@@ -176,7 +175,6 @@ class TestSectionizer:
         doc = nlp("Past Medical History: This is the sentence.")
         sectionizer(doc)
         assert doc[-1]._.section_category == "past_medical_history"
-
 
     def test_max_scope(self):
         sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
@@ -416,8 +414,14 @@ class TestSectionizer:
             s2 = doc._.sections[1]
             s3 = doc._.sections[2]
             s2_2 = doc._.sections[3]
-            assert len(w) == 1
-            assert issubclass(w[0].category, RuntimeWarning)
+            # assert len(w) == 1 # this throws errors if warnings occur elsewhere. check that specific warning is in
+            # the buffer instead
+            warning_found = False
+            for warn in w:
+                print("Duplicate" in str(warn.message))
+                if warn.category is RuntimeWarning and "Duplicate section title" in str(warn.message):
+                    warning_found = True
+            assert warning_found
             assert s1.parent is None
             assert s2.parent.category == "s1"
             assert s3.parent is None
@@ -428,6 +432,7 @@ class TestSectionizer:
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         doc = nlp("Past Medical History: Pneumonia")
         from spacy.tokens import Span
+
         doc.ents = (Span(doc, 4, 5),)
         sectionizer(doc)
         assert doc.ents[0]._.is_negated is True

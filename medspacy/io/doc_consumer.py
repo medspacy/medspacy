@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from spacy.language import Language
 
 ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
 
@@ -54,12 +55,11 @@ DEFAULT_ATTRS = {
 
 }
 
+@Language.factory("doc_consumer")
 class DocConsumer:
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
-    
-    name = "doc_consumer"
 
-    def __init__(self, nlp, dtypes=("ent", ), dtype_attrs=None):
+    def __init__(self, nlp, name="doc_consumer", dtypes=("ent", ), dtype_attrs=None):
         """Create a new DocConsumer.
 
         This component extracts structured information from a Doc. Information is stored in
@@ -92,6 +92,7 @@ class DocConsumer:
                 Default values for each dtype can be retrieved by the class method DocConsumer.get_default_attrs()
         """
         self.nlp = nlp
+        self.name = name
         if not isinstance(dtypes, tuple):
             if dtypes == "all":
                 dtypes = tuple(ALLOWED_DATA_TYPES)

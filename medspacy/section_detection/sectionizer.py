@@ -1,4 +1,5 @@
 from spacy.tokens import Doc, Token, Span
+from spacy.language import Language
 
 # Filepath to default rules which are included in package
 from os import path
@@ -22,13 +23,12 @@ DEFAULT_ATTRS = {
     "allergy": {"is_hypothetical": True},
 }
 
-
+@Language.factory("sectionizer")
 class Sectionizer:
-    name = "sectionizer"
-
     def __init__(
             self,
             nlp,
+            name="sectionizer",
             rules="default",
             add_attrs=False,
             max_scope=None,
@@ -84,6 +84,7 @@ class Sectionizer:
                 if either require_start_line or require_end_line are True.
         """
         self.nlp = nlp
+        self.name = name
         self.add_attrs = add_attrs
         self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
         self.max_scope = max_scope

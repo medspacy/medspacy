@@ -97,32 +97,13 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
 
 
     if "sentencizer" in enable:
-        from os import path
-        from pathlib import Path
-
-        pyrush_path = path.join(
-            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
-        )
-        from .sentence_splitting import PyRuSHSentencizer
-
-        pyrush = PyRuSHSentencizer(pyrush_path)
-        # If there is a dependency parser already in the pipeline,
-        # adding a sentencizer after will throw an error
-        if "parser" in nlp.pipe_names:
-            if "tagger" in nlp.pipe_names:
-                nlp.add_pipe(pyrush, before="tagger")
-            else:
-                nlp.add_pipe(pyrush, before="parser")
-        else:
-            nlp.add_pipe(pyrush)
+        nlp.add_pipe("sentencizer")
 
     if "target_matcher" in enable:
-        from .ner import TargetMatcher
-
-        target_matcher = TargetMatcher(nlp)
-        nlp.add_pipe(target_matcher)
+        nlp.add_pipe("target_matcher")
         
     if "quickumls" in enable:
+        raise NotImplementedError("Not implemented for spacy 3")
         from os import path
         from pathlib import Path
 
@@ -146,32 +127,36 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.add_pipe(quickumls_component)
 
     if "context" in enable:
-        from .context import ConTextComponent
-
-        if load_rules:
-            context = ConTextComponent(nlp, rules="default")
-        else:
-            context = ConTextComponent(nlp, rules=None)
-        nlp.add_pipe(context)
+        nlp.add_pipe("context")
+        # from .context import ConTextComponent
+        #
+        # if load_rules:
+        #     context = ConTextComponent(nlp, rules="default")
+        # else:
+        #     context = ConTextComponent(nlp, rules=None)
+        # nlp.add_pipe(context)
 
     if "sectionizer" in enable:
-        from .section_detection import Sectionizer
-
-        if load_rules:
-            sectionizer = Sectionizer(nlp, rules="default")
-        else:
-            sectionizer = Sectionizer(nlp, rules=None)
-        nlp.add_pipe(sectionizer)
+        nlp.add_pipe("sectionizer")
+        # from .section_detection import Sectionizer
+        #
+        # if load_rules:
+        #     sectionizer = Sectionizer(nlp, rules="default")
+        # else:
+        #     sectionizer = Sectionizer(nlp, rules=None)
+        # nlp.add_pipe(sectionizer)
 
     if "postprocessor" in enable:
-        from .postprocess import Postprocessor
-        postprocessor = Postprocessor()
-        nlp.add_pipe(postprocessor)
+        nlp.add_pipe("postprocessor")
+        # from .postprocess import Postprocessor
+        # postprocessor = Postprocessor()
+        # nlp.add_pipe(postprocessor)
 
     if "doc_consumer" in enable:
-        from .io import DocConsumer
-        doc_consumer = DocConsumer(nlp)
-        nlp.add_pipe(doc_consumer)
+        nlp.add_pipe("doc_consumer")
+        # from .io import DocConsumer
+        # doc_consumer = DocConsumer(nlp)
+        # nlp.add_pipe(doc_consumer)
 
     return nlp
 

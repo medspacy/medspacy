@@ -55,11 +55,11 @@ DEFAULT_ATTRS = {
 
 }
 
-@Language.factory("doc_consumer")
+@Language.factory("medspacy_doc_consumer")
 class DocConsumer:
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
 
-    def __init__(self, nlp, name="doc_consumer", dtypes=("ent", ), dtype_attrs=None):
+    def __init__(self, nlp, name="medspacy_doc_consumer", dtypes=("ent", ), dtype_attrs=None):
         """Create a new DocConsumer.
 
         This component extracts structured information from a Doc. Information is stored in

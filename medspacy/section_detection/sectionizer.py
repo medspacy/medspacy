@@ -23,12 +23,12 @@ DEFAULT_ATTRS = {
     "allergy": {"is_hypothetical": True},
 }
 
-@Language.factory("sectionizer")
+@Language.factory("medspacy_sectionizer")
 class Sectionizer:
     def __init__(
             self,
             nlp,
-            name="sectionizer",
+            name="medspacy_sectionizer",
             rules="default",
             add_attrs=False,
             max_scope=None,

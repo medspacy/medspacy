@@ -4,7 +4,7 @@ from medspacy.visualization import visualize_ent
 import spacy
 
 DEFAULT_PIPENAMES = {
-    "sentencizer",
+    "pyrush",
     "target_matcher",
     "context",
     "tokenizer",
@@ -96,11 +96,11 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.tokenizer = preprocessor
 
 
-    if "sentencizer" in enable:
-        nlp.add_pipe("sentencizer")
+    if "pyrush" in enable:
+        nlp.add_pipe("medspacy_pyrush")
 
     if "target_matcher" in enable:
-        nlp.add_pipe("target_matcher")
+        nlp.add_pipe("medspacy_target_matcher")
         
     if "quickumls" in enable:
         raise NotImplementedError("Not implemented for spacy 3")
@@ -127,7 +127,7 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.add_pipe(quickumls_component)
 
     if "context" in enable:
-        nlp.add_pipe("context")
+        nlp.add_pipe("medspacy_context")
         # from .context import ConTextComponent
         #
         # if load_rules:
@@ -137,7 +137,7 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         # nlp.add_pipe(context)
 
     if "sectionizer" in enable:
-        nlp.add_pipe("sectionizer")
+        nlp.add_pipe("medspacy_sectionizer")
         # from .section_detection import Sectionizer
         #
         # if load_rules:
@@ -147,13 +147,13 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         # nlp.add_pipe(sectionizer)
 
     if "postprocessor" in enable:
-        nlp.add_pipe("postprocessor")
+        nlp.add_pipe("medspacy_postprocessor")
         # from .postprocess import Postprocessor
         # postprocessor = Postprocessor()
         # nlp.add_pipe(postprocessor)
 
     if "doc_consumer" in enable:
-        nlp.add_pipe("doc_consumer")
+        nlp.add_pipe("medspacy_doc_consumer")
         # from .io import DocConsumer
         # doc_consumer = DocConsumer(nlp)
         # nlp.add_pipe(doc_consumer)

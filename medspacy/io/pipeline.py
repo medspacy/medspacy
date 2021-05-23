@@ -1,10 +1,12 @@
 from .doc_consumer import ALLOWED_DATA_TYPES
+from spacy.language import Language
 
+@Language.factory("medspacy_pipeline")
 class Pipeline:
     """The Pipeline class executes a batch process of reading texts, processing them with a spaCy model, and writing
     the results back to a database.
     """
-    def __init__(self, reader, writer, nlp, dtype="ent"):
+    def __init__(self, nlp, reader, writer, name="medspacy_pipeline",  dtype="ent"):
         """Create a new Pipeline object.
         Args:
             reader: A DbReader object
@@ -17,6 +19,7 @@ class Pipeline:
 
         self.reader = reader
         self.writer = writer
+        self.name = name
         self.nlp = nlp
         self.dtype = dtype
         if dtype not in ALLOWED_DATA_TYPES:

@@ -3,9 +3,9 @@ from spacy.language import Language
 
 postprocess_pattern = namedtuple("PostProcessPattern", ["func", "attr", "check_value", "success_value"])
 
-@Language.factory("postprocessor")
+@Language.factory("medspacy_postprocessor")
 class Postprocessor:
-    def __init__(self, nlp, name="postprocessor", debug=False):
+    def __init__(self, nlp, name="medspacy_postprocessor", debug=False):
         self.nlp = nlp
         self.name = name
         self.rules = []

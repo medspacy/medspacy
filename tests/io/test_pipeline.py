@@ -71,7 +71,7 @@ class TestPipeline:
                           create_table=True, drop_existing=False)
 
         from medspacy.io.pipeline import Pipeline
-        pipeline = Pipeline(reader, writer, nlp, "ent")
+        pipeline = Pipeline(nlp, reader, writer, nlp, "ent")
         pipeline.process()
 
         sq_conn = sqlite3.connect(db)

@@ -54,7 +54,7 @@ def is_preceded_by(ent, target, window=1):
         preceding ent.
     """
     preceding_span = ent.doc[ent.start - window: ent.start]
-    preceding_string = " ".join([token.lower_ for token in preceding_span])
+    preceding_string = " ".join([token.text.lower() for token in preceding_span])
     if isinstance(target, str):
         return target.lower() in preceding_string
     for string in target:
@@ -74,7 +74,7 @@ def is_followed_by(ent, target, window=1):
         following ent.
     """
     following_span = ent.doc[ent.end: ent.end+window]
-    following_string = " ".join([token.lower_ for token in following_span])
+    following_string = " ".join([token.text.lower() for token in following_span])
     if isinstance(target, str):
         return target.lower() in following_string
     for string in target:

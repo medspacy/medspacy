@@ -186,7 +186,7 @@ class TestSectionizer:
         section = doc._.sections[0]
         assert section.body_span[0]._.section_category == "past_medical_history"
         # This should be out of range of the section scope
-        assert section.body_span[3]._.section_category is None
+        assert doc[-1]._.section_category is None
 
     def test_max_scope_rule(self):
         sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
@@ -428,7 +428,7 @@ class TestSectionizer:
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         doc = nlp("Past Medical History: Pneumonia")
         from spacy.tokens import Span
-        doc.ents = (Span(doc, 4, 5),)
+        doc.ents = (Span(doc, 4, 5, "CONDITION"),)
         sectionizer(doc)
         assert doc.ents[0]._.is_negated is True
 

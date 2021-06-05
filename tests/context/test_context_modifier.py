@@ -205,7 +205,8 @@ class TestConTextModifier:
             # This should fail because doc.sents are None
             ConTextModifier(rule, 0, 3, doc)
         exception_info.match(
-            "ConText failed because sentence boundaries have not been set"
+            # "ConText failed because sentence boundaries have not been set"
+            "Sentence boundaries unset."
         )
 
     def test_set_scope_context_window_no_sentences(self):
@@ -295,7 +296,7 @@ class TestConTextModifier:
         modifier.reduce_targets()
         assert modifier.num_targets == 2
         for target in modifier._targets:
-            assert target.lower_ in ("pneumonia", "copd")
+            assert target.text.lower() in ("pneumonia", "copd")
 
     def test_max_targets_equal_to_targets(self):
         """Check that if max_targets is not None it will reduce the targets

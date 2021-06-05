@@ -11,7 +11,6 @@ def create_pyrush(nlp, name, pyrush_path=None):
         pyrush_path = path.join(
             Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
         )
-
     return PyRuSHSentencizer(pyrush_path)
 
 @Language.factory("medspacy_pysbd")

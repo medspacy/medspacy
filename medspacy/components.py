@@ -6,7 +6,7 @@ ALL_PIPE_NAMES = {
     "preprocessor",
     "postprocessor",
     "sectionizer",
-    "doc_consumer"
+    "doc_consumer",
 }
 
 from .sentence_splitting import PyRuSHSentencizer
@@ -17,3 +17,4 @@ from .preprocess import Preprocessor
 from .postprocess import Postprocessor
 from .section_detection import Sectionizer
 from .io import DocConsumer
+from ._quickumls import create_quickumls

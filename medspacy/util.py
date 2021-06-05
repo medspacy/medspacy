@@ -18,7 +18,7 @@ ALL_PIPE_NAMES_SIMPLE = {
     "preprocessor",
     "postprocessor",
     "sectionizer",
-    "doc_consumer"
+    "doc_consumer",
 }
 
 ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
@@ -103,29 +103,8 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
     if "medspacy_target_matcher" in enable:
         nlp.add_pipe("medspacy_target_matcher")
         
-    if enable.intersection({"quickumls", "medspacy_quickumls"}):
-        raise NotImplementedError("Not implemented for spacy 3")
-        from os import path
-        from pathlib import Path
-
-        if quickumls_path is None:
-            # let's use a default sample that we provide in medspacy
-            # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
-            # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
-
-            quickumls_platform_dir = 'QuickUMLS_SAMPLE_lowercase_POSIX_unqlite'
-            if platform.startswith("win"):
-                quickumls_platform_dir = 'QuickUMLS_SAMPLE_lowercase_Windows_unqlite'
-
-            quickumls_path = path.join(
-                Path(__file__).resolve().parents[1], "resources", "quickumls/{0}".format(quickumls_platform_dir)
-            )
-            print('Loading QuickUMLS resources from a default SAMPLE of UMLS data from here: {}'.format(quickumls_path))
-
-        from quickumls.spacy_component import SpacyQuickUMLS
-
-        quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
-        nlp.add_pipe(quickumls_component)
+    if enable.intersection({"medspacy_quickumls", "quickumls"}):
+        nlp.add_pipe("medspacy_quickumls", config={"quickumls_path": quickumls_path})
 
     if "medspacy_context" in enable:
         if load_rules is True:

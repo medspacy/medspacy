@@ -23,6 +23,7 @@ def set_span_extensions():
         try:
             Span.set_extension(attr, **attr_info)
         except ValueError as e: # If the attribute has already set, this will raise an error
+            # print(e)
             pass
 
 def set_doc_extensions():
@@ -108,7 +109,7 @@ def get_span_literal(span):
     """
     target_rule = span._.target_rule
     if target_rule is None:
-        return span.lower_
+        return span.text.lower()
     return target_rule.literal
 
 def any_context_attribute(span):

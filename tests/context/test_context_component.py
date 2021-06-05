@@ -66,7 +66,7 @@ class TestConTextComponent:
     def test_registers_attributes(self):
         """Test that the default ConText attributes are set on ."""
         doc = nlp("There is consolidation.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 2, 3, "CONDITION"),)
         context = ConTextComponent(nlp)
         doc = context(doc)
         assert hasattr(doc._, "context_graph")
@@ -93,7 +93,8 @@ class TestConTextComponent:
         """Check that default Span attributes have False values without any modifiers."""
         doc = nlp("There is evidence of pneumonia.")
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
-        doc.ents = (doc[-2:-1],)
+        ent = Span(doc, 5, 6, "CONDITION")
+        doc.ents = (ent,)
         context(doc)
         for attr_name in [
             "is_negated",
@@ -120,7 +121,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
         rules = [ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="forward")]
         context.add(rules)
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 5, 6, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_negated is True
@@ -130,7 +131,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
         rules = [ConTextRule("history of", "HISTORICAL", direction="forward")]
         context.add(rules)
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 2, 3, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_historical is True
@@ -140,7 +141,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
         rules = [ConTextRule("family history of", "FAMILY", direction="forward")]
         context.add(rules)
-        doc.ents = (doc[-3:-1],)
+        doc.ents = (Span(doc, 3, 5, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_family is True
@@ -177,7 +178,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=custom_attrs)
         context.add([ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD")])
         doc = nlp("There is no evidence of pneumonia.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 5, 6, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_negated is True
@@ -195,7 +196,7 @@ class TestConTextComponent:
             [ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")]
         )
         doc = nlp("There is no evidence of pneumonia.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 5, 6, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_family is False
@@ -322,7 +323,7 @@ class TestConTextComponent:
         context.add(rules)
 
         doc = nlp("She has a negative attitude about her treatment.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 7, 8, "CONDITION"),)
         context(doc)
 
         assert len(doc.ents[0]._.modifiers) == 0

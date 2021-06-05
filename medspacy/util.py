@@ -4,14 +4,14 @@ from medspacy.visualization import visualize_ent
 import spacy
 
 DEFAULT_PIPENAMES = {
-    "pyrush",
-    "target_matcher",
-    "context",
-    "tokenizer",
+    "medspacy_pyrush",
+    "medspacy_target_matcher",
+    "medspacy_context",
+    "medspacy_tokenizer",
 }
 
-ALL_PIPE_NAMES = {
-    "sentencizer",
+ALL_PIPE_NAMES_SIMPLE = {
+    "pyrush",
     "target_matcher",
     "context",
     "tokenizer",
@@ -20,6 +20,8 @@ ALL_PIPE_NAMES = {
     "sectionizer",
     "doc_consumer"
 }
+
+ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
 
 
 def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None):
@@ -84,25 +86,24 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
     else:
         raise ValueError("model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
                          "You passed in", type(model))
-
-    if "tokenizer" in enable:
+    if "medspacy_tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)
         nlp.tokenizer = medspacy_tokenizer
 
-    if "preprocessor" in enable:
+    if "medspacy_preprocessor" in enable:
         from .preprocess import Preprocessor
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
 
-    if "pyrush" in enable:
+    if "medspacy_pyrush" in enable:
         nlp.add_pipe("medspacy_pyrush")
 
-    if "target_matcher" in enable:
+    if "medspacy_target_matcher" in enable:
         nlp.add_pipe("medspacy_target_matcher")
         
-    if "quickumls" in enable:
+    if enable.intersection({"quickumls", "medspacy_quickumls"}):
         raise NotImplementedError("Not implemented for spacy 3")
         from os import path
         from pathlib import Path
@@ -126,8 +127,12 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
         nlp.add_pipe(quickumls_component)
 
-    if "context" in enable:
-        nlp.add_pipe("medspacy_context")
+    if "medspacy_context" in enable:
+        if load_rules is True:
+            config = {"rules": "default"}
+        else:
+            config = {"rules": None}
+        nlp.add_pipe("medspacy_context", config=config)
         # from .context import ConTextComponent
         #
         # if load_rules:
@@ -135,9 +140,12 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         # else:
         #     context = ConTextComponent(nlp, rules=None)
         # nlp.add_pipe(context)
-
-    if "sectionizer" in enable:
-        nlp.add_pipe("medspacy_sectionizer")
+    if "medspacy_sectionizer" in enable:
+        if load_rules is True:
+            config = {"rules": "default"}
+        else:
+            config = {"rules": None}
+        nlp.add_pipe("medspacy_sectionizer", config=config)
         # from .section_detection import Sectionizer
         #
         # if load_rules:
@@ -146,13 +154,13 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         #     sectionizer = Sectionizer(nlp, rules=None)
         # nlp.add_pipe(sectionizer)
 
-    if "postprocessor" in enable:
+    if "medspacy_postprocessor" in enable:
         nlp.add_pipe("medspacy_postprocessor")
         # from .postprocess import Postprocessor
         # postprocessor = Postprocessor()
         # nlp.add_pipe(postprocessor)
 
-    if "doc_consumer" in enable:
+    if "medspacy_doc_consumer" in enable:
         nlp.add_pipe("medspacy_doc_consumer")
         # from .io import DocConsumer
         # doc_consumer = DocConsumer(nlp)
@@ -172,9 +180,9 @@ def _build_pipe_names(enable=None, disable=None):
     if disable is not None:
         # If there's a single pipe name, next it in a set
         if isinstance(disable, str):
-            disable = {disable}
+            disable = {_get_prefix_name(disable)}
         else:
-            disable = set(disable)
+            disable = {_get_prefix_name(name) for name in disable}
         enable = DEFAULT_PIPENAMES.difference(set(disable))
     elif enable is not None:
 
@@ -182,12 +190,19 @@ def _build_pipe_names(enable=None, disable=None):
             if enable == "all":
                 enable = ALL_PIPE_NAMES.copy()
             else:
-                enable = {enable}
+                enable = {_get_prefix_name(enable)}
         else:
-            enable = set(enable)
+            enable = {_get_prefix_name(name) for name in enable}
         disable = set(DEFAULT_PIPENAMES).difference(enable)
     else:
         enable = DEFAULT_PIPENAMES
         disable = set()
 
     return enable, disable
+
+def _get_prefix_name(component_name):
+    if component_name in ALL_PIPE_NAMES_SIMPLE:
+        return "medspacy_" + component_name
+    if component_name in ALL_PIPE_NAMES:
+        return component_name
+    return component_name

@@ -106,9 +106,9 @@ class RegexMatcher:
 
 def get_token_for_char(doc, char_idx, resolve="left"):
     if char_idx < 0:
-        return ValueError("char_idx must be > 0")
-    if char_idx > len(doc.text_with_ws) - 1:
-        return ValueError("char_idx {0} is out of range for text with length {1}".format(char_idx, len(doc.text_with_ws)))
+        raise ValueError("char_idx must be > 0")
+    if char_idx > len(doc.text_with_ws):
+        raise ValueError("char_idx {0} is out of range for text with length {1}".format(char_idx, len(doc.text_with_ws)))
     for i, token in enumerate(doc):
         if char_idx > token.idx:
             continue

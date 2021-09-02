@@ -1,80 +1,44 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# GitHub Action that uses Black to reformat all Python code and submits a PR
+# in regular intervals. Inspired by: https://github.com/cclauss/autoblack
 
-name: medspacy
-
+name: autoblack
 on:
-  push:
-    branches: [ master, develop, ci_debug ]
-  pull_request:
-    branches: [ master, develop ]
+  workflow_dispatch:  # allow manual trigger
+  schedule:
+    - cron: '0 8 * * 5'  # every Friday at 8am UTC
 
 jobs:
-  build:
-  
-    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
-    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        # removed 3.5 since there appears to be a failure with setuptools
-        #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
-        #os: [ubuntu-latest, macos-latest, windows-2019]
-        include:
-          - name: "Ubuntu Python 3.7"
-            os: ubuntu-latest
-            python-version: 3.7
-            addons:
-              apt:
-                update: true
-                packages:
-                  # These are the required system level updates for Ubuntu and spacy:
-                  # https://spacy.io/usage#source-ubuntu
-                  - build-essential
-                  - python-dev
-          - name: "MacOS Python 3.7"
-            os: macos-latest
-            python-version: 3.7
-          - name: "Windows Python 3.7"
-            os: windows-2019
-            python-version: 3.7
-
+  autoblack:
+    if: github.repository_owner == 'explosion'
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-    - uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}   
-    - name: Install dependencies
-      run: |
-        python --version
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-
-        # Install our package to make sure our setup works...
-        git clone https://github.com/explosion/spaCy.git
-        cd spaCy        
-        wget https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt 
-        pip install -r spacy_requirements.txt
-        python setup.py build_ext --inplacepip install .
-        cd ..        
-        python setup.py install
-
-        # set up all spacy language models that are used in our pytest tests
-        python -m spacy download de_core_news_sm
-        python -m spacy download en_core_web_sm
-        python -m spacy download en_core_web_md
-        # install scispacy model as well to ensure compatibility
-        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
-
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+      - uses: actions/checkout@v2
+        with:
+            ref: ${{ github.head_ref }}
+      - uses: actions/setup-python@v2
+      - run: pip install black
+      - name: Auto-format code if needed
+        run: black spacy
+      # We can't run black --check here because that returns a non-zero excit
+      # code and makes GitHub think the action failed
+      - name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+      - name: Create Pull Request
+        if: steps.git-check.outputs.modified == 'true'
+        uses: peter-evans/create-pull-request@v3
+        with:
+            title: Auto-format code with black
+            labels: meta
+            commit-message: Auto-format code with black
+            committer: GitHub <noreply@github.com>
+            author: explosion-bot <explosion-bot@users.noreply.github.com>
+            body: _This PR is auto-generated._
+            branch: autoblack
+            delete-branch: true
+            draft: false
+      - name: Check outputs
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"

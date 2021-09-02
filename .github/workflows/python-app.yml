@@ -44,12 +44,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}      
-    - uses: suisei-cn/actions-download-file@v1
-      id: download_spacy_requirements  # Remember to give an ID if you need the output
-      name: Download fixed spacy requirements file
-      with:
-        url: "https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt"
-        target: ./
     - name: Install dependencies      
       run: |
         python --version

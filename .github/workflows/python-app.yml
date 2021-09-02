@@ -45,7 +45,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}      
     - uses: suisei-cn/actions-download-file@v1
-      id: download requirement file  # Remember to give an ID if you need the output
+      id: download_spacy_requirements  # Remember to give an ID if you need the output
       name: Download the file
       with:
         url: "https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt"

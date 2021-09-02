@@ -50,7 +50,6 @@ jobs:
       with:
         url: "https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt"
         target: ./
-        auto-match: true
     - name: Install dependencies      
       run: |
         python --version

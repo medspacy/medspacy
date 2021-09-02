@@ -60,7 +60,7 @@ setup(
         "jsonschema",
         "requests>=2.13.0,<2.16",
         # this is temporary to fix a spacy issue, remove later
-        # "typer>=0.4.0",
+        # "six>=1.14.0",
     ]
     + additional_installs,
     long_description=long_description,

@@ -23,9 +23,9 @@ else:
 # function to recursively get files for resourcee
 def package_files(directory):
     paths = []
-    for (path, directories, filenames) in os.walk(directory):
+    for (p, directories, filenames) in os.walk(directory):
         for filename in filenames:
-            paths.append(os.path.join('..', path, filename))
+            paths.append(os.path.join('..', p, filename))
     return paths
 
 

@@ -44,18 +44,22 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}      
-    - name: use_wget
-      uses: wei/wget@v1
+    - uses: suisei-cn/actions-download-file@v1
+      id: download requirement file  # Remember to give an ID if you need the output
+      name: Download the file
+      with:
+        url: "https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt"
+        target: ./
+        auto-match: true
     - name: Install dependencies      
       run: |
         python --version
         python -m pip install --upgrade pip
         pip install flake8 pytest
         # Install our package to make sure our setup works...
-        git clone https://github.com/explosion/spaCy.git
-        cd spaCy        
-        wget https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt 
         pip install -r spacy_requirements.txt
+        git clone https://github.com/explosion/spaCy.git
+        cd spaCy                
         python setup.py build_ext --inplacepip install .
         cd ..        
         python setup.py install

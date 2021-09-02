@@ -33,13 +33,18 @@ Future work could include I/O, relations extraction, and pre-trained clinical mo
 
 # Usage
 ## Installation
+
+NOTE: A workaround to a medspacy installation issue is installing spacy BEFORE using pip or setup.py to install medspacy.
+
 You can install `medspacy` using `setup.py`:
 ```bash
+pip install spacy
 python setup.py install
 ```
 
 Or with pip:
 ```bash
+pip install spacy
 pip install medspacy
 ```
 

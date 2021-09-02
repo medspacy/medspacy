@@ -57,9 +57,7 @@ jobs:
         # Install our package to make sure our setup works...
         pip install -U pip setuptools wheel
         pip install -U spacy
-        pip install -r requirements.txt
-        python setup.py build_ext --inplace
-        pip install .
+        python setup.py install
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm

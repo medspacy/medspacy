@@ -46,28 +46,29 @@ jobs:
         python-version: ${{ matrix.python-version }}      
     - uses: suisei-cn/actions-download-file@v1
       id: download_spacy_requirements  # Remember to give an ID if you need the output
-      name: Download the file
+      name: Download fixed spacy requirements file
       with:
         url: "https://raw.githubusercontent.com/medspacy/medspacy/ci_debug/spacy_requirements.txt"
         target: ./
     - name: Install dependencies      
       run: |
         python --version
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
+        python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
-        pip install -r spacy_requirements.txt
-        git clone https://github.com/explosion/spaCy.git
-        cd spaCy                
-        python setup.py build_ext --inplacepip install .
-        cd ..        
-        python setup.py install
+        # pip install -r spacy_requirements.txt
+        pip install -U pip setuptools wheel
+        git clone https://github.com/explosion/spaCy
+        cd spaCy
+        pip install -r requirements.txt
+        python setup.py build_ext --inplace
+        pip install .
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
         # install scispacy model as well to ensure compatibility
         pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+        pip install flake8 pytest
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

@@ -54,7 +54,8 @@ setup(
         # NOTE: spacy imports numpy to bootstrap its own setup.py in 2.3.2
         "spacy>=2.3.0,<=2.3.2",
         "PyRuSH>=1.0.3.5",
-        "jsonschema"
+        "jsonschema",
+        "requests>=2.13.0,<2.16",
     ] + additional_installs,
     long_description=long_description,
     long_description_content_type="text/markdown",

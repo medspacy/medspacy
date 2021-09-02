@@ -45,9 +45,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
     - uses: actions/setup-python@v2
-    - uses: wei/wget@v1
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.python-version }}    
+    - uses: wei/wget@v1
     - name: Install dependencies
       run: |
         python --version

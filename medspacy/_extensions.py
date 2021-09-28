@@ -1,7 +1,9 @@
 """This module will set extension attributes and methods for medspaCy. Examples include custom methods like span._.window()"""
 from spacy.tokens import Doc, Span, Token
 from .common.util import span_contains
-from .io.doc_consumer import ALLOWED_DATA_TYPES
+# from .io.doc_consumer import ALLOWED_DATA_TYPES
+
+ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
 
 def set_extensions():
     "Set custom medspaCy extensions for Token, Span, and Doc classes."
@@ -21,6 +23,7 @@ def set_span_extensions():
         try:
             Span.set_extension(attr, **attr_info)
         except ValueError as e: # If the attribute has already set, this will raise an error
+            # print(e)
             pass
 
 def set_doc_extensions():
@@ -106,7 +109,7 @@ def get_span_literal(span):
     """
     target_rule = span._.target_rule
     if target_rule is None:
-        return span.lower_
+        return span.text.lower()
     return target_rule.literal
 
 def any_context_attribute(span):

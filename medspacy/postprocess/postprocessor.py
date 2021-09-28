@@ -1,10 +1,13 @@
 from collections import namedtuple
+from spacy.language import Language
+
 postprocess_pattern = namedtuple("PostProcessPattern", ["func", "attr", "check_value", "success_value"])
 
+@Language.factory("medspacy_postprocessor")
 class Postprocessor:
-    name = "postprocessor"
-
-    def __init__(self, debug=False):
+    def __init__(self, nlp, name="medspacy_postprocessor", debug=False):
+        self.nlp = nlp
+        self.name = name
         self.rules = []
         self.debug = debug
 

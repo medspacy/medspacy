@@ -4,22 +4,24 @@ from medspacy.visualization import visualize_ent
 import spacy
 
 DEFAULT_PIPENAMES = {
-    "sentencizer",
-    "target_matcher",
-    "context",
-    "tokenizer",
+    "medspacy_pyrush",
+    "medspacy_target_matcher",
+    "medspacy_context",
+    "medspacy_tokenizer",
 }
 
-ALL_PIPE_NAMES = {
-    "sentencizer",
+ALL_PIPE_NAMES_SIMPLE = {
+    "pyrush",
     "target_matcher",
     "context",
     "tokenizer",
     "preprocessor",
     "postprocessor",
     "sectionizer",
-    "doc_consumer"
+    "doc_consumer",
 }
+
+ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
 
 
 def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None):
@@ -84,94 +86,64 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
     else:
         raise ValueError("model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
                          "You passed in", type(model))
-
-    if "tokenizer" in enable:
+    if "medspacy_tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)
         nlp.tokenizer = medspacy_tokenizer
 
-    if "preprocessor" in enable:
+    if "medspacy_preprocessor" in enable:
         from .preprocess import Preprocessor
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
 
-    if "sentencizer" in enable:
-        from os import path
-        from pathlib import Path
+    if "medspacy_pyrush" in enable:
+        nlp.add_pipe("medspacy_pyrush")
 
-        pyrush_path = path.join(
-            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
-        )
-        from .sentence_splitting import PyRuSHSentencizer
-
-        pyrush = PyRuSHSentencizer(pyrush_path)
-        # If there is a dependency parser already in the pipeline,
-        # adding a sentencizer after will throw an error
-        if "parser" in nlp.pipe_names:
-            if "tagger" in nlp.pipe_names:
-                nlp.add_pipe(pyrush, before="tagger")
-            else:
-                nlp.add_pipe(pyrush, before="parser")
-        else:
-            nlp.add_pipe(pyrush)
-
-    if "target_matcher" in enable:
-        from .ner import TargetMatcher
-
-        target_matcher = TargetMatcher(nlp)
-        nlp.add_pipe(target_matcher)
+    if "medspacy_target_matcher" in enable:
+        nlp.add_pipe("medspacy_target_matcher")
         
-    if "quickumls" in enable:
-        from os import path
-        from pathlib import Path
+    if enable.intersection({"medspacy_quickumls", "quickumls"}):
+        nlp.add_pipe("medspacy_quickumls", config={"quickumls_path": quickumls_path})
 
-        if quickumls_path is None:
-            # let's use a default sample that we provide in medspacy
-            # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
-            # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
-
-            quickumls_platform_dir = 'QuickUMLS_SAMPLE_lowercase_POSIX_unqlite'
-            if platform.startswith("win"):
-                quickumls_platform_dir = 'QuickUMLS_SAMPLE_lowercase_Windows_unqlite'
-
-            quickumls_path = path.join(
-                Path(__file__).resolve().parents[1], "resources", "quickumls/{0}".format(quickumls_platform_dir)
-            )
-            print('Loading QuickUMLS resources from a default SAMPLE of UMLS data from here: {}'.format(quickumls_path))
-
-        from quickumls.spacy_component import SpacyQuickUMLS
-
-        quickumls_component = SpacyQuickUMLS(nlp, quickumls_path)
-        nlp.add_pipe(quickumls_component)
-
-    if "context" in enable:
-        from .context import ConTextComponent
-
-        if load_rules:
-            context = ConTextComponent(nlp, rules="default")
+    if "medspacy_context" in enable:
+        if load_rules is True:
+            config = {"rules": "default"}
         else:
-            context = ConTextComponent(nlp, rules=None)
-        nlp.add_pipe(context)
-
-    if "sectionizer" in enable:
-        from .section_detection import Sectionizer
-
-        if load_rules:
-            sectionizer = Sectionizer(nlp, rules="default")
+            config = {"rules": None}
+        nlp.add_pipe("medspacy_context", config=config)
+        # from .context import ConTextComponent
+        #
+        # if load_rules:
+        #     context = ConTextComponent(nlp, rules="default")
+        # else:
+        #     context = ConTextComponent(nlp, rules=None)
+        # nlp.add_pipe(context)
+    if "medspacy_sectionizer" in enable:
+        if load_rules is True:
+            config = {"rules": "default"}
         else:
-            sectionizer = Sectionizer(nlp, rules=None)
-        nlp.add_pipe(sectionizer)
+            config = {"rules": None}
+        nlp.add_pipe("medspacy_sectionizer", config=config)
+        # from .section_detection import Sectionizer
+        #
+        # if load_rules:
+        #     sectionizer = Sectionizer(nlp, rules="default")
+        # else:
+        #     sectionizer = Sectionizer(nlp, rules=None)
+        # nlp.add_pipe(sectionizer)
 
-    if "postprocessor" in enable:
-        from .postprocess import Postprocessor
-        postprocessor = Postprocessor()
-        nlp.add_pipe(postprocessor)
+    if "medspacy_postprocessor" in enable:
+        nlp.add_pipe("medspacy_postprocessor")
+        # from .postprocess import Postprocessor
+        # postprocessor = Postprocessor()
+        # nlp.add_pipe(postprocessor)
 
-    if "doc_consumer" in enable:
-        from .io import DocConsumer
-        doc_consumer = DocConsumer(nlp)
-        nlp.add_pipe(doc_consumer)
+    if "medspacy_doc_consumer" in enable:
+        nlp.add_pipe("medspacy_doc_consumer")
+        # from .io import DocConsumer
+        # doc_consumer = DocConsumer(nlp)
+        # nlp.add_pipe(doc_consumer)
 
     return nlp
 
@@ -187,9 +159,9 @@ def _build_pipe_names(enable=None, disable=None):
     if disable is not None:
         # If there's a single pipe name, next it in a set
         if isinstance(disable, str):
-            disable = {disable}
+            disable = {_get_prefix_name(disable)}
         else:
-            disable = set(disable)
+            disable = {_get_prefix_name(name) for name in disable}
         enable = DEFAULT_PIPENAMES.difference(set(disable))
     elif enable is not None:
 
@@ -197,12 +169,19 @@ def _build_pipe_names(enable=None, disable=None):
             if enable == "all":
                 enable = ALL_PIPE_NAMES.copy()
             else:
-                enable = {enable}
+                enable = {_get_prefix_name(enable)}
         else:
-            enable = set(enable)
+            enable = {_get_prefix_name(name) for name in enable}
         disable = set(DEFAULT_PIPENAMES).difference(enable)
     else:
         enable = DEFAULT_PIPENAMES
         disable = set()
 
     return enable, disable
+
+def _get_prefix_name(component_name):
+    if component_name in ALL_PIPE_NAMES_SIMPLE:
+        return "medspacy_" + component_name
+    if component_name in ALL_PIPE_NAMES:
+        return component_name
+    return component_name

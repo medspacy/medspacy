@@ -5,7 +5,7 @@ def span_contains(span, target, regex=True, case_insensitive=True):
     """Return True if a Span object contains a target phrase.
     Case insensitive.
     span: A spaCy Span, such as an entity in doc.ents
-    target: A target phrase or iterable of phrases to check in span.lower_.
+    target: A target phrase or iterable of phrases to check in span.text.lower().
     regex (bool): Whether to search the span using a regular expression rather than
         a literal string. Default True.
     """
@@ -16,7 +16,7 @@ def span_contains(span, target, regex=True, case_insensitive=True):
             func = lambda x: re.search(x, span.text) is not None
     else:
         if case_insensitive:
-            func = lambda x: x.lower() in span.lower_
+            func = lambda x: x.lower() in span.text.lower()
         else:
             func = lambda x: x in span.text
 

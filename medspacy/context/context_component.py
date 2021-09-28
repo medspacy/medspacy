@@ -4,8 +4,8 @@ from os import path
 # Filepath to default rules which are included in package
 from pathlib import Path
 
-from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
+from spacy.language import Language
 
 from .context_modifier import ConTextModifier
 from .context_graph import ConTextGraph
@@ -24,7 +24,7 @@ DEFAULT_ATTRS = {
 
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "context_rules.json")
 
-
+@Language.factory("medspacy_context")
 class ConTextComponent:
     """The ConTextComponent for spaCy processing."""
 
@@ -33,7 +33,7 @@ class ConTextComponent:
     def __init__(
         self,
         nlp,
-        targets="ents",
+        name="medspacy_context",
         add_attrs=True,
         phrase_matcher_attr="LOWER",
         rules="default",
@@ -48,7 +48,7 @@ class ConTextComponent:
         remove_overlapping_modifiers=False,
     ):
 
-        """Create a new ConTextComponent algorithm.
+        """Create a new ConTextComponent.
 
         This component matches modifiers in a Doc,
         defines their scope, and identifies edges between targets and modifiers.
@@ -59,9 +59,6 @@ class ConTextComponent:
 
         Args:
             nlp: a spaCy NLP model
-            targets: the attribute of Doc which contains targets.
-                Default is "ents", in which case it will use the standard Doc.ents attribute.
-                Otherwise will look for a custom attribute in Doc._.{targets}
             add_attrs: Whether or not to add the additional spaCy Span attributes (ie., Span._.x)
                 defining assertion on the targets. By default, these are:
                 - is_negated: True if a target is modified by 'NEGATED_EXISTENCE', default False
@@ -129,9 +126,7 @@ class ConTextComponent:
         """
 
         self.nlp = nlp
-        if targets != "ents":
-            raise NotImplementedError()
-        self._target_attr = targets
+        self.name = name
         self.prune = prune
         self.remove_overlapping_modifiers = remove_overlapping_modifiers
 
@@ -318,10 +313,7 @@ class ConTextComponent:
         Returns:
             doc: a spaCy Doc
         """
-        if self._target_attr == "ents":
-            targets = doc.ents
-        else:
-            targets = getattr(doc._, self._target_attr)
+        targets = doc.ents
 
         # Store data in ConTextGraph object
         # TODO: move some of this over to ConTextGraph

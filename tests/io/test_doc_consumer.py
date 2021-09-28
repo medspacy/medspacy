@@ -9,21 +9,18 @@ from medspacy.section_detection import Sectionizer, SectionRule
 nlp = spacy.load("en_core_web_sm")
 nlp.remove_pipe("ner")
 
-matcher = EntityRuler(nlp)
+matcher = nlp.add_pipe("entity_ruler")
 matcher.add_patterns([{"label": "PROBLEM", "pattern": "cough"}])
-nlp.add_pipe(matcher)
 
-context = ConTextComponent(nlp)
-nlp.add_pipe(context)
+nlp.add_pipe("medspacy_context")
 
-sectionizer = Sectionizer(nlp)
+sectionizer = nlp.add_pipe("medspacy_sectionizer")
 sectionizer.add(
     [
         SectionRule("Section 1:", "section1"),
         SectionRule("Section 2:", "section2", parents=["section1"]),
     ]
 )
-nlp.add_pipe(sectionizer)
 
 simple_text = "Patient has a cough."
 context_text = "Patient has no cough."

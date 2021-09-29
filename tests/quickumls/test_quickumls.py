@@ -5,8 +5,8 @@ import pytest
 
 import medspacy
 
-class TestQuickUMLS:
 
+class TestQuickUMLS:
     @staticmethod
     def can_test_quickumls():
         if platform.startswith("win"):
@@ -56,10 +56,10 @@ class TestQuickUMLS:
         quickumls = nlp.get_pipe("medspacy_quickumls")
 
         # TODO -- Consider moving this and other extraction tests to separate tests from loading
-        doc = nlp('Decreased dipalmitoyllecithin content found in lung specimens')
+        doc = nlp("Decreased dipalmitoyllecithin content found in lung specimens")
 
         assert len(doc.ents) == 1
 
         entity_spans = [ent.text for ent in doc.ents]
 
-        assert 'dipalmitoyllecithin' in entity_spans
+        assert "dipalmitoyllecithin" in entity_spans

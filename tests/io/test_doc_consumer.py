@@ -2,7 +2,13 @@ import spacy
 from spacy.pipeline import EntityRuler
 
 from medspacy.io import DocConsumer
-from medspacy.io.doc_consumer import DEFAULT_ENT_ATTRS, DEFAULT_DOC_ATTRS, ALLOWED_CONTEXT_ATTRS, ALLOWED_SECTION_ATTRS, ALLOWED_DATA_TYPES
+from medspacy.io.doc_consumer import (
+    DEFAULT_ENT_ATTRS,
+    DEFAULT_DOC_ATTRS,
+    ALLOWED_CONTEXT_ATTRS,
+    ALLOWED_SECTION_ATTRS,
+    ALLOWED_DATA_TYPES,
+)
 from medspacy.context import ConTextComponent
 from medspacy.section_detection import Sectionizer, SectionRule
 
@@ -16,10 +22,7 @@ nlp.add_pipe("medspacy_context")
 
 sectionizer = nlp.add_pipe("medspacy_sectionizer")
 sectionizer.add(
-    [
-        SectionRule("Section 1:", "section1"),
-        SectionRule("Section 2:", "section2", parents=["section1"]),
-    ]
+    [SectionRule("Section 1:", "section1"), SectionRule("Section 2:", "section2", parents=["section1"]),]
 )
 
 simple_text = "Patient has a cough."
@@ -40,7 +43,7 @@ class TestDocConsumer:
     def test_init_default(self):
         doc_consumer = DocConsumer(nlp)
         assert DocConsumer(nlp)
-        assert doc_consumer.dtypes == ("ent", )
+        assert doc_consumer.dtypes == ("ent",)
 
     def test_init_context(self):
         doc_consumer = DocConsumer(nlp, dtypes=("context",))

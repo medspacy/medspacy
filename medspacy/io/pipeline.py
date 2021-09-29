@@ -1,12 +1,14 @@
 from .doc_consumer import ALLOWED_DATA_TYPES
 from spacy.language import Language
 
+
 @Language.factory("medspacy_pipeline")
 class Pipeline:
     """The Pipeline class executes a batch process of reading texts, processing them with a spaCy model, and writing
     the results back to a database.
     """
-    def __init__(self, nlp, reader, writer, name="medspacy_pipeline",  dtype="ent"):
+
+    def __init__(self, nlp, reader, writer, name="medspacy_pipeline", dtype="ent"):
         """Create a new Pipeline object.
         Args:
             reader: A DbReader object
@@ -44,7 +46,7 @@ class Pipeline:
                     # Get the data as rows of tuples
                     doc_data = doc._.get_data(self.dtype, as_rows=True)
                     # Add the identifier column
-                    doc_data = [(text_id,)+row_data for row_data in doc_data]
+                    doc_data = [(text_id,) + row_data for row_data in doc_data]
                     # doc_data.insert(0, self.writer.cols[0], [text_id for _ in range(len(doc_data))])
                     # doc_data = pd.DataFrame(data=doc._.get_data(self.dtype))
                     # doc_data.insert(0, self.writer.cols[0], [text_id for _ in range(len(doc_data))])

@@ -1,5 +1,4 @@
 class PostprocessingRule:
-
     def __init__(self, patterns, action, name=None, description=None, action_args=None):
         """A PostprocessingRule checks conditions of a spaCy Span entity
         and executes some action if all rules are met.
@@ -64,9 +63,12 @@ class PostprocessingRule:
     def __repr__(self):
         return f"PostprocessingRule: {self.name} - {self.description}"
 
+
 def _raise_action_error(func, args):
-    raise ValueError("The action function {0} does not have the correct number of arguments. "
-                     "Any action function must start with two arguments: (ent, i) - the span and the index of "
-                     "the span in doc.ents. Any additional arguments must be provided in a tuple "
-                     "in `direction.action_args`. "
-                     "Actual arguments passed in: {1} ".format(func, args))
+    raise ValueError(
+        "The action function {0} does not have the correct number of arguments. "
+        "Any action function must start with two arguments: (ent, i) - the span and the index of "
+        "the span in doc.ents. Any additional arguments must be provided in a tuple "
+        "in `direction.action_args`. "
+        "Actual arguments passed in: {1} ".format(func, args)
+    )

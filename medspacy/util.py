@@ -24,7 +24,7 @@ ALL_PIPE_NAMES_SIMPLE = {
 ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
 
 
-def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path = None):
+def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path=None):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be a blank 'en' model with the
     following components:
@@ -75,6 +75,7 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
     """
     enable, disable = _build_pipe_names(enable, disable)
     import spacy
+
     if isinstance(model, str):
         if model == "default":
             nlp = spacy.blank("en")
@@ -84,25 +85,28 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
     elif "spacy.lang" in str(type(model)):
         nlp = model
     else:
-        raise ValueError("model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
-                         "You passed in", type(model))
+        raise ValueError(
+            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. " "You passed in",
+            type(model),
+        )
     if "medspacy_tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
+
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)
         nlp.tokenizer = medspacy_tokenizer
 
     if "medspacy_preprocessor" in enable:
         from .preprocess import Preprocessor
+
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
-
 
     if "medspacy_pyrush" in enable:
         nlp.add_pipe("medspacy_pyrush")
 
     if "medspacy_target_matcher" in enable:
         nlp.add_pipe("medspacy_target_matcher")
-        
+
     if enable.intersection({"medspacy_quickumls", "quickumls"}):
         nlp.add_pipe("medspacy_quickumls", config={"quickumls_path": quickumls_path})
 
@@ -178,6 +182,7 @@ def _build_pipe_names(enable=None, disable=None):
         disable = set()
 
     return enable, disable
+
 
 def _get_prefix_name(component_name):
     if component_name in ALL_PIPE_NAMES_SIMPLE:

@@ -2,8 +2,8 @@ import json
 from ..common.base_rule import BaseRule
 
 import warnings
-warnings.simplefilter('always')
 
+warnings.simplefilter("always")
 
 
 class ConTextRule(BaseRule):
@@ -47,7 +47,7 @@ class ConTextRule(BaseRule):
         terminated_by=None,
         metadata=None,
         filtered_types=None,
-        **kwargs
+        **kwargs,
     ):
         """Create an ConTextRule object.
         The primary arguments of `literal` `category`, and `direction` define
@@ -133,10 +133,12 @@ class ConTextRule(BaseRule):
         super().__init__(literal, category.upper(), pattern, on_match, metadata)
         # 'direction' used to be called 'rule', so we'll handle that here and raise a warning
         if "rule" in kwargs:
-            warnings.warn("The 'rule' argument from ConTextItem has been replaced with 'direction' "
-                                     "in ConTextRule. In the future please use 'direction': "
-                                     "ConTextItem(literal, category, direction=...)",
-                          DeprecationWarning)
+            warnings.warn(
+                "The 'rule' argument from ConTextItem has been replaced with 'direction' "
+                "in ConTextRule. In the future please use 'direction': "
+                "ConTextItem(literal, category, direction=...)",
+                DeprecationWarning,
+            )
             self.direction = kwargs["rule"].upper()
         else:
             self.direction = direction.upper()
@@ -167,11 +169,7 @@ class ConTextRule(BaseRule):
             terminated_by = set()
         else:
             if isinstance(terminated_by, str):
-                raise ValueError(
-                    "terminated_by must be an iterable, such as a list or set, not {}.".format(
-                        terminated_by
-                    )
-                )
+                raise ValueError("terminated_by must be an iterable, such as a list or set, not {}.".format(terminated_by))
             terminated_by = {string.upper() for string in terminated_by}
 
         self.terminated_by = terminated_by
@@ -182,11 +180,8 @@ class ConTextRule(BaseRule):
 
         if self.direction not in self._ALLOWED_DIRECTIONS:
             raise ValueError(
-                "Direction {0} not recognized. Must be one of: {1}".format(
-                    self.direction, self._ALLOWED_DIRECTIONS
-                )
+                "Direction {0} not recognized. Must be one of: {1}".format(self.direction, self._ALLOWED_DIRECTIONS)
             )
-
 
     @property
     def rule(self):
@@ -217,9 +212,7 @@ class ConTextRule(BaseRule):
             return urllib.request.urlopen(_file, data=None)
 
         f0 = _get_fileobj(_file)
-        context_rules = [
-            ConTextRule.from_dict(data) for data in yaml.safe_load_all(f0)
-        ]
+        context_rules = [ConTextRule.from_dict(data) for data in yaml.safe_load_all(f0)]
         f0.close()
         return {"item_data": context_rules}
 
@@ -260,10 +253,7 @@ class ConTextRule(BaseRule):
         keys = set(rule_dict.keys())
         invalid_keys = keys.difference(cls._ALLOWED_KEYS)
         if invalid_keys:
-            msg = (
-                "JSON object contains invalid keys: {0}.\n"
-                "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
-            )
+            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
             raise ValueError(msg)
         rule = ConTextRule(**rule_dict)
         return rule

@@ -26,16 +26,14 @@ db_dtypes = [
 
 def create_test_db(db, drop_existing=True):
     import os
+
     if drop_existing and os.path.exists(db):
         print("File medspacy_demo.db already exists")
         return
 
     import sqlite3 as s3
 
-    texts = [
-        "Patient with a history of breast ca",
-        "There is no evidence of pneumonia."
-    ]
+    texts = ["Patient with a history of breast ca", "There is no evidence of pneumonia."]
 
     conn = s3.connect(db)
 
@@ -50,16 +48,18 @@ def create_test_db(db, drop_existing=True):
     conn.close()
     print("Created file", db)
 
-class TestDbWriter:
 
+class TestDbWriter:
     def test_init_from_sqlite3_conn(self):
         from medspacy.io.db_connect import DbConnect
         import sqlite3
+
         create_test_db(db)
         sq_conn = sqlite3.connect(db)
 
         db_conn = DbConnect(conn=sq_conn)
         from medspacy.io.db_reader import DbReader
+
         reader = DbReader(db_conn, "SELECT text_id, text FROM texts")
         rslts = reader.read()
         assert rslts[0] == (1, "Patient with a history of breast ca")

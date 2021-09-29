@@ -12,7 +12,7 @@ from .section_rule import SectionRule
 from .section import Section
 from ..common.medspacy_matcher import MedspacyMatcher
 
-DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json", )
+DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
 
 DEFAULT_ATTRS = {
     "past_medical_history": {"is_historical": True},
@@ -23,20 +23,21 @@ DEFAULT_ATTRS = {
     "allergy": {"is_hypothetical": True},
 }
 
+
 @Language.factory("medspacy_sectionizer")
 class Sectionizer:
     def __init__(
-            self,
-            nlp,
-            name="medspacy_sectionizer",
-            rules="default",
-            add_attrs=False,
-            max_scope=None,
-            include_header=False,
-            phrase_matcher_attr="LOWER",
-            require_start_line=False,
-            require_end_line=False,
-            newline_pattern=r"[\n\r]+[\s]*$",
+        self,
+        nlp,
+        name="medspacy_sectionizer",
+        rules="default",
+        add_attrs=False,
+        max_scope=None,
+        include_header=False,
+        phrase_matcher_attr="LOWER",
+        require_start_line=False,
+        require_end_line=False,
+        newline_pattern=r"[\n\r]+[\s]*$",
     ):
         """Create a new Sectionizer component. The sectionizer will search for spans in the text which
         match section header rules, such as 'Past Medical History:'. Sections will be represented
@@ -134,8 +135,7 @@ class Sectionizer:
             self.assertion_attributes_mapping = add_attrs
 
         else:
-            raise ValueError(
-                "add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
+            raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
 
     @property
     def rules(self):
@@ -177,11 +177,13 @@ class Sectionizer:
 
         if not isinstance(rules[0], SectionRule):
             if isinstance(rules[0], dict):
-                raise TypeError("Dictionary patterns are no longer supported. You should now add rules using the "
-                                "`SectionRule` class: `from medspacy.section_detection import SectionRule`. "
-                                "You can migrate old patterns to the new rule format by using: "
-                                "`from medspacy.section_dection import section_patterns_to_rules; "
-                                "rules = section_patterns_to_rules(patterns)`")
+                raise TypeError(
+                    "Dictionary patterns are no longer supported. You should now add rules using the "
+                    "`SectionRule` class: `from medspacy.section_detection import SectionRule`. "
+                    "You can migrate old patterns to the new rule format by using: "
+                    "`from medspacy.section_dection import section_patterns_to_rules; "
+                    "rules = section_patterns_to_rules(patterns)`"
+                )
             else:
                 raise TypeError("Rules must be of class SectionRule, not", type(rules[0]))
 
@@ -264,8 +266,7 @@ class Sectionizer:
                                 candidate = None
                                 continue
                             # otherwise get the previous item in the list
-                            temp = self._rule_item_mapping[
-                                self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]].category
+                            temp = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]].category
                             temp_parent_idx = sections_final[candidate_i - 1][3]
                             if temp_parent_idx is not None:
                                 temp_parent = self._rule_item_mapping[

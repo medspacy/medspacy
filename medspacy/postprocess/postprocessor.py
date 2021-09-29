@@ -3,6 +3,7 @@ from spacy.language import Language
 
 postprocess_pattern = namedtuple("PostProcessPattern", ["func", "attr", "check_value", "success_value"])
 
+
 @Language.factory("medspacy_postprocessor")
 class Postprocessor:
     def __init__(self, nlp, name="medspacy_postprocessor", debug=False):
@@ -16,7 +17,7 @@ class Postprocessor:
 
     def __call__(self, doc):
         # Iterate through the entities in reversed order
-        for i in range(len(doc.ents)-1, -1, -1):
+        for i in range(len(doc.ents) - 1, -1, -1):
             ent = doc.ents[i]
             if self.debug:
                 print(ent)

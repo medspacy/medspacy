@@ -174,25 +174,14 @@ class TestConTextModifier:
         assert len(flu._.modifiers) == 1
         assert len(pneumonia._.modifiers) == 1
 
-
     def test_no_limit_scope_same_category_different_allowed_types(self):
         """Test that a two ConTextModifiers of the same type but with different
          allowed types does not limits the scope of the modifier object.
          """
         doc = nlp("no history of travel to Puerto Rico, neg for pneumonia")
 
-        rule = ConTextRule(
-            "no history of",
-            "DEFINITE_NEGATED_EXISTENCE",
-            "FORWARD",
-            allowed_types={"TRAVEL"},
-        )
-        rule2 = ConTextRule(
-            "neg for",
-            "DEFINITE_NEGATED_EXISTENCE",
-            "FORWARD",
-            allowed_types={"CONDITION"},
-        )
+        rule = ConTextRule("no history of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD", allowed_types={"TRAVEL"},)
+        rule2 = ConTextRule("neg for", "DEFINITE_NEGATED_EXISTENCE", "FORWARD", allowed_types={"CONDITION"},)
         modifier = ConTextModifier(rule, 0, 3, doc)
         modifier2 = ConTextModifier(rule2, 8, 10, doc)
         assert not modifier.limit_scope(modifier2)
@@ -238,10 +227,7 @@ class TestConTextModifier:
         """Test that specifying allowed_types will only modify that target type."""
         doc = self.create_target_type_examples()
         rule = ConTextRule(
-            "no history of travel to",
-            category="DEFINITE_NEGATED_EXISTENCE",
-            direction="FORWARD",
-            allowed_types={"TRAVEL"},
+            "no history of travel to", category="DEFINITE_NEGATED_EXISTENCE", direction="FORWARD", allowed_types={"TRAVEL"},
         )
         modifier = ConTextModifier(rule, 0, 5, doc)
         modifier.set_scope()
@@ -267,11 +253,7 @@ class TestConTextModifier:
     def test_no_types(self):
         """Test that not specifying allowed_types or excluded_types will modify all targets."""
         doc = self.create_target_type_examples()
-        rule = ConTextRule(
-            "no history of travel to",
-            category="DEFINITE_NEGATED_EXISTENCE",
-            direction="FORWARD",
-        )
+        rule = ConTextRule("no history of travel to", category="DEFINITE_NEGATED_EXISTENCE", direction="FORWARD",)
         modifier = ConTextModifier(rule, 0, 5, doc)
         modifier.set_scope()
         travel, condition = doc.ents  # "puerto rico", "pneumonia"
@@ -284,9 +266,7 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule(
-            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=2
-        )
+        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=2)
         # Set "vs" to be the modifier
         modifier = ConTextModifier(rule, 5, 6, doc)
         for target in doc.ents:
@@ -304,9 +284,7 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule(
-            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=3
-        )
+        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=3)
         # Set "vs" to be the modifier
         modifier = ConTextModifier(rule, 5, 6, doc)
         for target in doc.ents:
@@ -322,9 +300,7 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule(
-            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=None
-        )
+        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=None)
         # Set "vs" to be the modifier
         modifier = ConTextModifier(rule, 5, 6, doc)
         for target in doc.ents:
@@ -340,9 +316,7 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule(
-            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=1
-        )
+        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=1)
         modifier = ConTextModifier(rule, 5, 6, doc)
 
         for target in doc.ents:
@@ -358,17 +332,13 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule(
-            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=None
-        )
+        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=None)
         modifier = ConTextModifier(rule, 5, 6, doc)
 
         for target in doc.ents:
             if modifier.modifies(target):
                 modifier.modify(target)
         assert modifier.num_targets == 3
-
-
 
     def test_overlapping_target(self):
         """Test that a modifier will not modify a target if it is
@@ -402,7 +372,6 @@ class TestConTextModifier:
         modifier = ConTextModifier(rule, 2, 5, doc)
 
         assert modifier.modifies(doc.ents[0]) is False
-
 
     def test_on_modifies_arg_types(self):
         def check_arg_types(target, modifier, span_between):

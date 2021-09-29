@@ -58,11 +58,8 @@ class ConTextGraph:
 
         self.edges = edges
 
-
     def __repr__(self):
-        return "<ConTextGraph> with {0} targets and {1} modifiers".format(
-            len(self.targets), len(self.modifiers)
-        )
+        return "<ConTextGraph> with {0} targets and {1} modifiers".format(len(self.targets), len(self.modifiers))
 
 
 def overlap_target_modifiers(span1, span2):
@@ -76,6 +73,4 @@ def overlap_target_modifiers(span1, span2):
 
 
 def _spans_overlap(span1, span2):
-    return (span1.end > span2.start and span1.end <= span2.end) or (
-        span1.start >= span2.start and span1.start < span2.end
-    )
+    return (span1.end > span2.start and span1.end <= span2.end) or (span1.start >= span2.start and span1.start < span2.end)

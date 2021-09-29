@@ -25,8 +25,10 @@ db_dtypes = [
     "varchar(100)",
 ]
 
+
 def create_test_db(db, drop_existing=True):
     import os
+
     if drop_existing and os.path.exists(db):
         print("File medspacy_demo.db already exists")
         return
@@ -51,26 +53,34 @@ def create_test_db(db, drop_existing=True):
     conn.close()
     print("Created file", db)
 
-class TestPipeline:
 
+class TestPipeline:
     def test_init_from_sqlite3_conn(self):
         from medspacy.io.db_connect import DbConnect
         import sqlite3
+
         create_test_db(db)
         sq_conn = sqlite3.connect(db)
 
         db_conn = DbConnect(conn=sq_conn)
 
         from medspacy.io.db_reader import DbReader
+
         reader = DbReader(db_conn, "SELECT text_id, text FROM texts")
 
         from medspacy.io.db_writer import DbWriter
-        writer = DbWriter(db_conn, "ents",
-                          ["text_id"] + doc_consumer.dtype_attrs["ent"],
-                          ["int"] + db_dtypes,
-                          create_table=True, drop_existing=False)
+
+        writer = DbWriter(
+            db_conn,
+            "ents",
+            ["text_id"] + doc_consumer.dtype_attrs["ent"],
+            ["int"] + db_dtypes,
+            create_table=True,
+            drop_existing=False,
+        )
 
         from medspacy.io.pipeline import Pipeline
+
         pipeline = Pipeline(nlp, reader, writer, nlp, "ent")
         pipeline.process()
 

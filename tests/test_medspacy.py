@@ -1,8 +1,11 @@
 import pytest
 
+import subprocess
+import tempfile
+import glob
+
 import medspacy
 import spacy
-
 
 class TestMedSpaCy:
     def test_default_build_pipe_names(self):
@@ -68,6 +71,19 @@ class TestMedSpaCy:
     # def test_load_sci(self):
     #     # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
     #     assert medspacy.load("en_core_sci_sm")
+
+    def test_execute_example_notebooks(self):
+
+        sample_notebook_files = glob.glob("notebooks/*.txt")
+
+        for sample_notebook_file in sample_notebook_files:
+            # Following a pattern from here:
+            # https://github.com/ghego/travis_anaconda_jupyter/blob/master/test_nb.py
+            with tempfile.NamedTemporaryFile(suffix=".ipynb") as fout:
+                args = ["jupyter", "nbconvert", "--to", "notebook", "--execute",
+                        "--ExecutePreprocessor.timeout=1000",
+                        "--output", fout.name, sample_notebook_file]
+                subprocess.check_call(args)
 
     def test_load_rules(self):
         nlp = medspacy.load(load_rules=True)

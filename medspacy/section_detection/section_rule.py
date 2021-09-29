@@ -6,8 +6,7 @@ class SectionRule(BaseRule):
     _ALLOWED_KEYS = {"literal", "pattern", "category", "metadata", "parents", "parent_required", "max_scope"}
 
     def __init__(
-        self, literal, category, pattern=None, on_match=None, max_scope=None,
-            parents=[], parent_required=False, metadata=None
+        self, literal, category, pattern=None, on_match=None, max_scope=None, parents=[], parent_required=False, metadata=None
     ):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:

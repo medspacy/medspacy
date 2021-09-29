@@ -4,11 +4,7 @@ import re
 from os import path
 from pathlib import Path
 
-DEFAULT_RULES_FILEPATH = path.join(
-    Path(__file__).resolve().parents[2],
-    "resources",
-    "section_rules.json",
-)
+DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_rules.json",)
 
 
 class TextSectionizer:
@@ -67,15 +63,12 @@ class TextSectionizer:
             pattern = pattern_dict["pattern"]
             if isinstance(pattern, str):
                 self._compiled_patterns.setdefault(name, [])
-                self._compiled_patterns[name].append(
-                    _mycomp(pattern, flags=cflags)
-                )
+                self._compiled_patterns[name].append(_mycomp(pattern, flags=cflags))
             else:
                 # TODO: Change the default rules
                 # continue
                 raise ValueError(
-                    "Patterns added to the TextSectionizer must be strings",
-                    pattern_dict,
+                    "Patterns added to the TextSectionizer must be strings", pattern_dict,
                 )
             self._patterns.append(pattern_dict)
             self._section_titles.add(name)
@@ -154,9 +147,7 @@ class TextSectionizer:
                 sections.append((name, text[match.start() :]))
             else:
                 next_match = matches[i + 1][1]
-                sections.append(
-                    (name, text[match.start() : next_match.start()])
-                )
+                sections.append((name, text[match.start() : next_match.start()]))
 
         return sections
 

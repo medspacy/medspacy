@@ -24,6 +24,7 @@ DEFAULT_ATTRS = {
 
 DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "context_rules.json")
 
+
 @Language.factory("medspacy_context")
 class ConTextComponent:
     """The ConTextComponent for spaCy processing."""
@@ -249,9 +250,7 @@ class ConTextComponent:
         self.matcher.add(rules)
         for rule in rules:
             if not isinstance(rule, ConTextRule):
-                raise TypeError(
-                    "rules must be a list of ConTextRules."
-                )
+                raise TypeError("rules must be a list of ConTextRules.")
             self._categories.add(rule.category)
 
             # If global attributes like allowed_types and max_scope are defined,
@@ -274,7 +273,6 @@ class ConTextComponent:
                     rule.terminated_by.add(other_modifier.upper())
 
             self._rules.append(rule)
-
 
     def register_graph_attributes(self):
         """Register spaCy container custom attribute extensions.

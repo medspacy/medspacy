@@ -6,6 +6,7 @@ import tempfile
 
 tmpdirname = tempfile.TemporaryDirectory()
 
+
 class TestMedSpaCyExtensions:
     def test_init_str(self):
         rule = PreprocessingRule("this is a string")
@@ -27,30 +28,18 @@ class TestMedSpaCyExtensions:
         preprocessed = rule(text)
         assert preprocessed == "The pt has a Past Medical History of diabetes."
 
-
-
     def test_to_dict(self):
         rule = PreprocessingRule("this is a string")
         d = rule.to_dict()
-        assert d == {
-            "pattern": "this is a string",
-            "repl": "",
-            "ignorecase": True,
-            "callback": None,
-            "desc": ""
-        }
+        assert d == {"pattern": "this is a string", "repl": "", "ignorecase": True, "callback": None, "desc": ""}
 
     def test_from_dict(self):
-        d = {
-            "pattern": "this is a string",
-            "repl": "",
-            "callback": None,
-            "desc": ""
-        }
+        d = {"pattern": "this is a string", "repl": "", "callback": None, "desc": ""}
         rule = PreprocessingRule.from_dict(d)
 
     def test_to_json(self):
         import os, json
+
         dname = os.path.join(tmpdirname.name, "test_preprocess_rules.json")
 
         rule = PreprocessingRule("this is a string")
@@ -64,23 +53,17 @@ class TestMedSpaCyExtensions:
 
     def test_from_json(self):
         import os, json
+
         dname = os.path.join(tmpdirname.name, "test_preprocess_rules.json")
         # dname = os.path.join(".", "test_preprocess_rules.json")
         data = {
             "preprocessing_rules": [
-                {
-                    "pattern": "this is a string",
-                    "repl": "",
-                    "ignorecase": True,
-                    "callback": None,
-                    "desc": ""
-                }
+                {"pattern": "this is a string", "repl": "", "ignorecase": True, "callback": None, "desc": ""}
             ]
         }
 
         with open(dname, "w") as f:
             json.dump(data, f)
-
 
         rules = PreprocessingRule.from_json(dname)
         rule = rules[0]

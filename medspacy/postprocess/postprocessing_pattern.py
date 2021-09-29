@@ -1,5 +1,4 @@
 class PostprocessingPattern:
-
     def __init__(self, condition, success_value=True, condition_args=None):
         """A PostprocessingPattern defines a single condition to check against an entity.
         condition (function): A function to call on an entity. If the result of

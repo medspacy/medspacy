@@ -1,5 +1,6 @@
 import re
 
+
 class PreprocessingRule:
 
     _ALLOWED_KEYS = {"pattern", "repl", "desc", "pattern"}
@@ -43,8 +44,13 @@ class PreprocessingRule:
             pattern = re.compile(d["pattern"], flags=d["flags"])
         else:
             pattern = re.compile(d["pattern"])
-        return PreprocessingRule(pattern, repl=d.get("repl"), ignorecase=d.get("ignorecase", False), callback=d.get("callback"), desc=d.get("desc", ""))
-
+        return PreprocessingRule(
+            pattern,
+            repl=d.get("repl"),
+            ignorecase=d.get("ignorecase", False),
+            callback=d.get("callback"),
+            desc=d.get("desc", ""),
+        )
 
     def to_dict(self):
         d = {
@@ -52,15 +58,16 @@ class PreprocessingRule:
             "repl": self.repl,
             "callback": self.callback,
             "desc": self.desc,
-            "ignorecase": self.ignorecase
+            "ignorecase": self.ignorecase,
         }
-        if self.pattern.flags is not None and self.pattern.flags != 34: # re.IGNORECASE
+        if self.pattern.flags is not None and self.pattern.flags != 34:  # re.IGNORECASE
             d["flags"] = self.pattern.flags
         return d
 
     @classmethod
     def from_json(cls, filepath):
         import json
+
         with open(filepath) as f:
             data = json.load(f)
         return [PreprocessingRule.from_dict(rule) for rule in data["preprocessing_rules"]]
@@ -68,18 +75,20 @@ class PreprocessingRule:
     @classmethod
     def to_json(cls, preprocess_rules, filepath):
         import json
+
         # Validate that all of the keys are serializable
         dicts = []
         for rule in preprocess_rules:
             if not isinstance(rule.repl, str):
-                raise ValueError("The repl attribute must currently be a string to be serialized as json, not", type(rule.repl))
+                raise ValueError(
+                    "The repl attribute must currently be a string to be serialized as json, not", type(rule.repl)
+                )
             if rule.callback is not None:
                 raise ValueError("The callback attribute is not serializable and must be left as None.")
             dicts.append(rule.to_dict())
         data = {"preprocessing_rules": dicts}
         with open(filepath, "w") as f:
             json.dump(data, f)
-
 
     def __call__(self, text):
         """Apply a preprocessing direction. If the callback attribute of direction is None,
@@ -98,5 +107,6 @@ class PreprocessingRule:
         return self.callback(match)
 
     def __repr__(self):
-        return "PreprocessingRule(pattern={0}, repl={1}, callback={2}, desc={3})".format(self.pattern, self.repl,
-                                                                                         self.callback, self.desc)
+        return "PreprocessingRule(pattern={0}, repl={1}, callback={2}, desc={3})".format(
+            self.pattern, self.repl, self.callback, self.desc
+        )

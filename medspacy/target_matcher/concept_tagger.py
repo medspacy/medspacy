@@ -2,6 +2,7 @@ from . import TargetMatcher
 from spacy.tokens import Token
 from spacy.language import Language
 
+
 @Language.factory("medspacy_concept_tagger")
 class ConceptTagger:
     """ConceptTagger is a component for setting an attribute on tokens contained

@@ -53,7 +53,6 @@ class TestMedSpaCy:
         actual_pipe_names, _ = medspacy.util._build_pipe_names("all")
         assert expected_pipe_names == actual_pipe_names
 
-
     def test_load_all_components(self):
         full_pipe_names = [
             "medspacy_pyrush",
@@ -102,9 +101,9 @@ class TestMedSpaCy:
 
     def test_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer
-        custom_tokenizer = medspacy.load(enable=['tokenizer']).tokenizer
+        custom_tokenizer = medspacy.load(enable=["tokenizer"]).tokenizer
 
-        text = r'Pt c\o n;v;d h\o chf+cp n/v/d'
+        text = r"Pt c\o n;v;d h\o chf+cp n/v/d"
 
         default_doc = default_tokenizer(text)
         medspacy_doc = custom_tokenizer(text)
@@ -119,9 +118,9 @@ class TestMedSpaCy:
 
     def test_disable_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer
-        custom_tokenizer = medspacy.load(disable=['tokenizer']).tokenizer
+        custom_tokenizer = medspacy.load(disable=["tokenizer"]).tokenizer
 
-        text = r'Pt c\o n;v;d h\o chf+cp n/v/d'
+        text = r"Pt c\o n;v;d h\o chf+cp n/v/d"
 
         default_doc = default_tokenizer(text)
         medspacy_doc = custom_tokenizer(text)
@@ -129,11 +128,11 @@ class TestMedSpaCy:
         assert [token.text for token in default_doc] == [token.text for token in medspacy_doc]
 
     def test_medspacy_tokenizer_uppercase(self):
-        custom_tokenizer = medspacy.load(enable=['medspacy_tokenizer']).tokenizer
+        custom_tokenizer = medspacy.load(enable=["medspacy_tokenizer"]).tokenizer
 
         # Issue 13: Ensure that uppercase tokens are not tokenized as each character
         # https://github.com/medspacy/medspacy/issues/13
-        text = r'DO NOT BREAK ME UP'
+        text = r"DO NOT BREAK ME UP"
 
         medspacy_doc = custom_tokenizer(text)
 
@@ -147,9 +146,9 @@ class TestMedSpaCy:
         assert "B R E A K" not in joined_tokens
 
     def test_medspacy_tokenizer_numerics(self):
-        custom_tokenizer = medspacy.load(enable=['medspacy_tokenizer']).tokenizer
+        custom_tokenizer = medspacy.load(enable=["medspacy_tokenizer"]).tokenizer
 
-        text = r'1.5 mg'
+        text = r"1.5 mg"
 
         medspacy_doc = custom_tokenizer(text)
 
@@ -161,4 +160,3 @@ class TestMedSpaCy:
         joined_tokens = " ".join(tokens)
         assert "1.5" in joined_tokens
         assert "1 . 5" not in joined_tokens
-

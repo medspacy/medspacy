@@ -21,6 +21,11 @@ class TestNotebooks:
                     if '12-io' in file.lower():
                         continue
 
+                    # Skip this one since it has an Exception which currently occurs intentionally
+                    # Now sure if we can work around this in some way
+                    if 'advanced-modifiers' in file.lower():
+                        continue
+
                     # Skip this on Windows since there are other pieces which must be installed
                     # manually on this platform for now
                     if platform.startswith("win") and 'quickumls' in file.lower():

@@ -60,6 +60,11 @@ setup(
         "jsonschema",
         "requests>=2.13.0,<2.16",
         "six>=1.14.0",
+        # "typer" 0.3.0 has limitations of "click" package versioning
+        # Meanwhile, current spacy which gets installed requires <0.4.0 so this narrow range works around it
+        # Long story and you can read it if you want:
+        # https://github.com/tiangolo/typer/issues/313
+        "typer>=0.3.2,<0.4.0"
     ]
     + additional_installs,
     long_description=long_description,

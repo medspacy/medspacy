@@ -26,6 +26,14 @@ class TestNotebooks:
                     if 'advanced-modifiers' in file.lower():
                         continue
 
+                    # Skip this one since it has a manual model download which also does not currently load
+                    if 'clinical-sectionizer' in file.lower():
+                        continue
+
+                    # Skip this one since it has a manual model download which also does not currently load
+                    if 'adding-sections' in file.lower():
+                        continue
+
                     # Skip this on Windows since there are other pieces which must be installed
                     # manually on this platform for now
                     if platform.startswith("win") and 'quickumls' in file.lower():

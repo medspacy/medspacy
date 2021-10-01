@@ -108,6 +108,16 @@ visualize_ent(doc)
 
 For more detailed examples and explanations of each component, see the [notebooks](./notebooks) folder.
 
+# Citing medspaCy
+If you use medspaCy in your work, consider citing our paper! Presented at the AMIA Annual Symposium 2021, [preprint available on Arxiv](http://arxiv.org/abs/2106.07799).
+
+```
+H. Eyre, A.B. Chapman, K.S. Peterson, J. Shi, P.R. Alba, M.M. Jones, T.L. Box, S.L. DuVall, O. V Patterson,
+Launching into clinical space with medspaCy: a new clinical text processing toolkit in Python,
+AMIA Annu. Symp. Proc. 2021 (in Press. (n.d.). 
+http://arxiv.org/abs/2106.07799.
+```
+
 # Made with medSpaCy
 Here are some links to projects or tutorials which use medSpacy. If you have a project which uses medSpaCy which you'd like to use, let us know!
 - [VA_COVID-19_NLP_BSV](https://github.com/abchapman93/VA_COVID-19_NLP_BSV): An NLP pipeline for [identifying positive cases of COVID-19](https://aclanthology.org/2020.nlpcovid19-acl.10/) from clinical text. Deployed as part of the Department of Veterans Affairs response to COVID-19

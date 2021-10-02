@@ -30,9 +30,7 @@ class TestConTextComponent:
             filepath = "./resources/context_rules.json"
         else:
             filepath = "../../resources/context_rules.json"
-        context = ConTextComponent(
-            nlp, rules="other", rule_list=os.path.abspath(filepath)
-        )
+        context = ConTextComponent(nlp, rules="other", rule_list=os.path.abspath(filepath))
         assert context.rules
 
     def test_custom_patterns_list(self):
@@ -66,7 +64,7 @@ class TestConTextComponent:
     def test_registers_attributes(self):
         """Test that the default ConText attributes are set on ."""
         doc = nlp("There is consolidation.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 2, 3, "CONDITION"),)
         context = ConTextComponent(nlp)
         doc = context(doc)
         assert hasattr(doc._, "context_graph")
@@ -93,7 +91,8 @@ class TestConTextComponent:
         """Check that default Span attributes have False values without any modifiers."""
         doc = nlp("There is evidence of pneumonia.")
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
-        doc.ents = (doc[-2:-1],)
+        ent = Span(doc, 5, 6, "CONDITION")
+        doc.ents = (ent,)
         context(doc)
         for attr_name in [
             "is_negated",
@@ -120,7 +119,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
         rules = [ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="forward")]
         context.add(rules)
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 5, 6, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_negated is True
@@ -130,7 +129,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
         rules = [ConTextRule("history of", "HISTORICAL", direction="forward")]
         context.add(rules)
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 2, 3, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_historical is True
@@ -140,7 +139,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=True, rules=None)
         rules = [ConTextRule("family history of", "FAMILY", direction="forward")]
         context.add(rules)
-        doc.ents = (doc[-3:-1],)
+        doc.ents = (Span(doc, 3, 5, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_family is True
@@ -177,7 +176,7 @@ class TestConTextComponent:
         context = ConTextComponent(nlp, add_attrs=custom_attrs)
         context.add([ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD")])
         doc = nlp("There is no evidence of pneumonia.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 5, 6, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_negated is True
@@ -191,11 +190,9 @@ class TestConTextComponent:
         except:
             pass
         context = ConTextComponent(nlp, add_attrs=custom_attrs)
-        context.add(
-            [ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")]
-        )
+        context.add([ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")])
         doc = nlp("There is no evidence of pneumonia.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 5, 6, "CONDITION"),)
         context(doc)
 
         assert doc.ents[0]._.is_family is False
@@ -208,16 +205,7 @@ class TestConTextComponent:
             span = doc[start:end]
             print("Matched on span:", span)
 
-        context.add(
-            [
-                ConTextRule(
-                    "no evidence of",
-                    "NEGATED_EXISTENCE",
-                    "FORWARD",
-                    on_match=simple_callback,
-                )
-            ]
-        )
+        context.add([ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", on_match=simple_callback,)])
 
         doc = nlp("There is no evidence of pneumonia.")
         context(doc)
@@ -230,9 +218,7 @@ class TestConTextComponent:
         value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types={"PROBLEM"})
-        rule = ConTextRule(
-            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types=None
-        )
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types=None)
         context.add([rule])
         assert rule.allowed_types == {"PROBLEM"}
 
@@ -242,9 +228,7 @@ class TestConTextComponent:
         value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types=None)
-        rule = ConTextRule(
-            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"}
-        )
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"})
         context.add([rule])
         assert rule.allowed_types == {"PROBLEM"}
 
@@ -253,35 +237,25 @@ class TestConTextComponent:
         the ConTextRule will not receive the component's value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types={"TREATMENT"})
-        rule = ConTextRule(
-            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"}
-        )
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"})
         context.add([rule])
         assert rule.allowed_types == {"PROBLEM"}
 
     def test_context_modifier_termination(self):
         context = ConTextComponent(nlp, rules=None, terminations={"NEGATED_EXISTENCE": ["POSITIVE_EXISTENCE", "UNCERTAIN"]})
-        rule = ConTextRule(
-            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
-        )
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None)
         context.add([rule])
         assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
     def test_rule_modifier_termination(self):
-        context = ConTextComponent(nlp, rules=None,
-                                   terminations=None)
-        rule = ConTextRule(
-            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE", "UNCERTAIN"}
-        )
+        context = ConTextComponent(nlp, rules=None, terminations=None)
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE", "UNCERTAIN"})
         context.add([rule])
         assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
     def test_null_modifier_termination(self):
-        context = ConTextComponent(nlp, rules=None,
-                                   terminations=None)
-        rule = ConTextRule(
-            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
-        )
+        context = ConTextComponent(nlp, rules=None, terminations=None)
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None)
         context.add([rule])
         assert rule.terminated_by == set()
 
@@ -322,7 +296,7 @@ class TestConTextComponent:
         context.add(rules)
 
         doc = nlp("She has a negative attitude about her treatment.")
-        doc.ents = (doc[-2:-1],)
+        doc.ents = (Span(doc, 7, 8, "CONDITION"),)
         context(doc)
 
         assert len(doc.ents[0]._.modifiers) == 0
@@ -333,9 +307,7 @@ class TestConTextComponent:
         "Test that if use_context_window is True but max_scope is None, the instantiation will fail"
         with pytest.raises(ValueError) as exception_info:
             context = ConTextComponent(nlp, max_scope=None, use_context_window=True)
-        exception_info.match(
-            "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None"
-        )
+        exception_info.match("If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None")
 
     def test_regex_pattern(self):
         rules = [
@@ -375,5 +347,3 @@ class TestConTextComponent:
         context(doc)
 
         assert len(doc._.context_graph.modifiers) == 2
-
-

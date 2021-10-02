@@ -31,8 +31,11 @@ for detecting semantic modifiers and attributes of entities, including negation 
 
 Future work could include I/O, relations extraction, and pre-trained clinical models.
 
+**As of 10/2/2021 (version 0.2.0.0), medspaCy supports spaCy v3**
+
 # Usage
 ## Installation
+
 You can install `medspacy` using `setup.py`:
 ```bash
 python setup.py install
@@ -42,6 +45,16 @@ Or with pip:
 ```bash
 pip install medspacy
 ```
+
+To install a previous version which uses spaCy 2:
+```bash
+pip install medspacy==medspacy 0.1.0.2
+```
+
+### Requirements
+The following packages are required and installed when `medspacy` is installed:
+- spaCy v3
+- [pyrush](https://github.com/medspacy/PyRuSH)
 
 If you download other models, you can use them by providing the model itself or model name to `medspacy.load(model_name)`:
 ```python
@@ -56,11 +69,6 @@ nlp = medspacy.load(nlp)
 # Option 3: Load from model name
 nlp = medspacy.load("en_core_web_sm", disable={"ner"})
 ```
-
-### Requirements
-The following packages are required and installed when `medspacy` is installed:
-- spaCy 2.3 (spaCy 3 is not currently supported)
-- [pyrush](https://github.com/medspacy/PyRuSH)
     
 ## Basic Usage
 Here is a simple example showing how to implement and visualize a simple rule-based pipeline using `medspacy`:
@@ -107,8 +115,19 @@ visualize_ent(doc)
 
 For more detailed examples and explanations of each component, see the [notebooks](./notebooks) folder.
 
+# Citing medspaCy
+If you use medspaCy in your work, consider citing our paper! Presented at the AMIA Annual Symposium 2021, [preprint available on Arxiv](http://arxiv.org/abs/2106.07799).
+
+```
+H. Eyre, A.B. Chapman, K.S. Peterson, J. Shi, P.R. Alba, M.M. Jones, T.L. Box, S.L. DuVall, O. V Patterson,
+Launching into clinical space with medspaCy: a new clinical text processing toolkit in Python,
+AMIA Annu. Symp. Proc. 2021 (in Press. (n.d.). 
+http://arxiv.org/abs/2106.07799.
+```
+
 # Made with medSpaCy
 Here are some links to projects or tutorials which use medSpacy. If you have a project which uses medSpaCy which you'd like to use, let us know!
-- [VA_COVID-19_NLP_BSV](https://github.com/abchapman93/VA_COVID-19_NLP_BSV): An NLP pipeline for identifying positive cases of COVID-19 from clinical text. Deployed as part of the Department of Veterans Affairs response to COVID-19
+- [VA_COVID-19_NLP_BSV](https://github.com/abchapman93/VA_COVID-19_NLP_BSV): An NLP pipeline for [identifying positive cases of COVID-19](https://aclanthology.org/2020.nlpcovid19-acl.10/) from clinical text. Deployed as part of the Department of Veterans Affairs response to COVID-19
 - [clinspacy](https://ml4lhs.github.io/clinspacy/index.html): An R wrapper for spaCy, sciSpaCy, and medSpaCy for performing clinical NLP and UMLS linking in R
 - [mimic34md2020_materials](https://github.com/Melbourne-BMDS/mimic34md2020_materials): A crash course in clinical data science from the University of Melbourne. For medSpaCy materials, see `notebooks/nlp-*.ipynb`
+- [ReHouSED NLP](https://github.com/abchapman93/ReHouSED): An NLP pipeline for [studying Veteran housing stability](https://www.sciencedirect.com/science/article/pii/S153204642100232X) and distinguishing between Veterans who are currently unstably housed and those who have exited homelessness

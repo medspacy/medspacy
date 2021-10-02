@@ -27,9 +27,11 @@ def create_medspacy_tokenizer(nlp):
     # get all python punctuation
     punctuation_chars = string.punctuation
     # remove periods so that we do not break up '1.5 mg' into '1 . 5 mg'
-    punctuation_chars = punctuation_chars.replace('.', '')
+    punctuation_chars = punctuation_chars.replace(".", "")
 
-    infixes = nlp.Defaults.infixes + (r'''[{}]'''.format(re.escape(punctuation_chars)),)
+    infixes = nlp.Defaults.infixes + [
+        r"""[{}]""".format(re.escape(punctuation_chars)),
+    ]
     prefixes = nlp.Defaults.prefixes
     suffixes = nlp.Defaults.suffixes
 

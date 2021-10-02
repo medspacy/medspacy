@@ -24,13 +24,13 @@ class TestSectionizer:
 
     def test_patterns_to_rules(self):
         from medspacy.section_detection import section_patterns_to_rules
+
         patterns = [
             {"section_title": "past_medical_history", "pattern": "Past Medical History"},
             {
                 "section_title": "assessment_and_plan",
-                "pattern":
-                    [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}]
-            }
+                "pattern": [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}],
+            },
         ]
 
         rules = section_patterns_to_rules(patterns)

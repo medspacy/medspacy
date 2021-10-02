@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from spacy.language import Language
 
 ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
 
@@ -14,22 +15,19 @@ DEFAULT_ENT_ATTRS = (
     "is_family",
     "section_category",
     "section_parent",
-
 )
 
-DEFAULT_DOC_ATTRS = (
-    "text",
-)
+DEFAULT_DOC_ATTRS = ("text",)
 
 ALLOWED_SECTION_ATTRS = (
-            "section_category",
-            "section_title_text",
-            "section_title_start_char",
-            "section_title_end_char",
-            "section_text",
-            "section_text_start_char",
-            "section_text_end_char",
-            "section_parent",
+    "section_category",
+    "section_title_text",
+    "section_title_start_char",
+    "section_title_end_char",
+    "section_text",
+    "section_text_start_char",
+    "section_text_end_char",
+    "section_parent",
 )
 
 ALLOWED_CONTEXT_ATTRS = (
@@ -50,16 +48,15 @@ DEFAULT_ATTRS = {
     "ent": DEFAULT_ENT_ATTRS,
     "section": ALLOWED_SECTION_ATTRS,
     "context": ALLOWED_CONTEXT_ATTRS,
-    "doc": DEFAULT_DOC_ATTRS
-
+    "doc": DEFAULT_DOC_ATTRS,
 }
 
+
+@Language.factory("medspacy_doc_consumer")
 class DocConsumer:
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
-    
-    name = "doc_consumer"
 
-    def __init__(self, nlp, dtypes=("ent", ), dtype_attrs=None):
+    def __init__(self, nlp, name="medspacy_doc_consumer", dtypes=("ent",), dtype_attrs=None):
         """Create a new DocConsumer.
 
         This component extracts structured information from a Doc. Information is stored in
@@ -92,6 +89,7 @@ class DocConsumer:
                 Default values for each dtype can be retrieved by the class method DocConsumer.get_default_attrs()
         """
         self.nlp = nlp
+        self.name = name
         if not isinstance(dtypes, tuple):
             if dtypes == "all":
                 dtypes = tuple(ALLOWED_DATA_TYPES)
@@ -121,10 +119,8 @@ class DocConsumer:
         dtype_attrs = {dtype: list(attrs) for (dtype, attrs) in DEFAULT_ATTRS.items() if dtype in dtypes}
         return dtype_attrs
 
-
     def set_default_attrs(self):
         self.dtype_attrs = self.get_default_attrs(self.dtypes)
-
 
     def validate_section_attrs(self, attrs):
         """Validate that section attributes are either not specified or are valid attribute names."""

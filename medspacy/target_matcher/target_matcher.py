@@ -2,19 +2,18 @@
 
 from spacy.tokens import Token
 from spacy.tokens import Span
+from spacy.language import Language
 from .target_rule import TargetRule
 from ..common.medspacy_matcher import MedspacyMatcher
 
 
-
+@Language.factory("medspacy_target_matcher")
 class TargetMatcher:
     """TargetMatcher is a component for advanced direction-based text extraction.
     Rules are defined using medspacy.target_matcher.TargetRule.
     """
 
-    name = "target_matcher"
-
-    def __init__(self, nlp, add_ents=True, phrase_matcher_attr="LOWER"):
+    def __init__(self, nlp, name="medspacy_target_matcher", add_ents=True, phrase_matcher_attr="LOWER"):
         """Create a new TargetMatcher.
         Params:
             nlp: A spaCy Language model.
@@ -26,6 +25,7 @@ class TargetMatcher:
                 Default is "LOWER".
         """
         self.nlp = nlp
+        self.name = name
         self.add_ents = add_ents
         self._rules = list()
 

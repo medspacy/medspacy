@@ -31,6 +31,8 @@ for detecting semantic modifiers and attributes of entities, including negation 
 
 Future work could include I/O, relations extraction, and pre-trained clinical models.
 
+**As of 10/2/2021 (version 0.2.0.0), medspaCy supports spaCy v3**
+
 # Usage
 ## Installation
 
@@ -43,6 +45,16 @@ Or with pip:
 ```bash
 pip install medspacy
 ```
+
+To install a previous version which uses spaCy 2:
+```bash
+pip install medspacy==medspacy 0.1.0.2
+```
+
+### Requirements
+The following packages are required and installed when `medspacy` is installed:
+- spaCy v3
+- [pyrush](https://github.com/medspacy/PyRuSH)
 
 If you download other models, you can use them by providing the model itself or model name to `medspacy.load(model_name)`:
 ```python
@@ -57,11 +69,6 @@ nlp = medspacy.load(nlp)
 # Option 3: Load from model name
 nlp = medspacy.load("en_core_web_sm", disable={"ner"})
 ```
-
-### Requirements
-The following packages are required and installed when `medspacy` is installed:
-- spaCy 2.3 (spaCy 3 is not currently supported)
-- [pyrush](https://github.com/medspacy/PyRuSH)
     
 ## Basic Usage
 Here is a simple example showing how to implement and visualize a simple rule-based pipeline using `medspacy`:

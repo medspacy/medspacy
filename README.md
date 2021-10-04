@@ -125,6 +125,16 @@ AMIA Annu. Symp. Proc. 2021 (in Press. (n.d.).
 http://arxiv.org/abs/2106.07799.
 ```
 
+```
+@inproceedings{eyre2021medspacy,
+      title={Launching into clinical space with medspaCy: a new clinical text processing toolkit in Python}, 
+      author={Hannah Eyre and Alec B Chapman and Kelly S Peterson and Jianlin Shi and Patrick R Alba and Makoto M Jones and Tamara L Box and Scott L DuVall and Olga V Patterson},
+      booktitle = {AMIA Annual Symposium Proceedings 2021},
+      year={(in press, n.d.)},
+      url       = {http://arxiv.org/abs/2106.07799}
+}
+```
+
 # Made with medSpaCy
 Here are some links to projects or tutorials which use medSpacy. If you have a project which uses medSpaCy which you'd like to use, let us know!
 - [VA_COVID-19_NLP_BSV](https://github.com/abchapman93/VA_COVID-19_NLP_BSV): An NLP pipeline for [identifying positive cases of COVID-19](https://aclanthology.org/2020.nlpcovid19-acl.10/) from clinical text. Deployed as part of the Department of Veterans Affairs response to COVID-19

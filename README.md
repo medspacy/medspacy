@@ -79,6 +79,7 @@ from medspacy.visualization import visualize_ent
 
 # Load medspacy model
 nlp = medspacy.load()
+print(nlp.pipe_names)
 
 text = """
 Past Medical History:
@@ -90,7 +91,7 @@ There is no evidence of pneumonia. Continue warfarin for Afib. Follow up for man
 """
 
 # Add rules for target concept extraction
-target_matcher = nlp.get_pipe("target_matcher")
+target_matcher = nlp.get_pipe("medspacy_target_matcher")
 target_rules = [
     TargetRule("atrial fibrillation", "PROBLEM"),
     TargetRule("atrial fibrillation", "PROBLEM", pattern=[{"LOWER": "afib"}]),

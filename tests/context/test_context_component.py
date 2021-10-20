@@ -1,5 +1,6 @@
 import spacy
-from spacy.tokens import Span
+from spacy.tokens import Span, Doc
+import medspacy
 
 from medspacy.context import ConTextComponent
 from medspacy.context import ConTextRule
@@ -347,3 +348,33 @@ class TestConTextComponent:
         context(doc)
 
         assert len(doc._.context_graph.modifiers) == 2
+
+    def test_non_entity_input(self):
+        rules = [
+            ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
+        ]
+        context = ConTextComponent(nlp, rules=None)
+        context.add(rules)
+
+        doc = nlp("Patient has a history of diabetes and history of renal failiure")
+        Doc.set_extension("my_custom_spans", default = [], force=True)
+        doc._.my_custom_spans = [doc[-6:-4] ,doc[-2:]]
+        context(doc, "my_custom_spans")
+        for span in doc._.my_custom_spans:
+            assert span._.is_historical
+        Doc.remove_extension("my_custom_spans")
+
+    def test_non_entity_input_non_iterable(self):
+        rules = [
+            ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
+        ]
+        context = ConTextComponent(nlp, rules=None)
+        context.add(rules)
+
+        doc = nlp("Patient has a history of diabetes and history of renal failiure")
+        Doc.set_extension("my_custom_spans", default = [], force=True)
+        doc._.my_custom_spans = doc[-6:-4]
+        with pytest.raises(TypeError) as exception_info:
+            context(doc, "my_custom_spans")
+            assert exception_info.match("argument of type 'spacy.tokens.token.Token' is not iterable")
+        Doc.remove_extension("my_custom_spans")

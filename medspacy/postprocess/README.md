@@ -60,7 +60,7 @@ for ent in doc.ents:
 
 from nlp_postprocessor.postprocessing_functions import sentence_contains, set_label
 postprocessor = Postprocessor()
-pattern1 = PostprocessingPattern(condition=lambda ent: ent.lower_ == "ca")
+pattern1 = PostprocessingPattern(condition=lambda ent: ent.text.lower() == "ca")
 pattern2 = PostprocessingPattern(condition=is_negated, condition_args=("lab",))
 rule = PostprocessingRule(patterns=[pattern1, pattern2], action=set_label, action_args=("TEST",))
 postprocessor.add([rule])

@@ -1,5 +1,6 @@
 import json
 
+
 class Section(object):
     def __init__(self, doc, category, title_start, title_end, body_start, body_end, parent=None, rule=None):
         self.doc = doc

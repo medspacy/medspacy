@@ -37,22 +37,17 @@ class TestTargetRule:
             assert key in rule_dict
 
     def test_from_dict(self):
-        d = dict(
-            literal="pneumonia", category="CONDITION"
-        )
+        d = dict(literal="pneumonia", category="CONDITION")
         assert TargetRule.from_dict(d)
 
     def test_from_dict_error(self):
-        d = dict(
-            literal="pneumonia",
-            category="CONDITION",
-            invalid="this is an invalid key",
-        )
+        d = dict(literal="pneumonia", category="CONDITION", invalid="this is an invalid key",)
         with pytest.raises(ValueError):
             TargetRule.from_dict(d)
 
     def test_from_json(self, from_json_file):
         assert TargetRule.from_json(from_json_file)
+
 
 @pytest.fixture
 def from_json_file():
@@ -61,20 +56,9 @@ def from_json_file():
     json_filepath = os.path.join(tmpdirname.name, "test_targets.json")
 
     item_data = [
-        {
-            "literal": "pneumonia",
-            "category": "CONDITION",
-        },
-        {
-            "literal": "breast cancer",
-            "category": "CONDITION",
-            "pattern": [{"LOWER": "breast"}, {"LOWER": "cancer"}],
-        },
-        {
-            "literal": "breast cancer",
-            "category": "CONDITION",
-            "pattern": "breast ca(ncer)?",
-        },
+        {"literal": "pneumonia", "category": "CONDITION",},
+        {"literal": "breast cancer", "category": "CONDITION", "pattern": [{"LOWER": "breast"}, {"LOWER": "cancer"}],},
+        {"literal": "breast cancer", "category": "CONDITION", "pattern": "breast ca(ncer)?",},
     ]
 
     # Save dicts to a temporary file

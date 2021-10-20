@@ -2,8 +2,11 @@ from spacy import displacy
 
 import warnings
 
-warnings.simplefilter('once', DeprecationWarning)
-warnings.warn("Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning)
+warnings.simplefilter("once", DeprecationWarning)
+warnings.warn(
+    "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning
+)
+
 
 def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
     """Create a NER-style visualization
@@ -24,7 +27,9 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
         cycles through the default matplotlib colors for ent and modifier labels
         and uses a light gray for section headers. Default None.
     """
-    warnings.warn("Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning)
+    warnings.warn(
+        "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning
+    )
     # Make sure that doc has the custom medSpaCy attributes registered
     if not hasattr(doc._, "context_graph"):
         context = False
@@ -88,9 +93,7 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
         options = {
             "colors": colors,
         }
-    return displacy.render(
-        viz_data, style="ent", manual=True, options=options, jupyter=jupyter
-    )
+    return displacy.render(viz_data, style="ent", manual=True, options=options, jupyter=jupyter)
 
 
 def _create_color_mapping(labels):
@@ -124,7 +127,9 @@ def _create_color_generator():
 def visualize_dep(doc, jupyter=True):
     """Create a dependency-style visualization for
     targets and modifiers in doc."""
-    warnings.warn("Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning)
+    warnings.warn(
+        "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning
+    )
     token_data = []
     token_data_mapping = {}
     for token in doc:

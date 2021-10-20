@@ -1,11 +1,12 @@
 import spacy
 import warnings
 from sys import platform
+import pytest
 
 import medspacy
 
-class TestQuickUMLS:
 
+class TestQuickUMLS:
     @staticmethod
     def can_test_quickumls():
         if platform.startswith("win"):
@@ -14,6 +15,7 @@ class TestQuickUMLS:
 
         return True
 
+    # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_initialize_pipeline(self):
         """
         Test that a pipeline with a QuickUMLS component can be loaded in medpacy
@@ -31,13 +33,14 @@ class TestQuickUMLS:
         nlp = medspacy.load(enable=["quickumls"])
         assert nlp
 
-        quickumls = nlp.get_pipe("QuickUMLS matcher")
+        quickumls = nlp.get_pipe("medspacy_quickumls")
         assert quickumls
         # this is a member of the QuickUMLS algorithm inside the component
         assert quickumls.quickumls
         # Check that the simstring database exists
         assert quickumls.quickumls.ss_db
 
+    # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_quickumls_extractions(self):
         """
         Test that extractions can be performed using the very small (<100 concept) UMLS sample resources
@@ -50,13 +53,13 @@ class TestQuickUMLS:
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = medspacy.load(enable=["quickumls"])
-        quickumls = nlp.get_pipe("QuickUMLS matcher")
+        quickumls = nlp.get_pipe("medspacy_quickumls")
 
         # TODO -- Consider moving this and other extraction tests to separate tests from loading
-        doc = nlp('Decreased dipalmitoyllecithin content found in lung specimens')
+        doc = nlp("Decreased dipalmitoyllecithin content found in lung specimens")
 
         assert len(doc.ents) == 1
 
         entity_spans = [ent.text for ent in doc.ents]
 
-        assert 'dipalmitoyllecithin' in entity_spans
+        assert "dipalmitoyllecithin" in entity_spans

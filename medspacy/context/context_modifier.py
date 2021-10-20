@@ -3,9 +3,7 @@ class ConTextModifier:
     Is the result of ConTextRule matching a span of text in a Doc.
     """
 
-    def __init__(
-        self, context_rule, start, end, doc, _use_context_window=False
-    ):
+    def __init__(self, context_rule, start, end, doc, _use_context_window=False):
         """Create a new ConTextModifier from a document span.
 
         context_item (int): The ConTextRule object which defines the modifier.
@@ -113,10 +111,7 @@ class ConTextModifier:
 
         if self.direction.lower() == "forward":
             self._scope_start, self._scope_end = self.end, full_scope_span.end
-            if (
-                self.max_scope is not None
-                and (self._scope_end - self._scope_start) > self.max_scope
-            ):
+            if self.max_scope is not None and (self._scope_end - self._scope_start) > self.max_scope:
                 self._scope_end = self.end + self.max_scope
 
         elif self.direction.lower() == "backward":
@@ -124,10 +119,7 @@ class ConTextModifier:
                 full_scope_span.start,
                 self.start,
             )
-            if (
-                self.max_scope is not None
-                and (self._scope_end - self._scope_start) > self.max_scope
-            ):
+            if self.max_scope is not None and (self._scope_end - self._scope_start) > self.max_scope:
                 self._scope_start = self.start - self.max_scope
         else:  # bidirectional
             self._scope_start, self._scope_end = (
@@ -137,16 +129,10 @@ class ConTextModifier:
 
             # Set the max scope on either side
             # Backwards
-            if (
-                self.max_scope is not None
-                and (self.start - self._scope_start) > self.max_scope
-            ):
+            if self.max_scope is not None and (self.start - self._scope_start) > self.max_scope:
                 self._scope_start = self.start - self.max_scope
             # Forwards
-            if (
-                self.max_scope is not None
-                and (self._scope_end - self.end) > self.max_scope
-            ):
+            if self.max_scope is not None and (self._scope_end - self.end) > self.max_scope:
                 self._scope_end = self.end + self.max_scope
 
     def update_scope(self, span):
@@ -187,8 +173,7 @@ class ConTextModifier:
         # If two modifiers have the same category but modify different target types,
         # don't limit scope.
         if self.category == other.category and (
-            (self.allowed_types != other.allowed_types)
-            or (self.excluded_types != other.excluded_types)
+            (self.allowed_types != other.allowed_types) or (self.excluded_types != other.excluded_types)
         ):
             return False
 
@@ -256,9 +241,7 @@ class ConTextModifier:
         if rslt not in (True, False):
             raise ValueError(
                 "The on_modifies function must return either True or False indicating "
-                "whether a modify modifies a target. Actual value: {0}".format(
-                    rslt
-                )
+                "whether a modify modifies a target. Actual value: {0}".format(rslt)
             )
         return rslt
 
@@ -277,9 +260,7 @@ class ConTextModifier:
 
         target_dists = []
         for target in self._targets:
-            dist = min(
-                abs(self.start - target.end), abs(target.start - self.end)
-            )
+            dist = min(abs(self.start - target.end), abs(target.start - self.end))
             target_dists.append((target, dist))
         srtd_targets, _ = zip(*sorted(target_dists, key=lambda x: x[1]))
         self._targets = srtd_targets[: self.max_targets]
@@ -301,12 +282,7 @@ class ConTextModifier:
 
     def overlaps_target(self, target):
         """Returns True if self overlaps with a spaCy span."""
-        return (
-            self.span[0] in target
-            or self.span[-1] in target
-            or target[0] in self.span
-            or target[-1] in self.span
-        )
+        return self.span[0] in target or self.span[-1] in target or target[0] in self.span or target[-1] in self.span
 
     def __gt__(self, other):
         return self.span > other.span

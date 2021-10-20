@@ -17,9 +17,7 @@ class TestConTextGraph:
         doc[0].is_sent_start = True
         for token in doc[1:]:
             token.is_sent_start = False
-        item_data1 = ConTextRule(
-            "no evidence of", "DEFINITE_NEGATED_EXISTENCE", "forward"
-        )
+        item_data1 = ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "forward")
         tag_object1 = ConTextModifier(item_data1, 2, 5, doc)
 
         item_data2 = ConTextRule("evidence of", "DEFINITE_EXISTENCE", "forward")
@@ -78,5 +76,3 @@ class TestConTextGraph:
 
         assert overlap_target_modifiers(tag_object.span, doc.ents[0])
         assert len(graph.modifiers) == 1
-
-

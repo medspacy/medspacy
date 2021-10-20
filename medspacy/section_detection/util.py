@@ -1,5 +1,6 @@
 NEWLINE_PATTERN = r"[\n\r]+[\s]*$"
 
+
 def is_start_line(idx, doc, pattern):
     # If it's the start of the doc, return True
     if idx == 0:
@@ -21,6 +22,7 @@ def is_end_line(idx, doc, pattern):
         return True
     following_text = doc[idx + 1].text_with_ws
     return pattern.search(following_text) is not None
+
 
 def section_patterns_to_rules(patterns):
     """Convert a list of dictionary-based patterns of the old Sectionizer API

@@ -54,17 +54,12 @@ class TestItemData:
         assert item.metadata
 
     def test_from_dict(self):
-        d = dict(
-            literal="reason for examination", category="INDICATION", direction="FORWARD"
-        )
+        d = dict(literal="reason for examination", category="INDICATION", direction="FORWARD")
         assert ConTextRule.from_dict(d)
 
     def test_from_dict_error(self):
         d = dict(
-            literal="reason for examination",
-            category="INDICATION",
-            direction="FORWARD",
-            invalid="this is an invalid key",
+            literal="reason for examination", category="INDICATION", direction="FORWARD", invalid="this is an invalid key",
         )
         with pytest.raises(ValueError):
             ConTextRule.from_dict(d)
@@ -90,7 +85,6 @@ class TestItemData:
         item = ConTextRule(literal, category, rule)
         ConTextRule.to_json([item], dname)
 
-
         with open(dname) as f:
             data = json.load(f)
         assert "context_rules" in data
@@ -99,7 +93,7 @@ class TestItemData:
         for key in ["literal", "category", "direction"]:
             assert key in item
 
-        #os.remove("test_modifiers.json")
+        # os.remove("test_modifiers.json")
 
     def test_default_terminate(self):
         item = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None)
@@ -113,10 +107,9 @@ class TestItemData:
         with pytest.raises(NotImplementedError) as exception_info:
             # This should fail because context_item throws a NotImplementedError
             from medspacy.context import ConTextItem
+
             ConTextItem()
-        exception_info.match(
-            "ConTextItem has been deprecated and replaced with ConTextRule."
-        )
+        exception_info.match("ConTextItem has been deprecated and replaced with ConTextRule.")
 
     def test_deprecated_rule_argument_raises_warrning(self):
         with pytest.warns(DeprecationWarning) as warning_info:
@@ -130,7 +123,6 @@ class TestItemData:
         assert "The 'rule' attribute has been replaced with 'direction'." in warning_info[0].message.args[0]
 
 
-
 @pytest.fixture
 def from_json_file():
     import json, os
@@ -138,12 +130,7 @@ def from_json_file():
     json_filepath = os.path.join(tmpdirname.name, "test_modifiers.json")
 
     item_data = [
-        {
-            "literal": "are ruled out",
-            "category": "DEFINITE_NEGATED_EXISTENCE",
-            "pattern": None,
-            "direction": "backward",
-        },
+        {"literal": "are ruled out", "category": "DEFINITE_NEGATED_EXISTENCE", "pattern": None, "direction": "backward",},
         {
             "literal": "is negative",
             "category": "DEFINITE_NEGATED_EXISTENCE",

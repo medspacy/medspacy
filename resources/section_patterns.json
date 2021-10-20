@@ -17,6 +17,10 @@
       "category": "allergy"
     },
     {
+      "literal": "Allergies",
+      "category": "allergies"
+    },
+    {
       "literal": "CC:",
       "category": "chief_complaint"
     },
@@ -31,6 +35,10 @@
     {
       "literal": "COMMENTS:",
       "category": "comments"
+    },
+    {
+      "literal": "CONSENT:",
+      "category": "patient_education"
     },
     {
       "literal": "ADMISSION DIAGNOSES:",
@@ -77,7 +85,31 @@
       "category": "history_of_present_illness"
     },
     {
+      "literal": "History present illness:",
+      "category": "history_of_present_illness"
+    },
+    {
       "literal": "HPI:",
+      "category": "history_of_present_illness"
+    },
+    {
+      "literal": "Consulting HPI",
+      "category": "history_of_present_illness"
+    },
+    {
+      "literal": "Consult",
+      "category": "history_of_present_illness"
+    },
+    {
+      "literal": "Clinical Preamble:",
+      "category": "history_of_present_illness"
+    },
+    {
+      "literal": "CLINICAL INDICATION:",
+      "category": "history_of_present_illness"
+    },
+    {
+      "literal": "CLINICAL PREAMBLE:",
       "category": "history_of_present_illness"
     },
     {
@@ -101,6 +133,10 @@
       "category": "imaging"
     },
     {
+      "literal": "TECHNIQUE:",
+      "category": "imaging"
+    },
+    {
       "literal": "INTERPRETATION:",
       "category": "imaging"
     },
@@ -121,6 +157,14 @@
       "category": "labs_and_studies"
     },
     {
+      "literal": "MICROBIOLOGY SPECIMEN SUMMARY:",
+      "category": "labs_and_studies"
+    },
+    {
+      "literal": "Vital Signs",
+      "category": "labs_and_studies"
+    },
+    {
       "literal": "Admission Labs:",
       "category": "labs_and_studies"
     },
@@ -134,6 +178,18 @@
     },
     {
       "literal": "FINDINGS:",
+      "category": "labs_and_studies"
+    },
+    {
+      "literal": "On exam:",
+      "category": "labs_and_studies"
+    },
+    {
+      "literal": "Laboratory Tests",
+      "category": "labs_and_studies"
+    },
+    {
+      "literal": "Laboratory Last Values",
       "category": "labs_and_studies"
     },
     {
@@ -209,6 +265,10 @@
       "category": "medications"
     },
     {
+      "literal": "Home Medication",
+      "category": "medications"
+    },
+    {
       "literal": "MEDICATIONS LIST:",
       "category": "medications"
     },
@@ -253,7 +313,15 @@
       "category": "observation_and_plan"
     },
     {
+      "literal": "Reassesment:",
+      "category": "observation_and_plan"
+    },
+    {
       "literal": "Assessment/Plan:",
+      "category": "observation_and_plan"
+    },
+    {
+      "literal": "PLAN/DISPOSITION",
       "category": "observation_and_plan"
     },
     {
@@ -261,11 +329,23 @@
       "category": "observation_and_plan"
     },
     {
+      "literal": "Impression and plan:",
+      "category": "observation_and_plan"
+    },
+    {
       "literal": "DISCHARGE DIAGNOSES:",
       "category": "observation_and_plan"
     },
     {
+      "literal": "Discharge Plan",
+      "category": "observation_and_plan"
+    },
+    {
       "literal": "DISCHARGE DIAGNOSIS:",
+      "category": "observation_and_plan"
+    },
+    {
+      "literal": "FINAL ASSESSMENT",
       "category": "observation_and_plan"
     },
     {
@@ -317,6 +397,18 @@
       "category": "past_medical_history"
     },
     {
+      "literal": "HISTORY:",
+      "category": "past_medical_history"
+    },
+    {
+      "literal": "PAST HISTORY",
+      "category": "past_medical_history"
+    },
+    {
+      "literal": "CLINICAL HISTORY:",
+      "category": "past_medical_history"
+    },
+    {
       "literal": "History of Chronic Illness:",
       "category": "past_medical_history"
     },
@@ -330,6 +422,10 @@
     },
     {
       "literal": "PAST MEDICAL HISTORY:",
+      "category": "past_medical_history"
+    },
+    {
+      "literal": "Past med history:",
       "category": "past_medical_history"
     },
     {
@@ -397,6 +493,10 @@
       "category": "physical_exam"
     },
     {
+      "literal": "Physical exam:",
+      "category": "physical_exam"
+    },
+    {
       "literal": "Active Problem List:",
       "category": "problem_list"
     },
@@ -415,6 +515,14 @@
     {
       "literal": "Problem List:",
       "category": "problem_list"
+    },
+    {
+      "literal": "PROCEDURE NOTE",
+      "category": "hospital_course"
+    },
+    {
+      "literal": "PROCEDURE AND FINDING:",
+      "category": "hospital_course"
     },
     {
       "literal": "REASON FOR THIS EXAMINATION:",

@@ -143,3 +143,19 @@ class TestMedSpaCy:
         joined_tokens = " ".join(tokens)
         assert "1.5" in joined_tokens
         assert "1 . 5" not in joined_tokens
+
+class TestMedSpaCyForRelease:
+    @pytest.mark.parametrize("language_model", [("es_core_news_sm"), ("pl_core_news_sm"), ("de_core_news_sm"), ("xx_ent_wiki_sm")])
+    def test_multilingual_load(self, language_model):
+        """
+        Checks that we can instantiate the pipeline with different language backends
+        """
+        # Try instantiating the model
+        try:
+            nlp = medspacy.load(language_model, disable={"parser"})
+        # Except if you don't have the model downloaded
+        except OSError:
+            assert True
+            return
+        doc = nlp("This is a very short piece of text that we want to use for testing. No patients were given type 2 diabetes as part of this test case. Podczas tego testu nie dano żadnemu pacjentowi cukrzycy typu drugiego.")
+        assert doc

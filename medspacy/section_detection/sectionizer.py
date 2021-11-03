@@ -286,7 +286,7 @@ class Sectionizer:
                                 candidate = None
 
                 # if a parent is required, then add
-                if identified_parent or not required:
+                if identified_parent is not None or not required:
                     # if the parent is identified, add section
                     # if the parent is not required, add section
                     # if parent is not identified and required, do not add the section

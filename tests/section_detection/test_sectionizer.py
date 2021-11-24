@@ -444,3 +444,16 @@ class TestSectionizer:
         sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         assert sectionizer.section_categories == ["past_medical_history"]
+
+    def test_sectionizer_regex(self):
+        sectionizer = Sectionizer(nlp, rules="./resources/section_patterns_new.json")
+        doc = nlp("Past MeDiCal HiStory          : PE")
+        sectionizer(doc)
+
+        token = doc[-1]
+        assert token._.section is doc._.sections[0]
+        assert token._.section_category == "past_medical_history"
+        assert token._.section_span == doc[0:]
+        assert token._.section_title == doc[0:-1]
+        assert token._.section_body == doc[-1:]
+        assert token._.section_parent is None

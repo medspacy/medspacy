@@ -1,4 +1,7 @@
 import string
+import json
+from types import new_class
+from typing import DefaultDict
 NEWLINE_PATTERN = r"[\n\r]+[\s]*$"
 
 
@@ -76,3 +79,37 @@ def section_patterns_to_rules(patterns):
         rule = SectionRule(**refactored)
         rules.append(rule)
     return rules
+
+
+def create_section_pattern_regexes(section_rules):
+    literals = set()
+    categories = DefaultDict(set)
+    for pattern in section_rules["section_rules"]:
+        literal = pattern["literal"]
+        category = pattern["category"]
+        clean_literal = literal.lower().strip(string.punctuation)
+        categories[clean_literal].add(category)
+        literals.add(clean_literal)
+
+    new_patterns = []
+    for literal in literals:
+        category = categories.get(literal)
+        if len(category) > 1:
+            raise ValueError
+        else:
+            category = list(category)[0]
+        new_patterns.append({
+        "literal": literal,
+        "category": category,
+        "pattern": create_regex_pattern_from_section_name(literal)
+    })
+
+    return new_patterns
+
+
+if __name__ == "__main__":
+    with open("./resources/section_patterns.json", "r") as f:
+        current_patterns = json.load(f)
+    new_patterns = create_section_pattern_regexes(current_patterns)
+    with open("./resources/section_patterns.json", "w") as f:
+        json.dump({"section_rules": new_patterns}, f)

@@ -1,3 +1,4 @@
+import string
 NEWLINE_PATTERN = r"[\n\r]+[\s]*$"
 
 
@@ -23,6 +24,33 @@ def is_end_line(idx, doc, pattern):
     following_text = doc[idx + 1].text_with_ws
     return pattern.search(following_text) is not None
 
+def create_regex_pattern_from_section_name(section_name:str) -> str:
+    """
+    Creates a regex pattern for matching the section name that covers the most common edgecases
+
+    Parameters
+    ----------
+    section_name : str
+        plaintext section name
+    """
+    # Clean the section name:
+    section_name = section_name.lower().strip(string.punctuation)
+    # Create regex
+    regex_pattern = r"[\W]*"
+    for character in section_name:
+        #If character not alpha:
+        if character != " " and character not in string.ascii_letters:
+            regex_pattern += character
+        # Spaces between words
+        elif character == " ":
+            regex_pattern += r"[\s]*"
+        # Alpha chars
+        else:
+            regex_pattern += f"[{character.lower()}|{character.upper()}]"
+    # Add possible endings:
+    regex_pattern += r"[\s]*"
+    regex_pattern += r"[\n|:|-]"
+    return regex_pattern
 
 def section_patterns_to_rules(patterns):
     """Convert a list of dictionary-based patterns of the old Sectionizer API

@@ -55,6 +55,11 @@ jobs:
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
+        # multilingual models for testing compatibility
+        python -m spacy download es_core_news_sm
+        python -m spacy download pl_core_news_sm
+        python -m spacy download de_core_news_sm
+        python -m spacy download xx_ent_wiki_sm
         # install scispacy model as well to ensure compatibility
         pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         pip install flake8 pytest

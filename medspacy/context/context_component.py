@@ -302,17 +302,21 @@ class ConTextComponent:
                 for attr_name, attr_value in attr_dict.items():
                     setattr(target._, attr_name, attr_value)
 
-    def __call__(self, doc):
+    def __call__(self, doc, targets:str=None):
         """Applies the ConText algorithm to a Doc.
 
         Args:
             doc: a spaCy Doc
+            targets: (str) the custom attribute extension on doc to run over.
+                    Must contain an iterable of Span objects
 
         Returns:
             doc: a spaCy Doc
         """
-        targets = doc.ents
-
+        if targets is None:
+            targets = doc.ents
+        else:
+            targets = getattr(doc._, targets)
         # Store data in ConTextGraph object
         # TODO: move some of this over to ConTextGraph
         context_graph = ConTextGraph(remove_overlapping_modifiers=self.remove_overlapping_modifiers)

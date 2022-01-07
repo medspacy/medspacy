@@ -47,6 +47,7 @@ class ConTextComponent:
         terminations=None,
         prune=True,
         remove_overlapping_modifiers=False,
+        process_by_sents=True,
     ):
 
         """Create a new ConTextComponent.
@@ -117,7 +118,11 @@ class ConTextComponent:
                 all modifiers of type "POSITIVE_EXISTENCE" will be terminated by "NEGATED_EXISTENCE" or "UNCERTAIN"
                 modifiers, and all "NEGATED_EXISTENCE" modifiers will be terminated by "FUTURE".
                 This can also be defined for specific ConTextItems in the `terminated_by` attribute.
-
+            process_by_sents (bool): Whether to only process sentences containing entities.
+                This adds a bit of overhead when converting each sentence to a separate Doc,
+                but can be more efficient by avoiding running ConText on large chunks of the
+                document without any targets.
+                Default False.
 
         Returns:
             context: a ConTextComponent
@@ -178,6 +183,7 @@ class ConTextComponent:
         self.allowed_types = allowed_types
         self.excluded_types = excluded_types
         self.max_targets = max_targets
+        self.process_by_sents = process_by_sents
 
         if terminations is None:
             terminations = dict()
@@ -313,6 +319,74 @@ class ConTextComponent:
         Returns:
             doc: a spaCy Doc
         """
+        if self.process_by_sents is True:
+            self._process_doc_by_sents(doc, targets)
+        else:
+            self._process_doc(doc, targets)
+        context_graph = doc._.context_graph
+        context_graph.update_scopes()
+        context_graph.apply_modifiers()
+
+        # Link targets to their modifiers
+        for target, modifier in context_graph.edges:
+            target._.modifiers += (modifier,)
+
+        # If add_attrs is True, add is_negated, is_current, is_asserted to targets
+        if self.add_attrs:
+            self.set_context_attributes(context_graph.edges)
+
+        doc._.context_graph = context_graph
+
+        return doc
+
+    def _process_doc_by_sents(self, doc, targets):
+        graph = ConTextGraph(remove_overlapping_modifiers=self.remove_overlapping_modifiers)
+        # 1. Collect each sentence that has an entity in it
+        # We'll keep track of the original token index offset so we can
+        # reassemble in the original doc
+        sent_offsets = set()
+        for ent in doc.ents:
+            sent_offsets.add((ent.sent.start, ent.sent))
+        sent_offsets = sorted(sent_offsets, key=lambda x:x[0])
+
+        # 2. Convert each sentence to a doc
+        sent_doc_offsets = [(idx, sent.as_doc(copy_user_data=True))
+            for (idx, sent) in sent_offsets]
+
+        # 3. Run ConText on each span
+        for _, sent_doc in sent_doc_offsets:
+            self._process_doc(sent_doc, targets)
+
+        # Mapping from
+        original_ents = dict()
+
+        # 4. Reassemble ConText graph for original Doc
+        for offset, sent_doc in sent_doc_offsets:
+            for target in sent_doc._.context_graph.targets:
+                original_target = self._get_original_span(doc, offset, target)
+                graph.targets.append(original_target)
+
+            for modifier in sent_doc._.context_graph.modifiers:
+                original_span = self._get_original_span(doc, offset, modifier.span)
+                original_modifier = ConTextModifier(
+                    modifier.rule,
+                    original_span.start,
+                    original_span.end,
+                    doc,
+                    modifier._use_context_window
+                    )
+                graph.modifiers.append(original_modifier)
+
+        doc._.context_graph = graph
+        return doc
+
+    def _get_original_span(self, doc, offset, span):
+        original_start = span.start + offset
+        original_end = span.end + offset
+        return doc[original_start:original_end]
+
+
+    def _process_doc(self, doc, targets):
         if targets is None:
             targets = doc.ents
         else:
@@ -331,18 +405,5 @@ class ConTextComponent:
             rules = self._modifier_rule_mapping[self.nlp.vocab[match_id].text]
             modifier = ConTextModifier(rules, start, end, doc, self.use_context_window)
             context_graph.modifiers.append(modifier)
-
-        context_graph.update_scopes()
-        context_graph.apply_modifiers()
-
-        # Link targets to their modifiers
-        for target, modifier in context_graph.edges:
-            target._.modifiers += (modifier,)
-
-        # If add_attrs is True, add is_negated, is_current, is_asserted to targets
-        if self.add_attrs:
-            self.set_context_attributes(context_graph.edges)
-
         doc._.context_graph = context_graph
-
         return doc

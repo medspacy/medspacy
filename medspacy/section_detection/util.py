@@ -39,7 +39,7 @@ def create_regex_pattern_from_section_name(section_name:str) -> str:
     # Clean the section name:
     section_name = section_name.lower().strip(string.punctuation)
     # Create regex
-    regex_pattern = r"[\W]*"
+    regex_pattern = r"[^\S\r\n]*"
     for character in section_name:
         #If character not alpha:
         if character != " " and character not in string.ascii_letters:

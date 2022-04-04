@@ -20,9 +20,9 @@ jobs:
         #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
         #os: [ubuntu-latest, macos-latest, windows-2019]
         include:
-          - name: "Ubuntu Python 3.7"
+          - name: "Ubuntu Python 3.8"
             os: ubuntu-latest
-            python-version: 3.7
+            python-version: 3.8
             addons:
               apt:
                 update: true
@@ -31,12 +31,12 @@ jobs:
                   # https://spacy.io/usage#source-ubuntu
                   - build-essential
                   - python-dev
-          - name: "MacOS Python 3.7"
+          - name: "MacOS Python 3.8"
             os: macos-latest
-            python-version: 3.7
-          - name: "Windows Python 3.7"
+            python-version: 3.8
+          - name: "Windows Python 3.8"
             os: windows-2019
-            python-version: 3.7
+            python-version: 3.8
 
     steps:
     - uses: actions/checkout@v2

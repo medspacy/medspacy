@@ -1,0 +1,5 @@
+[tool.black]
+line-length = 100
+include = '\.py$'
+target-version = ['py38']
+verbose = false

@@ -1,0 +1,463 @@
+{
+    "section_rules": [{
+        "literal": "medications on admission",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[o|O][n|N][\\s]*[a|A][d|D][m|M][i|I][s|S][s|S][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "secondary diagnoses",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[s|S][e|E][c|C][o|O][n|N][d|D][a|A][r|R][y|Y][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "consent",
+        "category": "patient_education",
+        "pattern": "[\\W]*[c|C][o|O][n|N][s|S][e|E][n|N][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "summary of hospital course",
+        "category": "hospital_course",
+        "pattern": "[\\W]*[s|S][u|U][m|M][m|M][a|A][r|R][y|Y][\\s]*[o|O][f|F][\\s]*[h|H][o|O][s|S][p|P][i|I][t|T][a|A][l|L][\\s]*[c|C][o|O][u|U][r|R][s|S][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "secondary",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[s|S][e|E][c|C][o|O][n|N][d|D][a|A][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medications prior to admission",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[p|P][r|R][i|I][o|O][r|R][\\s]*[t|T][o|O][\\s]*[a|A][d|D][m|M][i|I][s|S][s|S][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "mhx",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[m|M][h|H][x|X][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "pmhx",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][m|M][h|H][x|X][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "final assessment",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[f|F][i|I][n|N][a|A][l|L][\\s]*[a|A][s|S][s|S][e|E][s|S][s|S][m|M][e|E][n|N][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "interpretation",
+        "category": "imaging",
+        "pattern": "[\\W]*[i|I][n|N][t|T][e|E][r|R][p|P][r|R][e|E][t|T][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "current medical problems",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[c|C][u|U][r|R][r|R][e|E][n|N][t|T][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][l|L][\\s]*[p|P][r|R][o|O][b|B][l|L][e|E][m|M][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "laboratory tests",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[l|L][a|A][b|B][o|O][r|R][a|A][t|T][o|O][r|R][y|Y][\\s]*[t|T][e|E][s|S][t|T][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "underlying medical condition",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[u|U][n|N][d|D][e|E][r|R][l|L][y|Y][i|I][n|N][g|G][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][l|L][\\s]*[c|C][o|O][n|N][d|D][i|I][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "problem list",
+        "category": "problem_list",
+        "pattern": "[\\W]*[p|P][r|R][o|O][b|B][l|L][e|E][m|M][\\s]*[l|L][i|I][s|S][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "history of present illness",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[o|O][f|F][\\s]*[p|P][r|R][e|E][s|S][e|E][n|N][t|T][\\s]*[i|I][l|L][l|L][n|N][e|E][s|S][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "reassesment",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[r|R][e|E][a|A][s|S][s|S][e|E][s|S][m|M][e|E][n|N][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "past medical hx",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][a|A][s|S][t|T][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][l|L][\\s]*[h|H][x|X][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "findings",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[f|F][i|I][n|N][d|D][i|I][n|N][g|G][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "studies",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[s|S][t|T][u|U][d|D][i|I][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge instructions",
+        "category": "patient_instructions",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[i|I][n|N][s|S][t|T][r|R][u|U][c|C][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "procedure note",
+        "category": "hospital_course",
+        "pattern": "[\\W]*[p|P][r|R][o|O][c|C][e|E][d|D][u|U][r|R][e|E][\\s]*[n|N][o|O][t|T][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "microbiology specimen summary",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[m|M][i|I][c|C][r|R][o|O][b|B][i|I][o|O][l|L][o|O][g|G][y|Y][\\s]*[s|S][p|P][e|E][c|C][i|I][m|M][e|E][n|N][\\s]*[s|S][u|U][m|M][m|M][a|A][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "hpi",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[h|H][p|P][i|I][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medications list",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[l|L][i|I][s|S][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "history",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "home medications",
+        "category": "medications",
+        "pattern": "[\\W]*[h|H][o|O][m|M][e|E][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "a/p",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[a|A]/[p|P][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "current problems",
+        "category": "problem_list",
+        "pattern": "[\\W]*[c|C][u|U][r|R][r|R][e|E][n|N][t|T][\\s]*[p|P][r|R][o|O][b|B][l|L][e|E][m|M][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "past medical history",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][a|A][s|S][t|T][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][l|L][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "final diagnosis",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[f|F][i|I][n|N][a|A][l|L][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][i|I][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "pmh",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][m|M][h|H][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "plan/disposition",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[p|P][l|L][a|A][n|N]/[d|D][i|I][s|S][p|P][o|O][s|S][i|I][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "clinical preamble",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[c|C][l|L][i|I][n|N][i|I][c|C][a|A][l|L][\\s]*[p|P][r|R][e|E][a|A][m|M][b|B][l|L][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "sh",
+        "category": "social_history",
+        "pattern": "[\\W]*[s|S][h|H][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "past surgical history",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][a|A][s|S][t|T][\\s]*[s|S][u|U][r|R][g|G][i|I][c|C][a|A][l|L][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "social history",
+        "category": "social_history",
+        "pattern": "[\\W]*[s|S][o|O][c|C][i|I][a|A][l|L][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "vital signs",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[v|V][i|I][t|T][a|A][l|L][\\s]*[s|S][i|I][g|G][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medications on transfer",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[o|O][n|N][\\s]*[t|T][r|R][a|A][n|N][s|S][f|F][e|E][r|R][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "microbiology",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[m|M][i|I][c|C][r|R][o|O][b|B][i|I][o|O][l|L][o|O][g|G][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "active problem list",
+        "category": "problem_list",
+        "pattern": "[\\W]*[a|A][c|C][t|T][i|I][v|V][e|E][\\s]*[p|P][r|R][o|O][b|B][l|L][e|E][m|M][\\s]*[l|L][i|I][s|S][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "addendum",
+        "category": "addendum",
+        "pattern": "[\\W]*[a|A][d|D][d|D][e|E][n|N][d|D][u|U][m|M][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "family history",
+        "category": "family_history",
+        "pattern": "[\\W]*[f|F][a|A][m|M][i|I][l|L][y|Y][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "signed electronically by",
+        "category": "signature",
+        "pattern": "[\\W]*[s|S][i|I][g|G][n|N][e|E][d|D][\\s]*[e|E][l|L][e|E][c|C][t|T][r|R][o|O][n|N][i|I][c|C][a|A][l|L][l|L][y|Y][\\s]*[b|B][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "imaging",
+        "category": "imaging",
+        "pattern": "[\\W]*[i|I][m|M][a|A][g|G][i|I][n|N][g|G][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "sexual history",
+        "category": "social_history",
+        "pattern": "[\\W]*[s|S][e|E][x|X][u|U][a|A][l|L][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "hospital course",
+        "category": "hospital_course",
+        "pattern": "[\\W]*[h|H][o|O][s|S][p|P][i|I][t|T][a|A][l|L][\\s]*[c|C][o|O][u|U][r|R][s|S][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "cc",
+        "category": "chief_complaint",
+        "pattern": "[\\W]*[c|C][c|C][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "education",
+        "category": "patient_education",
+        "pattern": "[\\W]*[e|E][d|D][u|U][c|C][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "consulting hpi",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[c|C][o|O][n|N][s|S][u|U][l|L][t|T][i|I][n|N][g|G][\\s]*[h|H][p|P][i|I][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge diagnoses",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "clinical history",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[c|C][l|L][i|I][n|N][i|I][c|C][a|A][l|L][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medications at home",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[a|A][t|T][\\s]*[h|H][o|O][m|M][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge plan",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[p|P][l|L][a|A][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "final diagnoses",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[f|F][i|I][n|N][a|A][l|L][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "admission medications",
+        "category": "medications",
+        "pattern": "[\\W]*[a|A][d|D][m|M][i|I][s|S][s|S][i|I][o|O][n|N][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "past med history",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][a|A][s|S][t|T][\\s]*[m|M][e|E][d|D][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "concise summary of hospital course by issue/system",
+        "category": "hospital_course",
+        "pattern": "[\\W]*[c|C][o|O][n|N][c|C][i|I][s|S][e|E][\\s]*[s|S][u|U][m|M][m|M][a|A][r|R][y|Y][\\s]*[o|O][f|F][\\s]*[h|H][o|O][s|S][p|P][i|I][t|T][a|A][l|L][\\s]*[c|C][o|O][u|U][r|R][s|S][e|E][\\s]*[b|B][y|Y][\\s]*[i|I][s|S][s|S][u|U][e|E]/[s|S][y|Y][s|S][t|T][e|E][m|M][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "echo",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[e|E][c|C][h|H][o|O][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "current medications",
+        "category": "medications",
+        "pattern": "[\\W]*[c|C][u|U][r|R][r|R][e|E][n|N][t|T][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "allergies",
+        "category": "allergies",
+        "pattern": "[\\W]*[a|A][l|L][l|L][e|E][r|R][g|G][i|I][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "physical examination",
+        "category": "physical_exam",
+        "pattern": "[\\W]*[p|P][h|H][y|Y][s|S][i|I][c|C][a|A][l|L][\\s]*[e|E][x|X][a|A][m|M][i|I][n|N][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "technique",
+        "category": "imaging",
+        "pattern": "[\\W]*[t|T][e|E][c|C][h|H][n|N][i|I][q|Q][u|U][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "reason for this examination",
+        "category": "reason_for_examination",
+        "pattern": "[\\W]*[r|R][e|E][a|A][s|S][o|O][n|N][\\s]*[f|F][o|O][r|R][\\s]*[t|T][h|H][i|I][s|S][\\s]*[e|E][x|X][a|A][m|M][i|I][n|N][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "service",
+        "category": "other",
+        "pattern": "[\\W]*[s|S][e|E][r|R][v|V][i|I][c|C][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "followup instructions",
+        "category": "patient_instructions",
+        "pattern": "[\\W]*[f|F][o|O][l|L][l|L][o|O][w|W][u|U][p|P][\\s]*[i|I][n|N][s|S][t|T][r|R][u|U][c|C][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge condition",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[c|C][o|O][n|N][d|D][i|I][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "laboratory last values",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[l|L][a|A][b|B][o|O][r|R][a|A][t|T][o|O][r|R][y|Y][\\s]*[l|L][a|A][s|S][t|T][\\s]*[v|V][a|A][l|L][u|U][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "facility",
+        "category": "other",
+        "pattern": "[\\W]*[f|F][a|A][c|C][i|I][l|L][i|I][t|T][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "diagnoses",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge labs",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[l|L][a|A][b|B][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "mri",
+        "category": "imaging",
+        "pattern": "[\\W]*[m|M][r|R][i|I][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge instructions/followup",
+        "category": "patient_instructions",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[i|I][n|N][s|S][t|T][r|R][u|U][c|C][t|T][i|I][o|O][n|N][s|S]/[f|F][o|O][l|L][l|L][o|O][w|W][u|U][p|P][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge medications",
+        "category": "medications",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "patient education",
+        "category": "patient_education",
+        "pattern": "[\\W]*[p|P][a|A][t|T][i|I][e|E][n|N][t|T][\\s]*[e|E][d|D][u|U][c|C][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "physical exam",
+        "category": "physical_exam",
+        "pattern": "[\\W]*[p|P][h|H][y|Y][s|S][i|I][c|C][a|A][l|L][\\s]*[e|E][x|X][a|A][m|M][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "chief complaint",
+        "category": "chief_complaint",
+        "pattern": "[\\W]*[c|C][h|H][i|I][e|E][f|F][\\s]*[c|C][o|O][m|M][p|P][l|L][a|A][i|I][n|N][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "clinical impression",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[c|C][l|L][i|I][n|N][i|I][c|C][a|A][l|L][\\s]*[i|I][m|M][p|P][r|R][e|E][s|S][s|S][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge disposition",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[d|D][i|I][s|S][p|P][o|O][s|S][i|I][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "admission labs",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[a|A][d|D][m|M][i|I][s|S][s|S][i|I][o|O][n|N][\\s]*[l|L][a|A][b|B][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "active medications",
+        "category": "medications",
+        "pattern": "[\\W]*[a|A][c|C][t|T][i|I][v|V][e|E][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "comments",
+        "category": "comments",
+        "pattern": "[\\W]*[c|C][o|O][m|M][m|M][e|E][n|N][t|T][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "on exam",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[o|O][n|N][\\s]*[e|E][x|X][a|A][m|M][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "primary diagnosis",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[p|P][r|R][i|I][m|M][a|A][r|R][y|Y][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][i|I][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "history of chronic illness",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[o|O][f|F][\\s]*[c|C][h|H][r|R][o|O][n|N][i|I][c|C][\\s]*[i|I][l|L][l|L][n|N][e|E][s|S][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "home medication",
+        "category": "medications",
+        "pattern": "[\\W]*[h|H][o|O][m|M][e|E][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "pe",
+        "category": "physical_exam",
+        "pattern": "[\\W]*[p|P][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "discharge diagnosis",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][i|I][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "pmhsx",
+        "category": "social_history",
+        "pattern": "[\\W]*[p|P][m|M][h|H][s|S][x|X][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "indication",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[i|I][n|N][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "labs",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[l|L][a|A][b|B][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "active medications list",
+        "category": "medications",
+        "pattern": "[\\W]*[a|A][c|C][t|T][i|I][v|V][e|E][\\s]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[l|L][i|I][s|S][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "psh",
+        "category": "social_history",
+        "pattern": "[\\W]*[p|P][s|S][h|H][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "micro",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[m|M][i|I][c|C][r|R][o|O][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "pertinent results",
+        "category": "labs_and_studies",
+        "pattern": "[\\W]*[p|P][e|E][r|R][t|T][i|I][n|N][e|E][n|N][t|T][\\s]*[r|R][e|E][s|S][u|U][l|L][t|T][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "impression and recommendation",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[i|I][m|M][p|P][r|R][e|E][s|S][s|S][i|I][o|O][n|N][\\s]*[a|A][n|N][d|D][\\s]*[r|R][e|E][c|C][o|O][m|M][m|M][e|E][n|N][d|D][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "assessment/plan",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[a|A][s|S][s|S][e|E][s|S][s|S][m|M][e|E][n|N][t|T]/[p|P][l|L][a|A][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "impression and plan",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[i|I][m|M][p|P][r|R][e|E][s|S][s|S][i|I][o|O][n|N][\\s]*[a|A][n|N][d|D][\\s]*[p|P][l|L][a|A][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "allergic reactions",
+        "category": "allergies",
+        "pattern": "[\\W]*[a|A][l|L][l|L][e|E][r|R][g|G][i|I][c|C][\\s]*[r|R][e|E][a|A][c|C][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "neuro",
+        "category": "neurological",
+        "pattern": "[\\W]*[n|N][e|E][u|U][r|R][o|O][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medications",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "history present illness",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[p|P][r|R][e|E][s|S][e|E][n|N][t|T][\\s]*[i|I][l|L][l|L][n|N][e|E][s|S][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medical problems",
+        "category": "problem_list",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][l|L][\\s]*[p|P][r|R][o|O][b|B][l|L][e|E][m|M][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "primary",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[p|P][r|R][i|I][m|M][a|A][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "radiology",
+        "category": "imaging",
+        "pattern": "[\\W]*[r|R][a|A][d|D][i|I][o|O][l|L][o|O][g|G][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "clinical indication",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[c|C][l|L][i|I][n|N][i|I][c|C][a|A][l|L][\\s]*[i|I][n|N][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "electronic signature",
+        "category": "signature",
+        "pattern": "[\\W]*[e|E][l|L][e|E][c|C][t|T][r|R][o|O][n|N][i|I][c|C][\\s]*[s|S][i|I][g|G][n|N][a|A][t|T][u|U][r|R][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "medications on discharge",
+        "category": "medications",
+        "pattern": "[\\W]*[m|M][e|E][d|D][i|I][c|C][a|A][t|T][i|I][o|O][n|N][s|S][\\s]*[o|O][n|N][\\s]*[d|D][i|I][s|S][c|C][h|H][a|A][r|R][g|G][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "assessment",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[a|A][s|S][s|S][e|E][s|S][s|S][m|M][e|E][n|N][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "secondary diagnosis",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[s|S][e|E][c|C][o|O][n|N][d|D][a|A][r|R][y|Y][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][i|I][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "admission diagnoses",
+        "category": "diagnoses",
+        "pattern": "[\\W]*[a|A][d|D][m|M][i|I][s|S][s|S][i|I][o|O][n|N][\\s]*[d|D][i|I][a|A][g|G][n|N][o|O][s|S][e|E][s|S][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "consult",
+        "category": "history_of_present_illness",
+        "pattern": "[\\W]*[c|C][o|O][n|N][s|S][u|U][l|L][t|T][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "brief hospital course",
+        "category": "hospital_course",
+        "pattern": "[\\W]*[b|B][r|R][i|I][e|E][f|F][\\s]*[h|H][o|O][s|S][p|P][i|I][t|T][a|A][l|L][\\s]*[c|C][o|O][u|U][r|R][s|S][e|E][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "past history",
+        "category": "past_medical_history",
+        "pattern": "[\\W]*[p|P][a|A][s|S][t|T][\\s]*[h|H][i|I][s|S][t|T][o|O][r|R][y|Y][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "procedure and finding",
+        "category": "hospital_course",
+        "pattern": "[\\W]*[p|P][r|R][o|O][c|C][e|E][d|D][u|U][r|R][e|E][\\s]*[a|A][n|N][d|D][\\s]*[f|F][i|I][n|N][d|D][i|I][n|N][g|G][\\s]*[\\n|:|-]"
+    }, {
+        "literal": "impression",
+        "category": "observation_and_plan",
+        "pattern": "[\\W]*[i|I][m|M][p|P][r|R][e|E][s|S][s|S][i|I][o|O][n|N][\\s]*[\\n|:|-]"
+    }]
+}

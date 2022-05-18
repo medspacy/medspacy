@@ -50,85 +50,85 @@ class ConTextRule(BaseRule):
         **kwargs,
     ):
         """Create an ConTextRule object.
-        The primary arguments of `literal` `category`, and `direction` define
-        the span of text to be matched, the semantic category, and the direction
-        within the sentence in which the modifier operates.
-        Other arguments specify additional custom logic such as:
-            - Additional control over what text can be matched as a modifier (pattern and on_match)
-            - Which types of targets can be modified (allowed_types, excluded_types)
-            - The scope size and number of targets that a modifier can modify (max_targets, max_scope)
-            - Other logic for terminating a span or for allowing a modifier to modify a target (on_modifies, terminated_by)
+                The primary arguments of `literal` `category`, and `direction` define
+                the span of text to be matched, the semantic category, and the direction
+                within the sentence in which the modifier operates.
+                Other arguments specify additional custom logic such as:
+                    - Additional control over what text can be matched as a modifier (pattern and on_match)
+                    - Which types of targets can be modified (allowed_types, excluded_types)
+                    - The scope size and number of targets that a modifier can modify (max_targets, max_scope)
+                    - Other logic for terminating a span or for allowing a modifier to modify a target (on_modifies, terminated_by)
 
 
-        Args:
-            literal (str): The actual string of a concept. If pattern is None,
-                this string will be lower-cased and matched to the lower-case string.
-            category (str): The semantic class of the modifier. Case insensitive.
-            pattern (list, str, or None): A pattern to use for matching rather than `literal`.
-                If a list, will use spaCy dictionary pattern matching to match using token attributes.
-                See https://spacy.io/usage/rule-based-matching.
-                If a string, will use regular expression matching on the underlying text of a doc.
-                Note that regular-expression matching is not natively supported by spaCy and could
-                result in unexpected matched spans if match boundaries do not align with token boundaries.
-                If None, `literal` will be matched exactly.
-            direction (str): The directionality or action of a modifier. This defines which part
-                of a sentence a modifier will include as its scope. Entities within
-                the scope will be considered to be modified.
-                Valid values are:
-                 - "FORWARD": Scope will begin after the end of a modifier and move
-                    to the right towards the end of the sentence
-                - "BACKWARD": Scope will begin before the beginning of a modifier
-                    and move to the left towards the beginning of a sentence
-                - "BIDIRECTIONAL": Scope will expand on either side of a modifier
-                - "TERMINATE": A special direction to limit any other modifiers
-                    if this phrase is in its scope.
-                    Example: "no evidence of chf but there is pneumonia":
-                        "but" will prevent "no evidence of" from modifying "pneumonia"
-                - "PSEUDO": A special direction which will not modify any targets.
-                    This can be used for differentiating superstrings of modifiers.
-                    Example: A modifier with literal="negative attitude"
-                    will prevent the phrase "negative" in "She has a negative attitude about her treatment"
-                    from being extracted as a modifier.
-            on_match (callable or None): Callback function to act on spaCy matches.
-                Takes the argument matcher, doc, i, and matches.
-            on_modifies (callable or None): Callback function to run when building an edge
-                between a target and a modifier. This allows specifying custom logic for
-                allowing or preventing certain modifiers from modifying certain targets.
-                The callable should take 3 arguments:
-                    target: The spaCy Span from doc.ents (ie., 'Evidence of pneumonia')
-                    modifier: The spaCy Span covered in a resulting modifier (ie., 'no evidence of')
-                    span_between: The Span between the target and modifier in question.
-                Should return either True or False. If returns False, then the modifier will not modify
-                the target.
-#           allowed_types (set or None): A set of target labels to allow a modifier to modify.
-                If None, will apply to any type not specifically excluded in excluded_types.
-                Only one of allowed_types and excluded_types can be used. An error will be thrown
-                if both are not None.
-            excluded_types (set or None): A set of target labels which this modifier cannot modify.
-                If None, will apply to all target types unless allowed_types is not None.
-            max_scope (int or None): A number of tokens to explicitly limit the size of the modifier's scope.
-                If None, the scope will include the entire sentence in the direction of `direction`
-                (ie., starting at the beginning of the sentence for "BACKWARD", end of the sentence for "FORWARD",
-                and the entire sentence for "BIDIRECTIONAL".
-                This is useful for requiring modifiers be very close to a concept in the text
-                or for preventing too far of modifier ranges caused by undersplitting of sentences.
-                Example: In the sentence "pt with chf, pna vs. rsv", "vs." will modify
-                    only "pna" and "rsv" if max_scope=1 and direction="BIDIRECTIONAL".
-            max_targets (int or None): The maximum number of targets which a modifier can modify.
-                If None, will modify all targets in its scope.
-            terminated_by (iterable or None): An optional array of other modifier categories which will
-                terminate the scope of this modifier. If None, only "TERMINATE" will do this.
-                Example: if a ConTextRule defining "positive for" has terminated_by={"NEGATED_EXISTENCE"},
-                then in the sentence "positive for flu, negative for RSV", the positive modifier
-                will modify "flu" but will be terminated by "negative for" and will not modify "RSV".
-                This helps prevent multiple conflicting modifiers from distributing too far across
-                a sentence.
-            metadata (dict or None): A dict of additional data to pass in,
-                such as free-text comments, additional attributes, or ICD-10 codes.
-                Default None.
+                Args:
+                    literal (str): The actual string of a concept. If pattern is None,
+                        this string will be lower-cased and matched to the lower-case string.
+                    category (str): The semantic class of the modifier. Case insensitive.
+                    pattern (list, str, or None): A pattern to use for matching rather than `literal`.
+                        If a list, will use spaCy dictionary pattern matching to match using token attributes.
+                        See https://spacy.io/usage/rule-based-matching.
+                        If a string, will use regular expression matching on the underlying text of a doc.
+                        Note that regular-expression matching is not natively supported by spaCy and could
+                        result in unexpected matched spans if match boundaries do not align with token boundaries.
+                        If None, `literal` will be matched exactly.
+                    direction (str): The directionality or action of a modifier. This defines which part
+                        of a sentence a modifier will include as its scope. Entities within
+                        the scope will be considered to be modified.
+                        Valid values are:
+                         - "FORWARD": Scope will begin after the end of a modifier and move
+                            to the right towards the end of the sentence
+                        - "BACKWARD": Scope will begin before the beginning of a modifier
+                            and move to the left towards the beginning of a sentence
+                        - "BIDIRECTIONAL": Scope will expand on either side of a modifier
+                        - "TERMINATE": A special direction to limit any other modifiers
+                            if this phrase is in its scope.
+                            Example: "no evidence of chf but there is pneumonia":
+                                "but" will prevent "no evidence of" from modifying "pneumonia"
+                        - "PSEUDO": A special direction which will not modify any targets.
+                            This can be used for differentiating superstrings of modifiers.
+                            Example: A modifier with literal="negative attitude"
+                            will prevent the phrase "negative" in "She has a negative attitude about her treatment"
+                            from being extracted as a modifier.
+                    on_match (callable or None): Callback function to act on spaCy matches.
+                        Takes the argument matcher, doc, i, and matches.
+                    on_modifies (callable or None): Callback function to run when building an edge
+                        between a target and a modifier. This allows specifying custom logic for
+                        allowing or preventing certain modifiers from modifying certain targets.
+                        The callable should take 3 arguments:
+                            target: The spaCy Span from doc.ents (ie., 'Evidence of pneumonia')
+                            modifier: The spaCy Span covered in a resulting modifier (ie., 'no evidence of')
+                            span_between: The Span between the target and modifier in question.
+                        Should return either True or False. If returns False, then the modifier will not modify
+                        the target.
+        #           allowed_types (set or None): A set of target labels to allow a modifier to modify.
+                        If None, will apply to any type not specifically excluded in excluded_types.
+                        Only one of allowed_types and excluded_types can be used. An error will be thrown
+                        if both are not None.
+                    excluded_types (set or None): A set of target labels which this modifier cannot modify.
+                        If None, will apply to all target types unless allowed_types is not None.
+                    max_scope (int or None): A number of tokens to explicitly limit the size of the modifier's scope.
+                        If None, the scope will include the entire sentence in the direction of `direction`
+                        (ie., starting at the beginning of the sentence for "BACKWARD", end of the sentence for "FORWARD",
+                        and the entire sentence for "BIDIRECTIONAL".
+                        This is useful for requiring modifiers be very close to a concept in the text
+                        or for preventing too far of modifier ranges caused by undersplitting of sentences.
+                        Example: In the sentence "pt with chf, pna vs. rsv", "vs." will modify
+                            only "pna" and "rsv" if max_scope=1 and direction="BIDIRECTIONAL".
+                    max_targets (int or None): The maximum number of targets which a modifier can modify.
+                        If None, will modify all targets in its scope.
+                    terminated_by (iterable or None): An optional array of other modifier categories which will
+                        terminate the scope of this modifier. If None, only "TERMINATE" will do this.
+                        Example: if a ConTextRule defining "positive for" has terminated_by={"NEGATED_EXISTENCE"},
+                        then in the sentence "positive for flu, negative for RSV", the positive modifier
+                        will modify "flu" but will be terminated by "negative for" and will not modify "RSV".
+                        This helps prevent multiple conflicting modifiers from distributing too far across
+                        a sentence.
+                    metadata (dict or None): A dict of additional data to pass in,
+                        such as free-text comments, additional attributes, or ICD-10 codes.
+                        Default None.
 
-        Returns:
-            direction: a ConTextRule
+                Returns:
+                    direction: a ConTextRule
         """
         super().__init__(literal, category.upper(), pattern, on_match, metadata)
         # 'direction' used to be called 'rule', so we'll handle that here and raise a warning
@@ -169,7 +169,11 @@ class ConTextRule(BaseRule):
             terminated_by = set()
         else:
             if isinstance(terminated_by, str):
-                raise ValueError("terminated_by must be an iterable, such as a list or set, not {}.".format(terminated_by))
+                raise ValueError(
+                    "terminated_by must be an iterable, such as a list or set, not {}.".format(
+                        terminated_by
+                    )
+                )
             terminated_by = {string.upper() for string in terminated_by}
 
         self.terminated_by = terminated_by
@@ -180,13 +184,17 @@ class ConTextRule(BaseRule):
 
         if self.direction not in self._ALLOWED_DIRECTIONS:
             raise ValueError(
-                "Direction {0} not recognized. Must be one of: {1}".format(self.direction, self._ALLOWED_DIRECTIONS)
+                "Direction {0} not recognized. Must be one of: {1}".format(
+                    self.direction, self._ALLOWED_DIRECTIONS
+                )
             )
 
     @property
     def rule(self):
         "Deprecated attribute name from ConTextItem. Now `direction`."
-        warnings.warn("The 'rule' attribute has been replaced with 'direction'.", DeprecationWarning)
+        warnings.warn(
+            "The 'rule' attribute has been replaced with 'direction'.", DeprecationWarning
+        )
         return self.direction
 
     @classmethod
@@ -253,7 +261,9 @@ class ConTextRule(BaseRule):
         keys = set(rule_dict.keys())
         invalid_keys = keys.difference(cls._ALLOWED_KEYS)
         if invalid_keys:
-            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
+            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(
+                invalid_keys, cls._ALLOWED_KEYS
+            )
             raise ValueError(msg)
         rule = ConTextRule(**rule_dict)
         return rule

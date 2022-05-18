@@ -8,14 +8,14 @@ from spacy.util import compile_prefix_regex, compile_infix_regex, compile_suffix
 
 
 def create_medspacy_tokenizer(nlp):
-    """Generates a custom tokenizer to augment the default spacy tokenizer 
-        for situations commonly seen in clinical text.
-        This includes:
-            * Punctuation infixes.  
-                For example, this allows the following examples to be more aggresively tokenized as :
-                    "Patient complains of c/o" -> [..., 'c', '/', 'o']
-                    "chf+cp" -> ['chf', '+', 'cp']
-       @param nlp: Spacy language model
+    """Generates a custom tokenizer to augment the default spacy tokenizer
+     for situations commonly seen in clinical text.
+     This includes:
+         * Punctuation infixes.
+             For example, this allows the following examples to be more aggresively tokenized as :
+                 "Patient complains of c/o" -> [..., 'c', '/', 'o']
+                 "chf+cp" -> ['chf', '+', 'cp']
+    @param nlp: Spacy language model
     """
 
     # augment the defaults

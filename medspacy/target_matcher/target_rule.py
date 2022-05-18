@@ -11,7 +11,9 @@ class TargetRule(BaseRule):
         "attributes",
     }
 
-    def __init__(self, literal, category, pattern=None, on_match=None, metadata=None, attributes=None):
+    def __init__(
+        self, literal, category, pattern=None, on_match=None, metadata=None, attributes=None
+    ):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
             literal (str): The actual string of a concept. If pattern is None,
@@ -78,7 +80,9 @@ class TargetRule(BaseRule):
         keys = set(rule_dict.keys())
         invalid_keys = keys.difference(cls._ALLOWED_KEYS)
         if invalid_keys:
-            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
+            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(
+                invalid_keys, cls._ALLOWED_KEYS
+            )
             raise ValueError(msg)
         rule = TargetRule(**rule_dict)
         return rule

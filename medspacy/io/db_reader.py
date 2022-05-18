@@ -13,7 +13,9 @@ class DbReader:
                 result = self.db.read(self.read_query)
                 self.read_complete = True
             else:
-                result = self.db.read(self.read_query.format(self.start, self.start + self.batch_size))
+                result = self.db.read(
+                    self.read_query.format(self.start, self.start + self.batch_size)
+                )
                 self.start += self.batch_size
                 if self.start >= self.end:
                     self.read_complete = True

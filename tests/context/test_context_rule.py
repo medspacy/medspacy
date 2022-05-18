@@ -59,7 +59,10 @@ class TestItemData:
 
     def test_from_dict_error(self):
         d = dict(
-            literal="reason for examination", category="INDICATION", direction="FORWARD", invalid="this is an invalid key",
+            literal="reason for examination",
+            category="INDICATION",
+            direction="FORWARD",
+            invalid="this is an invalid key",
         )
         with pytest.raises(ValueError):
             ConTextRule.from_dict(d)
@@ -100,7 +103,9 @@ class TestItemData:
         assert item.terminated_by == set()
 
     def test_custom_terminate(self):
-        item = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
+        item = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE"}
+        )
         assert item.terminated_by == {"POSITIVE_EXISTENCE"}
 
     def test_deprecated_context_item_throws_error(self):
@@ -114,13 +119,19 @@ class TestItemData:
     def test_deprecated_rule_argument_raises_warrning(self):
         with pytest.warns(DeprecationWarning) as warning_info:
             ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
-        assert "The 'rule' argument from ConTextItem has been replaced with 'direction'" in warning_info[0].message.args[0]
+        assert (
+            "The 'rule' argument from ConTextItem has been replaced with 'direction'"
+            in warning_info[0].message.args[0]
+        )
 
     def test_deprecated_rule_attribute_raises_warrning(self):
         with pytest.warns(DeprecationWarning) as warning_info:
             rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE")
             rule.rule
-        assert "The 'rule' attribute has been replaced with 'direction'." in warning_info[0].message.args[0]
+        assert (
+            "The 'rule' attribute has been replaced with 'direction'."
+            in warning_info[0].message.args[0]
+        )
 
 
 @pytest.fixture
@@ -130,7 +141,12 @@ def from_json_file():
     json_filepath = os.path.join(tmpdirname.name, "test_modifiers.json")
 
     item_data = [
-        {"literal": "are ruled out", "category": "DEFINITE_NEGATED_EXISTENCE", "pattern": None, "direction": "backward",},
+        {
+            "literal": "are ruled out",
+            "category": "DEFINITE_NEGATED_EXISTENCE",
+            "pattern": None,
+            "direction": "backward",
+        },
         {
             "literal": "is negative",
             "category": "DEFINITE_NEGATED_EXISTENCE",

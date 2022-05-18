@@ -13,7 +13,9 @@ nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"
 nlp.get_pipe("medspacy_target_matcher").add(TargetRule("pneumonia", "CONDITION"))
 doc = nlp("There is no evidence of pneumonia.")
 
-doc_consumer = DocConsumer(nlp, dtype_attrs={"ent": ["text", "label_", "is_negated", "section_category"]})
+doc_consumer = DocConsumer(
+    nlp, dtype_attrs={"ent": ["text", "label_", "is_negated", "section_category"]}
+)
 doc_consumer(doc)
 
 db_dtypes = [

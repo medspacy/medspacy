@@ -3,7 +3,12 @@ import medspacy
 
 import spacy
 
-from medspacy._extensions import _token_extensions, _span_extensions, _doc_extensions, _context_attributes
+from medspacy._extensions import (
+    _token_extensions,
+    _span_extensions,
+    _doc_extensions,
+    _context_attributes,
+)
 
 nlp = spacy.blank("en")
 doc = nlp("There is no evidence of pneumonia in the chest x-ray.")
@@ -67,7 +72,13 @@ class TestMedSpaCyExtensions:
     def test_span_context_attributes(self):
         span = doc[3:5]
         context_dict = span._.context_attributes
-        assert set(context_dict.keys()) == {"is_negated", "is_hypothetical", "is_uncertain", "is_historical", "is_family"}
+        assert set(context_dict.keys()) == {
+            "is_negated",
+            "is_hypothetical",
+            "is_uncertain",
+            "is_historical",
+            "is_family",
+        }
         assert set(context_dict.values()) == {False}
 
     def test_span_not_any_context_attributes(self):

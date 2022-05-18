@@ -1,8 +1,11 @@
 import json
-
+import srsly
+from medspacy.section_detection.section_rule import SectionRule
 
 class Section(object):
-    def __init__(self, doc, category, title_start, title_end, body_start, body_end, parent=None, rule=None):
+    def __init__(
+        self, doc, category, title_start, title_end, body_start, body_end, parent=None, rule=None
+    ):
         self.doc = doc
         self.category = category
         self.title_start = title_start
@@ -42,3 +45,55 @@ class Section(object):
         with data_path.open("r", encoding="utf8") as f:
             self.data = json.loads(f)
         return self
+
+
+    def serialized_representation(self):
+
+        rule = self.rule
+
+        return {
+            "category": self.category,
+            "title_start": self.title_start,
+            "title_end": self.title_end,
+            "body_start": self.body_start,
+            "body_end": self.body_end,
+            "parent": self.parent,
+            "rule": rule.to_dict() if rule is not None else None,
+        }
+
+    @classmethod
+    def from_serialized_representation(cls, serialized_representation):
+        rule = SectionRule.from_dict(serialized_representation["rule"])
+        serialized_representation["doc"] = None #TODO: Unhack this
+
+        section = Section(**{k:v for k,v in serialized_representation.items() if k not in ["rule"]})
+        section.rule = rule
+        
+        return section
+
+@srsly.msgpack_encoders("section")
+def serialize_section(obj, chain=None):
+    if isinstance(obj, Section):
+        return obj.serialized_representation()
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_decoders("section")
+def deserialize_section(obj, chain=None):
+    if "section" in obj:
+        return Section.from_serialized_representation(obj["section"])
+    return obj if chain is None else chain(obj)
+
+
+# @srsly.msgpack_encoders("sections")
+# def serialize_sections(obj, chain=None):
+#     if isinstance(obj, list) and isinstance(obj[0], Section):
+#         return obj.serialized_representation()
+#     return obj if chain is None else chain(obj)
+
+
+# @srsly.msgpack_decoders("sections")
+# def deserialize_sections(obj, chain=None):
+#     if "section" in obj:
+#         return Section.from_serialized_representation(obj["section"])
+#     return obj if chain is None else chain(obj)

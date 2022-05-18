@@ -207,7 +207,16 @@ class TestConTextComponent:
             span = doc[start:end]
             print("Matched on span:", span)
 
-        context.add([ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", on_match=simple_callback,)])
+        context.add(
+            [
+                ConTextRule(
+                    "no evidence of",
+                    "NEGATED_EXISTENCE",
+                    "FORWARD",
+                    on_match=simple_callback,
+                )
+            ]
+        )
 
         doc = nlp("There is no evidence of pneumonia.")
         context(doc)
@@ -230,7 +239,9 @@ class TestConTextComponent:
         value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types=None)
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"})
+        rule = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"}
+        )
         context.add([rule])
         assert rule.allowed_types == {"PROBLEM"}
 
@@ -239,19 +250,28 @@ class TestConTextComponent:
         the ConTextRule will not receive the component's value.
         """
         context = ConTextComponent(nlp, rules=None, allowed_types={"TREATMENT"})
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"})
+        rule = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", allowed_types={"PROBLEM"}
+        )
         context.add([rule])
         assert rule.allowed_types == {"PROBLEM"}
 
     def test_context_modifier_termination(self):
-        context = ConTextComponent(nlp, rules=None, terminations={"NEGATED_EXISTENCE": ["POSITIVE_EXISTENCE", "UNCERTAIN"]})
+        context = ConTextComponent(
+            nlp, rules=None, terminations={"NEGATED_EXISTENCE": ["POSITIVE_EXISTENCE", "UNCERTAIN"]}
+        )
         rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None)
         context.add([rule])
         assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
     def test_rule_modifier_termination(self):
         context = ConTextComponent(nlp, rules=None, terminations=None)
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE", "UNCERTAIN"})
+        rule = ConTextRule(
+            "no evidence of",
+            "NEGATED_EXISTENCE",
+            "FORWARD",
+            terminated_by={"POSITIVE_EXISTENCE", "UNCERTAIN"},
+        )
         context.add([rule])
         assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
@@ -309,11 +329,18 @@ class TestConTextComponent:
         "Test that if use_context_window is True but max_scope is None, the instantiation will fail"
         with pytest.raises(ValueError) as exception_info:
             context = ConTextComponent(nlp, max_scope=None, use_context_window=True)
-        exception_info.match("If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None")
+        exception_info.match(
+            "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None"
+        )
 
     def test_regex_pattern(self):
         rules = [
-            ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD", pattern="no (history|hx) of"),
+            ConTextRule(
+                "no history of",
+                "NEGATED_EXISTENCE",
+                direction="FORWARD",
+                pattern="no (history|hx) of",
+            ),
         ]
         context = ConTextComponent(nlp, rules=None)
         context.add(rules)
@@ -358,8 +385,8 @@ class TestConTextComponent:
         context.add(rules)
 
         doc = nlp("Patient has a history of diabetes and history of renal failiure")
-        Doc.set_extension("my_custom_spans", default = [], force=True)
-        doc._.my_custom_spans = [doc[-6:-4] ,doc[-2:]]
+        Doc.set_extension("my_custom_spans", default=[], force=True)
+        doc._.my_custom_spans = [doc[-6:-4], doc[-2:]]
         context(doc, "my_custom_spans")
         for span in doc._.my_custom_spans:
             assert span._.is_historical
@@ -373,35 +400,41 @@ class TestConTextComponent:
         context.add(rules)
 
         doc = nlp("Patient has a history of diabetes and history of renal failiure")
-        Doc.set_extension("my_custom_spans", default = [], force=True)
+        Doc.set_extension("my_custom_spans", default=[], force=True)
         doc._.my_custom_spans = doc[-6:-4]
         with pytest.raises(TypeError) as exception_info:
             context(doc, "my_custom_spans")
-            assert exception_info.match("argument of type 'spacy.tokens.token.Token' is not iterable")
+            assert exception_info.match(
+                "argument of type 'spacy.tokens.token.Token' is not iterable"
+            )
         Doc.remove_extension("my_custom_spans")
-    
-    def test_context_component_as_part_of_pipeline(self):
 
+    def test_context_component_as_part_of_pipeline(self):
         @Language.factory("custom_span_setter")
         class CustomSpanSetterForTesting:
             def __init__(self, nlp, name="custom_span_setter"):
                 self.nlp = nlp
                 self.name = name
                 if not Doc.has_extension("my_custom_spans"):
-                    Doc.set_extension("my_custom_spans", default = [], force=True)
+                    Doc.set_extension("my_custom_spans", default=[], force=True)
 
-            def __call__(self, doc):    
-                doc._.my_custom_spans = [doc[-6:-4] ,doc[-2:]]
+            def __call__(self, doc):
+                doc._.my_custom_spans = [doc[-6:-4], doc[-2:]]
                 return doc
+
         nlp.add_pipe("custom_span_setter")
         nlp.add_pipe("medspacy_context", config={"rules": None})
-        nlp.get_pipe("medspacy_context").add([
-            ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
-        ])
-        doc = nlp("Patient has a history of diabetes and history of renal failiure", component_cfg={"medspacy_context": {"targets": "my_custom_spans"}})
+        nlp.get_pipe("medspacy_context").add(
+            [
+                ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
+            ]
+        )
+        doc = nlp(
+            "Patient has a history of diabetes and history of renal failiure",
+            component_cfg={"medspacy_context": {"targets": "my_custom_spans"}},
+        )
         for span in doc._.my_custom_spans:
             assert span._.is_historical
         Doc.remove_extension("my_custom_spans")
         nlp.remove_pipe("custom_span_setter")
         nlp.remove_pipe("medspacy_context")
-        

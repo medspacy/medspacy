@@ -66,7 +66,17 @@ elif row_type == "section":
         "section_text_end_char",
         "section_parent",
     ]
-    col_types = ["bigint", "varchar(200)", "varchar(max)", "int", "int", "varchar(max)", "int", "int", "varchar(200)"]
+    col_types = [
+        "bigint",
+        "varchar(200)",
+        "varchar(max)",
+        "int",
+        "int",
+        "varchar(max)",
+        "int",
+        "int",
+        "varchar(200)",
+    ]
 #####################################################
 
 
@@ -95,7 +105,9 @@ nlp = spacy.load("en_core_web_sm")
 context = ConTextComponent(nlp)
 sectionizer = Sectionizer(nlp, patterns=None)
 sectionizer.add([{"section_title": "equals", "pattern": [{"LOWER": "=", "OP": "+"}]}])
-consumer = DocConsumer(nlp, context=True, sectionizer=True)  # DocConsumer has optional bool context and sectionizer
+consumer = DocConsumer(
+    nlp, context=True, sectionizer=True
+)  # DocConsumer has optional bool context and sectionizer
 nlp.add_pipe(sectionizer)
 nlp.add_pipe(context)
 nlp.add_pipe(consumer)
@@ -111,8 +123,12 @@ db_write_conn = DbConnect(driver, server, db, user, pwd)
 
 #####################################################
 # CREATING DB READ/WRITERS
-db_reader = DbReader(db_read_conn, read_query, start, end, read_batch_size)  # start, end, read_batch_size optional
-db_writer = DbWriter(db_write_conn, destination_table, create_table, drop_existing, write_batch_size, cols, col_types)
+db_reader = DbReader(
+    db_read_conn, read_query, start, end, read_batch_size
+)  # start, end, read_batch_size optional
+db_writer = DbWriter(
+    db_write_conn, destination_table, create_table, drop_existing, write_batch_size, cols, col_types
+)
 #####################################################
 
 

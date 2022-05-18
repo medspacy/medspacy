@@ -1382,6 +1382,29 @@
       "literal": ": no",
       "pattern": null,
       "direction": "BACKWARD"
+    },
+    {
+      "category": "NEGATED_EXISTENCE",
+      "literal": "no known history of",
+      "pattern": [{
+          "LOWER": "no"
+        },
+        {
+          "LOWER": "known",
+          "OP": "?"
+        },
+        {
+          "LOWER": {
+            "IN": ["history", "indication", "sign", "signs", "hx"]
+          }
+        },
+        {
+          "LOWER": {
+            "IN": ["of", "for"]
+          },
+          "OP": "?"
+        }],
+      "direction": "FORWARD"
     }
   ]
 }

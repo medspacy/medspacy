@@ -41,7 +41,11 @@ def set_doc_extensions():
 
 def get_extensions():
     "Get a list of medspaCy extensions for Token, Span, and Doc classes."
-    return {"Token": get_token_extensions(), "Span": get_span_extensions(), "Doc": get_doc_extensions()}
+    return {
+        "Token": get_token_extensions(),
+        "Span": get_span_extensions(),
+        "Doc": get_doc_extensions(),
+    }
 
 
 def get_token_extensions():
@@ -213,7 +217,9 @@ def get_data(doc, dtype=None, attrs=None, as_rows=False):
             data = data_to_rows(data)
         return data
     else:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(dtype, ALLOWED_DATA_TYPES))
+        raise ValueError(
+            "Invalid data type requested: {0}. Must be one of {1}".format(dtype, ALLOWED_DATA_TYPES)
+        )
 
 
 def data_to_rows(data):
@@ -225,11 +231,59 @@ def data_to_rows(data):
 
 def to_dataframe(doc, data_type="ent"):
     if data_type not in ALLOWED_DATA_TYPES:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(data_type, ALLOWED_DATA_TYPES))
+        raise ValueError(
+            "Invalid data type requested: {0}. Must be one of {1}".format(
+                data_type, ALLOWED_DATA_TYPES
+            )
+        )
     import pandas as pd
 
     doc_data = pd.DataFrame(data=doc._.get_data(data_type))
     return doc_data
+
+
+def section_getter(x):
+    return x[0]._.section
+
+
+def section_span_getter(x):
+    return x[0]._.section_span
+
+
+def section_category_getter(x):
+    return x[0]._.section_category
+
+
+def section_title_getter(x):
+    return x[0]._.section_title
+
+
+def section_body_getter(x):
+    return x[0]._.section_body
+
+
+def section_parent_getter(x):
+    return x[0]._.section_parent
+
+
+def section_rule_getter(x):
+    return x[0]._.section_rule
+
+
+def ent_data_getter(x):
+    return get_data(x, "ent")
+
+
+def section_data_getter(x):
+    return get_data(x, "section")
+
+
+def doc_data_getter(x):
+    return get_data(x, "doc")
+
+
+def context_data_getter(x):
+    return get_data(x, "context")
 
 
 _token_extensions = {
@@ -251,23 +305,23 @@ _context_attributes = {
     "is_uncertain": {"default": False},
 }
 
-
 _span_extensions = {
     "window": {"method": get_window_span},
     "context_attributes": {"getter": get_context_attributes},
     "any_context_attributes": {"getter": any_context_attribute},
-    "section": {"getter": lambda x: x[0]._.section},
-    "section_span": {"getter": lambda x: x[0]._.section_span},
-    "section_category": {"getter": lambda x: x[0]._.section_category},
-    "section_title": {"getter": lambda x: x[0]._.section_title},
-    "section_body": {"getter": lambda x: x[0]._.section_body},
-    "section_parent": {"getter": lambda x: x[0]._.section_parent},
-    "section_rule": {"getter": lambda x: x[0]._.section_rule},
+    "section": {"getter": section_getter},
+    "section_span": {"getter": section_span_getter},
+    "section_category": {"getter": section_category_getter},
+    "section_title": {"getter": section_title_getter},
+    "section_body": {"getter": section_body_getter},
+    "section_parent": {"getter": section_parent_getter},
+    "section_rule": {"getter": section_rule_getter},
     "contains": {"method": span_contains},
     "target_rule": {"default": None},
     "literal": {"getter": get_span_literal},
     **_context_attributes,
 }
+
 
 _doc_extensions = {
     "sections": {"default": list()},
@@ -278,9 +332,9 @@ _doc_extensions = {
     "section_bodies": {"getter": get_section_body_spans},
     "get_data": {"method": get_data},
     "data": {"default": None},
-    "ent_data": {"getter": lambda doc: get_data(doc, "ent")},
-    "section_data": {"getter": lambda doc: get_data(doc, "section")},
-    "doc_data": {"getter": lambda doc: get_data(doc, "doc")},
-    "context_data": {"getter": lambda doc: get_data(doc, "context")},
+    "ent_data": {"getter": ent_data_getter},
+    "section_data": {"getter": section_data_getter},
+    "doc_data": {"getter": doc_data_getter},
+    "context_data": {"getter": context_data_getter},
     "to_dataframe": {"method": to_dataframe},
 }

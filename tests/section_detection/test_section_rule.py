@@ -19,7 +19,9 @@ class TestSectionizer:
             assert isinstance(rule, BaseRule)
 
     def test_max_scope(self):
-        rule = SectionRule(category="past_medical_history", literal="Past Medical History:", max_scope=100)
+        rule = SectionRule(
+            category="past_medical_history", literal="Past Medical History:", max_scope=100
+        )
         assert rule.max_scope == 100
 
     def test_patterns_to_rules(self):
@@ -41,5 +43,7 @@ class TestSectionizer:
 
         assert isinstance(rules[1], SectionRule)
         assert rules[1].category == "assessment_and_plan"
-        assert rules[1].literal == str([{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}])
+        assert rules[1].literal == str(
+            [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}]
+        )
         assert rules[1].pattern == [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}]

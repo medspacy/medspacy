@@ -3,10 +3,16 @@ import pytest
 import medspacy
 import spacy
 
+
 class TestMedSpaCy:
     def test_default_build_pipe_names(self):
         enable, disable = medspacy.util._build_pipe_names(enable=None, disable=None)
-        assert enable == {"medspacy_tokenizer", "medspacy_pyrush", "medspacy_target_matcher", "medspacy_context"}
+        assert enable == {
+            "medspacy_tokenizer",
+            "medspacy_pyrush",
+            "medspacy_target_matcher",
+            "medspacy_context",
+        }
         assert disable == set()
 
     def test_default_load(self):
@@ -144,8 +150,12 @@ class TestMedSpaCy:
         assert "1.5" in joined_tokens
         assert "1 . 5" not in joined_tokens
 
+
 class TestMedSpaCyForRelease:
-    @pytest.mark.parametrize("language_model", [("es_core_news_sm"), ("pl_core_news_sm"), ("de_core_news_sm"), ("xx_ent_wiki_sm")])
+    @pytest.mark.parametrize(
+        "language_model",
+        [("es_core_news_sm"), ("pl_core_news_sm"), ("de_core_news_sm"), ("xx_ent_wiki_sm")],
+    )
     def test_multilingual_load(self, language_model):
         """
         Checks that we can instantiate the pipeline with different language backends
@@ -157,5 +167,7 @@ class TestMedSpaCyForRelease:
         except OSError:
             assert True
             return
-        doc = nlp("This is a very short piece of text that we want to use for testing. No patients were given type 2 diabetes as part of this test case. Podczas tego testu nie dano żadnemu pacjentowi cukrzycy typu drugiego.")
+        doc = nlp(
+            "This is a very short piece of text that we want to use for testing. No patients were given type 2 diabetes as part of this test case. Podczas tego testu nie dano żadnemu pacjentowi cukrzycy typu drugiego."
+        )
         assert doc

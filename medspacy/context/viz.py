@@ -4,7 +4,8 @@ import warnings
 
 warnings.simplefilter("once", DeprecationWarning)
 warnings.warn(
-    "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning
+    "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.",
+    RuntimeWarning,
 )
 
 
@@ -28,7 +29,8 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
         and uses a light gray for section headers. Default None.
     """
     warnings.warn(
-        "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning
+        "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.",
+        RuntimeWarning,
     )
     # Make sure that doc has the custom medSpaCy attributes registered
     if not hasattr(doc._, "context_graph"):
@@ -88,7 +90,12 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
             for title in section_titles:
                 colors[title] = "#dee0e3"
         ents_display_data, _ = zip(*ents_data)
-        viz_data = [{"text": doc.text, "ents": ents_display_data,}]
+        viz_data = [
+            {
+                "text": doc.text,
+                "ents": ents_display_data,
+            }
+        ]
 
         options = {
             "colors": colors,
@@ -128,7 +135,8 @@ def visualize_dep(doc, jupyter=True):
     """Create a dependency-style visualization for
     targets and modifiers in doc."""
     warnings.warn(
-        "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.", RuntimeWarning
+        "Cycontext visualizer is deprecated and will be removed. Please use medspacy.visualization instead.",
+        RuntimeWarning,
     )
     token_data = []
     token_data_mapping = {}

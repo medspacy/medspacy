@@ -26,7 +26,9 @@ class DbConnect:
             import pyodbc
 
             self.conn = pyodbc.connect(
-                "DRIVER={0};SERVER={1};DATABASE={2};USER={3};PWD={4}".format(driver, server, db, user, pwd)
+                "DRIVER={0};SERVER={1};DATABASE={2};USER={3};PWD={4}".format(
+                    driver, server, db, user, pwd
+                )
             )
         else:
             self.conn = conn
@@ -43,7 +45,11 @@ class DbConnect:
                 self.db_lib = "pyodbc"
                 self.database_exception = pyodbc.DatabaseError
             else:
-                raise ValueError("conn must be either a sqlite3 or pyodbc Connection object, not {0}".format(type(self.conn)))
+                raise ValueError(
+                    "conn must be either a sqlite3 or pyodbc Connection object, not {0}".format(
+                        type(self.conn)
+                    )
+                )
 
         print("Opened connection to {0}.{1}".format(server, db))
 

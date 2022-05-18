@@ -95,7 +95,12 @@ class TestConTextModifier:
         """Test that a modifier will be explicitly terminated by a modifier with a category
         in terminated_by."""
         doc = nlp("negative for flu, positive for pneumonia.")
-        rule = ConTextRule("negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
+        rule = ConTextRule(
+            "negative for",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            terminated_by={"POSITIVE_EXISTENCE"},
+        )
         rule2 = ConTextRule("positive for", "POSITIVE_EXISTENCE", direction="FORWARD")
         modifier = ConTextModifier(rule, 0, 2, doc)
         modifier2 = ConTextModifier(rule2, 4, 6, doc)
@@ -106,14 +111,18 @@ class TestConTextModifier:
         in terminated_by."""
         doc = nlp("flu is negative, pneumonia is positive.")
         rule = ConTextRule("negative", "NEGATED_EXISTENCE", direction="BACKWARD")
-        rule2 = ConTextRule("positive", "POSITIVE_EXISTENCE", direction="BACKWARD", terminated_by={"NEGATED_EXISTENCE"})
+        rule2 = ConTextRule(
+            "positive",
+            "POSITIVE_EXISTENCE",
+            direction="BACKWARD",
+            terminated_by={"NEGATED_EXISTENCE"},
+        )
         modifier = ConTextModifier(rule, 2, 3, doc)
         modifier2 = ConTextModifier(rule2, 6, 7, doc)
         assert modifier2.limit_scope(modifier)
 
     def test_terminate_limit_scope_backward(self):
-        """Test that a 'TERMINATE' modifier will limit the scope of a 'BACKWARD' modifier.
-        """
+        """Test that a 'TERMINATE' modifier will limit the scope of a 'BACKWARD' modifier."""
         doc = nlp("Pt has chf but pneumonia is ruled out")
         rule = ConTextRule("is ruled out", "NEGATED_EXISTENCE", "BACKWARD")
         modifier = ConTextModifier(rule, 6, 8, doc)
@@ -152,7 +161,9 @@ class TestConTextModifier:
         doc = nlp("negative for flu, positive for pneumonia.")
         context = ConTextComponent(nlp, rules=None)
 
-        rule = ConTextRule("negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by=None)
+        rule = ConTextRule(
+            "negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by=None
+        )
         rule2 = ConTextRule("positive for", "POSITIVE_EXISTENCE", direction="FORWARD")
         context.add([rule, rule2])
         doc.ents = (Span(doc, 2, 3, "PROBLEM"), Span(doc, 6, 7, "PROBLEM"))
@@ -165,7 +176,12 @@ class TestConTextModifier:
         doc = nlp("negative for flu, positive for pneumonia.")
         context = ConTextComponent(nlp, rules=None)
 
-        rule = ConTextRule("negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
+        rule = ConTextRule(
+            "negative for",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            terminated_by={"POSITIVE_EXISTENCE"},
+        )
         rule2 = ConTextRule("positive for", "POSITIVE_EXISTENCE", direction="FORWARD")
         context.add([rule, rule2])
         doc.ents = (Span(doc, 2, 3, "PROBLEM"), Span(doc, 6, 7, "PROBLEM"))
@@ -176,12 +192,22 @@ class TestConTextModifier:
 
     def test_no_limit_scope_same_category_different_allowed_types(self):
         """Test that a two ConTextModifiers of the same type but with different
-         allowed types does not limits the scope of the modifier object.
-         """
+        allowed types does not limits the scope of the modifier object.
+        """
         doc = nlp("no history of travel to Puerto Rico, neg for pneumonia")
 
-        rule = ConTextRule("no history of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD", allowed_types={"TRAVEL"},)
-        rule2 = ConTextRule("neg for", "DEFINITE_NEGATED_EXISTENCE", "FORWARD", allowed_types={"CONDITION"},)
+        rule = ConTextRule(
+            "no history of",
+            "DEFINITE_NEGATED_EXISTENCE",
+            "FORWARD",
+            allowed_types={"TRAVEL"},
+        )
+        rule2 = ConTextRule(
+            "neg for",
+            "DEFINITE_NEGATED_EXISTENCE",
+            "FORWARD",
+            allowed_types={"CONDITION"},
+        )
         modifier = ConTextModifier(rule, 0, 3, doc)
         modifier2 = ConTextModifier(rule2, 8, 10, doc)
         assert not modifier.limit_scope(modifier2)
@@ -227,7 +253,10 @@ class TestConTextModifier:
         """Test that specifying allowed_types will only modify that target type."""
         doc = self.create_target_type_examples()
         rule = ConTextRule(
-            "no history of travel to", category="DEFINITE_NEGATED_EXISTENCE", direction="FORWARD", allowed_types={"TRAVEL"},
+            "no history of travel to",
+            category="DEFINITE_NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"TRAVEL"},
         )
         modifier = ConTextModifier(rule, 0, 5, doc)
         modifier.set_scope()
@@ -253,7 +282,11 @@ class TestConTextModifier:
     def test_no_types(self):
         """Test that not specifying allowed_types or excluded_types will modify all targets."""
         doc = self.create_target_type_examples()
-        rule = ConTextRule("no history of travel to", category="DEFINITE_NEGATED_EXISTENCE", direction="FORWARD",)
+        rule = ConTextRule(
+            "no history of travel to",
+            category="DEFINITE_NEGATED_EXISTENCE",
+            direction="FORWARD",
+        )
         modifier = ConTextModifier(rule, 0, 5, doc)
         modifier.set_scope()
         travel, condition = doc.ents  # "puerto rico", "pneumonia"

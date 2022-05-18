@@ -22,7 +22,10 @@ nlp.add_pipe("medspacy_context")
 
 sectionizer = nlp.add_pipe("medspacy_sectionizer")
 sectionizer.add(
-    [SectionRule("Section 1:", "section1"), SectionRule("Section 2:", "section2", parents=["section1"]),]
+    [
+        SectionRule("Section 1:", "section1"),
+        SectionRule("Section 2:", "section2", parents=["section1"]),
+    ]
 )
 
 simple_text = "Patient has a cough."

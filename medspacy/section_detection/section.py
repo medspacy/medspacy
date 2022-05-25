@@ -1,4 +1,5 @@
 import json
+from section_detection.section_rule import SectionRule
 
 
 class Section(object):
@@ -13,7 +14,10 @@ class Section(object):
         self.rule = rule
 
     def __repr__(self):
-        return f"""Section(category={self.category}, title={self.title_span}, body={self.body_span}, parent={self.parent}, rule={self.rule})"""
+        if self.doc is not None:
+            return f"""Section(category={self.category}, title={self.title_span}, body={self.body_span}, parent={self.parent}, rule={self.rule})"""
+        else:
+            return f"""Section(category={self.category} at {self.title_start} : {self.title_end} in the doc with a body at {self.body_start} : {self.body_end} based on the rule {self.rule}"""
 
     @property
     def title_span(self):
@@ -42,3 +46,40 @@ class Section(object):
         with data_path.open("r", encoding="utf8") as f:
             self.data = json.loads(f)
         return self
+
+    def serialized_representation(self):
+
+        rule = self.rule
+
+        return {
+            "category": self.category,
+            "title_start": self.title_start,
+            "title_end": self.title_end,
+            "body_start": self.body_start,
+            "body_end": self.body_end,
+            "parent": self.parent,
+            "rule": rule.to_dict() if rule is not None else None,
+        }
+
+    @classmethod
+    def from_serialized_representation(cls, serialized_representation):
+        rule = SectionRule.from_dict(serialized_representation["rule"])
+        serialized_representation["doc"] = None #TODO: Unhack this
+
+        section = Section(**{k:v for k,v in serialized_representation.items() if k not in ["rule"]})
+        section.rule = rule
+
+        return section
+
+@srsly.msgpack_encoders("section")
+def serialize_section(obj, chain=None):
+    if isinstance(obj, Section):
+        return {"section": obj.serialized_representation()}
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_decoders("section")
+def deserialize_section(obj, chain=None):
+    if "section" in obj:
+        return Section.from_serialized_representation(obj["section"])
+    return obj if chain is None else chain(obj)

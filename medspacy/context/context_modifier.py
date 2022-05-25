@@ -1,9 +1,13 @@
+from __future__ import annotations
+from context.context_rule import ConTextRule
+import srsly
+
 class ConTextModifier:
     """Represents a concept found by ConText in a document.
     Is the result of ConTextRule matching a span of text in a Doc.
     """
 
-    def __init__(self, context_rule, start, end, doc, _use_context_window=False):
+    def __init__(self, context_rule, start, end, doc, _scope_start=None, _scope_end=None, _use_context_window=False):
         """Create a new ConTextModifier from a document span.
 
         context_item (int): The ConTextRule object which defines the modifier.
@@ -20,10 +24,10 @@ class ConTextModifier:
         self._num_targets = 0
 
         self._use_context_window = _use_context_window
-        self._scope_start = None
-        self._scope_end = None
-
-        self.set_scope()
+        self._scope_start = _scope_start
+        self._scope_end = _scope_end
+        if self._scope_end is None or self._scope_start is None:
+            self.set_scope()
 
     @property
     def span(self):
@@ -300,4 +304,61 @@ class ConTextModifier:
         return len(self.span)
 
     def __repr__(self):
-        return f"<ConTextModifier> [{self.span}, {self.category}]"
+        return f"<ConTextModifier> [{self.start}, {self.end}, {self.category}]"
+
+    def serialized_representation(self):
+        """
+        Serialized Representation of the modifier
+        """
+
+        KEYS_TO_KEEP = ["start", "end", "_use_context_window", "_scope_start", "_scope_end"]
+
+        modifier_dict = self.__dict__
+
+        rule_dict = modifier_dict["_context_rule"].to_dict()
+
+        dict_repr = dict((key, modifier_dict[key]) for key in KEYS_TO_KEEP)
+        dict_repr["context_rule"] = rule_dict
+
+        return dict_repr
+
+    @classmethod
+    def from_serialized_representation(cls, serialized_representation) -> ConTextModifier:
+        """
+        Instantiates the class from the serialized representation
+        """
+        rule = ConTextRule.from_dict(serialized_representation["context_rule"])
+
+        serialized_representation["context_rule"] = rule
+        serialized_representation["doc"] = None #TODO: remove the dependency of ConTextModifier on Doc
+
+        return ConTextModifier(**serialized_representation)
+
+
+@srsly.msgpack_encoders("modifiers")
+def serialize_modifiers(obj, chain=None):
+    if isinstance(obj, list) and isinstance(obj[0], ConTextModifier):
+        return {"modifiers": [modifier.serialized_representation() for modifier in obj]}
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_encoders("modifier")
+def serialize_modifier(obj, chain=None):
+    if isinstance(obj, ConTextModifier):
+        return obj.serialized_representation()
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_decoders("modifiers")
+def deserialize_modifiers(obj, chain=None):
+    if "modifiers" in obj:
+        obj["modifiers"] = [ConTextModifier.from_serialized_representation(serialized_modifier) for serialized_modifier in obj["modifiers"]]
+        return obj
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_decoders("modifier")
+def deserialize_modifier(obj, chain=None):
+    if "modifier" in obj:
+        return ConTextModifier.from_serialized_representation(obj["modifier"])
+    return obj if chain is None else chain(obj) 

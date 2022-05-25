@@ -100,7 +100,7 @@ def _spans_overlap(span1, span2):
 @srsly.msgpack_encoders("context_graph")
 def serialize_context_graph(obj, chain=None):
     if isinstance(obj, ConTextGraph):
-        return obj.serialized_representation()
+        return {"context_graph": obj.serialized_representation()}
     return obj if chain is None else chain(obj)
 
 

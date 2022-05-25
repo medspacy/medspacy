@@ -62,19 +62,6 @@ class TestSerialization:
 
         assert isinstance(deserialized,ConTextModifier)
 
-    def test_serialize_context(self, doc_with_context):
-        serialized = srsly.msgpack_dumps({"context_graph": doc_with_context._.context_graph})
-        deserialized = srsly.msgpack_loads(serialized)
-
-        assert isinstance(deserialized, ConTextGraph)
-
-
-    def test_serialize_section(self, doc_with_sections):
-        serialized = srsly.msgpack_dumps({"section": doc_with_sections._.sections[0]})
-        deserialized = srsly.msgpack_loads(serialized)
-
-        assert isinstance(deserialized, Section)
-
     def test_serialize_doc_with_sections(self, doc_with_sections):
         vocab = doc_with_sections.vocab
         serialized_doc = doc_with_sections.to_bytes()

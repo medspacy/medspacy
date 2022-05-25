@@ -346,11 +346,11 @@ class ConTextModifier:
         return ConTextModifier(**serialized_representation)
 
 
-# @srsly.msgpack_encoders("modifiers")
-# def serialize_modifiers(obj, chain=None):
-#     if isinstance(obj, list) and isinstance(obj[0], ConTextModifier):
-#         return {"modifiers": [modifier.serialized_representation() for modifier in obj]}
-#     return obj if chain is None else chain(obj)
+@srsly.msgpack_encoders("modifiers")
+def serialize_modifiers(obj, chain=None):
+    if isinstance(obj, list) and isinstance(obj[0], ConTextModifier):
+        return {"modifiers": [modifier.serialized_representation() for modifier in obj]}
+    return obj if chain is None else chain(obj)
 
 @srsly.msgpack_encoders("modifier")
 def serialize_modifier(obj, chain=None):
@@ -358,12 +358,12 @@ def serialize_modifier(obj, chain=None):
         return obj.serialized_representation()
     return obj if chain is None else chain(obj)
 
-# @srsly.msgpack_decoders("modifiers")
-# def deserialize_modifiers(obj, chain=None):
-#     if "modifiers" in obj:
-#         print(obj)
-#         return [ConTextModifier.from_serialized_representation(serialized_modifier) for serialized_modifier in obj["modifiers"]]
-#     return obj if chain is None else chain(obj)
+@srsly.msgpack_decoders("modifiers")
+def deserialize_modifiers(obj, chain=None):
+    if "modifiers" in obj:
+        obj["modifiers"] = [ConTextModifier.from_serialized_representation(serialized_modifier) for serialized_modifier in obj["modifiers"]]
+        return obj
+    return obj if chain is None else chain(obj)
 
 @srsly.msgpack_decoders("modifier")
 def deserialize_modifier(obj, chain=None):

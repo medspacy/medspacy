@@ -1,4 +1,5 @@
 import json
+import pdb
 import srsly
 from medspacy.section_detection.section_rule import SectionRule
 
@@ -16,7 +17,10 @@ class Section(object):
         self.rule = rule
 
     def __repr__(self):
-        return f"""Section(category={self.category}, title={self.title_span}, body={self.body_span}, parent={self.parent}, rule={self.rule})"""
+        if self.doc is not None:
+            return f"""Section(category={self.category}, title={self.title_span}, body={self.body_span}, parent={self.parent}, rule={self.rule})"""
+        else:
+            return f"""Section(category={self.category} at {self.title_start} : {self.title_end} in the doc with a body at {self.body_start} : {self.body_end} based on the rule {self.rule}"""
 
     @property
     def title_span(self):
@@ -74,7 +78,7 @@ class Section(object):
 @srsly.msgpack_encoders("section")
 def serialize_section(obj, chain=None):
     if isinstance(obj, Section):
-        return obj.serialized_representation()
+        return {"section": obj.serialized_representation()}
     return obj if chain is None else chain(obj)
 
 
@@ -83,17 +87,3 @@ def deserialize_section(obj, chain=None):
     if "section" in obj:
         return Section.from_serialized_representation(obj["section"])
     return obj if chain is None else chain(obj)
-
-
-# @srsly.msgpack_encoders("sections")
-# def serialize_sections(obj, chain=None):
-#     if isinstance(obj, list) and isinstance(obj[0], Section):
-#         return obj.serialized_representation()
-#     return obj if chain is None else chain(obj)
-
-
-# @srsly.msgpack_decoders("sections")
-# def deserialize_sections(obj, chain=None):
-#     if "section" in obj:
-#         return Section.from_serialized_representation(obj["section"])
-#     return obj if chain is None else chain(obj)

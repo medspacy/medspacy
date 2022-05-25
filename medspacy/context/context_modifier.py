@@ -1,5 +1,5 @@
 from __future__ import annotations
-from context.context_rule import ConTextRule
+from medspacy.context.context_rule import ConTextRule
 import srsly
 
 class ConTextModifier:

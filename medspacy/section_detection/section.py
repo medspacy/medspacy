@@ -1,5 +1,5 @@
 import json
-from section_detection.section_rule import SectionRule
+from medspacy.section_detection.section_rule import SectionRule
 import srsly
 
 

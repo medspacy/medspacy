@@ -1,5 +1,4 @@
 import spacy
-from spacy.pipeline import EntityRuler
 
 from medspacy.io import DocConsumer
 from medspacy.io.doc_consumer import (
@@ -9,8 +8,7 @@ from medspacy.io.doc_consumer import (
     ALLOWED_SECTION_ATTRS,
     ALLOWED_DATA_TYPES,
 )
-from medspacy.context import ConTextComponent
-from medspacy.section_detection import Sectionizer, SectionRule
+from medspacy.section_detection import SectionRule
 
 nlp = spacy.load("en_core_web_sm")
 nlp.remove_pipe("ner")
@@ -22,7 +20,10 @@ nlp.add_pipe("medspacy_context")
 
 sectionizer = nlp.add_pipe("medspacy_sectionizer")
 sectionizer.add(
-    [SectionRule("Section 1:", "section1"), SectionRule("Section 2:", "section2", parents=["section1"]),]
+    [
+        SectionRule("Section 1:", "section1"),
+        SectionRule("Section 2:", "section2", parents=["section1"]),
+    ]
 )
 
 simple_text = "Patient has a cough."

@@ -111,7 +111,10 @@ class ConTextModifier:
 
         if self.direction.lower() == "forward":
             self._scope_start, self._scope_end = self.end, full_scope_span.end
-            if self.max_scope is not None and (self._scope_end - self._scope_start) > self.max_scope:
+            if (
+                self.max_scope is not None
+                and (self._scope_end - self._scope_start) > self.max_scope
+            ):
                 self._scope_end = self.end + self.max_scope
 
         elif self.direction.lower() == "backward":
@@ -119,7 +122,10 @@ class ConTextModifier:
                 full_scope_span.start,
                 self.start,
             )
-            if self.max_scope is not None and (self._scope_end - self._scope_start) > self.max_scope:
+            if (
+                self.max_scope is not None
+                and (self._scope_end - self._scope_start) > self.max_scope
+            ):
                 self._scope_start = self.start - self.max_scope
         else:  # bidirectional
             self._scope_start, self._scope_end = (
@@ -173,7 +179,8 @@ class ConTextModifier:
         # If two modifiers have the same category but modify different target types,
         # don't limit scope.
         if self.category == other.category and (
-            (self.allowed_types != other.allowed_types) or (self.excluded_types != other.excluded_types)
+            (self.allowed_types != other.allowed_types)
+            or (self.excluded_types != other.excluded_types)
         ):
             return False
 
@@ -267,7 +274,7 @@ class ConTextModifier:
         self._num_targets = len(self._targets)
 
     def overlaps(self, other):
-        """ Returns whether the object overlaps with another span
+        """Returns whether the object overlaps with another span
 
         other (): the other object to check for overlaps
 
@@ -282,7 +289,12 @@ class ConTextModifier:
 
     def overlaps_target(self, target):
         """Returns True if self overlaps with a spaCy span."""
-        return self.span[0] in target or self.span[-1] in target or target[0] in self.span or target[-1] in self.span
+        return (
+            self.span[0] in target
+            or self.span[-1] in target
+            or target[0] in self.span
+            or target[-1] in self.span
+        )
 
     def __gt__(self, other):
         return self.span > other.span

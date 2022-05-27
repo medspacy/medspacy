@@ -1,6 +1,5 @@
 # from nlp_tools.utils import prune_overlapping_matches
 
-from spacy.tokens import Token
 from spacy.tokens import Span
 from spacy.language import Language
 from .target_rule import TargetRule
@@ -13,7 +12,9 @@ class TargetMatcher:
     Rules are defined using medspacy.target_matcher.TargetRule.
     """
 
-    def __init__(self, nlp, name="medspacy_target_matcher", add_ents=True, phrase_matcher_attr="LOWER"):
+    def __init__(
+        self, nlp, name="medspacy_target_matcher", add_ents=True, phrase_matcher_attr="LOWER"
+    ):
         """Create a new TargetMatcher.
         Params:
             nlp: A spaCy Language model.
@@ -80,7 +81,7 @@ class TargetMatcher:
                 # spaCy will raise a value error if the token in span are already
                 # part of an entity (ie., as part of an upstream component)
                 # In that case, let the existing span supersede this one
-                except ValueError as e:
+                except ValueError:
                     # raise e
                     pass
             return doc

@@ -1,5 +1,4 @@
 import spacy
-import warnings
 
 from medspacy.common.medspacy_matcher import MedspacyMatcher
 from medspacy.common import BaseRule
@@ -19,7 +18,10 @@ class TestTargetMatcher:
     def test_prune_overlapping_matching(self):
         matcher = MedspacyMatcher(nlp, prune=True)
         matcher.add(
-            [BaseRule("history of", "HISTORICAL"), BaseRule("no history of", "NEGATED_EXISTENCE"),]
+            [
+                BaseRule("history of", "HISTORICAL"),
+                BaseRule("no history of", "NEGATED_EXISTENCE"),
+            ]
         )
         doc = nlp("no history of pneumonia")
         matches = matcher(doc)
@@ -30,7 +32,10 @@ class TestTargetMatcher:
     def test_prune_false(self):
         matcher = MedspacyMatcher(nlp, prune=False)
         matcher.add(
-            [BaseRule("history of", "HISTORICAL"), BaseRule("no history of", "NEGATED_EXISTENCE"),]
+            [
+                BaseRule("history of", "HISTORICAL"),
+                BaseRule("no history of", "NEGATED_EXISTENCE"),
+            ]
         )
         doc = nlp("no history of pneumonia")
         matches = matcher(doc)

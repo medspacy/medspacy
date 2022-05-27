@@ -97,7 +97,11 @@ class DocConsumer:
                 raise ValueError("dtypes must be either 'all' or a tuple, not {0}".format(dtypes))
         for dtype in dtypes:
             if dtype not in ALLOWED_DATA_TYPES:
-                raise ValueError("Invalid dtypes. Supported dtypes are {0}, not {1}".format(ALLOWED_DATA_TYPES, dtype))
+                raise ValueError(
+                    "Invalid dtypes. Supported dtypes are {0}, not {1}".format(
+                        ALLOWED_DATA_TYPES, dtype
+                    )
+                )
             if dtype == "section":
                 self.validate_section_attrs(dtype_attrs)
         self.dtypes = dtypes
@@ -116,7 +120,9 @@ class DocConsumer:
             for dtype in dtypes:
                 if dtype not in ALLOWED_DATA_TYPES:
                     raise ValueError("Invalid dtype,", dtype)
-        dtype_attrs = {dtype: list(attrs) for (dtype, attrs) in DEFAULT_ATTRS.items() if dtype in dtypes}
+        dtype_attrs = {
+            dtype: list(attrs) for (dtype, attrs) in DEFAULT_ATTRS.items() if dtype in dtypes
+        }
         return dtype_attrs
 
     def set_default_attrs(self):

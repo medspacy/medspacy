@@ -81,10 +81,13 @@ class PreprocessingRule:
         for rule in preprocess_rules:
             if not isinstance(rule.repl, str):
                 raise ValueError(
-                    "The repl attribute must currently be a string to be serialized as json, not", type(rule.repl)
+                    "The repl attribute must currently be a string to be serialized as json, not",
+                    type(rule.repl),
                 )
             if rule.callback is not None:
-                raise ValueError("The callback attribute is not serializable and must be left as None.")
+                raise ValueError(
+                    "The callback attribute is not serializable and must be left as None."
+                )
             dicts.append(rule.to_dict())
         data = {"preprocessing_rules": dicts}
         with open(filepath, "w") as f:

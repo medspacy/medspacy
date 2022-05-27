@@ -1,7 +1,4 @@
-from sys import platform
 
-from medspacy.visualization import visualize_ent
-import spacy
 
 DEFAULT_PIPENAMES = {
     "medspacy_pyrush",
@@ -86,7 +83,8 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp = model
     else:
         raise ValueError(
-            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. " "You passed in",
+            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
+            "You passed in",
             type(model),
         )
     if "medspacy_tokenizer" in enable:

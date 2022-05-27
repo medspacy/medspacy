@@ -1,0 +1,9 @@
+repos:
+- repo: local
+  hooks:
+  - id: format_and_lint
+    name: format with black and lint with flake8
+    entry: make
+    language: system
+    args: [pre-commit]
+

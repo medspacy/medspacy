@@ -1,7 +1,4 @@
-import spacy
-import warnings
 from sys import platform
-import pytest
 
 import medspacy
 
@@ -53,7 +50,7 @@ class TestQuickUMLS:
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = medspacy.load(enable=["quickumls"])
-        quickumls = nlp.get_pipe("medspacy_quickumls")
+        nlp.get_pipe("medspacy_quickumls")
 
         # TODO -- Consider moving this and other extraction tests to separate tests from loading
         doc = nlp("Decreased dipalmitoyllecithin content found in lung specimens")

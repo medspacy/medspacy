@@ -1,5 +1,4 @@
 import spacy
-import warnings
 
 from medspacy.common.regex_matcher import RegexMatcher
 

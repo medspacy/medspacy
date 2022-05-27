@@ -9,8 +9,8 @@ class ConTextGraph:
         """Update the scope of all ConTextModifier.
 
         For each modifier in a list of ConTextModifiers, check against each other
-        modifier to see if one of the modifiers should update the other. 
-        This allows neighboring similar modifiers to extend each other's 
+        modifier to see if one of the modifiers should update the other.
+        This allows neighboring similar modifiers to extend each other's
         scope and allows "terminate" modifiers to end a modifier's scope.
 
         Args:
@@ -32,7 +32,7 @@ class ConTextGraph:
             marked_targets: A list of Spans
             marked_modifiers: A list of ConTextModifiers
 
-        RETURNS 
+        RETURNS
             edges: A list of tuples consisting of target/modifier pairs
         """
         if self.remove_overlapping_modifiers:
@@ -59,12 +59,14 @@ class ConTextGraph:
         self.edges = edges
 
     def __repr__(self):
-        return "<ConTextGraph> with {0} targets and {1} modifiers".format(len(self.targets), len(self.modifiers))
+        return "<ConTextGraph> with {0} targets and {1} modifiers".format(
+            len(self.targets), len(self.modifiers)
+        )
 
 
 def overlap_target_modifiers(span1, span2):
     """Checks whether two modifiers overlap.
-        
+
     Args:
         span1: the first span
         span2: the second span
@@ -73,4 +75,6 @@ def overlap_target_modifiers(span1, span2):
 
 
 def _spans_overlap(span1, span2):
-    return (span1.end > span2.start and span1.end <= span2.end) or (span1.start >= span2.start and span1.start < span2.end)
+    return (span1.end > span2.start and span1.end <= span2.end) or (
+        span1.start >= span2.start and span1.start < span2.end
+    )

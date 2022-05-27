@@ -3,10 +3,26 @@ from ..common.base_rule import BaseRule
 
 class SectionRule(BaseRule):
 
-    _ALLOWED_KEYS = {"literal", "pattern", "category", "metadata", "parents", "parent_required", "max_scope"}
+    _ALLOWED_KEYS = {
+        "literal",
+        "pattern",
+        "category",
+        "metadata",
+        "parents",
+        "parent_required",
+        "max_scope",
+    }
 
     def __init__(
-        self, literal, category, pattern=None, on_match=None, max_scope=None, parents=[], parent_required=False, metadata=None
+        self,
+        literal,
+        category,
+        pattern=None,
+        on_match=None,
+        max_scope=None,
+        parents=[],
+        parent_required=False,
+        metadata=None,
     ):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
@@ -92,7 +108,9 @@ class SectionRule(BaseRule):
         keys = set(rule_dict.keys())
         invalid_keys = keys.difference(cls._ALLOWED_KEYS)
         if invalid_keys:
-            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
+            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(
+                invalid_keys, cls._ALLOWED_KEYS
+            )
             raise ValueError(msg)
         rule = SectionRule(**rule_dict)
         return rule

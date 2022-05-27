@@ -1,5 +1,4 @@
 from medspacy.preprocess import PreprocessingRule
-import pytest
 import re
 
 import tempfile
@@ -31,11 +30,17 @@ class TestMedSpaCyExtensions:
     def test_to_dict(self):
         rule = PreprocessingRule("this is a string")
         d = rule.to_dict()
-        assert d == {"pattern": "this is a string", "repl": "", "ignorecase": True, "callback": None, "desc": ""}
+        assert d == {
+            "pattern": "this is a string",
+            "repl": "",
+            "ignorecase": True,
+            "callback": None,
+            "desc": "",
+        }
 
     def test_from_dict(self):
         d = {"pattern": "this is a string", "repl": "", "callback": None, "desc": ""}
-        rule = PreprocessingRule.from_dict(d)
+        PreprocessingRule.from_dict(d)
 
     def test_to_json(self):
         import os, json
@@ -58,7 +63,13 @@ class TestMedSpaCyExtensions:
         # dname = os.path.join(".", "test_preprocess_rules.json")
         data = {
             "preprocessing_rules": [
-                {"pattern": "this is a string", "repl": "", "ignorecase": True, "callback": None, "desc": ""}
+                {
+                    "pattern": "this is a string",
+                    "repl": "",
+                    "ignorecase": True,
+                    "callback": None,
+                    "desc": "",
+                }
             ]
         }
 

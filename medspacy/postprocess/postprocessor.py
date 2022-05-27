@@ -1,7 +1,9 @@
 from collections import namedtuple
 from spacy.language import Language
 
-postprocess_pattern = namedtuple("PostProcessPattern", ["func", "attr", "check_value", "success_value"])
+postprocess_pattern = namedtuple(
+    "PostProcessPattern", ["func", "attr", "check_value", "success_value"]
+)
 
 
 @Language.factory("medspacy_postprocessor")
@@ -22,7 +24,7 @@ class Postprocessor:
             if self.debug:
                 print(ent)
             for rule in self.rules:
-                num_ents = len(doc.ents)
+                len(doc.ents)
                 rule(ent, i, self.debug)
                 # Check if the entity was removed -if it was, skip to the next entity
                 try:

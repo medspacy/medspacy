@@ -1,4 +1,3 @@
-import pytest
 import os
 import tempfile
 
@@ -28,7 +27,9 @@ class TestDbWriter:
         db_conn = DbConnect(conn=sq_conn)
         from medspacy.io.db_writer import DbWriter
 
-        writer = DbWriter(db_conn, "ents", cols=None, col_types=None, create_table=True, drop_existing=False)
+        writer = DbWriter(
+            db_conn, "ents", cols=None, col_types=None, create_table=True, drop_existing=False
+        )
         writer.write(doc)
         cursor.execute("SELECT * FROM ents;")
         rslts = cursor.fetchone()
@@ -54,7 +55,9 @@ class TestDbWriter:
 
         from medspacy.io.db_writer import DbWriter
 
-        writer = DbWriter(db_conn, "ents", cols=cols, col_types=db_dtypes, create_table=True, drop_existing=True)
+        writer = DbWriter(
+            db_conn, "ents", cols=cols, col_types=db_dtypes, create_table=True, drop_existing=True
+        )
         writer.write(doc)
         cursor.execute("SELECT * FROM ents;")
         rslts = cursor.fetchone()

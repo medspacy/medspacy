@@ -68,7 +68,9 @@ class RegexMatcher:
             self.vocab.strings.add(match_id)
         self._patterns.setdefault(self.vocab.strings[match_id], [])
         for pattern in patterns:
-            self._patterns[self.vocab.strings[match_id]].append(re.compile(pattern, flags=self.flags))
+            self._patterns[self.vocab.strings[match_id]].append(
+                re.compile(pattern, flags=self.flags)
+            )
             self._callbacks[self.vocab.strings[match_id]] = on_match
 
     def get(self, key):
@@ -82,7 +84,9 @@ class RegexMatcher:
                 for re_match in pattern.finditer(doc.text_with_ws):
                     span = doc.char_span(re_match.start(), re_match.end())
                     if span is None:
-                        start = get_token_for_char(doc, re_match.start(), resolve=self.resolve_start)
+                        start = get_token_for_char(
+                            doc, re_match.start(), resolve=self.resolve_start
+                        )
                         end = get_token_for_char(doc, re_match.end(), resolve=self.resolve_end)
                         if end is None:
                             end_index = len(doc)
@@ -108,7 +112,11 @@ def get_token_for_char(doc, char_idx, resolve="left"):
     if char_idx < 0:
         raise ValueError("char_idx must be > 0")
     if char_idx > len(doc.text_with_ws):
-        raise ValueError("char_idx {0} is out of range for text with length {1}".format(char_idx, len(doc.text_with_ws)))
+        raise ValueError(
+            "char_idx {0} is out of range for text with length {1}".format(
+                char_idx, len(doc.text_with_ws)
+            )
+        )
     for i, token in enumerate(doc):
         if char_idx > token.idx:
             continue

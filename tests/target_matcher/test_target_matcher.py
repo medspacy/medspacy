@@ -1,5 +1,4 @@
 import spacy
-import warnings
 
 from medspacy.target_matcher import TargetMatcher, TargetRule
 

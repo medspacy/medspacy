@@ -17,7 +17,9 @@ class TestSectionizer:
 
     def test_doc_attributes(self):
         sectionizer = Sectionizer(nlp, rules=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
 
@@ -29,7 +31,9 @@ class TestSectionizer:
 
     def test_span_attributes(self):
         sectionizer = Sectionizer(nlp, rules=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
 
@@ -44,7 +48,9 @@ class TestSectionizer:
 
     def test_span_attributes(self):
         sectionizer = Sectionizer(nlp, rules=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
 
@@ -119,7 +125,9 @@ class TestSectionizer:
 
     def test_num_sections(self):
         sectionizer = Sectionizer(nlp, rules=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
         assert len(doc._.sections) == 1
@@ -130,7 +138,9 @@ class TestSectionizer:
 
     def test_string_match(self):
         sectionizer = Sectionizer(nlp, rules=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: PE")
         sectionizer(doc)
         section = doc._.sections[0]
@@ -144,7 +154,12 @@ class TestSectionizer:
             SectionRule(
                 category="past_medical_history",
                 literal="past medical history:",
-                pattern=[{"LOWER": "past"}, {"LOWER": "medical"}, {"LOWER": "history"}, {"LOWER": ":"}],
+                pattern=[
+                    {"LOWER": "past"},
+                    {"LOWER": "medical"},
+                    {"LOWER": "history"},
+                    {"LOWER": ":"},
+                ],
             )
         )
         doc = nlp("Past Medical History: PE")
@@ -156,7 +171,9 @@ class TestSectionizer:
 
     def test_document_starts_no_header(self):
         sectionizer = Sectionizer(nlp, rules=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("This is separate. Past Medical History: PE")
         sectionizer(doc)
         assert len(doc._.sections) == 2
@@ -172,14 +189,18 @@ class TestSectionizer:
 
     def test_max_scope_none(self):
         sectionizer = Sectionizer(nlp, rules=None, max_scope=None)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: This is the sentence.")
         sectionizer(doc)
         assert doc[-1]._.section_category == "past_medical_history"
 
     def test_max_scope(self):
         sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         doc = nlp("Past Medical History: This is the sentence.")
         sectionizer(doc)
         section = doc._.sections[0]
@@ -189,7 +210,11 @@ class TestSectionizer:
 
     def test_max_scope_rule(self):
         sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:", max_scope=100))
+        sectionizer.add(
+            SectionRule(
+                category="past_medical_history", literal="Past Medical History:", max_scope=100
+            )
+        )
         doc = nlp("Past Medical History: This is the sentence.")
         sectionizer(doc)
         section = doc._.sections[-1]
@@ -200,7 +225,9 @@ class TestSectionizer:
 
     def test_start_line(self):
         sectionizer = Sectionizer(nlp, rules=None, require_start_line=True)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         text = "\n\n Past Medical History: The patient has a Past Medical History:"
         doc = nlp(text)
         sectionizer(doc)
@@ -208,7 +235,9 @@ class TestSectionizer:
 
     def test_end_line(self):
         sectionizer = Sectionizer(nlp, rules=None, require_end_line=True)
-        sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
+        sectionizer.add(
+            SectionRule(category="past_medical_history", literal="Past Medical History:")
+        )
         text = "\n\n Past Medical History:\n The patient has a Past Medical History: this"
         doc = nlp(text)
         sectionizer(doc)
@@ -219,7 +248,9 @@ class TestSectionizer:
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
-                SectionRule(category="explanation", literal="Explanation:", parents=["past_medical_history"]),
+                SectionRule(
+                    category="explanation", literal="Explanation:", parents=["past_medical_history"]
+                ),
             ]
         )
         text = "Past Medical History: some other text Explanation: The patient has one"
@@ -236,7 +267,11 @@ class TestSectionizer:
         sectionizer.add(
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
-                SectionRule(category="explanation", literal="Explanation:", parents=["past_medical_history", "allergies"]),
+                SectionRule(
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history", "allergies"],
+                ),
             ]
         )
         text = "Past Medical History: some other text. Explanation: The patient has one"
@@ -254,7 +289,11 @@ class TestSectionizer:
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
                 SectionRule(category="allergies", literal="Allergies:"),
-                SectionRule(category="explanation", literal="Explanation:", parents=["past_medical_history", "allergies"]),
+                SectionRule(
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history", "allergies"],
+                ),
             ]
         )
         text = "Past Medical History: some other text. Explanation: The patient has one. Allergies: peanuts"
@@ -274,7 +313,11 @@ class TestSectionizer:
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
                 SectionRule(category="allergies", literal="Allergies:"),
-                SectionRule(category="explanation", literal="Explanation:", parents=["past_medical_history", "allergies"]),
+                SectionRule(
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history", "allergies"],
+                ),
             ]
         )
         text = "Past Medical History: some other text. Explanation: The patient has one. Allergies: peanuts Explanation: pt cannot eat peanuts"
@@ -296,7 +339,9 @@ class TestSectionizer:
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
                 SectionRule(category="allergies", literal="Allergies:"),
-                SectionRule(category="explanation", literal="Explanation:", parents=["past_medical_history"]),
+                SectionRule(
+                    category="explanation", literal="Explanation:", parents=["past_medical_history"]
+                ),
             ]
         )
         text = "Past Medical History: some other text. Allergies: peanuts Explanation: pt cannot eat peanuts"
@@ -316,7 +361,10 @@ class TestSectionizer:
             [
                 SectionRule(category="past_medical_history", literal="Past Medical History:"),
                 SectionRule(
-                    category="explanation", literal="Explanation:", parents=["past_medical_history"], parent_required=True
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history"],
+                    parent_required=True,
                 ),
             ]
         )
@@ -421,7 +469,9 @@ class TestSectionizer:
             warning_found = False
             for warn in w:
                 print("Duplicate" in str(warn.message))
-                if warn.category is RuntimeWarning and "Duplicate section title" in str(warn.message):
+                if warn.category is RuntimeWarning and "Duplicate section title" in str(
+                    warn.message
+                ):
                     warning_found = True
             assert warning_found
             assert s1.parent is None
@@ -430,7 +480,9 @@ class TestSectionizer:
             assert s2_2.parent.category == "s3"
 
     def test_context_attributes(self):
-        sectionizer = Sectionizer(nlp, rules=None, add_attrs={"past_medical_history": {"is_negated": True}})
+        sectionizer = Sectionizer(
+            nlp, rules=None, add_attrs={"past_medical_history": {"is_negated": True}}
+        )
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         doc = nlp("Past Medical History: Pneumonia")
         from spacy.tokens import Span

@@ -1,4 +1,3 @@
-import pytest
 import os
 import tempfile
 
@@ -12,11 +11,18 @@ db = os.path.join(tmpdirname.name, "test.db")
 
 # Set up a simple pipeline which will allow us to write results
 nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"])
-nlp.get_pipe("medspacy_target_matcher").add([TargetRule("pneumonia", "CONDITION"), TargetRule("breast ca", "CONDITION")])
+nlp.get_pipe("medspacy_target_matcher").add(
+    [TargetRule("pneumonia", "CONDITION"), TargetRule("breast ca", "CONDITION")]
+)
 doc = nlp("There is no evidence of pneumonia.")
 
-doc_consumer = DocConsumer(nlp, dtype_attrs={"ent": ["text", "label_", "is_negated", "section_category"]})
-nlp.add_pipe("medspacy_doc_consumer", config={"dtype_attrs": {"ent": ["text", "label_", "is_negated", "section_category"]}})
+doc_consumer = DocConsumer(
+    nlp, dtype_attrs={"ent": ["text", "label_", "is_negated", "section_category"]}
+)
+nlp.add_pipe(
+    "medspacy_doc_consumer",
+    config={"dtype_attrs": {"ent": ["text", "label_", "is_negated", "section_category"]}},
+)
 
 db_dtypes = [
     "varchar(100)",

@@ -59,9 +59,14 @@ setup(
         "pysbd==0.3.4",
         "jsonschema",
         "requests>=2.13.0,<2.16",
-        "six>=1.14.0"
+        "six>=1.14.0",
     ]
     + additional_installs,
+    extras_require={"dev": [
+        "black==21.6b0",
+        "pre-commit==2.12.1",
+        "autoflake8==0.3.1",
+    ]} ,
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},

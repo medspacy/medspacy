@@ -2,13 +2,12 @@ name: medspacy
 
 on:
   push:
-    branches: [ master, develop, ci_debug ]
+    branches: [master, develop, ci_debug]
   pull_request:
-    branches: [ master, develop ]
+    branches: [master, develop]
 
 jobs:
   build:
-  
     # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
     #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
 
@@ -39,39 +38,40 @@ jobs:
             python-version: 3.8
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}      
-    - name: Install dependencies      
-      run: |
-        python --version
-        python -m pip install --upgrade pip        
-        # Install our package to make sure our setup works...
-        pip install -U pip setuptools wheel
-        python setup.py install
-        # set up all spacy language models that are used in our pytest tests
-        python -m spacy download de_core_news_sm
-        python -m spacy download en_core_web_sm
-        python -m spacy download en_core_web_md
-        # multilingual models for testing compatibility
-        python -m spacy download es_core_news_sm
-        python -m spacy download pl_core_news_sm
-        python -m spacy download de_core_news_sm
-        python -m spacy download xx_ent_wiki_sm
-        # install scispacy model as well to ensure compatibility
-        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
-        pip install flake8 pytest
-        # we want to test execution of jupyter notebooks in pytest as well
-        pip install jupyter
-        pip install nltk
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python --version
+          python -m pip install --upgrade pip        
+          # Install our package to make sure our setup works...
+          pip install -U pip setuptools wheel
+          python setup.py install
+          # set up all spacy language models that are used in our pytest tests
+          python -m spacy download de_core_news_sm
+          python -m spacy download en_core_web_sm
+          python -m spacy download en_core_web_md
+          # multilingual models for testing compatibility
+          python -m spacy download es_core_news_sm
+          python -m spacy download pl_core_news_sm
+          python -m spacy download de_core_news_sm
+          python -m spacy download xx_ent_wiki_sm
+          # install scispacy model as well to ensure compatibility
+          pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+          pip install flake8 pytest
+          # we want to test execution of jupyter notebooks in pytest as well
+          pip install jupyter
+          pip install nltk
+      - name: Lint with flake8
+        run: |
+          make format
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 100 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
+      - name: Test with pytest
+        run: |
+          pytest

@@ -17,4 +17,3 @@ from .preprocess import Preprocessor
 from .postprocess import Postprocessor
 from .section_detection import Sectionizer
 from .io import DocConsumer
-from ._quickumls import create_quickumls

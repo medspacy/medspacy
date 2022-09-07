@@ -1,4 +1,6 @@
 from sys import platform
+from os import path
+from pathlib import Path
 
 from medspacy.visualization import visualize_ent
 import spacy
@@ -111,6 +113,22 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
         # but if it's requested at this point, let's load it
         from quickumls import spacy_component
+
+        # let's see if we need to supply a path for QuickUMLS.  If none is provided,
+        # let's point to the demo data
+        if quickumls_path is None:
+            # let's use a default sample that we provide in medspacy
+            # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
+            # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
+
+            quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_POSIX_unqlite"
+            if platform.startswith("win"):
+                quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
+
+            quickumls_path = path.join(
+                Path(__file__).resolve().parents[1], "resources", "quickumls/{0}".format(quickumls_platform_dir)
+            )
+            print("Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(quickumls_path))
 
         nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": quickumls_path})
 

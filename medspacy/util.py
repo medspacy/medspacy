@@ -108,6 +108,10 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.add_pipe("medspacy_target_matcher")
 
     if enable.intersection({"medspacy_quickumls", "quickumls"}):
+        # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
+        # but if it's requested at this point, let's load it
+        from quickumls import spacy_component
+
         nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": quickumls_path})
 
     if "medspacy_context" in enable:

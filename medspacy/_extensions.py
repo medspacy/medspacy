@@ -41,7 +41,11 @@ def set_doc_extensions():
 
 def get_extensions():
     "Get a list of medspaCy extensions for Token, Span, and Doc classes."
-    return {"Token": get_token_extensions(), "Span": get_span_extensions(), "Doc": get_doc_extensions()}
+    return {
+        "Token": get_token_extensions(),
+        "Span": get_span_extensions(),
+        "Doc": get_doc_extensions(),
+    }
 
 
 def get_token_extensions():
@@ -213,7 +217,11 @@ def get_data(doc, dtype=None, attrs=None, as_rows=False):
             data = data_to_rows(data)
         return data
     else:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(dtype, ALLOWED_DATA_TYPES))
+        raise ValueError(
+            "Invalid data type requested: {0}. Must be one of {1}".format(
+                dtype, ALLOWED_DATA_TYPES
+            )
+        )
 
 
 def data_to_rows(data):
@@ -225,7 +233,11 @@ def data_to_rows(data):
 
 def to_dataframe(doc, data_type="ent"):
     if data_type not in ALLOWED_DATA_TYPES:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(data_type, ALLOWED_DATA_TYPES))
+        raise ValueError(
+            "Invalid data type requested: {0}. Must be one of {1}".format(
+                data_type, ALLOWED_DATA_TYPES
+            )
+        )
     import pandas as pd
 
     doc_data = pd.DataFrame(data=doc._.get_data(data_type))

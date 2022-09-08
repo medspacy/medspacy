@@ -26,7 +26,9 @@ ALL_PIPE_NAMES_SIMPLE = {
 ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
 
 
-def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path=None):
+def load(
+    model="default", enable=None, disable=None, load_rules=True, quickumls_path=None
+):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be a blank 'en' model with the
     following components:
@@ -88,7 +90,8 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp = model
     else:
         raise ValueError(
-            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. " "You passed in",
+            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
+            "You passed in",
             type(model),
         )
     if "medspacy_tokenizer" in enable:
@@ -104,7 +107,10 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.tokenizer = preprocessor
 
     if "medspacy_pyrush" in enable:
-        nlp.add_pipe("medspacy_pyrush")
+        pyrush_path = path.join(
+            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
+        )
+        nlp.add_pipe("medspacy_pyrush", config={"rules_path": pyrush_path})
 
     if "medspacy_target_matcher" in enable:
         nlp.add_pipe("medspacy_target_matcher")
@@ -126,9 +132,15 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
                 quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
 
             quickumls_path = path.join(
-                Path(__file__).resolve().parents[1], "resources", "quickumls/{0}".format(quickumls_platform_dir)
+                Path(__file__).resolve().parents[1],
+                "resources",
+                "quickumls/{0}".format(quickumls_platform_dir),
             )
-            print("Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(quickumls_path))
+            print(
+                "Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(
+                    quickumls_path
+                )
+            )
 
         nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": quickumls_path})
 

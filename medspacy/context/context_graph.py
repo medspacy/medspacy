@@ -1,8 +1,16 @@
 from __future__ import annotations
 from typing import Optional, List, Dict, Any
 import srsly
+
+
 class ConTextGraph:
-    def __init__(self, targets:Optional[List]=None, modifiers:Optional[List]=None, edges:Optional[List]=None, remove_overlapping_modifiers=False):
+    def __init__(
+        self,
+        targets: Optional[List] = None,
+        modifiers: Optional[List] = None,
+        edges: Optional[List] = None,
+        remove_overlapping_modifiers=False,
+    ):
         self.targets = targets if targets is not None else []
         self.modifiers = modifiers if modifiers is not None else []
         self.edges = edges if edges is not None else []
@@ -12,8 +20,8 @@ class ConTextGraph:
         """Update the scope of all ConTextModifier.
 
         For each modifier in a list of ConTextModifiers, check against each other
-        modifier to see if one of the modifiers should update the other. 
-        This allows neighboring similar modifiers to extend each other's 
+        modifier to see if one of the modifiers should update the other.
+        This allows neighboring similar modifiers to extend each other's
         scope and allows "terminate" modifiers to end a modifier's scope.
 
         Args:
@@ -35,7 +43,7 @@ class ConTextGraph:
             marked_targets: A list of Spans
             marked_modifiers: A list of ConTextModifiers
 
-        RETURNS 
+        RETURNS
             edges: A list of tuples consisting of target/modifier pairs
         """
         if self.remove_overlapping_modifiers:
@@ -84,7 +92,7 @@ class ConTextGraph:
 
 def overlap_target_modifiers(span1, span2):
     """Checks whether two modifiers overlap.
-        
+
     Args:
         span1: the first span
         span2: the second span
@@ -93,7 +101,10 @@ def overlap_target_modifiers(span1, span2):
 
 
 def _spans_overlap(span1, span2):
-    return (span1.end > span2.start and span1.end <= span2.end) or (span1.start >= span2.start and span1.start < span2.end)
+    return (span1.end > span2.start and span1.end <= span2.end) or (
+        span1.start >= span2.start and span1.start < span2.end
+    )
+
 
 @srsly.msgpack_encoders("context_graph")
 def serialize_context_graph(obj, chain=None):
@@ -106,4 +117,4 @@ def serialize_context_graph(obj, chain=None):
 def deserialize_context_graph(obj, chain=None):
     if "context_graph" in obj:
         return ConTextGraph.from_serialized_representation(obj["context_graph"])
-    return obj if chain is None else chain(obj) 
+    return obj if chain is None else chain(obj)

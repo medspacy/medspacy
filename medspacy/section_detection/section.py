@@ -4,7 +4,17 @@ import srsly
 
 
 class Section(object):
-    def __init__(self, doc, category, title_start, title_end, body_start, body_end, parent=None, rule=None):
+    def __init__(
+        self,
+        doc,
+        category,
+        title_start,
+        title_end,
+        body_start,
+        body_end,
+        parent=None,
+        rule=None,
+    ):
         self.doc = doc
         self.category = category
         self.title_start = title_start
@@ -65,12 +75,15 @@ class Section(object):
     @classmethod
     def from_serialized_representation(cls, serialized_representation):
         rule = SectionRule.from_dict(serialized_representation["rule"])
-        serialized_representation["doc"] = None #TODO: Unhack this
+        serialized_representation["doc"] = None  # TODO: Unhack this
 
-        section = Section(**{k:v for k,v in serialized_representation.items() if k not in ["rule"]})
+        section = Section(
+            **{k: v for k, v in serialized_representation.items() if k not in ["rule"]}
+        )
         section.rule = rule
 
         return section
+
 
 @srsly.msgpack_encoders("section")
 def serialize_section(obj, chain=None):

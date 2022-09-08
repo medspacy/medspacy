@@ -4,14 +4,20 @@ import re
 from os import path
 from pathlib import Path
 
-DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_rules.json",)
+DEFAULT_RULES_FILEPATH = path.join(
+    Path(__file__).resolve().parents[2],
+    "resources",
+    "section_rules.json",
+)
 
 
 class TextSectionizer:
     name = "text_sectionizer"
 
     def __init__(self, patterns="default"):
-        raise NotImplementedError("The TextSectionizer is not currently supported and will be available in a future release.")
+        raise NotImplementedError(
+            "The TextSectionizer is not currently supported and will be available in a future release."
+        )
         self._patterns = []
         self._compiled_patterns = dict()
         self._section_titles = set()
@@ -68,7 +74,8 @@ class TextSectionizer:
                 # TODO: Change the default rules
                 # continue
                 raise ValueError(
-                    "Patterns added to the TextSectionizer must be strings", pattern_dict,
+                    "Patterns added to the TextSectionizer must be strings",
+                    pattern_dict,
                 )
             self._patterns.append(pattern_dict)
             self._section_titles.add(name)

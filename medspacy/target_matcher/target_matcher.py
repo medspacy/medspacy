@@ -13,7 +13,13 @@ class TargetMatcher:
     Rules are defined using medspacy.target_matcher.TargetRule.
     """
 
-    def __init__(self, nlp, name="medspacy_target_matcher", add_ents=True, phrase_matcher_attr="LOWER"):
+    def __init__(
+        self,
+        nlp,
+        name="medspacy_target_matcher",
+        add_ents=True,
+        phrase_matcher_attr="LOWER",
+    ):
         """Create a new TargetMatcher.
         Params:
             nlp: A spaCy Language model.

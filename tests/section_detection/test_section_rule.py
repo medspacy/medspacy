@@ -1,6 +1,9 @@
 import spacy
 import warnings
 
+import os
+from pathlib import Path
+
 from medspacy.common import BaseRule
 from medspacy.section_detection import SectionRule
 
@@ -12,24 +15,38 @@ class TestSectionizer:
         assert SectionRule("title", "literal")
 
     def test_read_json(self):
-        rules = SectionRule.from_json("resources/section_patterns.json")
+        rules_path = os.path.join(
+            Path(__file__).resolve().parents[2], "resources", "section_patterns.json"
+        )
+        rules = SectionRule.from_json(rules_path)
         assert rules
         for rule in rules:
             assert isinstance(rule, SectionRule)
             assert isinstance(rule, BaseRule)
 
     def test_max_scope(self):
-        rule = SectionRule(category="past_medical_history", literal="Past Medical History:", max_scope=100)
+        rule = SectionRule(
+            category="past_medical_history",
+            literal="Past Medical History:",
+            max_scope=100,
+        )
         assert rule.max_scope == 100
 
     def test_patterns_to_rules(self):
         from medspacy.section_detection import section_patterns_to_rules
 
         patterns = [
-            {"section_title": "past_medical_history", "pattern": "Past Medical History"},
+            {
+                "section_title": "past_medical_history",
+                "pattern": "Past Medical History",
+            },
             {
                 "section_title": "assessment_and_plan",
-                "pattern": [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}],
+                "pattern": [
+                    {"LOWER": "assessment"},
+                    {"LOWER": "and"},
+                    {"LOWER": "plan"},
+                ],
             },
         ]
 
@@ -41,5 +58,11 @@ class TestSectionizer:
 
         assert isinstance(rules[1], SectionRule)
         assert rules[1].category == "assessment_and_plan"
-        assert rules[1].literal == str([{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}])
-        assert rules[1].pattern == [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}]
+        assert rules[1].literal == str(
+            [{"LOWER": "assessment"}, {"LOWER": "and"}, {"LOWER": "plan"}]
+        )
+        assert rules[1].pattern == [
+            {"LOWER": "assessment"},
+            {"LOWER": "and"},
+            {"LOWER": "plan"},
+        ]

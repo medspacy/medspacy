@@ -53,7 +53,8 @@ class MedspacyMatcher:
         for rule in rules:
             if not isinstance(rule, BaseRule):
                 raise ValueError(
-                    "Rules must inherit from medspacy.common.BaseRule, " "such as medspacy.target_matcher.TargetRule."
+                    "Rules must inherit from medspacy.common.BaseRule, "
+                    "such as medspacy.target_matcher.TargetRule."
                 )
             self.labels.add(rule.category)
             rule_id = f"{rule.category}_{i}"
@@ -68,10 +69,16 @@ class MedspacyMatcher:
                     self.matcher.add(rule_id, [rule.pattern], on_match=rule.on_match)
                 else:
                     raise ValueError(
-                        "The pattern argument must be either a string or a list, not {0}".format(type(rule.pattern))
+                        "The pattern argument must be either a string or a list, not {0}".format(
+                            type(rule.pattern)
+                        )
                     )
             else:
-                self.phrase_matcher.add(rule_id, [self.nlp.make_doc(rule.literal.lower())], on_match=rule.on_match)
+                self.phrase_matcher.add(
+                    rule_id,
+                    [self.nlp.make_doc(rule.literal.lower())],
+                    on_match=rule.on_match,
+                )
             i += 1
 
     def __call__(self, doc):

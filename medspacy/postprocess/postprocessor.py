@@ -1,7 +1,9 @@
 from collections import namedtuple
 from spacy.language import Language
 
-postprocess_pattern = namedtuple("PostProcessPattern", ["func", "attr", "check_value", "success_value"])
+postprocess_pattern = namedtuple(
+    "PostProcessPattern", ["func", "attr", "check_value", "success_value"]
+)
 
 
 @Language.factory("medspacy_postprocessor")

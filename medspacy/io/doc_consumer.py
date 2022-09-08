@@ -56,7 +56,9 @@ DEFAULT_ATTRS = {
 class DocConsumer:
     """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
 
-    def __init__(self, nlp, name="medspacy_doc_consumer", dtypes=("ent",), dtype_attrs=None):
+    def __init__(
+        self, nlp, name="medspacy_doc_consumer", dtypes=("ent",), dtype_attrs=None
+    ):
         """Create a new DocConsumer.
 
         This component extracts structured information from a Doc. Information is stored in
@@ -94,10 +96,16 @@ class DocConsumer:
             if dtypes == "all":
                 dtypes = tuple(ALLOWED_DATA_TYPES)
             else:
-                raise ValueError("dtypes must be either 'all' or a tuple, not {0}".format(dtypes))
+                raise ValueError(
+                    "dtypes must be either 'all' or a tuple, not {0}".format(dtypes)
+                )
         for dtype in dtypes:
             if dtype not in ALLOWED_DATA_TYPES:
-                raise ValueError("Invalid dtypes. Supported dtypes are {0}, not {1}".format(ALLOWED_DATA_TYPES, dtype))
+                raise ValueError(
+                    "Invalid dtypes. Supported dtypes are {0}, not {1}".format(
+                        ALLOWED_DATA_TYPES, dtype
+                    )
+                )
             if dtype == "section":
                 self.validate_section_attrs(dtype_attrs)
         self.dtypes = dtypes
@@ -116,7 +124,11 @@ class DocConsumer:
             for dtype in dtypes:
                 if dtype not in ALLOWED_DATA_TYPES:
                     raise ValueError("Invalid dtype,", dtype)
-        dtype_attrs = {dtype: list(attrs) for (dtype, attrs) in DEFAULT_ATTRS.items() if dtype in dtypes}
+        dtype_attrs = {
+            dtype: list(attrs)
+            for (dtype, attrs) in DEFAULT_ATTRS.items()
+            if dtype in dtypes
+        }
         return dtype_attrs
 
     def set_default_attrs(self):
@@ -196,9 +208,13 @@ class DocConsumer:
             if "section_title_text" in self.dtype_attrs["section"]:
                 section_data["section_title_text"].append(section.title_span.text)
             if "section_title_start_char" in self.dtype_attrs["section"]:
-                section_data["section_title_start_char"].append(section.title_span.start_char)
+                section_data["section_title_start_char"].append(
+                    section.title_span.start_char
+                )
             if "section_title_end_char" in self.dtype_attrs["section"]:
-                section_data["section_title_end_char"].append(section.title_span.end_char)
+                section_data["section_title_end_char"].append(
+                    section.title_span.end_char
+                )
         else:
             if "section_title_text" in self.dtype_attrs["section"]:
                 section_data["section_title_text"].append(None)
@@ -209,7 +225,9 @@ class DocConsumer:
         if "section_text" in self.dtype_attrs["section"]:
             section_data["section_text"].append(section.section_span.text)
         if "section_text_start_char" in self.dtype_attrs["section"]:
-            section_data["section_text_start_char"].append(section.section_span.start_char)
+            section_data["section_text_start_char"].append(
+                section.section_span.start_char
+            )
         if "section_text_end_char" in self.dtype_attrs["section"]:
             section_data["section_text_end_char"].append(section.section_span.end_char)
         if "section_parent" in self.dtype_attrs["section"]:

@@ -31,7 +31,9 @@ class PreprocessingRule:
             else:
                 pattern = re.compile(pattern)
         elif not isinstance(pattern, re.Pattern):
-            raise ValueError("pattern must be either a str or re.Pattern, not", type(pattern))
+            raise ValueError(
+                "pattern must be either a str or re.Pattern, not", type(pattern)
+            )
         self.pattern = pattern
         self.repl = repl
         self.ignorecase = ignorecase
@@ -70,7 +72,9 @@ class PreprocessingRule:
 
         with open(filepath) as f:
             data = json.load(f)
-        return [PreprocessingRule.from_dict(rule) for rule in data["preprocessing_rules"]]
+        return [
+            PreprocessingRule.from_dict(rule) for rule in data["preprocessing_rules"]
+        ]
 
     @classmethod
     def to_json(cls, preprocess_rules, filepath):
@@ -81,10 +85,13 @@ class PreprocessingRule:
         for rule in preprocess_rules:
             if not isinstance(rule.repl, str):
                 raise ValueError(
-                    "The repl attribute must currently be a string to be serialized as json, not", type(rule.repl)
+                    "The repl attribute must currently be a string to be serialized as json, not",
+                    type(rule.repl),
                 )
             if rule.callback is not None:
-                raise ValueError("The callback attribute is not serializable and must be left as None.")
+                raise ValueError(
+                    "The callback attribute is not serializable and must be left as None."
+                )
             dicts.append(rule.to_dict())
         data = {"preprocessing_rules": dicts}
         with open(filepath, "w") as f:
@@ -107,6 +114,8 @@ class PreprocessingRule:
         return self.callback(match)
 
     def __repr__(self):
-        return "PreprocessingRule(pattern={0}, repl={1}, callback={2}, desc={3})".format(
-            self.pattern, self.repl, self.callback, self.desc
+        return (
+            "PreprocessingRule(pattern={0}, repl={1}, callback={2}, desc={3})".format(
+                self.pattern, self.repl, self.callback, self.desc
+            )
         )

@@ -2,6 +2,7 @@ import spacy
 import warnings
 import pytest
 
+import medspacy
 from medspacy.section_detection import Sectionizer
 from medspacy.section_detection import SectionRule
 
@@ -35,14 +36,14 @@ class TestSectionizer:
 
         span = doc[2:5]
 
-        assert len(span._.section)
+        assert span._.section
         assert len(span._.section_category)
-        assert len(doc._.section_title)
-        assert len(doc._.section_span)
-        assert len(doc._.section_body)
-        assert len(doc._.section_rule)
+        assert len(span._.section_title)
+        assert len(span._.section_span)
+        assert len(span._.section_body)
+        assert span._.section_rule
 
-    def test_span_attributes(self):
+    def test_token_attributes(self):
         sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(SectionRule(category="past_medical_history", literal="Past Medical History:"))
         doc = nlp("Past Medical History: PE")
@@ -50,12 +51,12 @@ class TestSectionizer:
 
         token = doc[-1]
 
-        assert len(token._.section)
+        assert token._.section
         assert len(token._.section_category)
         assert len(token._.section_title)
         assert len(token._.section_span)
         assert len(token._.section_body)
-        assert len(token._.section_rule)
+        assert token._.section_rule
 
     def test_section(self):
         sectionizer = Sectionizer(nlp, rules=None)
@@ -88,7 +89,7 @@ class TestSectionizer:
         assert token._.section_parent is None
         assert token._.section_rule is rule
 
-    def test_span_attributes(self):
+    def test_span_attributes3(self):
         sectionizer = Sectionizer(nlp, rules=None)
         rule = SectionRule(category="past_medical_history", literal="Past Medical History:")
         sectionizer.add(rule)

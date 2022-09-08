@@ -23,9 +23,6 @@ class ConTextGraph:
         modifier to see if one of the modifiers should update the other.
         This allows neighboring similar modifiers to extend each other's
         scope and allows "terminate" modifiers to end a modifier's scope.
-
-        Args:
-            marked_modifiers: A list of ConTextModifiers in a Doc.
         """
         for i in range(len(self.modifiers) - 1):
             modifier1 = self.modifiers[i]
@@ -38,13 +35,6 @@ class ConTextGraph:
     def apply_modifiers(self):
         """Checks each target/modifier pair. If modifier modifies target,
         create an edge between them.
-
-        Args:
-            marked_targets: A list of Spans
-            marked_modifiers: A list of ConTextModifiers
-
-        RETURNS
-            edges: A list of tuples consisting of target/modifier pairs
         """
         if self.remove_overlapping_modifiers:
             for i in range(len(self.modifiers) - 1, -1, -1):

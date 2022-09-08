@@ -251,7 +251,7 @@ class TestConTextComponent:
         context.add([rule])
         assert rule.allowed_types == {"PROBLEM"}
 
-    def test_global_allowed_types2(self):
+    def test_global_allowed_types3(self):
         """Check that if both the ConTextComponent and a ConTextRule have allowed_types defined,
         the ConTextRule will not receive the component's value.
         """

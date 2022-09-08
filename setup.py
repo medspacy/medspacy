@@ -54,12 +54,10 @@ setup(
     packages=find_packages(),
     install_requires=[
         # NOTE: spacy imports numpy to bootstrap its own setup.py in 2.3.2
-        "spacy>=3.1.3,<3.2.0",
-        "PyRuSH>=1.0.3.5,<=1.0.3.6",
+        "spacy>=3.1.3",
+        "PyRuSH>=1.0.3.5",
         "pysbd==0.3.4",
         "jsonschema",
-        "requests>=2.13.0,<2.16",
-        "six>=1.14.0"
     ]
     + additional_installs,
     long_description=long_description,

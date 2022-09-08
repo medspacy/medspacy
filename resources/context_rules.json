@@ -247,6 +247,18 @@
       "direction": "TERMINATE"
     },
     {
+      "category": "HYPOTHETICAL",
+      "literal": "risks of",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["risks of", "risk of"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+    },
+    {
       "category": "NEGATED_EXISTENCE",
       "literal": "but",
       "pattern": [

@@ -6,7 +6,6 @@ import srsly
 class Section(object):
     def __init__(
         self,
-        doc,
         category,
         title_start,
         title_end,
@@ -15,7 +14,6 @@ class Section(object):
         parent=None,
         rule=None,
     ):
-        self.doc = doc
         self.category = category
         self.title_start = title_start
         self.title_end = title_end
@@ -25,22 +23,19 @@ class Section(object):
         self.rule = rule
 
     def __repr__(self):
-        if self.doc is not None:
-            return f"""Section(category={self.category}, title={self.title_span}, body={self.body_span}, parent={self.parent}, rule={self.rule})"""
-        else:
-            return f"""Section(category={self.category} at {self.title_start} : {self.title_end} in the doc with a body at {self.body_start} : {self.body_end} based on the rule {self.rule}"""
+        return f"""Section(category={self.category} at {self.title_start} : {self.title_end} in the doc with a body at {self.body_start} : {self.body_end} based on the rule {self.rule}"""
 
     @property
     def title_span(self):
-        return self.doc[self.title_start : self.title_end]
+        return self.title_start, self.title_end
 
     @property
     def body_span(self):
-        return self.doc[self.body_start : self.body_end]
+        return self.body_start, self.body_end
 
     @property
     def section_span(self):
-        return self.doc[self.title_start : self.body_end]
+        return self.title_start, self.body_end
 
     def save(self, *args, **kwargs):
         raise ValueError
@@ -75,8 +70,6 @@ class Section(object):
     @classmethod
     def from_serialized_representation(cls, serialized_representation):
         rule = SectionRule.from_dict(serialized_representation["rule"])
-        serialized_representation["doc"] = None  # TODO: Unhack this
-
         section = Section(
             **{k: v for k, v in serialized_representation.items() if k not in ["rule"]}
         )

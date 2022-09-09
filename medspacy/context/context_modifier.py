@@ -13,7 +13,6 @@ class ConTextModifier:
         context_rule,
         start,
         end,
-        doc,
         _scope_start=None,
         _scope_end=None,
         _use_context_window=False,
@@ -28,7 +27,6 @@ class ConTextModifier:
         self._context_rule = context_rule
         self.start = start
         self.end = end
-        self.doc = doc
 
         self._targets = []
         self._num_targets = 0
@@ -42,7 +40,7 @@ class ConTextModifier:
     @property
     def span(self):
         """The spaCy Span object, which is a view of self.doc, covered by this match."""
-        return self.doc[self.start : self.end]
+        return self.start, self.end
 
     @property
     def rule(self):
@@ -61,7 +59,7 @@ class ConTextModifier:
     @property
     def scope(self):
         """Returns the associated scope."""
-        return self.doc[self._scope_start : self._scope_end]
+        return self._scope_start, self._scope_end
 
     @property
     def allowed_types(self):

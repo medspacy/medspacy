@@ -427,6 +427,44 @@ class TestConTextComponent:
             )
         Doc.remove_extension("my_custom_spans")
 
+    def test_long_match(self):
+        doc = nlp("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 target")
+        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        rules = [
+            ConTextRule(
+                "long pattern",
+                "FAMILY",
+                direction="forward",
+                pattern=[{"LIKE_NUM": True, "OP": "+"}],
+            )
+        ]
+        context.add(rules)
+        doc.ents = (Span(doc, len(doc) - 1, len(doc), "CONDITION"),)
+        context(doc)
+
+        assert doc.ents[0]._.is_family is True
+
+    def test_ent_type_match(self):
+        doc = nlp(
+            "target 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 a b c d e f"
+        )
+        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        rules = [
+            ConTextRule(
+                "ent type match",
+                "FAMILY",
+                direction="backward",
+                pattern=[{"ENT_TYPE": "NUM", "OP": "+"}, {"LOWER": "a", "OP": "?"}],
+            )
+        ]
+        context.add(rules)
+        ents = []
+        for i in range(15):
+            ents.append(Span(doc, i + 2, i + 3, "NUM"))
+        doc.ents = (Span(doc, 0, 1, "CONDITION"), *ents)
+        context(doc)
+        assert doc.ents[0]._.is_family is True
+
     def test_context_component_as_part_of_pipeline(self):
         @Language.factory("custom_span_setter")
         class CustomSpanSetterForTesting:

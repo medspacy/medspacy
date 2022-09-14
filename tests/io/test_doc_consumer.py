@@ -22,7 +22,10 @@ nlp.add_pipe("medspacy_context")
 
 sectionizer = nlp.add_pipe("medspacy_sectionizer")
 sectionizer.add(
-    [SectionRule("Section 1:", "section1"), SectionRule("Section 2:", "section2", parents=["section1"]),]
+    [
+        SectionRule("Section 1:", "section1"),
+        SectionRule("Section 2:", "section2", parents=["section1"]),
+    ]
 )
 
 simple_text = "Patient has a cough."
@@ -117,13 +120,15 @@ class TestDocConsumer:
         doc = consumer(section_doc)
         data = doc._.get_data("section")
         section = doc._.sections[0]
+        section_title = doc[section.title_span[0] : section.title_span[1]]
+        section_body = doc[section.body_span[0] : section.body_span[1]]
         assert data["section_category"][0] == section.category
-        assert data["section_title_text"][0] == section.title_span.text
-        assert data["section_title_start_char"][0] == section.title_span.start_char
-        assert data["section_title_end_char"][0] == section.title_span.end_char
-        assert data["section_text"][0] == section.section_span.text
-        assert data["section_text_start_char"][0] == section.section_span.start_char
-        assert data["section_text_end_char"][0] == section.section_span.end_char
+        assert data["section_title_text"][0] == section_title.text
+        assert data["section_title_start_char"][0] == section_title.start_char
+        assert data["section_title_end_char"][0] == section_title.end_char
+        assert data["section_body"][0] == section_body.text
+        assert data["section_body_start_char"][0] == section_body.start_char
+        assert data["section_body_end_char"][0] == section_body.end_char
         assert data["section_parent"][0] == section.parent
 
     def test_ten_concepts(self):

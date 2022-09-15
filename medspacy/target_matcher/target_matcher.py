@@ -25,11 +25,12 @@ class TargetMatcher:
         nlp: Language,
         name: str = "medspacy_target_matcher",
         phrase_matcher_attr: str = "LOWER",
-        result_type: str = "ents",
+        result_type: Union[str, None] = "ents",
         span_group_name: str = "medspacy_spans",
     ):
         """
         Creates a new TargetMatcher.
+
         Args:
             nlp: A spaCy Language model.
             name: The name of the TargetMatcher component

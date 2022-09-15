@@ -24,7 +24,7 @@ class MedspacyMatcher:
         Params:
             nlp: A spaCy Language model.
             phrase_matcher_attr: The attribute to use for spaCy's PhraseMatcher (default is 'LOWER')
-            prune: Whether or not to prune matches which overlap or are substrings of another match.
+            prune: Whether to prune matches which overlap or are substrings of another match.
                 For example, if "no history of" and "history of" are both matches, setting prune to True
                 would drop "history of".
                 Default True.

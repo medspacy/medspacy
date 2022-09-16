@@ -104,14 +104,6 @@ class TestItemData:
         item = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
         assert item.terminated_by == {"POSITIVE_EXISTENCE"}
 
-    def test_deprecated_context_item_throws_error(self):
-        with pytest.raises(NotImplementedError) as exception_info:
-            # This should fail because context_item throws a NotImplementedError
-            from medspacy.context import ConTextItem
-
-            ConTextItem()
-        exception_info.match("ConTextItem has been deprecated and replaced with ConTextRule.")
-
     def test_deprecated_rule_argument_raises_warrning(self):
         with pytest.warns(DeprecationWarning) as warning_info:
             ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")

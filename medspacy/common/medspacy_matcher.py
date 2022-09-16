@@ -174,11 +174,7 @@ def overlaps(a, b):
 def _match_overlaps(a, b):
     _, a_start, a_end = a
     _, b_start, b_end = b
-    if a_start >= b_start and a_start < b_end:
-        return True
-    if a_end > b_start and a_end <= b_end:
-        return True
-    return False
+    return b_start <= a_start < b_end or b_start < a_end <= b_end
 
 
 def matches_to_spans(doc, matches, set_label=True):

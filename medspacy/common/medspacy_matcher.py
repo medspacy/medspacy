@@ -4,6 +4,7 @@ from spacy import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from .regex_matcher import RegexMatcher
 from .base_rule import BaseRule
+from ..util import tuple_overlaps
 
 from spacy.tokens import Span, Doc
 
@@ -129,8 +130,21 @@ class MedspacyMatcher:
 def prune_overlapping_matches(
     matches: List[Tuple[int, int, int]], strategy: str = "longest"
 ):
+    """
+    Prunes overlapping matches from a list of spaCy match tuples (match_id, start, end).
+
+    Args:
+        matches: A list of match tuples of form (match_id, start, end).
+        strategy: The pruning strategy to use. At this time, the only available option is "longest" and will keep the
+            longest of any two overlapping spans. Other behavior will be added in a future update.
+
+    Returns:
+        The pruned list of matches.
+    """
     if strategy != "longest":
-        raise NotImplementedError("No other filtering strategy has been implemented. Coming in a future update.")
+        raise NotImplementedError(
+            "No other filtering strategy has been implemented. Coming in a future update."
+        )
 
     # Make a copy and sort
     unpruned = sorted(matches, key=lambda x: (x[1], x[2]))
@@ -165,19 +179,36 @@ def prune_overlapping_matches(
         return prune_overlapping_matches(pruned)
 
 
-def overlaps(a, b):
-    if _match_overlaps(a, b) or _match_overlaps(b, a):
-        return True
-    return False
+def overlaps(a: Tuple[int, int, int], b: Tuple[int, int, int]):
+    """
+    Checks whether two match Tuples out of spacy matchers overlap.
 
+    Args:
+        a: A match Tuple (match_id, start, end).
+        b: A match Tuple (match_id, start, end).
 
-def _match_overlaps(a, b):
+    Returns:
+        Whether the tuples overlap.
+    """
     _, a_start, a_end = a
     _, b_start, b_end = b
-    return b_start <= a_start < b_end or b_start < a_end <= b_end
+    return tuple_overlaps((a_start, a_end), (b_start, b_end))
 
 
-def matches_to_spans(doc, matches, set_label=True):
+def matches_to_spans(
+    doc: Doc, matches: List[Tuple[int, int, int]], set_label: bool = True
+):
+    """
+    Converts all identified matches to spans.
+
+    Args:
+        doc: The spaCy doc corresponding to the matches.
+        matches: The list of match Tuples (match_id, start, end).
+        set_label: Whether to assign a label to the span based off the source rule. Default is True.
+
+    Returns:
+        A list of spacy spans corresponding to the input matches.
+    """
     spans = []
     for (rule_id, start, end) in matches:
         if set_label:

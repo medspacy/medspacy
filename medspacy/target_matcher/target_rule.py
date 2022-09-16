@@ -25,7 +25,9 @@ class TargetRule(BaseRule):
         literal: str,
         category: str,
         pattern: Optional[Union[List[Dict[str, str]], str]] = None,
-        on_match: Optional[Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]] = None,
+        on_match: Optional[
+            Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]
+        ] = None,
         attributes: Optional[Dict[str, Any]] = None,
         metadata: Optional[Dict[Any, Any]] = None,
     ):
@@ -38,9 +40,9 @@ class TargetRule(BaseRule):
                 but can be used as a reference as the rule name.
             category: The semantic class of the matched span. This corresponds to the `label_` attribute of an entity.
             pattern: A list or string to use as a spaCy pattern rather than `literal`. If a list, will use spaCy
-                token-based pattern matching to match using token attributes. If a string, will use spacy phrase
-                matching to match strings. If None, will use `literal` as the pattern for phrase matching. For more
-                information, see https://spacy.io/usage/rule-based-matching.
+                token-based pattern matching to match using token attributes. If a string, will use medspaCy's
+                RegexMatcher. If None, will use `literal` as the pattern for phrase matching. For more information, see
+                https://spacy.io/usage/rule-based-matching.
             on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
                 matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
             attributes: Optional custom attribute names to set for a Span matched by the direction. These attribute

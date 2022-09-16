@@ -189,15 +189,6 @@ class ConTextRule(BaseRule):
                 )
             )
 
-    @property
-    def rule(self):
-        "Deprecated attribute name from ConTextItem. Now `direction`."
-        warnings.warn(
-            "The 'rule' attribute has been replaced with 'direction'.",
-            DeprecationWarning,
-        )
-        return self.direction
-
     @classmethod
     def from_yaml(cls, _file):
         """Read in a lexicon of modifiers from a YAML file.
@@ -251,7 +242,7 @@ class ConTextRule(BaseRule):
         """Reads a dictionary into a ConTextRule. Used when reading from a json file.
 
         Args:
-            item_dict: the dictionary to convert
+            rule_dict: the dictionary to convert
 
         Returns:
             item: the ConTextRule created from the dictionary

@@ -7,7 +7,9 @@ from sys import platform
 
 
 class TestNotebooks:
-    @pytest.mark.skip("revisit notebook tests later, currently failing while all other tests passing.")
+    @pytest.mark.skip(
+        "revisit notebook tests later, currently failing while all other tests passing."
+    )
     def test_execute_example_notebooks(self):
         successful_executions = 0
 

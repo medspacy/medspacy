@@ -24,9 +24,9 @@ ALLOWED_SECTION_ATTRS = (
     "section_title_text",
     "section_title_start_char",
     "section_title_end_char",
-    "section_text",
-    "section_text_start_char",
-    "section_text_end_char",
+    "section_body",
+    "section_body_start_char",
+    "section_body_end_char",
     "section_parent",
 )
 
@@ -161,10 +161,10 @@ class DocConsumer:
                     data["ent"][attr].append(val)
         if "context" in self.dtypes:
             for (ent, modifier) in doc._.context_graph.edges:
-                self.add_context_edge_attributes(ent, modifier, data["context"])
+                self.add_context_edge_attributes(ent, modifier, data["context"], doc)
         if "section" in self.dtypes:
             for section in doc._.sections:
-                self.add_section_attributes(section, data["section"])
+                self.add_section_attributes(section, data["section"], doc)
         if "doc" in self.dtypes:
             for attr in self.dtype_attrs["doc"]:
                 try:
@@ -176,7 +176,11 @@ class DocConsumer:
         doc._.data = data
         return doc
 
-    def add_context_edge_attributes(self, ent, modifier, context_data):
+    def add_context_edge_attributes(self, ent, modifier, context_data, doc):
+        span_tup = modifier.span
+        span = doc[span_tup[0] : span_tup[1]]
+        scope_tup = modifier.scope
+        scope = doc[scope_tup[0] : scope_tup[1]]
         if "ent_text" in self.dtype_attrs["context"]:
             context_data["ent_text"].append(ent.text)
         if "ent_label_" in self.dtype_attrs["context"]:
@@ -186,35 +190,37 @@ class DocConsumer:
         if "ent_end_char" in self.dtype_attrs["context"]:
             context_data["ent_end_char"].append(ent.end_char)
         if "modifier_text" in self.dtype_attrs["context"]:
-            context_data["modifier_text"].append(modifier.span.text)
+            context_data["modifier_text"].append(span.text)
         if "modifier_category" in self.dtype_attrs["context"]:
             context_data["modifier_category"].append(modifier.category)
         if "modifier_direction" in self.dtype_attrs["context"]:
             context_data["modifier_direction"].append(modifier.direction)
         if "modifier_start_char" in self.dtype_attrs["context"]:
-            context_data["modifier_start_char"].append(modifier.span.start_char)
+            context_data["modifier_start_char"].append(span.start_char)
         if "modifier_end_char" in self.dtype_attrs["context"]:
-            context_data["modifier_end_char"].append(modifier.span.end_char)
+            context_data["modifier_end_char"].append(span.end_char)
         if "modifier_scope_start_char" in self.dtype_attrs["context"]:
-            context_data["modifier_scope_start_char"].append(modifier.scope.start_char)
+            context_data["modifier_scope_start_char"].append(scope.start_char)
         if "modifier_scope_end_char" in self.dtype_attrs["context"]:
-            context_data["modifier_scope_end_char"].append(modifier.span.end_char)
+            context_data["modifier_scope_end_char"].append(scope.end_char)
 
-    def add_section_attributes(self, section, section_data):
+    def add_section_attributes(self, section, section_data, doc):
         # Allow for null sections
+        section_title_tup = section.title_span
+        section_body_tup = section.body_span
+        section_title = doc[section_title_tup[0] : section_title_tup[1]]
+        section_body = doc[section_body_tup[0] : section_body_tup[1]]
         if "section_category" in self.dtype_attrs["section"]:
             section_data["section_category"].append(section.category)
         if section.category is not None:
             if "section_title_text" in self.dtype_attrs["section"]:
-                section_data["section_title_text"].append(section.title_span.text)
+                section_data["section_title_text"].append(section_title.text)
             if "section_title_start_char" in self.dtype_attrs["section"]:
                 section_data["section_title_start_char"].append(
-                    section.title_span.start_char
+                    section_title.start_char
                 )
             if "section_title_end_char" in self.dtype_attrs["section"]:
-                section_data["section_title_end_char"].append(
-                    section.title_span.end_char
-                )
+                section_data["section_title_end_char"].append(section_title.end_char)
         else:
             if "section_title_text" in self.dtype_attrs["section"]:
                 section_data["section_title_text"].append(None)
@@ -222,13 +228,11 @@ class DocConsumer:
                 section_data["section_title_start_char"].append(0)
             if "section_title_end_char" in self.dtype_attrs["section"]:
                 section_data["section_title_end_char"].append(0)
-        if "section_text" in self.dtype_attrs["section"]:
-            section_data["section_text"].append(section.section_span.text)
-        if "section_text_start_char" in self.dtype_attrs["section"]:
-            section_data["section_text_start_char"].append(
-                section.section_span.start_char
-            )
-        if "section_text_end_char" in self.dtype_attrs["section"]:
-            section_data["section_text_end_char"].append(section.section_span.end_char)
+        if "section_body" in self.dtype_attrs["section"]:
+            section_data["section_body"].append(section_body.text)
+        if "section_body_start_char" in self.dtype_attrs["section"]:
+            section_data["section_body_start_char"].append(section_body.start_char)
+        if "section_body_end_char" in self.dtype_attrs["section"]:
+            section_data["section_body_end_char"].append(section_body.end_char)
         if "section_parent" in self.dtype_attrs["section"]:
             section_data["section_parent"].append(section.parent)

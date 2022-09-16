@@ -351,14 +351,14 @@ class Sectionizer:
         doc._.sections = []
         # if there were no matches, return the doc as one section
         if len(matches) == 0:
-            doc._.sections.append(Section(doc, None, 0, 0, 0, len(doc)))
+            doc._.sections.append(Section(None, 0, 0, 0, len(doc)))
             return doc
 
         section_list = []
         # if the firt match does not begin at token 0, handle the first section
         first_match = matches[0]
         if first_match[1] != 0:
-            section_list.append(Section(doc, None, 0, 0, 0, first_match[1]))
+            section_list.append(Section(None, 0, 0, 0, first_match[1]))
 
         # handle section spans
         for i, match in enumerate(matches):
@@ -374,7 +374,7 @@ class Sectionizer:
                 # If there is no scope limitation, go until the end of the doc
                 if self.max_scope is None and rule.max_scope is None:
                     section_list.append(
-                        Section(doc, category, start, end, end, len(doc), parent, rule)
+                        Section(category, start, end, end, len(doc), parent, rule)
                     )
                 else:
                     # If the rule has a max_scope, use that as a precedence
@@ -384,7 +384,7 @@ class Sectionizer:
                         scope_end = min(end + self.max_scope, doc[-1].i + 1)
 
                     section_list.append(
-                        Section(doc, category, start, end, end, scope_end, parent, rule)
+                        Section(category, start, end, end, scope_end, parent, rule)
                     )
             # Otherwise, go until the next section header
             else:
@@ -392,9 +392,7 @@ class Sectionizer:
                 _, next_start, _, _ = next_match
                 if self.max_scope is None and rule.max_scope is None:
                     section_list.append(
-                        Section(
-                            doc, category, start, end, end, next_start, parent, rule
-                        )
+                        Section(category, start, end, end, next_start, parent, rule)
                     )
                 else:
                     if rule.max_scope is not None:
@@ -402,12 +400,13 @@ class Sectionizer:
                     else:
                         scope_end = min(end + self.max_scope, next_start)
                     section_list.append(
-                        Section(doc, category, start, end, end, scope_end, parent, rule)
+                        Section(category, start, end, end, scope_end, parent, rule)
                     )
 
         for section in section_list:
             doc._.sections.append(section)
-            for token in section.section_span:
+            start, end = section.section_span
+            for token in doc[start:end]:
                 token._.section = section
 
         # If it is specified to add assertion attributes,

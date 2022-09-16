@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Optional, List, Dict, Any
 import srsly
 
+from medspacy.util import tuple_overlaps
+
 
 class ConTextGraph:
     def __init__(
@@ -23,9 +25,6 @@ class ConTextGraph:
         modifier to see if one of the modifiers should update the other.
         This allows neighboring similar modifiers to extend each other's
         scope and allows "terminate" modifiers to end a modifier's scope.
-
-        Args:
-            marked_modifiers: A list of ConTextModifiers in a Doc.
         """
         for i in range(len(self.modifiers) - 1):
             modifier1 = self.modifiers[i]
@@ -38,19 +37,12 @@ class ConTextGraph:
     def apply_modifiers(self):
         """Checks each target/modifier pair. If modifier modifies target,
         create an edge between them.
-
-        Args:
-            marked_targets: A list of Spans
-            marked_modifiers: A list of ConTextModifiers
-
-        RETURNS
-            edges: A list of tuples consisting of target/modifier pairs
         """
         if self.remove_overlapping_modifiers:
             for i in range(len(self.modifiers) - 1, -1, -1):
                 modifier = self.modifiers[i]
                 for target in self.targets:
-                    if overlap_target_modifiers(target, modifier.span):
+                    if tuple_overlaps((target.start, target.end), modifier.span):
                         self.modifiers.pop(i)
                         break
 
@@ -88,22 +80,6 @@ class ConTextGraph:
         context_graph = ConTextGraph(**serialized_representation)
 
         return context_graph
-
-
-def overlap_target_modifiers(span1, span2):
-    """Checks whether two modifiers overlap.
-
-    Args:
-        span1: the first span
-        span2: the second span
-    """
-    return _spans_overlap(span1, span2)
-
-
-def _spans_overlap(span1, span2):
-    return (span1.end > span2.start and span1.end <= span2.end) or (
-        span1.start >= span2.start and span1.start < span2.end
-    )
 
 
 @srsly.msgpack_encoders("context_graph")

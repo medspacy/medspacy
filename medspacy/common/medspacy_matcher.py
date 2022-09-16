@@ -44,6 +44,10 @@ class MedspacyMatcher:
     def rules(self):
         return self._rules
 
+    @property
+    def rule_item_mapping(self):
+        return self._rule_item_mapping
+
     def add(self, rules):
         """Add a list of rules to the matcher. Rules must inherit from medspacy.common.BaseRule,
         such as medspacy.target_matcher.TargetRule or medspacy.context.ConTextRule."""

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Iterable
 
 from spacy.tokens import Doc, Span
 from spacy.language import Language
@@ -45,30 +45,10 @@ class TargetMatcher:
         """
         self.nlp = nlp
         self.name = name
-        self.result_type = result_type
-        self.span_group_name = span_group_name
-        self._rules = list()
+        self._result_type = result_type
+        self._span_group_name = span_group_name
 
-        self.labels = set()
-
-        self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
-        self._rule_item_mapping = self.matcher._rule_item_mapping
-
-    def add(self, rules: list):
-        """
-        Adds a list of TargetRules to the TargetMatcher.
-
-        Args:
-            rules: A collection of TargetRules.
-
-        Raises:
-            ValueError: All elements in rules must be TargetRules.
-        """
-        for rule in rules:
-            if not isinstance(rule, TargetRule):
-                raise ValueError("Rules must be TargetRule, not", type(rule))
-        self._rules += rules
-        self.matcher.add(rules)
+        self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
 
     @property
     def rules(self) -> List[TargetRule]:
@@ -78,7 +58,58 @@ class TargetMatcher:
         Returns:
             A list of TargetRules.
         """
-        return self._rules
+        return self.__matcher.rules
+
+    @property
+    def result_type(self) -> Union[str, None]:
+        """
+        The result type of the TargetMatcher. "ents" indicates that calling TargetMatcher will store the results in
+        doc.ents, "group" indicates that the results will be stored in the span group indicated by `span_group_name`,
+        and None indicates that spans will be returned in a list.
+
+        Returns:
+            The result type string.
+        """
+        return self._result_type
+
+    @result_type.setter
+    def result_type(self, result_type: Union[str, None]):
+        if not (
+            not result_type or result_type.lower() == "group" or result_type != "ents"
+        ):
+            raise ValueError('result_type must be "ent". "group" or None.')
+        self._result_type = result_type
+
+    @property
+    def span_group_name(self) -> str:
+        """
+        The name of the span group used by this component. If `result_type` is "group", calling this component will
+        place results in the span group with this name.
+
+        Returns:
+            The span group name.
+        """
+        return self._span_group_name
+
+    @span_group_name.setter
+    def span_group_name(self, name: str):
+        if not name or not isinstance(name, str):
+            raise ValueError("Span group name must be a string.")
+        self._span_group_name = name
+
+    def add(self, rules: Union[TargetRule, Iterable[TargetRule]]):
+        """
+        Adds a single TargetRule or a list of TargetRules to the TargetMatcher.
+
+        Args:
+            rules: A single TargetRule or a collection of TargetRules.
+        """
+        if isinstance(rules, TargetRule):
+            rules = [rules]
+        for rule in rules:
+            if not isinstance(rule, TargetRule):
+                raise TypeError("Rules must be TargetRule, not", type(rule))
+        self.__matcher.add(rules)
 
     def __call__(self, doc: Doc) -> Union[Doc, List[Span]]:
         """
@@ -93,10 +124,10 @@ class TargetMatcher:
             Returns a modified `doc` when `TargetMatcher.result_type` is "ents" or "group". Returns a list of
             `Span` objects if `TargetMatcher.result_type` is None.
         """
-        matches = self.matcher(doc)
+        matches = self.__matcher(doc)
         spans = []
         for (rule_id, start, end) in matches:
-            rule = self._rule_item_mapping[self.nlp.vocab.strings[rule_id]]
+            rule = self.__matcher.rule_item_mapping[self.nlp.vocab.strings[rule_id]]
             span = Span(doc, start=start, end=end, label=rule.category)
             span._.target_rule = rule
             if rule.attributes is not None:
@@ -106,17 +137,21 @@ class TargetMatcher:
                     except AttributeError as e:
                         raise e
             spans.append(span)
-        if self.result_type.lower() is "ents":
+
+        if not self.result_type:
+            return spans
+        elif self.result_type.lower() == "ents":
             for span in spans:
                 try:
                     doc.ents += (span,)
-                # spaCy will raise a value error if the token in span are already part of an entity (i.e., as part of an
-                # upstream component). In that case, let the existing span supersede this one.
-                except ValueError as e:
-                    # raise e
-                    pass
+                except ValueError:
+                    # spaCy will raise a value error if the token in span are already part of an entity (i.e., as part
+                    # of an upstream component). In that case, let the existing span supersede this one.
+                    raise RuntimeWarning(
+                        f'The result ""{span}"" conflicts with a pre-existing entity in doc.ents. This result has been '
+                        f"skipped."
+                    )
             return doc
-        elif self.result_type.lower() is "group":
+        elif self.result_type.lower() == "group":
             doc.spans[self.span_group_name] = spans
-        else:
-            return spans
+            return doc

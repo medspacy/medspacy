@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Callable, Any, List, Tuple
+from typing import Dict, Callable, Any, List, Tuple, Union, Optional
 
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
@@ -24,27 +24,29 @@ class TargetRule(BaseRule):
         self,
         literal: str,
         category: str,
-        pattern: Dict = None,
-        on_match: Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any] = None,
-        metadata: Dict = None,
-        attributes: Dict = None,
+        pattern: Optional[Union[List[Dict[str, str]], str]] = None,
+        on_match: Optional[Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]] = None,
+        attributes: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[Any, Any]] = None,
     ):
         """
         Creates a new TargetRule.
 
         Args:
-            literal: The actual string of a concept. If pattern is None, this string will be lower-cased and matched to
-                the lower-case string. If `pattern` is not None, this argument will not be used for actual matching but
-                can be used as a reference as the direction name.
+            literal: The string representation of a concept. If `pattern` is None, this string will be lower-cased and
+                matched to the lower-case string. If `pattern` is not None, this argument will not be used for matching
+                but can be used as a reference as the rule name.
             category: The semantic class of the matched span. This corresponds to the `label_` attribute of an entity.
-            pattern: A pattern to use for matching rather than `literal`. If a list, will use spaCy dictionary pattern
-                matching to match using token attributes. See https://spacy.io/usage/rule-based-matching.
+            pattern: A list or string to use as a spaCy pattern rather than `literal`. If a list, will use spaCy
+                token-based pattern matching to match using token attributes. If a string, will use spacy phrase
+                matching to match strings. If None, will use `literal` as the pattern for phrase matching. For more
+                information, see https://spacy.io/usage/rule-based-matching.
             on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
                 matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
-            metadata: Optional dictionary of metadata.
             attributes: Optional custom attribute names to set for a Span matched by the direction. These attribute
                 names are stored under Span._.[attribute_name]. For example, if `attributes={'is_historical':True}`,
                 then any spans matched by this direction will have span._.is_historical = True
+            metadata: Optional dictionary of any extra metadata.
         """
         super().__init__(literal, category, pattern, on_match, metadata)
         self.attributes = attributes

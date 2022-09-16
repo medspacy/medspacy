@@ -127,7 +127,7 @@ class TargetMatcher:
         matches = self.__matcher(doc)
         spans = []
         for (rule_id, start, end) in matches:
-            rule = self.__matcher.rule_item_mapping[self.nlp.vocab.strings[rule_id]]
+            rule = self.__matcher.rule_map[self.nlp.vocab.strings[rule_id]]
             span = Span(doc, start=start, end=end, label=rule.category)
             span._.target_rule = rule
             if rule.attributes is not None:

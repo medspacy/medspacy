@@ -76,7 +76,7 @@ class ConceptTagger:
         """
         matches = self.__matcher(doc)
         for (rule_id, start, end) in matches:
-            rule = self.__matcher.rule_item_mapping[self.nlp.vocab.strings[rule_id]]
+            rule = self.__matcher.rule_map[self.nlp.vocab.strings[rule_id]]
             for i in range(start, end):
                 setattr(doc[i]._, self.attr_name, rule.category)
 

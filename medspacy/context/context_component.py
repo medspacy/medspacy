@@ -62,7 +62,7 @@ class ConTextComponent:
 
         Args:
             nlp: a spaCy NLP model
-            add_attrs: Whether or not to add the additional spaCy Span attributes (ie., Span._.x)
+            add_attrs: Whether to add the additional spaCy Span attributes (ie., Span._.x)
                 defining assertion on the targets. By default, these are:
                 - is_negated: True if a target is modified by 'NEGATED_EXISTENCE', default False
                 - is_uncertain: True if a target is modified by 'POSSIBLE_EXISTENCE', default False
@@ -74,12 +74,12 @@ class ConTextComponent:
                 If "LOWER", then the matching of modifiers with a "literal" string will be
                 case-insensitive. If "TEXT" or "ORTH", it will be case-sensitive.
                 Default "LOWER'.
-            prune: Whether or not to prune modifiers which are substrings of another modifier.
+            prune: Whether to prune modifiers which are substrings of another modifier.
                 For example, if "no history of" and "history of" are both ConTextItems, both will match
                 the text "no history of afib", but only "no history of" should modify afib.
                 If True, will drop shorter substrings completely.
                 Default True.
-            remove_overlapping_modifiers: Whether or not to remove any matched modifiers which overlap
+            remove_overlapping_modifiers: Whether to remove any matched modifiers which overlap
                 with target entities. If False, any overlapping modifiers will not modify the overlapping
                 entity but will still modify any other targets in its scope.
                 Default False.
@@ -87,7 +87,7 @@ class ConTextComponent:
                 - 'default': Load the default set of rules provided with cyConText
                 - 'other': Load a custom set of rules, please also set rule_list with a file path or list.
                 - None: Load no rules.
-            rule_list: The location of rules in json format or a list of ContextItems. Default
+            rule_list: The location of rules in json format or a list of ContextRules. Default
                 is None.
             allowed_types (set or None): A set of target labels to allow a ConTextRule to modify.
                 If None, will apply to any type not specifically excluded in excluded_types.

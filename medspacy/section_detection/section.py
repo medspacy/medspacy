@@ -1,4 +1,7 @@
+from __future__ import annotations
 import json
+from typing import Optional
+
 from medspacy.section_detection.section_rule import SectionRule
 import srsly
 
@@ -6,14 +9,25 @@ import srsly
 class Section(object):
     def __init__(
         self,
-        category,
-        title_start,
-        title_end,
-        body_start,
-        body_end,
-        parent=None,
-        rule=None,
+        category: str,
+        title_start: int,
+        title_end: int,
+        body_start: int,
+        body_end: int,
+        parent: Optional[Section] = None,
+        rule: Optional[SectionRule] = None,
     ):
+        """
+
+        Args:
+            category:
+            title_start:
+            title_end:
+            body_start:
+            body_end:
+            parent:
+            rule:
+        """
         self.category = category
         self.title_start = title_start
         self.title_end = title_end
@@ -27,34 +41,54 @@ class Section(object):
 
     @property
     def title_span(self):
+        """
+
+        Returns:
+
+        """
         return self.title_start, self.title_end
 
     @property
     def body_span(self):
+        """
+
+        Returns:
+
+        """
         return self.body_start, self.body_end
 
     @property
     def section_span(self):
+        """
+
+        Returns:
+
+        """
         return self.title_start, self.body_end
 
-    def save(self, *args, **kwargs):
-        raise ValueError
+    def to_disk(self, path):
+        """
 
-    def to_disk(self, path, **kwargs):
+        Args:
+            path:
+        """
         # This will receive the directory path + /my_component
         data_path = path / "section.json"
         with data_path.open("w", encoding="utf8") as f:
             f.write(json.dumps(self.data))
 
-    def from_disk(self, path, **cfg):
+    def from_disk(self, path):
+        """
+
+        Args:
+            path:
+        """
         # This will receive the directory path + /my_component
         data_path = path / "section.json"
         with data_path.open("r", encoding="utf8") as f:
             self.data = json.loads(f)
-        return self
 
     def serialized_representation(self):
-
         rule = self.rule
 
         return {

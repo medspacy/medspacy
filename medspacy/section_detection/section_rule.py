@@ -3,10 +3,26 @@ from ..common.base_rule import BaseRule
 
 class SectionRule(BaseRule):
 
-    _ALLOWED_KEYS = {"literal", "pattern", "category", "metadata", "parents", "parent_required", "max_scope"}
+    _ALLOWED_KEYS = {
+        "literal",
+        "pattern",
+        "category",
+        "metadata",
+        "parents",
+        "parent_required",
+        "max_scope",
+    }
 
     def __init__(
-        self, literal, category, pattern=None, on_match=None, max_scope=None, parents=[], parent_required=False, metadata=None
+        self,
+        literal,
+        category,
+        pattern=None,
+        on_match=None,
+        max_scope=None,
+        parents=[],
+        parent_required=False,
+        metadata=None,
     ):
         """Class for defining rules for extracting entities from text using TargetMatcher.
         Params:
@@ -48,9 +64,8 @@ class SectionRule(BaseRule):
         if parent_required:
             if not parents:
                 raise ValueError(
-                    "Jsonl file incorrectly formatted for pattern name {0}. If parents are required, then at least one parent must be specified.".format(
-                        category
-                    )
+                    f"Jsonl file incorrectly formatted for pattern name {category}. "
+                    f"If parents are required, then at least one parent must be specified."
                 )
         self.parent_required = parent_required
 
@@ -63,9 +78,6 @@ class SectionRule(BaseRule):
 
         Returns:
             section_rules: a list of SectionRule objects
-        Raises:
-            KeyError: if the dictionary contains any keys other than
-                those accepted by SectionRule.__init__
         """
         import json
 
@@ -85,14 +97,14 @@ class SectionRule(BaseRule):
 
         Returns:
             item: the SectionRule created from the dictionary
-
-        Raises:
-            ValueError: if the json is invalid
         """
         keys = set(rule_dict.keys())
         invalid_keys = keys.difference(cls._ALLOWED_KEYS)
         if invalid_keys:
-            msg = "JSON object contains invalid keys: {0}.\n" "Must be one of: {1}".format(invalid_keys, cls._ALLOWED_KEYS)
+            msg = (
+                f"JSON object contains invalid keys: {invalid_keys}. "
+                f"Must be one of: {cls._ALLOWED_KEYS}"
+            )
             raise ValueError(msg)
         rule = SectionRule(**rule_dict)
         return rule
@@ -102,8 +114,10 @@ class SectionRule(BaseRule):
         """Writes SectionRules to a json file.
 
         Args:
-            section_rules: a list of SectionRules that will be written to a file.
-            filepath: the .json file to contain modifier rules
+            section_rules:
+                A list of SectionRules that will be written to a file.
+            filepath:
+                The .json file to contain modifier rules
         """
         import json
 

@@ -1,3 +1,5 @@
+from typing import Union, List, Iterable, Optional
+
 from spacy.tokens import Doc, Token, Span
 from spacy.language import Language
 
@@ -30,79 +32,83 @@ DEFAULT_ATTRS = {
 
 @Language.factory("medspacy_sectionizer")
 class Sectionizer:
+    """
+    The Sectionizer will search for spans in the text which match section header rules, such as 'Past Medical History:'.
+    Sections will be represented in custom attributes as:
+        category: A normalized title of the section. Example: 'past_medical_history'
+        section_title: The Span of the doc which was matched as a section header.
+            Example: 'Past Medical History:'
+        section_span: The entire section of the note, starting with section_header and up until the end
+            of the section, which will be either the start of the next section header of some pre-specified
+            scope. Example: 'Past Medical History: Type II DM'
+
+    Section attributes will be registered for each Doc, Span, and Token in the following attributes:
+        Doc._.sections: A list of namedtuples of type Section with 4 elements:
+            - section_title
+            - section_header
+            - section_parent
+            - section_span.
+        A Doc will also have attributes corresponding to lists of each
+            (ie., Doc._.section_titles, Doc._.section_headers, Doc._.section_parents, Doc._.section_list)
+        (Span|Token)._.section_title
+        (Span|Token)._.section_header
+        (Span|Token)._.section_parent
+        (Span|Token)._.section_span"""
+
     def __init__(
         self,
-        nlp,
-        name="medspacy_sectionizer",
-        rules="default",
-        add_attrs=False,
-        max_scope=None,
-        include_header=False,
-        phrase_matcher_attr="LOWER",
-        require_start_line=False,
-        require_end_line=False,
-        newline_pattern=r"[\n\r]+[\s]*$",
+        nlp: Language,
+        name: str = "medspacy_sectionizer",
+        rules: Optional[str] = "default",
+        add_attrs: bool = False,
+        max_section_length: Optional[int] = None,
+        include_header: bool = False,
+        phrase_matcher_attr: str = "LOWER",
+        require_start_line: bool = False,
+        require_end_line: bool = False,
+        newline_pattern: str = r"[\n\r]+[\s]*$",
     ):
-        """Create a new Sectionizer component. The sectionizer will search for spans in the text which
-        match section header rules, such as 'Past Medical History:'. Sections will be represented
-        in custom attributes as:
-            category (str): A normalized title of the section. Example: 'past_medical_history'
-            section_title (Span): The Span of the doc which was matched as a section header.
-                Example: 'Past Medical History:'
-            section_span (Span): The entire section of the note, starting with section_header and up until the end
-                of the section, which will be either the start of the next section header of some pre-specified
-                scope. Example: 'Past Medical History: Type II DM'
-
-        Section attributes will be registered for each Doc, Span, and Token in the following attributes:
-            Doc._.sections: A list of namedtuples of type Section with 4 elements:
-                - section_title
-                - section_header
-                - section_parent
-                - section_span.
-            A Doc will also have attributes corresponding to lists of each
-                (ie., Doc._.section_titles, Doc._.section_headers, Doc._.section_parents, Doc._.section_list)
-            (Span|Token)._.section_title
-            (Span|Token)._.section_header
-            (Span|Token)._.section_parent
-            (Span|Token)._.section_span
+        """Create a new Sectionizer component.
 
         Args:
+            name:
+            add_attrs:
+            include_header:
             nlp: A SpaCy language model object
-            rules (str, list, or None): Where to read rules from. Default is "default", which will
-                load the default rules provided by medSpaCy, which are derived from MIMIC-II.
-                If a list, should be a list of pattern dicts following these conventional spaCy formats:
+            rules (str, list, or None): Where to acquire section rules. Default is "default", which will load the
+                rules provided by medSpaCy, which are derived from MIMIC-II. If a list, should be a list of pattern
+                dicts following these conventional spaCy formats:
                     [
                         {"section_title": "past_medical_history", "pattern": "Past Medical History:"},
                         {"section_title": "problem_list", "pattern": [{"TEXT": "PROBLEM"}, {"TEXT": "LIST"}, {"TEXT": ":"}]}
                     ]
                 If a string other than "default", should be a path to a jsonl file containing rules.
-            max_scope (None or int): Optional argument specifying the maximum number of tokens following a section header
-                which can be included in a section. This can be useful if you think your section rules are incomplete
-                and want to prevent sections from running too long in the note. Default is None, meaning that the scope
-                of a section will be until either the next section header or the end of the document.
-            include_title (bool): whether the section title is included in the section text
-            phrase_matcher_attr (str): The name of the token attribute which will be used by the PhraseMatcher
+            max_section_length: Optional argument specifying the maximum number of tokens following a section header
+                which can be included in a section body. This can be useful if you think your section rules are
+                incomplete and want to prevent sections from running too long in the note. Default is None, meaning that
+                the scope of a section will be until either the next section header or the end of the document.
+            phrase_matcher_attr: The name of the token attribute which will be used by the PhraseMatcher
                 for any rules with a "pattern" value of a string.
-            require_start_line (bool): Optionally require a section header to start on a new line. Default False.
-            require_end_line (bool): Optionally require a section header to end with a new line. Default False.
-            newline_pattern (str): Regular expression to match the new line either preceding or following a header
+            require_start_line: Optionally require a section header to start on a new line. Default False.
+            require_end_line: Optionally require a section header to end with a new line. Default False.
+            newline_pattern: Regular expression to match the new line either preceding or following a header
                 if either require_start_line or require_end_line are True.
         """
         self.nlp = nlp
         self.name = name
         self.add_attrs = add_attrs
-        self.matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
-        self.max_scope = max_scope
+        self.max_section_length = max_section_length
         self.require_start_line = require_start_line
         self.require_end_line = require_end_line
         self.newline_pattern = re.compile(newline_pattern)
         self.assertion_attributes_mapping = None
         self._parent_sections = {}
         self._parent_required = {}
-        self._rule_item_mapping = self.matcher._rule_item_mapping
         self._rules = []
         self._section_categories = set()
         self.include_header = include_header
+
+        self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
 
         if rules is not None:
             if rules == "default":
@@ -111,7 +117,7 @@ class Sectionizer:
                 if not os.path.exists(DEFAULT_RULES_FILEPATH):
                     raise FileNotFoundError(
                         "The expected location of the default rules file cannot be found. Please either "
-                        "add rules manually or add a jsonl file to the following location: ",
+                        "add rules manually or add a json file to the following location: ",
                         DEFAULT_RULES_FILEPATH,
                     )
                 self.add(SectionRule.from_json(DEFAULT_RULES_FILEPATH))
@@ -199,7 +205,7 @@ class Sectionizer:
                     "Rules must be of class SectionRule, not", type(rules[0])
                 )
 
-        self.matcher.add(rules)
+        self.__matcher.add(rules)
 
         for rule in rules:
             name = rule.category
@@ -245,7 +251,7 @@ class Sectionizer:
         sections_final = []
         removed_sections = 0
         for i, (match_id, start, end) in enumerate(sections):
-            name = self._rule_item_mapping[self.nlp.vocab.strings[match_id]].category
+            name = self.__matcher.rule_map[self.nlp.vocab.strings[match_id]].category
             required = self._parent_required[name]
             i_a = i - removed_sections  # adjusted index for removed values
             if required and i_a == 0:
@@ -258,12 +264,12 @@ class Sectionizer:
                 identified_parent = None
                 for parent in parents:
                     # go backwards through the section "tree" until you hit a root or the start of the list
-                    candidate = self._rule_item_mapping[
+                    candidate = self.__matcher.rule_map[
                         self.nlp.vocab.strings[sections_final[i_a - 1][0]]
                     ].category
                     candidates_parent_idx = sections_final[i_a - 1][3]
                     if candidates_parent_idx is not None:
-                        candidates_parent = self._rule_item_mapping[
+                        candidates_parent = self.__matcher.rule_map[
                             self.nlp.vocab.strings[
                                 sections_final[candidates_parent_idx][0]
                             ]
@@ -340,7 +346,7 @@ class Sectionizer:
                     setattr(ent._, attr_name, attr_value)
 
     def __call__(self, doc):
-        matches = self.matcher(doc)
+        matches = self.__matcher(doc)
         if self.require_start_line:
             matches = self.filter_start_lines(doc, matches)
         if self.require_end_line:
@@ -372,7 +378,7 @@ class Sectionizer:
             # If this is the last match, it should include the rest of the doc
             if i == len(matches) - 1:
                 # If there is no scope limitation, go until the end of the doc
-                if self.max_scope is None and rule.max_scope is None:
+                if self.max_section_length is None and rule.max_scope is None:
                     section_list.append(
                         Section(category, start, end, end, len(doc), parent, rule)
                     )
@@ -381,7 +387,7 @@ class Sectionizer:
                     if rule.max_scope is not None:
                         scope_end = min(end + rule.max_scope, doc[-1].i + 1)
                     else:
-                        scope_end = min(end + self.max_scope, doc[-1].i + 1)
+                        scope_end = min(end + self.max_section_length, doc[-1].i + 1)
 
                     section_list.append(
                         Section(category, start, end, end, scope_end, parent, rule)
@@ -390,7 +396,7 @@ class Sectionizer:
             else:
                 next_match = matches[i + 1]
                 _, next_start, _, _ = next_match
-                if self.max_scope is None and rule.max_scope is None:
+                if self.max_section_length is None and rule.max_scope is None:
                     section_list.append(
                         Section(category, start, end, end, next_start, parent, rule)
                     )
@@ -398,7 +404,7 @@ class Sectionizer:
                     if rule.max_scope is not None:
                         scope_end = min(end + rule.max_scope, next_start)
                     else:
-                        scope_end = min(end + self.max_scope, next_start)
+                        scope_end = min(end + self.max_section_length, next_start)
                     section_list.append(
                         Section(category, start, end, end, scope_end, parent, rule)
                     )

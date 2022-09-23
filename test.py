@@ -1,3 +1,5 @@
+import cProfile
+from functools import wraps
 import sys
 
 sys.path = [
@@ -13,6 +15,25 @@ sys.path = [
 ]
 print(sys.path)
 import medspacy
+
+
+# profile decorator
+def profiling():
+    def _profiling(f):
+        @wraps(f)
+        def __profiling(*rgs, **kwargs):
+            pr = cProfile.Profile()
+            pr.enable()
+            result = f(*rgs, **kwargs)
+            pr.disable()
+            # save stats into file
+            pr.dump_stats("profile_dump")
+            return result
+
+        return __profiling
+
+    return _profiling
+
 
 # load spacy model
 nlp = medspacy.load()

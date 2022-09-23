@@ -1,12 +1,12 @@
-from typing import Iterable, Tuple, List
+from typing import Iterable, List, Dict, Tuple, Type
 
 from spacy import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from .regex_matcher import RegexMatcher
 from .base_rule import BaseRule
-from ..util import tuple_overlaps
+from .util import prune_overlapping_matches
 
-from spacy.tokens import Span, Doc
+from spacy.tokens import Doc
 
 
 class MedspacyMatcher:
@@ -49,7 +49,7 @@ class MedspacyMatcher:
         self.__phrase_matcher_attr = phrase_matcher_attr
 
     @property
-    def rules(self):
+    def rules(self) -> List[BaseRule]:
         """
         The list of rules used by the MedspacyMatcher.
 
@@ -59,7 +59,7 @@ class MedspacyMatcher:
         return list(self._rule_map.values())
 
     @property
-    def rule_map(self):
+    def rule_map(self) -> Dict[str, BaseRule]:
         """
         The dictionary mapping a rule's id to the rule object.
 
@@ -108,7 +108,7 @@ class MedspacyMatcher:
                 )
             self.__rule_count += 1
 
-    def __call__(self, doc: Doc):
+    def __call__(self, doc: Doc) -> List[Tuple[int, int, int]]:
         """
         Call MedspacyMatcher on a doc and return a single list of matches. If self.prune is True,
         in the case of overlapping matches the longest will be returned.
@@ -125,95 +125,3 @@ class MedspacyMatcher:
         if self._prune:
             matches = prune_overlapping_matches(matches)
         return matches
-
-
-def prune_overlapping_matches(
-    matches: List[Tuple[int, int, int]], strategy: str = "longest"
-):
-    """
-    Prunes overlapping matches from a list of spaCy match tuples (match_id, start, end).
-
-    Args:
-        matches: A list of match tuples of form (match_id, start, end).
-        strategy: The pruning strategy to use. At this time, the only available option is "longest" and will keep the
-            longest of any two overlapping spans. Other behavior will be added in a future update.
-
-    Returns:
-        The pruned list of matches.
-    """
-    if strategy != "longest":
-        raise NotImplementedError(
-            "No other filtering strategy has been implemented. Coming in a future update."
-        )
-
-    # Make a copy and sort
-    unpruned = sorted(matches, key=lambda x: (x[1], x[2]))
-    pruned = []
-    num_matches = len(matches)
-    if num_matches == 0:
-        return matches
-    curr_match = unpruned.pop(0)
-
-    while True:
-        if len(unpruned) == 0:
-            pruned.append(curr_match)
-            break
-        next_match = unpruned.pop(0)
-
-        # Check if they overlap
-        if overlaps(curr_match, next_match):
-            # Choose the larger span
-            longer_span = max(curr_match, next_match, key=lambda x: (x[2] - x[1]))
-            pruned.append(longer_span)
-            if len(unpruned) == 0:
-                break
-            curr_match = unpruned.pop(0)
-        else:
-            pruned.append(curr_match)
-            curr_match = next_match
-    # Recursive base point
-    if len(pruned) == num_matches:
-        return pruned
-    # Recursive function call
-    else:
-        return prune_overlapping_matches(pruned)
-
-
-def overlaps(a: Tuple[int, int, int], b: Tuple[int, int, int]):
-    """
-    Checks whether two match Tuples out of spacy matchers overlap.
-
-    Args:
-        a: A match Tuple (match_id, start, end).
-        b: A match Tuple (match_id, start, end).
-
-    Returns:
-        Whether the tuples overlap.
-    """
-    _, a_start, a_end = a
-    _, b_start, b_end = b
-    return tuple_overlaps((a_start, a_end), (b_start, b_end))
-
-
-def matches_to_spans(
-    doc: Doc, matches: List[Tuple[int, int, int]], set_label: bool = True
-):
-    """
-    Converts all identified matches to spans.
-
-    Args:
-        doc: The spaCy doc corresponding to the matches.
-        matches: The list of match Tuples (match_id, start, end).
-        set_label: Whether to assign a label to the span based off the source rule. Default is True.
-
-    Returns:
-        A list of spacy spans corresponding to the input matches.
-    """
-    spans = []
-    for (rule_id, start, end) in matches:
-        if set_label:
-            label = doc.vocab.strings[rule_id]
-        else:
-            label = None
-        spans.append(Span(doc, start=start, end=end, label=label))
-    return spans

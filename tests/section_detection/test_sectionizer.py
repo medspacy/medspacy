@@ -228,7 +228,7 @@ class TestSectionizer:
         )
 
     def test_max_scope_none(self):
-        sectionizer = Sectionizer(nlp, rules=None, max_scope=None)
+        sectionizer = Sectionizer(nlp, rules=None, max_section_length=None)
         sectionizer.add(
             SectionRule(
                 category="past_medical_history", literal="Past Medical History:"
@@ -239,7 +239,7 @@ class TestSectionizer:
         assert doc[-1]._.section_category == "past_medical_history"
 
     def test_max_scope(self):
-        sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
+        sectionizer = Sectionizer(nlp, rules=None, max_section_length=2)
         sectionizer.add(
             SectionRule(
                 category="past_medical_history", literal="Past Medical History:"
@@ -253,7 +253,7 @@ class TestSectionizer:
         assert doc[-1]._.section_category is None
 
     def test_max_scope_rule(self):
-        sectionizer = Sectionizer(nlp, rules=None, max_scope=2)
+        sectionizer = Sectionizer(nlp, rules=None, max_section_length=2)
         sectionizer.add(
             SectionRule(
                 category="past_medical_history",
@@ -512,7 +512,7 @@ class TestSectionizer:
         assert s3.parent.category == "s2"
         assert s4.parent is None
 
-    @pytest.mark.skip("This test fails frequently with new versions")
+    # @pytest.mark.skip("This test fails frequently with new versions") # seems to have been resolved
     def test_duplicate_parent_definitions(self):
         with warnings.catch_warnings(record=True) as w:
             sectionizer = Sectionizer(nlp, rules=None)
@@ -550,7 +550,7 @@ class TestSectionizer:
 
     def test_context_attributes(self):
         sectionizer = Sectionizer(
-            nlp, rules=None, add_attrs={"past_medical_history": {"is_negated": True}}
+            nlp, rules=None, span_attrs={"past_medical_history": {"is_negated": True}}
         )
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         doc = nlp("Past Medical History: Pneumonia")

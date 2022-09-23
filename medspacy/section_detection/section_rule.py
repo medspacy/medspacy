@@ -1,7 +1,15 @@
+from typing import Optional, Union, List, Dict, Callable, Tuple, Any
+
+from spacy.matcher import Matcher
+from spacy.tokens import Doc
+
 from ..common.base_rule import BaseRule
 
 
 class SectionRule(BaseRule):
+    """
+    SectionRule defines rules for extracting entities from text using the Sectionizer.
+    """
 
     _ALLOWED_KEYS = {
         "literal",
@@ -15,48 +23,47 @@ class SectionRule(BaseRule):
 
     def __init__(
         self,
-        literal,
-        category,
-        pattern=None,
-        on_match=None,
-        max_scope=None,
-        parents=[],
-        parent_required=False,
-        metadata=None,
+        literal: str,
+        category: str,
+        pattern: Optional[Union[List[Dict[str, str]], str]] = None,
+        on_match: Optional[
+            Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]
+        ] = None,
+        max_scope: Optional[int] = None,
+        parents: Optional[List[str]] = None,
+        parent_required: bool = False,
+        metadata: Optional[Dict[Any, Any]] = None,
     ):
-        """Class for defining rules for extracting entities from text using TargetMatcher.
-        Params:
-            literal (str): The actual string of a concept. If pattern is None,
-                this string will be lower-cased and matched to the lower-case string.
-                If `pattern` is not None, this argument will not be used for actual matching
-                but can be used as a reference as the direction name.
-            category (str): The semantic class of the matched span. This corresponds to the `label_`
-                attribute of an entity.
-            pattern (list, str, or None): A pattern to use for matching rather than `literal`.
-                If a list, will use spaCy dictionary pattern matching to match using token attributes.
-                See https://spacy.io/usage/rule-based-matching.
-                If a string, will use regular expression matching on the underlying text of a doc.
-                Note that regular-expression matching is not natively supported by spaCy and could
-                result in unexpected matched spans if match boundaries do not align with token boundaries.
-                If None, `literal` will be matched exactly.
-            on_match (callable or None): An optional callback function or other callable which takes 4 arguments:
-                (matcher, doc, i, matches)
-                For more information, see https://spacy.io/usage/rule-based-matching#on_match
-            max_scope (int or None): A number of tokens to explicitly limit the size of a section body.
-                If None, the scope will include the entire doc up until either the next section header or the end
-                of the doc. This variable can also be set at a global level as `Sectionizer(nlp, max_scope=...)`,
-                but if the attribute is set here, the rule scope will take precedence.
-                If not None, this will be the number of tokens following the matched section header
+        """
+        Class for defining rules for extracting entities from text using TargetMatcher.
+
+        Args:
+            literal: The string representation of a concept. If `pattern` is None, this string will be lower-cased and
+                matched to the lower-case string. If `pattern` is not None, this argument will not be used for matching
+                but can be used as a reference as the rule name.
+            category: The semantic class of the matched span. This corresponds to the `label_` attribute of an entity.
+            pattern: A list or string to use as a spaCy pattern rather than `literal`. If a list, will use spaCy
+                token-based pattern matching to match using token attributes. If a string, will use medspaCy's
+                RegexMatcher. If None, will use `literal` as the pattern for phrase matching. For more information, see
+                https://spacy.io/usage/rule-based-matching.
+            on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
+                matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
+            max_scope: A number of tokens to explicitly limit the size of a section body. If None, the scope will
+                include the entire doc up until either the next section header or the end of the doc. This variable can
+                also be set at a global level as `Sectionizer(nlp, max_scope=...), but if the attribute is set here, the
+                rule scope will take precedence. If not None, this will be the number of tokens following the matched
+                section header
                     Example:
                         In the text "Past Medical History: Pt has hx of pneumonia",
                         SectionRule("Past Medical History:", "pmh", max_scope=None) will include the entire doc, but
                         SectionRule("Past Medical History:", "pmh", max_scope=2) will limit the section
                             to be "Past Medical History: Pt has"
-                This can be useful for limiting certain sections which are known to be short or allowing others
-                to be longer than the regular global max_scope.
-            parents (list or None): a list of candidate parents for determining subsections
-            parent_required (bool): whether a parent is required for the section to exist in the final output
-            metadata (dict or None): Optional dictionary of metadata.
+                This can be useful for limiting certain sections which are known to be short or allowing others to be
+                longer than the regular global max_scope.
+            parents: A list of candidate parents for determining subsections
+            parent_required: Whether a parent is required for the section to exist in the final output. If true and no
+                parent is identified, the section will be removed.
+            metadata: Optional dictionary of any extra metadata.
         """
         super().__init__(literal, category, pattern, on_match, metadata)
         self.max_scope = max_scope
@@ -71,7 +78,8 @@ class SectionRule(BaseRule):
 
     @classmethod
     def from_json(cls, filepath):
-        """Read in a lexicon of modifiers from a JSON file.
+        """
+        Read in a lexicon of modifiers from a JSON file.
 
         Args:
             filepath: the .json file containing modifier rules
@@ -90,7 +98,8 @@ class SectionRule(BaseRule):
 
     @classmethod
     def from_dict(cls, rule_dict):
-        """Reads a dictionary into a SectionRule list. Used when reading from a json file.
+        """
+        Reads a dictionary into a SectionRule list. Used when reading from a json file.
 
         Args:
             rule_dict: the dictionary to convert
@@ -109,24 +118,9 @@ class SectionRule(BaseRule):
         rule = SectionRule(**rule_dict)
         return rule
 
-    @classmethod
-    def to_json(cls, section_rules, filepath):
-        """Writes SectionRules to a json file.
-
-        Args:
-            section_rules:
-                A list of SectionRules that will be written to a file.
-            filepath:
-                The .json file to contain modifier rules
-        """
-        import json
-
-        data = {"section_rules": [rule.to_dict() for rule in section_rules]}
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-
     def to_dict(self):
-        """Converts TargetRules to a python dictionary. Used when writing section rules to a json file.
+        """
+        Converts TargetRules to a python dictionary. Used when writing section rules to a json file.
 
         Returns:
             rule_dict: the dictionary containing the TargetRule info.

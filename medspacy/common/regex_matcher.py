@@ -6,6 +6,8 @@ from spacy import Vocab
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
 
+from .util import get_token_for_char
+
 
 # we warn here but i'm not sure it's necessary.
 # warnings.filterwarnings("once", "You are using a TargetRule with a regex pattern.*")
@@ -66,17 +68,19 @@ class RegexMatcher:
     def add(
         self,
         match_id: str,
-        patterns: Iterable[str],
+        regex_rules: Iterable[str],
         on_match: Optional[
             Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]
         ] = None,
     ):
         """
+        Add a rule with one or more regex patterns to one match id.
 
         Args:
-            match_id:
-            patterns:
-            on_match:
+            match_id: The name of the pattern.
+            regex_rules: The list of regex strings to associate with `match_id`.
+            on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
+                matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
         """
         # i am not sure if these warnings are more annoying than useful.
         # warnings.warn(
@@ -89,7 +93,7 @@ class RegexMatcher:
         if match_id not in self.vocab:
             self.vocab.strings.add(match_id)
         self._patterns.setdefault(self.vocab.strings[match_id], [])
-        for pattern in patterns:
+        for pattern in regex_rules:
             self._patterns[self.vocab.strings[match_id]].append(
                 re.compile(pattern, flags=self.flags)
             )
@@ -98,14 +102,15 @@ class RegexMatcher:
     def get(self, key):
         return self._patterns.get(self.vocab.strings[key], [])
 
-    def __call__(self, doc):
+    def __call__(self, doc: Doc) -> List[Tuple[int, int, int]]:
         """
+        Call the RegexMatcher on a spaCy Doc.
 
         Args:
-            doc:
+            doc: The spaCy doc to process.
 
         Returns:
-
+            The list of match tuples (match_id, start, end).
         """
         matches = []
         for (match_id, patterns) in self._patterns.items():
@@ -138,43 +143,3 @@ class RegexMatcher:
                         on_match(self, doc, len(matches) - 1, matches)
 
         return matches
-
-
-def get_token_for_char(doc, char_idx, resolve="left"):
-    """
-
-    Args:
-        doc:
-        char_idx:
-        resolve:
-
-    Returns:
-
-    """
-    if char_idx < 0:
-        raise ValueError("char_idx must be > 0")
-    if char_idx > len(doc.text_with_ws):
-        raise ValueError(
-            "char_idx {0} is out of range for text with length {1}".format(
-                char_idx, len(doc.text_with_ws)
-            )
-        )
-    for i, token in enumerate(doc):
-        if char_idx > token.idx:
-            continue
-        if char_idx == token.idx:
-            return token
-        if char_idx < token.idx:
-            if resolve == "left":
-                return doc[i - 1]
-            elif resolve == "right":
-                return doc[i]
-            else:
-                raise ValueError("resolve must be either 'left' or 'right'")
-    # Otherwise, we've reached the end of the doc, so this must be the final token
-    # If resolving to the left, return the final token
-    # If resolving to the right, return None, meaning it should go to the end of the doc
-    if resolve == "left":
-        return doc[-1]
-    if resolve == "right":
-        return None

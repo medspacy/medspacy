@@ -9,7 +9,7 @@ from ..common.base_rule import BaseRule
 
 class TargetRule(BaseRule):
     """
-    TargetRule defines rules for extracting entities from text using TargetMatcher.
+    TargetRule defines rules for extracting entities from text using the TargetMatcher.
     """
 
     _ALLOWED_KEYS = {

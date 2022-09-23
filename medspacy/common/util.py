@@ -13,7 +13,9 @@ def span_contains(
     regex: bool = True,
     case_insensitive: bool = True,
 ) -> bool:
-    """Return True if a Span object contains a target phrase.
+    """
+    Return True if a Span object contains a target phrase.
+
     Args:
         span: A spaCy Doc or Span, such as an entity in doc.ents
         target: A target phrase or iterable of phrases to check in span.text.lower().

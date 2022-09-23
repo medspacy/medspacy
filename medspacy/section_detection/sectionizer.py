@@ -133,17 +133,30 @@ class Sectionizer:
             self.register_default_attributes()
 
     @property
-    def rules(self):
-        """Returns list of SectionRules"""
+    def rules(self) -> List[SectionRule]:
+        """
+        Gets list of rules associated with the Sectionizer.
+
+        Returns:
+            The list of SectionRules associated with the Sectionizer.
+        """
         return self.__matcher.rules
 
     @property
-    def section_categories(self):
-        """Returns a list of categories used in the Sectionizer."""
+    def section_categories(self) -> List[str]:
+        """
+        Gets a list of categories used in the Sectionizer.
+
+        Returns:
+                The list of all section categories available to the Sectionizer.
+        """
         return list(sorted(self._section_categories))
 
-    def register_default_attributes(self):
-        """Register the default values for the Span attributes defined in DEFAULT_ATTRS."""
+    @classmethod
+    def register_default_attributes(cls):
+        """
+        Register the default values for the Span attributes defined in `DEFAULT_ATTRIBUTES`.
+        """
         for attr_name in [
             "is_negated",
             "is_uncertain",
@@ -157,15 +170,11 @@ class Sectionizer:
                 pass
 
     def add(self, rules):
-        """Add a list of SectionRules to the clinical_sectionizer.
-       Example:
-       >>> rules = [ \
-            SectionRule("pmh", "past_medical_history"),\
-            SectionRule("pmh", "past_medical_history", \
-                pattern=[{"LOWER": "past","OP": "?"}, {"LOWER":"medical"}, {"LOWER": "history"}]),\
-            SectionRule("a/p:", "assessment_and_plan", pattern=r"a[/&]p:")]\
-           ]
-       >>> sectionizer.add(rules)
+        """
+        Adds SectionRules to the Sectionizer.
+
+        Args:
+            rules: A single SectionRule or a collection of SectionRules to add to the Sectionizer.
        """
         if isinstance(rules, SectionRule):
             rules = [rules]
@@ -218,7 +227,7 @@ class Sectionizer:
 
         Returns:
             A list of tuples (match_id, start, end, parent_idx) where the first three indices are the same as the input
-            and the added parent_idx represents the index in the list that corresponds to the parent section. May be a
+            and the added parent_idx represents the index in the list that corresponds to the parent section. Might be a
             smaller list than the input due to pruning with `parent_required`.
         """
         sections_final = []
@@ -302,7 +311,7 @@ class Sectionizer:
                     removed_sections += 1
         return sections_final
 
-    def set_assertion_attributes(self, spans: Span):
+    def set_assertion_attributes(self, spans: Iterable[Span]):
         """
         Add Span-level attributes to entities based on which section they occur in.
 
@@ -320,9 +329,9 @@ class Sectionizer:
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Call the Sectionizer on a spaCy doc. Sectionizer will identify sections using provided rules, then evaluate
-        any section hierarchy as needed, create section spans, and modify attributes on existing spans based on the
-        sections the entities spans in.
+        Call the Sectionizer on a spaCy doc. Sectionizer will identify sections using provided rules, then evaluate any
+        section hierarchy as needed, create section spans, and modify attributes on existing spans based on the sections
+        the entities spans in.
 
         Args:
             doc: The Doc to process.
@@ -412,14 +421,24 @@ class Sectionizer:
             self.set_assertion_attributes(doc.spans[self.span_group_name])
         return doc
 
-    def filter_start_lines(self, doc, matches):
-        "Filter a list of matches to only contain spans where the start token is the beginning of a new line."
+    def filter_start_lines(self, doc: Doc, matches: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:
+        """
+        Filter a list of matches to only contain spans where the start token is the beginning of a new line.
+
+        Returns:
+            A list of match tuples (match_id, start, end) that meet the filter criteria.
+        """
         return [
             m for m in matches if util.is_start_line(m[1], doc, self.newline_pattern)
         ]
 
-    def filter_end_lines(self, doc, matches):
-        "Filter a list of matches to only contain spans where the start token is followed by a new line."
+    def filter_end_lines(self, doc: Doc, matches: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:
+        """
+        Filter a list of matches to only contain spans where the start token is followed by a new line.
+
+        Returns:
+            A list of match tuples (match_id, start, end) that meet the filter criteria.
+        """
         return [
             m for m in matches if util.is_end_line(m[2] - 1, doc, self.newline_pattern)
         ]

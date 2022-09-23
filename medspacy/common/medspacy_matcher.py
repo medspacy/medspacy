@@ -1,4 +1,4 @@
-from typing import Iterable, List, Dict, Tuple, Type
+from typing import Iterable, List, Dict, Tuple
 
 from spacy import Language
 from spacy.matcher import Matcher, PhraseMatcher

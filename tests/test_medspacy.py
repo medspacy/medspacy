@@ -87,9 +87,10 @@ class TestMedSpaCy:
         assert not context.rules
 
     def test_load_lang_model(self):
-        nlp = spacy.load("en_core_web_sm", disable={"ner"})
+        # check that spacy pipeline components are still in the nlp object
+        nlp = spacy.load("en_core_web_sm", exclude={"ner", "parser", "senter"})
         nlp = medspacy.load(nlp)
-        assert {"tagger", "parser"}.intersection(set(nlp.pipe_names))
+        assert {"tagger", "lemmatizer"}.intersection(set(nlp.pipe_names))
 
     def test_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer

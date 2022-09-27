@@ -13,13 +13,22 @@ class ConTextGraph:
         edges: Optional[List] = None,
         remove_overlapping_modifiers=False,
     ):
+        """
+
+        Args:
+            targets:
+            modifiers:
+            edges:
+            remove_overlapping_modifiers:
+        """
         self.targets = targets if targets is not None else []
         self.modifiers = modifiers if modifiers is not None else []
         self.edges = edges if edges is not None else []
         self.remove_overlapping_modifiers = remove_overlapping_modifiers
 
     def update_scopes(self):
-        """Update the scope of all ConTextModifier.
+        """
+        Update the scope of all ConTextModifier.
 
         For each modifier in a list of ConTextModifiers, check against each other
         modifier to see if one of the modifiers should update the other.
@@ -35,7 +44,8 @@ class ConTextGraph:
                 modifier2.limit_scope(modifier1)
 
     def apply_modifiers(self):
-        """Checks each target/modifier pair. If modifier modifies target,
+        """
+        Checks each target/modifier pair. If modifier modifies target,
         create an edge between them.
         """
         if self.remove_overlapping_modifiers:

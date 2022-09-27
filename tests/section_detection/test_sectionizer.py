@@ -87,24 +87,6 @@ class TestSectionizer:
         assert section.parent is None
         assert section.rule is rule
 
-    def test_token_attributes(self):
-        sectionizer = Sectionizer(nlp, rules=None)
-        rule = SectionRule(
-            category="past_medical_history", literal="Past Medical History:"
-        )
-        sectionizer.add(rule)
-        doc = nlp("Past Medical History: PE")
-        sectionizer(doc)
-
-        token = doc[-1]
-        assert token._.section is doc._.sections[0]
-        assert token._.section_category == "past_medical_history"
-        assert token._.section_span == doc[0:]
-        assert token._.section_title == doc[0:-1]
-        assert token._.section_body == doc[-1:]
-        assert token._.section_parent is None
-        assert token._.section_rule is rule
-
     def test_span_attributes3(self):
         sectionizer = Sectionizer(nlp, rules=None)
         rule = SectionRule(
@@ -122,19 +104,6 @@ class TestSectionizer:
         assert span._.section_body == doc[-1:]
         assert span._.section_parent is None
         assert span._.section_rule is rule
-
-    # def test_load_default_rules(self):
-    #     sectionizer = Sectionizer(nlp, rules="default")
-    #     assert sectionizer.rules
-
-    # def test_load_no_rules(self):
-    #     sectionizer = Sectionizer(nlp, rules=None)
-    #     assert sectionizer.rules == []
-
-    # def test_add(self):
-    #     sectionizer = Sectionizer(nlp, rules=None)
-    #     sectionizer.add([{"section_title": "section", "pattern": "my pattern"}])
-    #     assert sectionizer.rules
 
     def test_num_sections(self):
         sectionizer = Sectionizer(nlp, rules=None)
@@ -548,18 +517,65 @@ class TestSectionizer:
             assert s3.parent is None
             assert s2_2.parent.category == "s3"
 
-    def test_context_attributes(self):
+    def test_attributes_ents(self):
         sectionizer = Sectionizer(
-            nlp, rules=None, span_attrs={"past_medical_history": {"is_negated": True}}
+            nlp,
+            rules=None,
+            span_attrs={"past_medical_history": {"is_historical": True}},
         )
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
-        doc = nlp("Past Medical History: Pneumonia")
+        doc = nlp("Past Medical History: Pneumonia, stroke, and cancer")
         from spacy.tokens import Span
 
         doc.ents = (Span(doc, 4, 5, "CONDITION"),)
+        doc.spans["medspacy_spans"] = (Span(doc, 5, 6, "CONDITION"),)
+        doc.spans["test"] = (Span(doc, 6, 7, "CONDITION"),)
 
         sectionizer(doc)
-        assert doc.ents[0]._.is_negated is True
+        assert doc.ents[0]._.is_historical is True
+        assert doc.spans["medspacy_spans"][0]._.is_historical is False
+        assert doc.spans["test"][0]._.is_historical is False
+
+    def test_attributes_span_groups(self):
+        sectionizer = Sectionizer(
+            nlp,
+            rules=None,
+            input_span_type="group",
+            span_attrs={"past_medical_history": {"is_historical": True}},
+        )
+        sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
+        doc = nlp("Past Medical History: Pneumonia, stroke, and cancer")
+        from spacy.tokens import Span
+
+        doc.ents = (Span(doc, 4, 5, "CONDITION"),)
+        doc.spans["medspacy_spans"] = (Span(doc, 5, 6, "CONDITION"),)
+        doc.spans["test"] = (Span(doc, 6, 7, "CONDITION"),)
+
+        sectionizer(doc)
+        assert doc.ents[0]._.is_historical is False
+        assert doc.spans["medspacy_spans"][0]._.is_historical is True
+        assert doc.spans["test"][0]._.is_historical is False
+
+    def test_attributes_custom_span_groups(self):
+        sectionizer = Sectionizer(
+            nlp,
+            rules=None,
+            input_span_type="group",
+            span_group_name="test",
+            span_attrs={"past_medical_history": {"is_historical": True}},
+        )
+        sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
+        doc = nlp("Past Medical History: Pneumonia, stroke, and cancer")
+        from spacy.tokens import Span
+
+        doc.ents = (Span(doc, 4, 5, "CONDITION"),)
+        doc.spans["medspacy_spans"] = (Span(doc, 5, 6, "CONDITION"),)
+        doc.spans["test"] = (Span(doc, 6, 7, "CONDITION"),)
+
+        sectionizer(doc)
+        assert doc.ents[0]._.is_historical is False
+        assert doc.spans["medspacy_spans"][0]._.is_historical is False
+        assert doc.spans["test"][0]._.is_historical is True
 
     def test_section_categories(self):
         sectionizer = Sectionizer(nlp, rules=None)

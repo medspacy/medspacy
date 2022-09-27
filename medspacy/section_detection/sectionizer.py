@@ -1,4 +1,4 @@
-from typing import Union, Iterable, Optional, Dict, Any, Tuple, List
+from typing import Union, Iterable, Optional, Dict, Any, Tuple, List, Literal
 
 from spacy.tokens import Span, Doc
 from spacy.language import Language
@@ -60,13 +60,13 @@ class Sectionizer:
         self,
         nlp: Language,
         name: str = "medspacy_sectionizer",
-        rules: Union[Iterable[SectionRule], str, None] = "default",
+        rules: Union[Iterable[SectionRule], Literal["default"], None] = "default",
         max_section_length: Optional[int] = None,
         phrase_matcher_attr: str = "LOWER",
         require_start_line: bool = False,
         require_end_line: bool = False,
         newline_pattern: str = r"[\n\r]+[\s]*$",
-        input_span_type: Union[str, None] = "ents",
+        input_span_type: Union[Literal["ents", "group"], None] = "ents",
         span_group_name: str = "medspacy_spans",
         span_attrs: Optional[Dict[str, Dict[str, Any]]] = None,
     ):
@@ -114,7 +114,7 @@ class Sectionizer:
 
         self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
 
-        if rules and rules.lower() == "default":
+        if rules and rules == "default":
             self.add(SectionRule.from_json(DEFAULT_RULES_FILEPATH))
         elif rules:
             self.add(rules)
@@ -175,7 +175,7 @@ class Sectionizer:
 
         Args:
             rules: A single SectionRule or a collection of SectionRules to add to the Sectionizer.
-       """
+        """
         if isinstance(rules, SectionRule):
             rules = [rules]
 
@@ -421,7 +421,9 @@ class Sectionizer:
             self.set_assertion_attributes(doc.spans[self.span_group_name])
         return doc
 
-    def filter_start_lines(self, doc: Doc, matches: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:
+    def filter_start_lines(
+        self, doc: Doc, matches: List[Tuple[int, int, int]]
+    ) -> List[Tuple[int, int, int]]:
         """
         Filter a list of matches to only contain spans where the start token is the beginning of a new line.
 
@@ -432,7 +434,9 @@ class Sectionizer:
             m for m in matches if util.is_start_line(m[1], doc, self.newline_pattern)
         ]
 
-    def filter_end_lines(self, doc: Doc, matches: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:
+    def filter_end_lines(
+        self, doc: Doc, matches: List[Tuple[int, int, int]]
+    ) -> List[Tuple[int, int, int]]:
         """
         Filter a list of matches to only contain spans where the start token is followed by a new line.
 

@@ -32,30 +32,22 @@ class TestConTextComponent:
         filepath = os.path.join(
             Path(__file__).resolve().parents[2], "resources", "context_rules.json"
         )
-        context = ConTextComponent(nlp, rules="other", rule_list=filepath)
+        context = ConTextComponent(nlp, rules=ConTextRule.from_json(filepath))
         assert context.rules
 
     def test_custom_patterns_list(self):
         """Test that rules are loaded from a list"""
         rule = ConTextRule("evidence of", "DEFINITE_EXISTENCE", "forward")
-        context = ConTextComponent(nlp, rules="other", rule_list=[rule])
+        context = ConTextComponent(nlp, rules=[rule])
         assert context.rules
 
     def test_bad_rules_arg(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             ConTextComponent(nlp, rules="not valid")
 
-    def test_bad_rule_list_path(self):
-        with pytest.raises(ValueError):
-            ConTextComponent(nlp, rules="other", rule_list="not a path")
-
-    def test_bad_rule_list_empty(self):
-        with pytest.raises(ValueError):
-            ConTextComponent(nlp, rules="other", rule_list=[])
-
     def test_bad_rule_list(self):
-        with pytest.raises(ValueError):
-            ConTextComponent(nlp, rules="other", rule_list=["list of strings"])
+        with pytest.raises(TypeError):
+            ConTextComponent(nlp, rules=["list of strings"])
 
     def test_call(self):
         doc = nlp("Pulmonary embolism has been ruled out.")
@@ -92,7 +84,7 @@ class TestConTextComponent:
     def test_default_attribute_values(self):
         """Check that default Span attributes have False values without any modifiers."""
         doc = nlp("There is evidence of pneumonia.")
-        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        context = ConTextComponent(nlp, rules=None)
         ent = Span(doc, 5, 6, "CONDITION")
         doc.ents = (ent,)
         context(doc)
@@ -104,17 +96,6 @@ class TestConTextComponent:
             "is_family",
         ]:
             assert getattr(doc.ents[0]._, attr_name) is False
-
-    def test_default_rules_match(self):
-        context = ConTextComponent(nlp)
-        matcher = context.matcher
-        assert matcher(nlp("no evidence of"))
-
-    def test_custom_rules_match(self):
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "forward")
-        context = ConTextComponent(nlp, rules="other", rule_list=[rule])
-        matcher = context.matcher
-        assert matcher(nlp("no evidence of"))
 
     def test_is_negated(self):
         doc = nlp("There is no evidence of pneumonia.")
@@ -348,7 +329,7 @@ class TestConTextComponent:
         with pytest.raises(ValueError) as exception_info:
             context = ConTextComponent(nlp, max_scope=None, use_context_window=True)
         exception_info.match(
-            "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, not None"
+            "If 'use_context_window' is True, 'max_scope' must be an integer greater than 0, not None"
         )
 
     def test_regex_pattern(self):
@@ -380,7 +361,7 @@ class TestConTextComponent:
 
         assert len(doc._.context_graph.modifiers) == 1
         modifier = doc._.context_graph.modifiers[0]
-        span = modifier.span
+        span = modifier.modifier_span
         assert doc[span[0] : span[1]].text.lower() == "no history of"
 
     def test_prune_false(self):

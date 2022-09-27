@@ -1,4 +1,4 @@
-from typing import List, Union, Iterable, Optional
+from typing import List, Union, Iterable, Optional, Literal
 
 from spacy.tokens import Doc, Span
 from spacy.language import Language
@@ -26,7 +26,7 @@ class TargetMatcher:
         name: str = "medspacy_target_matcher",
         rules: Optional[Iterable[TargetRule]] = None,
         phrase_matcher_attr: str = "LOWER",
-        result_type: Union[str, None] = "ents",
+        result_type: Union[Literal["ents", "group"], None] = "ents",
         span_group_name: str = "medspacy_spans",
     ):
         """

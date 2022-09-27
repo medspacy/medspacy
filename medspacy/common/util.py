@@ -1,4 +1,7 @@
-"""Module for utility functions contained by multiple components of medspaCy."""
+"""
+This module will contain helper functions and classes for common clinical processing tasks
+which will be used in medspaCy's matcher objects.
+"""
 import re
 from typing import Union, Tuple, List
 

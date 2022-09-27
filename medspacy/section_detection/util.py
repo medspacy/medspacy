@@ -1,3 +1,7 @@
+"""
+This module will contain helper functions and classes for common clinical processing tasks
+which will be used in medspaCy's sectionizer.
+"""
 import re
 
 from spacy.tokens import Doc

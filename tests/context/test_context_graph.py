@@ -18,14 +18,16 @@ class TestConTextGraph:
         for token in doc[1:]:
             token.is_sent_start = False
         item_data1 = ConTextRule(
-            "no evidence of", "DEFINITE_NEGATED_EXISTENCE", "forward"
+            "no evidence of", "DEFINITE_NEGATED_EXISTENCE", direction="forward"
         )
         tag_object1 = ConTextModifier(item_data1, 2, 5, doc)
 
-        item_data2 = ConTextRule("evidence of", "DEFINITE_EXISTENCE", "forward")
+        item_data2 = ConTextRule(
+            "evidence of", "DEFINITE_EXISTENCE", direction="forward"
+        )
         tag_object2 = ConTextModifier(item_data2, 3, 5, doc)
 
-        item_data3 = ConTextRule("but", "TERMINATE", "TERMINATE")
+        item_data3 = ConTextRule("but", "TERMINATE", direction="TERMINATE")
         tag_object3 = ConTextModifier(item_data3, 6, 7, doc)
 
         graph = ConTextGraph()
@@ -45,10 +47,10 @@ class TestConTextGraph:
         doc, graph = self.context_graph()
         graph.targets = [doc[5:6]]  # "pneumonia"
         graph.apply_modifiers()
-        scope_before = graph.modifiers[0].scope
+        scope_before = graph.modifiers[0].scope_span
         assert doc[scope_before[0] : scope_before[1]] == doc[5:]
         graph.update_scopes()
-        scope_after = graph.modifiers[0].scope
+        scope_after = graph.modifiers[0].scope_span
         assert doc[scope_after[0] : scope_after[1]] == doc[5:6]
 
     def test_remove_modifiers_overlap_target(self):
@@ -63,7 +65,9 @@ class TestConTextGraph:
         graph.targets = doc.ents
         graph.apply_modifiers()
 
-        assert tuple_overlaps(tag_object.span, (doc.ents[0].start, doc.ents[0].end))
+        assert tuple_overlaps(
+            tag_object.modifier_span, (doc.ents[0].start, doc.ents[0].end)
+        )
         assert len(graph.modifiers) == 0
 
     def test_not_remove_modifiers_overlap_target(self):

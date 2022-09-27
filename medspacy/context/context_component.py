@@ -3,6 +3,7 @@ from os import path
 
 # Filepath to default rules which are included in package
 from pathlib import Path
+from typing import Iterable, Union, Optional, Dict, Any, Set, Literal
 
 from spacy.tokens import Doc, Span
 from spacy.language import Language
@@ -14,7 +15,7 @@ from .context_rule import ConTextRule
 from ..common.medspacy_matcher import MedspacyMatcher
 
 #
-DEFAULT_ATTRS = {
+DEFAULT_ATTRIBUTES = {
     "NEGATED_EXISTENCE": {"is_negated": True},
     "POSSIBLE_EXISTENCE": {"is_uncertain": True},
     "HISTORICAL": {"is_historical": True},
@@ -29,39 +30,36 @@ DEFAULT_RULES_FILEPATH = path.join(
 
 @Language.factory("medspacy_context")
 class ConTextComponent:
-    """The ConTextComponent for spaCy processing."""
+    """
+    The ConTextComponent for spaCy processing.
 
-    name = "context"
-
-    def __init__(
-        self,
-        nlp,
-        name="medspacy_context",
-        add_attrs=True,
-        phrase_matcher_attr="LOWER",
-        rules="default",
-        rule_list=None,
-        allowed_types=None,
-        excluded_types=None,
-        use_context_window=False,
-        max_scope=None,
-        max_targets=None,
-        terminations=None,
-        prune=True,
-        remove_overlapping_modifiers=False,
-    ):
-
-        """Create a new ConTextComponent.
-
-        This component matches modifiers in a Doc,
-        defines their scope, and identifies edges between targets and modifiers.
-        Sets two spaCy extensions:
+    This component matches modifiers in a Doc, defines their scope, and identifies edges between targets and modifiers.
+    Sets two spaCy extensions:
             - Span._.modifiers: a list of ConTextModifier objects which modify a target Span
             - Doc._.context_graph: a ConText graph object which contains the targets,
                 modifiers, and edges between them.
+    """
 
-        Args:
-            nlp: a spaCy NLP model
+    def __init__(
+        self,
+        nlp: Language,
+        name: str = "medspacy_context",
+        rules: Union[Iterable[ConTextRule], Literal["default"], None] = "default",
+        phrase_matcher_attr: str = "LOWER",
+        allowed_types: Optional[Set[str]] = None,
+        excluded_types: Optional[Set[str]] = None,
+        use_context_window: bool = False,
+        max_scope: Optional[int] = None,
+        max_targets: Optional[int] = None,
+        terminations: Optional[Dict[str, Iterable[str]]] = None,
+        prune: bool = True,
+        remove_overlapping_modifiers: bool = False,
+        input_span_type: Union[Literal["ents", "group"]] = "ents",
+        span_group_name: str = "medspacy_spans",
+        span_attrs: Optional[Dict[str, Dict[str, Any]]] = None,
+    ):
+        """
+
             add_attrs: Whether to add the additional spaCy Span attributes (ie., Span._.x)
                 defining assertion on the targets. By default, these are:
                 - is_negated: True if a target is modified by 'NEGATED_EXISTENCE', default False
@@ -87,8 +85,6 @@ class ConTextComponent:
                 - 'default': Load the default set of rules provided with cyConText
                 - 'other': Load a custom set of rules, please also set rule_list with a file path or list.
                 - None: Load no rules.
-            rule_list: The location of rules in json format or a list of ContextRules. Default
-                is None.
             allowed_types (set or None): A set of target labels to allow a ConTextRule to modify.
                 If None, will apply to any type not specifically excluded in excluded_types.
                 Only one of allowed_types and excluded_types can be used. An error will be thrown
@@ -110,7 +106,7 @@ class ConTextComponent:
             max_scope (int or None): A number to explicitly limit the size of the modifier's scope
                 If this attribute is also defined in the ConTextRule, it will keep that value.
                 Otherwise it will inherit this value.
-            terminations (dict or None): Optional mapping between different categories which will
+            terminations: Optional mapping between different categories which will
                 cause one modifier type to be 'terminated' by another type. For example, if given
                 a mapping:
                     {"POSITIVE_EXISTENCE": {"NEGATED_EXISTENCE", "UNCERTAIN"},
@@ -127,67 +123,71 @@ class ConTextComponent:
         Raises:
             ValueError: if one of the parameters is incorrectly formatted.
         """
+        """
+        Create a new ConTextComponent.
 
+        Args:
+            nlp: A SpaCy Language object.
+            name: The name of the component.
+            rules: The rules to load. Default is "default", loads rules packaged with medspaCy that are derived from 
+                original ConText rules and years of practical applications at the US Department of Veterans Affairs.  If 
+                None, no rules are loaded. Otherwise, must be a list of ConTextRule objects.
+            phrase_matcher_attr: The token attribute to use for PhraseMatcher for rules where `pattern` is None. Default
+                is 'LOWER'.
+            allowed_types: 
+            excluded_types: 
+            use_context_window: 
+            max_scope: 
+            max_targets: 
+            terminations: 
+            prune: 
+            remove_overlapping_modifiers: 
+            input_span_type: "ents" or "group". Where to look for targets. "ents" will modify attributes of spans 
+                in doc.ents. "group" will modify attributes of spans in the span group specified by `span_group_name`.
+            span_group_name: The name of the span group used when `input_span_type` is "group". Default is
+                "medspacy_spans".
+            span_attrs: The optional span attributes to modify. Format is a dictionary mapping context modifier 
+                categories to a dictionary containing the attribute name and the value to set the attribute to when a 
+                span is modified by a modifier of that category. Default behavior is to use attributes in 
+                `DEFAULT_ATTRIBUTES`.
+        """
         self.nlp = nlp
         self.name = name
         self.prune = prune
         self.remove_overlapping_modifiers = remove_overlapping_modifiers
+        self.input_span_type = input_span_type
+        self.span_group_name = span_group_name
 
-        self._rules = []
         self._i = 0
         self._categories = set()
 
-        self.matcher = MedspacyMatcher(
+        self.__matcher = MedspacyMatcher(
             nlp, phrase_matcher_attr=phrase_matcher_attr, prune=prune
         )
-        # _modifier_rule_mapping: A mapping from spaCy Matcher match_ids to ConTextRule
-        # This allows us to use spaCy Matchers while still linking back to the ConTextRule
-        # To get the direction and category
-        self._modifier_rule_mapping = self.matcher._rule_item_mapping
-        # self.phrase_matcher = PhraseMatcher(
-        #     nlp.vocab, attr=phrase_matcher_attr, validate=True
-        # )  # TODO: match on custom attributes
-        # self.matcher = Matcher(nlp.vocab, validate=True)
-        # self.regex_matcher = RegexMatcher(nlp.vocab)
 
-        self.register_graph_attributes()
-        if add_attrs is False:
-            self.add_attrs = False
-        elif add_attrs is True:
-            self.add_attrs = True
-            self.context_attributes_mapping = DEFAULT_ATTRS
-        elif isinstance(add_attrs, dict):
-            # Check that each of the attributes being added has been set
-            for modifier in add_attrs.keys():
-                attr_dict = add_attrs[modifier]
-                for attr_name, attr_value in attr_dict.items():
+        if span_attrs:
+            for _, attr_dict in span_attrs.items():
+                for attr_name in attr_dict.keys():
                     if not Span.has_extension(attr_name):
                         raise ValueError(
-                            "Custom extension {0} has not been set. Call Span.set_extension.".format(
-                                attr_name
-                            )
+                            f"Custom extension {attr_name} has not been set. Please ensure Span.set_extension is "
+                            f"called for your pipeline's custom extensions."
                         )
-
-            self.add_attrs = True
-            self.context_attributes_mapping = add_attrs
-
+            self.assertion_attributes_mapping = span_attrs
         else:
-            raise ValueError(
-                "add_attrs must be either True (default), False, or a dictionary, not {0}".format(
-                    add_attrs
-                )
-            )
+            self.context_attributes_mapping = DEFAULT_ATTRIBUTES
+            self.register_graph_attributes()
+
         if use_context_window is True:
             if not isinstance(max_scope, int) or max_scope < 1:
                 raise ValueError(
-                    "If 'use_context_window' is True, 'max_scope' must be an integer greater 1, "
-                    "not {0}".format(max_scope)
+                    f"If 'use_context_window' is True, 'max_scope' must be an integer greater than 0, not {max_scope}"
                 )
         self.use_context_window = use_context_window
+
         if max_scope is not None and (not isinstance(max_scope, int) or max_scope < 1):
             raise ValueError(
-                "'max_scope' must be None or an integer greater 1, "
-                "not {0}".format(max_scope)
+                f"'max_scope' must be None or an integer greater than 0, not {max_scope}"
             )
         self.max_scope = max_scope
 
@@ -199,68 +199,15 @@ class ConTextComponent:
             terminations = dict()
         self.terminations = {k.upper(): v for (k, v) in terminations.items()}
 
-        if rules == "default":
-
-            rules = ConTextRule.from_json(DEFAULT_RULES_FILEPATH)
+        if rules and rules == "default":
+            self.add(ConTextRule.from_json(DEFAULT_RULES_FILEPATH))
+        elif rules:
             self.add(rules)
-
-        elif rules == "other":
-            # use custom rules
-            if isinstance(rule_list, str):
-                # if rules_list is a string, then it must be a path to a json
-                if "yaml" in rule_list or "yml" in rule_list:
-                    try:
-                        rule_list = ConTextRule.from_yaml(rule_list)
-                    except:
-                        raise ValueError(
-                            "direction list {0} could not be read".format(rule_list)
-                        )
-                elif path.exists(rule_list):
-                    rules = ConTextRule.from_json(rule_list)
-                    self.add(rules)
-                else:
-                    raise ValueError(
-                        "rule_list must be a valid path. Currently is: {0}".format(
-                            rule_list
-                        )
-                    )
-
-            elif isinstance(rule_list, list):
-                # otherwise it is a list of contextrules
-                if not rule_list:
-                    raise ValueError("rule_list must not be empty.")
-                for rule in rule_list:
-                    # check that all rules are contextrules
-                    if not isinstance(rule, ConTextRule):
-                        raise ValueError(
-                            "rule_list must contain only ContextItems. Currently contains: {0}".format(
-                                type(rule)
-                            )
-                        )
-                self.add(rule_list)
-
-            else:
-                raise ValueError(
-                    "rule_list must be a valid path or list of ContextItems. Currenty is: {0}".format(
-                        type(rule_list)
-                    )
-                )
-
-        elif not rules:
-            # otherwise leave the list empty.
-            # do nothing
-            pass
-
-        else:
-            # loading from json path or list is possible later
-            raise ValueError(
-                "rules must either be 'default' (default), 'other' or None."
-            )
 
     @property
     def rules(self):
         """Returns list of ConTextItems"""
-        return self._rules
+        return self.__matcher.rules
 
     @property
     def categories(self):
@@ -273,9 +220,8 @@ class ConTextComponent:
         Args:
             rules: a list of ConTextItems to add.
         """
-        if not isinstance(rules, list):
+        if isinstance(rules, ConTextRule):
             rules = [rules]
-        self.matcher.add(rules)
         for rule in rules:
             if not isinstance(rule, ConTextRule):
                 raise TypeError("rules must be a list of ConTextRules.")
@@ -302,7 +248,7 @@ class ConTextComponent:
                 for other_modifier in self.terminations[rule.category.upper()]:
                     rule.terminated_by.add(other_modifier.upper())
 
-            self._rules.append(rule)
+            self.__matcher.add(rules)
 
     def register_graph_attributes(self):
         """Register spaCy container custom attribute extensions.
@@ -337,14 +283,15 @@ class ConTextComponent:
 
         Args:
             doc: a spaCy Doc
-            targets: (str) the custom attribute extension on doc to run over.
-                    Must contain an iterable of Span objects
+            targets: the custom attribute extension on doc to run over. Must contain an iterable of Span objects
 
         Returns:
             doc: a spaCy Doc
         """
-        if targets is None:
+        if self.input_span_type == "ents":
             targets = doc.ents
+        elif self.input_span_type == "group":
+            targets = doc.spans[self.span_group_name]
         else:
             targets = getattr(doc._, targets)
         # Store data in ConTextGraph object
@@ -356,11 +303,11 @@ class ConTextComponent:
         context_graph.targets = targets
 
         context_graph.modifiers = []
-        matches = self.matcher(doc)
+        matches = self.__matcher(doc)
 
         for (match_id, start, end) in matches:
             # Get the ConTextRule object defining this modifier
-            rules = self._modifier_rule_mapping[self.nlp.vocab[match_id].text]
+            rules = self.__matcher.rule_map[self.nlp.vocab[match_id].text]
             modifier = ConTextModifier(rules, start, end, doc, self.use_context_window)
             context_graph.modifiers.append(modifier)
 
@@ -372,7 +319,7 @@ class ConTextComponent:
             target._.modifiers += (modifier,)
 
         # If add_attrs is True, add is_negated, is_current, is_asserted to targets
-        if self.add_attrs:
+        if self.input_span_type:
             self.set_context_attributes(context_graph.edges)
 
         doc._.context_graph = context_graph

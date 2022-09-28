@@ -349,21 +349,13 @@ class ConTextModifier:
         """
         Serialized Representation of the modifier
         """
-
-        KEYS_TO_KEEP = [
-            "start",
-            "end",
-            "_use_context_window",
-            "_scope_start",
-            "_scope_end",
-        ]
-
-        modifier_dict = self.__dict__
-
-        rule_dict = modifier_dict["_context_rule"].to_dict()
-
-        dict_repr = dict((key, modifier_dict[key]) for key in KEYS_TO_KEEP)
-        dict_repr["context_rule"] = rule_dict
+        dict_repr = dict()
+        dict_repr["context_rule"] = self.rule.to_dict()
+        dict_repr["start"] = self._start
+        dict_repr["end"] = self._end
+        dict_repr["use_context_window"] = self._use_context_window
+        dict_repr["scope_start"] = self._scope_start
+        dict_repr["scope_end"] = self._scope_end
 
         return dict_repr
 

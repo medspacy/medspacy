@@ -59,7 +59,7 @@ class TestConTextGraph:
         doc.ents = (Span(doc, 3, 5, "CONDITION"),)
         context_item = ConTextRule("failure", "MODIFIER")
         tag_object = ConTextModifier(context_item, 4, 5, doc)
-        graph = ConTextGraph(remove_overlapping_modifiers=True)
+        graph = ConTextGraph(prune_on_modifier_overlap=True)
 
         graph.modifiers = [tag_object]
         graph.targets = doc.ents
@@ -76,7 +76,7 @@ class TestConTextGraph:
         doc.ents = (Span(doc, 3, 5, "CONDITION"),)
         context_item = ConTextRule("failure", "MODIFIER")
         tag_object = ConTextModifier(context_item, 4, 5, doc)
-        graph = ConTextGraph(remove_overlapping_modifiers=False)
+        graph = ConTextGraph(prune_on_modifier_overlap=False)
 
         graph.modifiers = [tag_object]
         graph.targets = doc.ents

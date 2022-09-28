@@ -1,17 +1,28 @@
 from __future__ import annotations
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, TYPE_CHECKING
 import srsly
+from spacy.tokens import Span
 
+if TYPE_CHECKING:
+    from medspacy.context import ConTextModifier
 from medspacy.util import tuple_overlaps
 
 
 class ConTextGraph:
+    """
+    The ConTextGraph class defines the internal structure of the ConText algorithm. It stores a collection of modifiers,
+    matched with ConTextRules, and targets from some other source such as the TargetMatcher or a spaCy NER model.
+
+    Each modifier can have some number of associated targets that it modifies. This relationship is stored as edges of
+    of the graph.
+    """
+
     def __init__(
         self,
-        targets: Optional[List] = None,
-        modifiers: Optional[List] = None,
+        targets: Optional[List[Span]] = None,
+        modifiers: Optional[List["ConTextModifier"]] = None,
         edges: Optional[List] = None,
-        remove_overlapping_modifiers=False,
+        prune_on_modifier_overlap: bool = False,
     ):
         """
 
@@ -19,12 +30,12 @@ class ConTextGraph:
             targets:
             modifiers:
             edges:
-            remove_overlapping_modifiers:
+            prune_on_modifier_overlap:
         """
         self.targets = targets if targets is not None else []
         self.modifiers = modifiers if modifiers is not None else []
         self.edges = edges if edges is not None else []
-        self.remove_overlapping_modifiers = remove_overlapping_modifiers
+        self.prune_on_modifier_overlap = prune_on_modifier_overlap
 
     def update_scopes(self):
         """
@@ -48,7 +59,7 @@ class ConTextGraph:
         Checks each target/modifier pair. If modifier modifies target,
         create an edge between them.
         """
-        if self.remove_overlapping_modifiers:
+        if self.prune_on_modifier_overlap:
             for i in range(len(self.modifiers) - 1, -1, -1):
                 modifier = self.modifiers[i]
                 for target in self.targets:
@@ -74,9 +85,7 @@ class ConTextGraph:
         self.edges = edges
 
     def __repr__(self):
-        return "<ConTextGraph> with {0} targets and {1} modifiers".format(
-            len(self.targets), len(self.modifiers)
-        )
+        return f"<ConTextGraph> with {len(self.targets)} targets and {len(self.modifiers)} modifiers"
 
     def serialized_representation(self) -> Dict[str, Any]:
         """

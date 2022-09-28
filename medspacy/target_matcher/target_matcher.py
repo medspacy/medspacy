@@ -1,4 +1,4 @@
-from typing import List, Union, Iterable, Optional, Literal
+from typing import List, Union, Iterable, Optional, Literal, Set
 
 from spacy.tokens import Doc, Span
 from spacy.language import Language
@@ -67,6 +67,16 @@ class TargetMatcher:
         return self.__matcher.rules
 
     @property
+    def labels(self) -> Set[str]:
+        """
+        Gets the list of labels for the TargetMatcher. Based on rules added to the TargetMatcher.
+
+        Returns:
+            A list of all labels that the TargetMatcher can produce.
+        """
+        return self.__matcher.labels
+
+    @property
     def result_type(self) -> Union[str, None]:
         """
         The result type of the TargetMatcher. "ents" indicates that calling TargetMatcher will store the results in
@@ -79,11 +89,9 @@ class TargetMatcher:
         return self._result_type
 
     @result_type.setter
-    def result_type(self, result_type: Union[str, None]):
-        if not (
-            not result_type or result_type.lower() == "group" or result_type != "ents"
-        ):
-            raise ValueError('result_type must be "ent". "group" or None.')
+    def result_type(self, result_type: Literal["ents", "group"]):
+        if not (not result_type or result_type == "group" or result_type == "ents"):
+            raise ValueError('result_type must be "ents", "group" or None.')
         self._result_type = result_type
 
     @property

@@ -56,7 +56,8 @@ class ConTextRule(BaseRule):
         metadata: Optional[Dict[Any, Any]] = None,
     ):
         """
-        Create an ConTextRule object.
+        Creates a ConTextRule object.
+
         The primary arguments of `literal` `category`, and `direction` define the span of text to be matched, the
         semantic category, and the direction within the sentence in which the modifier operates.
         Other arguments specify additional custom logic such as:
@@ -161,7 +162,8 @@ class ConTextRule(BaseRule):
 
     @classmethod
     def from_json(cls, filepath) -> List[ConTextRule]:
-        """Read in a lexicon of modifiers from a JSON file under the key `context_rules`.
+        """
+        Reads in a lexicon of modifiers from a JSON file under the key `context_rules`.
 
         Args:
             filepath: The .json file containing modifier rules. Must contain `context_rules` key containing the rule
@@ -180,7 +182,8 @@ class ConTextRule(BaseRule):
 
     @classmethod
     def from_dict(cls, rule_dict) -> ConTextRule:
-        """Reads a dictionary into a ConTextRule.
+        """
+        Reads a dictionary into a ConTextRule.
 
         Args:
             rule_dict: The dictionary to convert.
@@ -200,7 +203,8 @@ class ConTextRule(BaseRule):
         return rule
 
     def to_dict(self) -> Dict[str, str]:
-        """Converts ConTextItems to a python dictionary. Used when writing context rules to a json file.
+        """
+        Converts ConTextItems to a python dictionary. Used when writing context rules to a json file.
 
         Returns:
             The dictionary containing the ConTextRule info.

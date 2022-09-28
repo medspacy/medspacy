@@ -1,4 +1,4 @@
-from typing import Iterable, List, Dict, Tuple
+from typing import Iterable, List, Dict, Tuple, Set
 
 from spacy import Language
 from spacy.matcher import Matcher, PhraseMatcher
@@ -67,6 +67,16 @@ class MedspacyMatcher:
             A dictionary mapping the rule's id to the rule.
         """
         return self._rule_map
+
+    @property
+    def labels(self) -> Set[str]:
+        """
+        The set of labels available to the matcher.
+
+        Returns:
+            A set of labels containing the labels for all the rules added to the matcher.
+        """
+        return self._labels
 
     def add(self, rules: Iterable[BaseRule]):
         """

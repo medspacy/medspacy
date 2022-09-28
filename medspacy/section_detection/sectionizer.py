@@ -1,4 +1,4 @@
-from typing import Union, Iterable, Optional, Dict, Any, Tuple, List, Literal
+from typing import Union, Iterable, Optional, Dict, Any, Tuple, List, Literal, Set
 
 from spacy.tokens import Span, Doc
 from spacy.language import Language
@@ -112,7 +112,6 @@ class Sectionizer:
         self.assertion_attributes_mapping = None
         self._parent_sections = {}
         self._parent_required = {}
-        self._section_categories = set()
         self.input_span_type = input_span_type
         self.span_group_name = span_group_name
 
@@ -147,14 +146,14 @@ class Sectionizer:
         return self.__matcher.rules
 
     @property
-    def section_categories(self) -> List[str]:
+    def section_categories(self) -> Set[str]:
         """
         Gets a list of categories used in the Sectionizer.
 
         Returns:
                 The list of all section categories available to the Sectionizer.
         """
-        return list(sorted(self._section_categories))
+        return self.__matcher.labels
 
     @classmethod
     def register_default_attributes(cls):
@@ -216,7 +215,6 @@ class Sectionizer:
                 self._parent_required[name] = False
             else:
                 self._parent_required[name] = parent_required
-            self._section_categories.add(rule.category)
 
     def set_parent_sections(
         self, sections: List[Tuple[int, int, int]]

@@ -350,7 +350,7 @@ class TestConTextComponent:
             ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
             ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD"),
         ]
-        context = ConTextComponent(nlp, rules=None, prune=True)
+        context = ConTextComponent(nlp, rules=None, prune_on_modifier_overlap=True)
         context.add(rules)
 
         doc = nlp("No history of afib.")
@@ -366,7 +366,7 @@ class TestConTextComponent:
             ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
             ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD"),
         ]
-        context = ConTextComponent(nlp, rules=None, prune=False)
+        context = ConTextComponent(nlp, rules=None, prune_on_modifier_overlap=False)
         context.add(rules)
 
         doc = nlp("No history of afib.")

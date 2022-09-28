@@ -107,9 +107,6 @@ class ConTextComponent:
         self.span_group_name = span_group_name
         self.context_attributes_mapping = None
 
-        self._i = 0
-        self._categories = set()
-
         self.__matcher = MedspacyMatcher(
             nlp,
             phrase_matcher_attr=phrase_matcher_attr,
@@ -160,8 +157,10 @@ class ConTextComponent:
 
     @property
     def categories(self):
-        """Returns list of categories from ConTextItems"""
-        return self._categories
+        """
+        Returns list of categories from ConTextItems
+        """
+        return self.__matcher.labels
 
     def add(self, rules):
         """
@@ -175,7 +174,6 @@ class ConTextComponent:
         for rule in rules:
             if not isinstance(rule, ConTextRule):
                 raise TypeError("rules must be a list of ConTextRules.")
-            self._categories.add(rule.category)
 
             # If global attributes like allowed_types and max_scope are defined,
             # check if the ConTextRule has them defined. If not, set to the global
@@ -203,15 +201,7 @@ class ConTextComponent:
     @classmethod
     def register_graph_attributes(cls):
         """
-        Registers spaCy container custom attribute extensions.
-
-        By default, will register Span._.modifiers and Doc._.context_graph.
-
-        If self.add_attrs is True, will add additional attributes to span
-            as defined in DEFAULT_ATTRS:
-            - is_negated
-            - is_historical
-            - is_experiencer
+        Registers spaCy attribute extensions: Span._.modifiers and Doc._.context_graph.
         """
         Span.set_extension("modifiers", default=(), force=True)
         Doc.set_extension("context_graph", default=None, force=True)
@@ -239,24 +229,23 @@ class ConTextComponent:
 
         Args:
             edges: The edges of the ContextGraph to modify.
-
         """
-
         for (target, modifier) in edges:
             if modifier.category in self.context_attributes_mapping:
                 attr_dict = self.context_attributes_mapping[modifier.category]
                 for attr_name, attr_value in attr_dict.items():
                     setattr(target._, attr_name, attr_value)
 
-    def __call__(self, doc, targets: str = None):
-        """Applies the ConText algorithm to a Doc.
+    def __call__(self, doc, targets: str = None) -> Doc:
+        """
+        Applies the ConText algorithm to a Doc.
 
         Args:
-            doc: a spaCy Doc
-            targets: the custom attribute extension on doc to run over. Must contain an iterable of Span objects
+            doc: The spaCy Doc to process.
+            targets: The optional custom attribute extension on doc to run over. Must contain an iterable of Span objects
 
         Returns:
-            doc: a spaCy Doc
+            The processed spaCy Doc.
         """
         if not targets and self.input_span_type == "ents":
             targets = doc.ents
@@ -267,7 +256,7 @@ class ConTextComponent:
         # Store data in ConTextGraph object
         # TODO: move some of this over to ConTextGraph
         context_graph = ConTextGraph(
-            remove_overlapping_modifiers=self.prune_on_target_overlap
+            prune_on_modifier_overlap=self.prune_on_target_overlap
         )
 
         context_graph.targets = targets

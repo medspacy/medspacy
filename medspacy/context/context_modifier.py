@@ -103,18 +103,18 @@ class ConTextModifier:
         """Returns the associated maximum scope."""
         return self.rule.max_scope
 
-    def __set_scope(self, doc):
-        """Applies the direction of the ConTextRule which generated
-        this ConTextModifier to define a scope.
-        If self.max_scope is None, then the default scope is the sentence which it occurs in
-        in whichever direction defined by self.direction.
-        For example, if the direction is "forward", the scope will be [self.end: sentence.end].
-        If the direction is "backward", it will be [self.start: sentence.start].
+    def __set_scope(self, doc: Doc):
+        """
+        Applies the direction of the ConTextRule which generated this ConTextModifier to define a scope. If
+        self.max_scope is None, then the default scope is the sentence which it occurs in whichever direction defined by
+        self.direction. For example, if the direction is "forward", the scope will be [self.end: sentence.end]. If the
+        direction is "backward", it will be [self.start: sentence.start].
 
-        If self.max_scope is not None and the length of the default scope is longer than self.max_scope,
-        it will be reduced to self.max_scope.
+        If self.max_scope is not None and the length of the default scope is longer than self.max_scope, it will be
+        reduced to self.max_scope.
 
-
+        Args:
+            doc: The spaCy doc to use to set scope.
         """
         # If ConText is set to use defined windows, do that instead of sentence splitting
         if self._use_context_window:
@@ -171,7 +171,7 @@ class ConTextModifier:
 
     def update_scope(self, span: Span):
         """
-        Change the scope of self to be the given spaCy span.
+        Changes the scope of self to be the given spaCy span.
 
         Args:
             span: a spaCy Span which contains the scope which a modifier should cover.
@@ -255,10 +255,14 @@ class ConTextModifier:
 
     def allows(self, target_label: str) -> bool:
         """
-        Returns True if a modifier is able to modify a target type.
-        A modifier may not be allowed if either self.allowed_types is not None and
-        target_label is not in it, or if self.excluded_types is not None and
-        target_label is in it.
+        Returns whether if a modifier is able to modify a target type.
+
+        Args:
+            target_label: The target type to check.
+
+        Returns:
+            Whether the modifier is allowed to modify a target of the specified type. True if `target_label` in
+            `self.allowed_types` or if `target_label` not in `self.excluded_tupes`. False otherwise.
         """
         if self.allowed_types is not None:
             if target_label not in self.allowed_types:
@@ -270,12 +274,16 @@ class ConTextModifier:
             return False
         return True
 
-    def on_modifies(self, target) -> bool:
+    def on_modifies(self, target: Span) -> bool:
         """
-        If the ConTextRule used to define a ConTextModifier has an on_modifies callback function,
-        evaluate and return either True or False.
+        If the ConTextRule used to define a ConTextModifier has an `on_modifies` callback function, evaluate and return
+        either True or False.
 
-        If on_modifies is None, return True.
+        Args:
+            target: The spaCy span to evaluate.
+
+        Returns:
+            The result of the `on_modifies` callback for the rule. True if the callback is None.
         """
         if self.rule.on_modifies is None:
             return True
@@ -293,15 +301,20 @@ class ConTextModifier:
             )
         return rslt
 
-    def modify(self, target):
-        """Add target to the list of self._targets and increment self._num_targets."""
+    def modify(self, target: Span):
+        """
+        Add target to the list of self._targets and increment self._num_targets.
+
+        Args:
+            target: The spaCy span to add.
+        """
         self._targets.append(target)
         self._num_targets += 1
 
     def reduce_targets(self):
-        """If self.max_targets is not None, reduce the targets which are modified
-        so that only the n closest targets are left. Distance is measured as
-        the distance to either the start or end of a target (whichever is closer).
+        """
+        Reduces the number of targets to the n-closest targets based on the value of `self.max_targets`. If
+        `self.max_targets` is None, no pruning is done.
         """
         if self.max_targets is None or self.num_targets <= self.max_targets:
             return

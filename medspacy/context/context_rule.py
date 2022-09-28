@@ -43,10 +43,10 @@ class ConTextRule(BaseRule):
         literal: str,
         category: str,
         pattern: Optional[Union[str, List[Dict[str, str]]]] = None,
+        direction: str = "BIDIRECTIONAL",
         on_match: Optional[
             Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]
         ] = None,
-        direction: str = "BIDIRECTIONAL",
         on_modifies: Optional[Callable[[Span, Span, Span], bool]] = None,
         allowed_types: Optional[Set[str]] = None,
         excluded_types: Optional[Set[str]] = None,
@@ -75,8 +75,6 @@ class ConTextRule(BaseRule):
                 token-based pattern matching to match using token attributes. If a string, will use medspaCy's
                 RegexMatcher. If None, will use `literal` as the pattern for phrase matching. For more information, see
                 https://spacy.io/usage/rule-based-matching.
-            on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
-                matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
             direction: The directionality or action of a modifier. This defines which part of a sentence a modifier will
                 include as its scope. Entities within the scope will be considered to be modified.
                 Valid values are:
@@ -90,6 +88,8 @@ class ConTextRule(BaseRule):
                     superstrings of modifiers. Example: A modifier with literal="negative attitude" will prevent the
                     phrase "negative" in "She has a negative attitude about her treatment" from being extracted as a
                     modifier.
+            on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
+                matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
             on_modifies: Callback function to run when building an edge between a target and a modifier. This allows
                 specifying custom logic for allowing or preventing certain modifiers from modifying certain targets. The
                 callable should take 3 arguments:

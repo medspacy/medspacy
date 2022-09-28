@@ -68,7 +68,9 @@ class Sectionizer:
         newline_pattern: str = r"[\n\r]+[\s]*$",
         input_span_type: Union[Literal["ents", "group"], None] = "ents",
         span_group_name: str = "medspacy_spans",
-        span_attrs: Optional[Dict[str, Dict[str, Any]]] = None,
+        span_attrs: Union[
+            Literal["default"], Dict[str, Dict[str, Any]], None
+        ] = "default",
     ):
         """
         Create a new Sectionizer component.
@@ -89,15 +91,17 @@ class Sectionizer:
             require_end_line: Optionally require a section header to end with a new line. Default False.
             newline_pattern: Regular expression to match the new line either preceding or following a header
                 if either require_start_line or require_end_line are True. Default is r"[\n\r]+[\s]*$"
-            input_span_type: "ents", "group" or None. Where to look for spans when modifying attributes of spans
-                contained in a section. "ents" will modify attributes of spans in doc.ents. "group" will modify
-                attributes of spans in the span group specified by `span_group_name`. If None, Sectionizer will not
-                modify attributes of entities contained in a section.
+            span_attrs: The optional span attributes to modify. Default option "default" uses attributes in
+                `DEFAULT_ATTRIBUTES`. If a dictionary of custom attributes, format is a dictionary mapping section
+                categories to a dictionary containing the attribute name and the value to set the attribute to when a
+                span is contained in a section of that category. Custom attributes must be assigned with
+                `Span.set_extension` before creating the Sectionizer. If None, sectionizer will not modify span
+                attributes.
+            input_span_type: "ents" or "group". Where to look for spans when modifying attributes of spans
+                contained in a section if `span_attrs` is not None. "ents" will modify attributes of spans in doc.ents.
+                "group" will modify attributes of spans in the span group specified by `span_group_name`.
             span_group_name: The name of the span group used when `input_span_type` is "group". Default is
                 "medspacy_spans".
-            span_attrs: The optional span attributes to modify. Format is a dictionary mapping section categories to a
-                dictionary containing the attribute name and the value to set the attribute to when a span is contained
-                in a section of that category. Default behavior is to use attributes in `DEFAULT_ATTRIBUTES`.
         """
         self.nlp = nlp
         self.name = name
@@ -119,7 +123,10 @@ class Sectionizer:
         elif rules:
             self.add(rules)
 
-        if span_attrs:
+        if span_attrs == "default":
+            self.assertion_attributes_mapping = DEFAULT_ATTRS
+            self.register_default_attributes()
+        elif span_attrs:
             for _, attr_dict in span_attrs.items():
                 for attr_name in attr_dict.keys():
                     if not Span.has_extension(attr_name):
@@ -128,9 +135,6 @@ class Sectionizer:
                             f"called for your pipeline's custom extensions."
                         )
             self.assertion_attributes_mapping = span_attrs
-        else:
-            self.assertion_attributes_mapping = DEFAULT_ATTRS
-            self.register_default_attributes()
 
     @property
     def rules(self) -> List[SectionRule]:
@@ -415,10 +419,12 @@ class Sectionizer:
 
         # If it is specified to add assertion attributes,
         # iterate through the entities in doc and add them
-        if self.input_span_type.lower() == "ents":
-            self.set_assertion_attributes(doc.ents)
-        elif self.input_span_type.lower() == "group":
-            self.set_assertion_attributes(doc.spans[self.span_group_name])
+        if self.assertion_attributes_mapping:
+            if self.input_span_type.lower() == "ents":
+                self.set_assertion_attributes(doc.ents)
+            elif self.input_span_type.lower() == "group":
+                self.set_assertion_attributes(doc.spans[self.span_group_name])
+
         return doc
 
     def filter_start_lines(

@@ -52,7 +52,9 @@ class ConTextGraph:
             for i in range(len(self.modifiers) - 1, -1, -1):
                 modifier = self.modifiers[i]
                 for target in self.targets:
-                    if tuple_overlaps((target.start, target.end), modifier.span):
+                    if tuple_overlaps(
+                        (target.start, target.end), modifier.modifier_span
+                    ):
                         self.modifiers.pop(i)
                         break
 

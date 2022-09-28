@@ -82,5 +82,7 @@ class TestConTextGraph:
         graph.targets = doc.ents
         graph.apply_modifiers()
 
-        assert tuple_overlaps(tag_object.span, (doc.ents[0].start, doc.ents[0].end))
+        assert tuple_overlaps(
+            tag_object.modifier_span, (doc.ents[0].start, doc.ents[0].end)
+        )
         assert len(graph.modifiers) == 1

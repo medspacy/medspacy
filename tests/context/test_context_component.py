@@ -65,11 +65,9 @@ class TestConTextComponent:
         assert hasattr(doc.ents[0]._, "modifiers")
 
     def test_registers_context_attributes(self):
-        """Test that the additional attributes such as
-        'is_negated' are registered on spaCy spans.
-        """
+        """Test that the additional attributes such as 'is_negated' are registered on spaCy spans."""
         doc = nlp("This is a span.")
-        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        context = ConTextComponent(nlp, span_attrs="default", rules=None)
         context(doc)
         span = doc[-2:]
         for attr_name in [
@@ -99,7 +97,7 @@ class TestConTextComponent:
 
     def test_is_negated(self):
         doc = nlp("There is no evidence of pneumonia.")
-        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        context = ConTextComponent(nlp, span_attrs="default", rules=None)
         rules = [
             ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="forward")
         ]
@@ -111,7 +109,7 @@ class TestConTextComponent:
 
     def test_is_historical(self):
         doc = nlp("History of pneumonia.")
-        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        context = ConTextComponent(nlp, span_attrs="default", rules=None)
         rules = [ConTextRule("history of", "HISTORICAL", direction="forward")]
         context.add(rules)
         doc.ents = (Span(doc, 2, 3, "CONDITION"),)
@@ -121,7 +119,7 @@ class TestConTextComponent:
 
     def test_is_family(self):
         doc = nlp("Family history of breast cancer.")
-        context = ConTextComponent(nlp, add_attrs=True, rules=None)
+        context = ConTextComponent(nlp, span_attrs="default", rules=None)
         rules = [ConTextRule("family history of", "FAMILY", direction="forward")]
         context.add(rules)
         doc.ents = (Span(doc, 3, 5, "CONDITION"),)
@@ -137,7 +135,7 @@ class TestConTextComponent:
             "FAKE_MODIFIER": {"non_existent_attribute": True},
         }
         with pytest.raises(ValueError):
-            ConTextComponent(nlp, add_attrs=custom_attrs)
+            ConTextComponent(nlp, span_attrs=custom_attrs)
 
     def test_custom_attributes_mapping(self):
         custom_attrs = {
@@ -147,7 +145,7 @@ class TestConTextComponent:
             Span.set_extension("is_negated", default=False)
         except:
             pass
-        context = ConTextComponent(nlp, add_attrs=custom_attrs)
+        context = ConTextComponent(nlp, span_attrs=custom_attrs)
         assert context.context_attributes_mapping == custom_attrs
 
     def test_custom_attributes_value1(self):
@@ -158,7 +156,7 @@ class TestConTextComponent:
             Span.set_extension("is_negated", default=False)
         except:
             pass
-        context = ConTextComponent(nlp, add_attrs=custom_attrs)
+        context = ConTextComponent(nlp, span_attrs=custom_attrs)
         context.add([ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD")])
         doc = nlp("There is no evidence of pneumonia.")
         doc.ents = (Span(doc, 5, 6, "CONDITION"),)
@@ -174,7 +172,7 @@ class TestConTextComponent:
             Span.set_extension("is_family", default=False)
         except:
             pass
-        context = ConTextComponent(nlp, add_attrs=custom_attrs)
+        context = ConTextComponent(nlp, span_attrs=custom_attrs)
         context.add(
             [ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")]
         )
@@ -197,7 +195,7 @@ class TestConTextComponent:
                 ConTextRule(
                     "no evidence of",
                     "NEGATED_EXISTENCE",
-                    "FORWARD",
+                    direction="FORWARD",
                     on_match=simple_callback,
                 )
             ]
@@ -247,7 +245,9 @@ class TestConTextComponent:
         context = ConTextComponent(
             nlp,
             rules=None,
-            terminations={"NEGATED_EXISTENCE": ["POSITIVE_EXISTENCE", "UNCERTAIN"]},
+            terminating_types={
+                "NEGATED_EXISTENCE": ["POSITIVE_EXISTENCE", "UNCERTAIN"]
+            },
         )
         rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
@@ -256,7 +256,7 @@ class TestConTextComponent:
         assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
     def test_rule_modifier_termination(self):
-        context = ConTextComponent(nlp, rules=None, terminations=None)
+        context = ConTextComponent(nlp, rules=None, terminating_types=None)
         rule = ConTextRule(
             "no evidence of",
             "NEGATED_EXISTENCE",
@@ -267,7 +267,7 @@ class TestConTextComponent:
         assert rule.terminated_by == {"POSITIVE_EXISTENCE", "UNCERTAIN"}
 
     def test_null_modifier_termination(self):
-        context = ConTextComponent(nlp, rules=None, terminations=None)
+        context = ConTextComponent(nlp, rules=None, terminating_types=None)
         rule = ConTextRule(
             "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
         )
@@ -324,13 +324,10 @@ class TestConTextComponent:
         assert len(doc._.context_graph.modifiers) == 1
         assert doc._.context_graph.modifiers[0].category == "PSEUDO_NEGATED_EXISTENCE"
 
-    def test_context_window_no_max_scope_fails(self):
+    def test__max_scope_fails(self):
         "Test that if use_context_window is True but max_scope is None, the instantiation will fail"
         with pytest.raises(ValueError) as exception_info:
-            context = ConTextComponent(nlp, max_scope=None, use_context_window=True)
-        exception_info.match(
-            "If 'use_context_window' is True, 'max_scope' must be an integer greater than 0, not None"
-        )
+            context = ConTextComponent(nlp, max_scope=-1)
 
     def test_regex_pattern(self):
         rules = [

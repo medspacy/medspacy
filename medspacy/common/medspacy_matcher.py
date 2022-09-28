@@ -77,7 +77,7 @@ class MedspacyMatcher:
         """
         for rule in rules:
             if not isinstance(rule, BaseRule):
-                raise ValueError("Rules must inherit from medspacy.common.BaseRule.")
+                raise TypeError("Rules must inherit from medspacy.common.BaseRule.")
             self._labels.add(rule.category)
             rule_id = f"{rule.category}_{self.__rule_count}"
             rule._rule_id = rule_id

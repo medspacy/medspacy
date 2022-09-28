@@ -151,7 +151,7 @@ def load(
 
     if "medspacy_context" in enable:
         if load_rules is True:
-            config = {"rules": "default"}
+            config = {}
         else:
             config = {"rules": None}
         nlp.add_pipe("medspacy_context", config=config)

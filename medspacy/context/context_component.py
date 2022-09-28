@@ -48,124 +48,78 @@ class ConTextComponent:
         phrase_matcher_attr: str = "LOWER",
         allowed_types: Optional[Set[str]] = None,
         excluded_types: Optional[Set[str]] = None,
-        use_context_window: bool = False,
+        terminating_types: Optional[Dict[str, Iterable[str]]] = None,
         max_scope: Optional[int] = None,
         max_targets: Optional[int] = None,
-        terminations: Optional[Dict[str, Iterable[str]]] = None,
-        prune: bool = True,
-        remove_overlapping_modifiers: bool = False,
+        prune_on_modifier_overlap: bool = True,
+        prune_on_target_overlap: bool = False,
+        span_attrs: Union[
+            Literal["default"], Dict[str, Dict[str, Any]], None
+        ] = "default",
         input_span_type: Union[Literal["ents", "group"]] = "ents",
         span_group_name: str = "medspacy_spans",
-        span_attrs: Optional[Dict[str, Dict[str, Any]]] = None,
     ):
         """
-
-            add_attrs: Whether to add the additional spaCy Span attributes (ie., Span._.x)
-                defining assertion on the targets. By default, these are:
-                - is_negated: True if a target is modified by 'NEGATED_EXISTENCE', default False
-                - is_uncertain: True if a target is modified by 'POSSIBLE_EXISTENCE', default False
-                - is_historical: True if a target is modified by 'HISTORICAL', default False
-                - is_hypothetical: True if a target is modified by 'HYPOTHETICAL', default False
-                - is_family: True if a target is modified by 'FAMILY', default False
-                In the future, these should be made customizable.
-            phrase_matcher_attr: The token attribute to be used by the underlying PhraseMatcher.
-                If "LOWER", then the matching of modifiers with a "literal" string will be
-                case-insensitive. If "TEXT" or "ORTH", it will be case-sensitive.
-                Default "LOWER'.
-            prune: Whether to prune modifiers which are substrings of another modifier.
-                For example, if "no history of" and "history of" are both ConTextItems, both will match
-                the text "no history of afib", but only "no history of" should modify afib.
-                If True, will drop shorter substrings completely.
-                Default True.
-            remove_overlapping_modifiers: Whether to remove any matched modifiers which overlap
-                with target entities. If False, any overlapping modifiers will not modify the overlapping
-                entity but will still modify any other targets in its scope.
-                Default False.
-            rules: Which rules to load on initialization. Default is 'default'.
-                - 'default': Load the default set of rules provided with cyConText
-                - 'other': Load a custom set of rules, please also set rule_list with a file path or list.
-                - None: Load no rules.
-            allowed_types (set or None): A set of target labels to allow a ConTextRule to modify.
-                If None, will apply to any type not specifically excluded in excluded_types.
-                Only one of allowed_types and excluded_types can be used. An error will be thrown
-                if both or not None.
-                If this attribute is also defined in the ConTextRule, it will keep that value.
-                Otherwise it will inherit this value.
-            excluded_types (set or None): A set of target labels which this modifier cannot modify.
-                If None, will apply to all target types unless allowed_types is not None.
-                If this attribute is also defined in the ConTextRule, it will keep that value.
-                Otherwise it will inherit this value.
-            max_targets (int or None): The maximum number of targets which a modifier can modify.
-                If None, will modify all targets in its scope.
-                If this attribute is also defined in the ConTextRule, it will keep that value.
-                Otherwise it will inherit this value.
-            use_context_window (bool): Whether to use a specified range around a target to check
-                for modifiers rather than split sentence boundaries. This can be useful
-                for quicker processing by skipping sentence splitting or errors caused by poorly
-                defined sentence boundaries. If True, max_scope must be an integer greater than 0.
-            max_scope (int or None): A number to explicitly limit the size of the modifier's scope
-                If this attribute is also defined in the ConTextRule, it will keep that value.
-                Otherwise it will inherit this value.
-            terminations: Optional mapping between different categories which will
-                cause one modifier type to be 'terminated' by another type. For example, if given
-                a mapping:
-                    {"POSITIVE_EXISTENCE": {"NEGATED_EXISTENCE", "UNCERTAIN"},
-                    "NEGATED_EXISTENCE": {"FUTURE"},
-                    }
-                all modifiers of type "POSITIVE_EXISTENCE" will be terminated by "NEGATED_EXISTENCE" or "UNCERTAIN"
-                modifiers, and all "NEGATED_EXISTENCE" modifiers will be terminated by "FUTURE".
-                This can also be defined for specific ConTextItems in the `terminated_by` attribute.
-
-
-        Returns:
-            context: a ConTextComponent
-
-        Raises:
-            ValueError: if one of the parameters is incorrectly formatted.
-        """
-        """
-        Create a new ConTextComponent.
+        Creates a new ConTextComponent.
 
         Args:
             nlp: A SpaCy Language object.
             name: The name of the component.
-            rules: The rules to load. Default is "default", loads rules packaged with medspaCy that are derived from 
-                original ConText rules and years of practical applications at the US Department of Veterans Affairs.  If 
+            rules: The rules to load. Default is "default", loads rules packaged with medspaCy that are derived from
+                original ConText rules and years of practical applications at the US Department of Veterans Affairs.  If
                 None, no rules are loaded. Otherwise, must be a list of ConTextRule objects.
             phrase_matcher_attr: The token attribute to use for PhraseMatcher for rules where `pattern` is None. Default
                 is 'LOWER'.
-            allowed_types: 
-            excluded_types: 
-            use_context_window: 
-            max_scope: 
-            max_targets: 
-            terminations: 
-            prune: 
-            remove_overlapping_modifiers: 
-            input_span_type: "ents" or "group". Where to look for targets. "ents" will modify attributes of spans 
+            allowed_types: A global list of types included by context. Rules will operate on only spans with these
+                labels.
+            excluded_types: A global list of types excluded by context. Rules will not operate on spans with these
+                labels.
+            terminating_types: A global map of types to the types that can terminate them. This can be used to apply
+                terminations to all rules of a particular type rather than adding to every rule individually in the
+                ContextRule object.
+            max_scope: The number of tokens around a modifier in a target can be modified. Default value is None,
+                Context will use the sentence boundaries. If a value greater than zero, applies the window globally.
+                Both options will be overridden by a more specific value in a ContextRule.
+            max_targets: The maximum number of targets a modifier can modify. Default value is None, context will modify
+                all targets in its scope. If a value greater than zero, applies this value globally. Both options will
+                be overridden by a more specific value in a ContextRule.
+            prune_on_modifier_overlap: Whether to prune modifiers which are substrings of another modifier. If True,
+                will drop substrings completely. For example, if "no history of"  and "history of" are both
+                ConTextRules,both will match the text "no history of afib", but only "no  history of" should modify
+                afib. Default True.
+            prune_on_target_overlap: Whether to remove any matched modifiers which overlap with target entities. If
+                False, any overlapping modifiers will not modify the overlapping entity but will still modify any other
+                targets in its scope. Default False.
+            span_attrs: The optional span attributes to modify. Default option "default" uses attributes in
+                `DEFAULT_ATTRIBUTES`. If a dictionary, format is mapping context modifier categories to a dictionary
+                containing the attribute name and the value to set the attribute to when a  span is modified by a
+                modifier of that category. If None, no attributes will be modified.
+            input_span_type: "ents" or "group". Where to look for targets. "ents" will modify attributes of spans
                 in doc.ents. "group" will modify attributes of spans in the span group specified by `span_group_name`.
             span_group_name: The name of the span group used when `input_span_type` is "group". Default is
                 "medspacy_spans".
-            span_attrs: The optional span attributes to modify. Format is a dictionary mapping context modifier 
-                categories to a dictionary containing the attribute name and the value to set the attribute to when a 
-                span is modified by a modifier of that category. Default behavior is to use attributes in 
-                `DEFAULT_ATTRIBUTES`.
         """
         self.nlp = nlp
         self.name = name
-        self.prune = prune
-        self.remove_overlapping_modifiers = remove_overlapping_modifiers
+        self.prune_on_modifier_overlap = prune_on_modifier_overlap
+        self.prune_on_target_overlap = prune_on_target_overlap
         self.input_span_type = input_span_type
         self.span_group_name = span_group_name
+        self.context_attributes_mapping = None
 
         self._i = 0
         self._categories = set()
 
         self.__matcher = MedspacyMatcher(
-            nlp, phrase_matcher_attr=phrase_matcher_attr, prune=prune
+            nlp,
+            phrase_matcher_attr=phrase_matcher_attr,
+            prune=prune_on_modifier_overlap,
         )
 
-        if span_attrs:
+        if span_attrs == "default":
+            self.context_attributes_mapping = DEFAULT_ATTRIBUTES
+            self.register_default_attributes()
+        elif span_attrs:
             for _, attr_dict in span_attrs.items():
                 for attr_name in attr_dict.keys():
                     if not Span.has_extension(attr_name):
@@ -173,31 +127,26 @@ class ConTextComponent:
                             f"Custom extension {attr_name} has not been set. Please ensure Span.set_extension is "
                             f"called for your pipeline's custom extensions."
                         )
-            self.assertion_attributes_mapping = span_attrs
-        else:
-            self.context_attributes_mapping = DEFAULT_ATTRIBUTES
-            self.register_graph_attributes()
+            self.context_attributes_mapping = span_attrs
 
-        if use_context_window is True:
-            if not isinstance(max_scope, int) or max_scope < 1:
+        self.register_graph_attributes()
+
+        if max_scope is not None:
+            if not (isinstance(max_scope, int) and max_scope > 0):
                 raise ValueError(
-                    f"If 'use_context_window' is True, 'max_scope' must be an integer greater than 0, not {max_scope}"
+                    f"If 'max_scope' is not None, must be a value greater than 0, not the current value: {max_scope}"
                 )
-        self.use_context_window = use_context_window
-
-        if max_scope is not None and (not isinstance(max_scope, int) or max_scope < 1):
-            raise ValueError(
-                f"'max_scope' must be None or an integer greater than 0, not {max_scope}"
-            )
         self.max_scope = max_scope
 
         self.allowed_types = allowed_types
         self.excluded_types = excluded_types
         self.max_targets = max_targets
 
-        if terminations is None:
-            terminations = dict()
-        self.terminations = {k.upper(): v for (k, v) in terminations.items()}
+        self.terminating_types = dict()
+        if terminating_types:
+            self.terminating_types = {
+                k.upper(): v for (k, v) in terminating_types.items()
+            }
 
         if rules and rules == "default":
             self.add(ConTextRule.from_json(DEFAULT_RULES_FILEPATH))
@@ -215,7 +164,8 @@ class ConTextComponent:
         return self._categories
 
     def add(self, rules):
-        """Add a list of ConTextRule rules to ConText.
+        """
+        Adds a list of ConTextRule rules to ConText.
 
         Args:
             rules: a list of ConTextItems to add.
@@ -244,16 +194,18 @@ class ConTextComponent:
                     setattr(rule, attr, value)
 
             # Check custom termination points
-            if rule.category.upper() in self.terminations:
-                for other_modifier in self.terminations[rule.category.upper()]:
+            if rule.category.upper() in self.terminating_types:
+                for other_modifier in self.terminating_types[rule.category.upper()]:
                     rule.terminated_by.add(other_modifier.upper())
 
-            self.__matcher.add(rules)
+        self.__matcher.add(rules)
 
-    def register_graph_attributes(self):
-        """Register spaCy container custom attribute extensions.
+    @classmethod
+    def register_graph_attributes(cls):
+        """
+        Registers spaCy container custom attribute extensions.
 
-        By default will register Span._.modifiers and Doc._.context_graph.
+        By default, will register Span._.modifiers and Doc._.context_graph.
 
         If self.add_attrs is True, will add additional attributes to span
             as defined in DEFAULT_ATTRS:
@@ -264,11 +216,29 @@ class ConTextComponent:
         Span.set_extension("modifiers", default=(), force=True)
         Doc.set_extension("context_graph", default=None, force=True)
 
+    @classmethod
+    def register_default_attributes(cls):
+        """
+        Registers the default values for the Span attributes defined in `DEFAULT_ATTRIBUTES`.
+        """
+        for attr_name in [
+            "is_negated",
+            "is_uncertain",
+            "is_historical",
+            "is_hypothetical",
+            "is_family",
+        ]:
+            try:
+                Span.set_extension(attr_name, default=False)
+            except ValueError:  # Extension already set
+                pass
+
     def set_context_attributes(self, edges):
-        """Add Span-level attributes to targets with modifiers.
+        """
+        Adds Span-level attributes to targets with modifiers.
 
         Args:
-            edges: the edges to modify
+            edges: The edges of the ContextGraph to modify.
 
         """
 
@@ -288,16 +258,16 @@ class ConTextComponent:
         Returns:
             doc: a spaCy Doc
         """
-        if self.input_span_type == "ents":
+        if not targets and self.input_span_type == "ents":
             targets = doc.ents
-        elif self.input_span_type == "group":
+        elif not targets and self.input_span_type == "group":
             targets = doc.spans[self.span_group_name]
-        else:
+        elif targets:
             targets = getattr(doc._, targets)
         # Store data in ConTextGraph object
         # TODO: move some of this over to ConTextGraph
         context_graph = ConTextGraph(
-            remove_overlapping_modifiers=self.remove_overlapping_modifiers
+            remove_overlapping_modifiers=self.prune_on_target_overlap
         )
 
         context_graph.targets = targets
@@ -307,8 +277,10 @@ class ConTextComponent:
 
         for (match_id, start, end) in matches:
             # Get the ConTextRule object defining this modifier
-            rules = self.__matcher.rule_map[self.nlp.vocab[match_id].text]
-            modifier = ConTextModifier(rules, start, end, doc, self.use_context_window)
+            rule = self.__matcher.rule_map[self.nlp.vocab[match_id].text]
+            modifier = ConTextModifier(
+                rule, start, end, doc, self.max_scope if self.max_scope else False
+            )
             context_graph.modifiers.append(modifier)
 
         context_graph.update_scopes()
@@ -318,8 +290,8 @@ class ConTextComponent:
         for target, modifier in context_graph.edges:
             target._.modifiers += (modifier,)
 
-        # If add_attrs is True, add is_negated, is_current, is_asserted to targets
-        if self.input_span_type:
+        # If attributes need to be modified
+        if self.context_attributes_mapping:
             self.set_context_attributes(context_graph.edges)
 
         doc._.context_graph = context_graph

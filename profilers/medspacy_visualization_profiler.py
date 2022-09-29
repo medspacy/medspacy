@@ -1,9 +1,6 @@
 import cProfile
 import pstats
-
-# import profiling decorator
-from profiling import profiling
-
+from profiling import profiling  # import profiling decorator
 import sys
 
 # Set the system path to call medspacy within the repository
@@ -18,28 +15,17 @@ sys.path = [
     "../medspacy",
     "/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/",
 ]
-# import medspacy from current git repository
 import medspacy
-import spacy
+from medspacy.ner import TargetRule
 
-with open("../notebooks/discharge_summary.txt") as f:
-    text = f.read()
-nlp_blank = spacy.blank("en")
-from medspacy.custom_tokenizer import create_medspacy_tokenizer
-from medspacy.sentence_splitting import PyRuSHSentencizer
+texts = [
+    "Family History: Mother with stroke at age 82.",
+    "Past Medical History: colon cancer",
+    "Allergies: Hydrochlorothiazide",
+    "Some metastasis.",
+    "Patient presents for radiotherapy to treat her breast cancer.",
+]
+# nlp = medspacy.load(enable=["pyrush"])
 
-# pipeline is here
-nlp = medspacy.load()
-medspacy_tokenizer = create_medspacy_tokenizer(nlp_blank)
-medspacy_tokenizer(text)
-
-
-@profiling(
-    output_file="stat/medspacy_tokenizer.prof", sort_by="ncalls", strip_dirs=True
-)
-def fun_profiler():
-    medspacy_tokenizer(text)
-
-
-fun_profiler()
-print("OKAY!")
+# nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"])
+# print(nlp.pipe_names)

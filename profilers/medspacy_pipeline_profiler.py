@@ -1,7 +1,9 @@
 import cProfile
-from functools import wraps
+import pstats
+from profiling import profiling  # import profiling decorator
 import sys
 
+# Set the system path to call medspacy within the repository
 sys.path = [
     "/Users/u6022257/opt/anaconda3/lib/python39.zip",
     "/Users/u6022257/opt/anaconda3/lib/python3.9",
@@ -13,36 +15,23 @@ sys.path = [
     "../medspacy",
     "/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/",
 ]
-print(sys.path)
+# import medspacy from current git repository
 import medspacy
-
-
-# load spacy model
-nlp = medspacy.load()  # YES
-
-# tokenizing and sentence splitting
 import spacy
 
 with open("../notebooks/discharge_summary.txt") as f:
     text = f.read()
-nlp = spacy.blank("en")
+nlp_blank = spacy.blank("en")
 from medspacy.custom_tokenizer import create_medspacy_tokenizer
 
-medspacy_tokenizer = create_medspacy_tokenizer(nlp)  # YES
-default_tokenizer = nlp.tokenizer
-example_text = r"Pt c\o n;v;d h\o chf+cp"
-print("Tokens from default tokenizer:")
-print(list(default_tokenizer(example_text)))
-print("Tokens from medspacy tokenizer:")
-print(list(medspacy_tokenizer(example_text)))  # YES
-from medspacy.sentence_splitting import PyRuSHSentencizer
-
-nlp.add_pipe("medspacy_pyrush")
-print(nlp.pipe_names)
-doc = nlp(example_text)
-
-# taget matcher
+# pipeline is here
 nlp = medspacy.load(enable=["pyrush"])
+medspacy_tokenizer = create_medspacy_tokenizer(nlp_blank)
+medspacy_tokenizer(text)
+nlp_blank.add_pipe("medspacy_pyrush")
+print("nlp from medspacy:", nlp.pipe_names)
+print("nlp_blank:", nlp_blank.pipe_names)
+# target matcher
 from medspacy.ner import TargetMatcher, TargetRule
 
 target_matcher = TargetMatcher(nlp)
@@ -56,11 +45,6 @@ target_rules1 = [
     TargetRule("metastasis", "PROBLEM"),
 ]
 target_matcher.add(target_rules1)
-doc = nlp(text)
-print(nlp.pipe_names)
-for ent in doc.ents:
-    print(ent, ent.label_, ent._.target_rule.literal, sep="  |  ")
-    print()
 pattern_rules = [
     TargetRule(
         "radiotherapy", "PROBLEM", pattern=[{"LOWER": {"IN": ["xrt", "radiotherapy"]}}]
@@ -93,11 +77,6 @@ target_rules2 = [
     ),
 ]
 target_matcher.add(target_rules2)
-
-doc = nlp(text)
-for ent in doc.ents:
-    if ent._.icd10 != "":
-        print(ent, ent._.icd10)
 # context
 from medspacy.context import ConTextComponent, ConTextRule
 
@@ -169,7 +148,42 @@ preprocess_rules = [
 ]
 preprocessor.add(preprocess_rules)
 nlp.tokenizer = preprocessor
+# post processing
+from medspacy.postprocess import (
+    Postprocessor,
+    PostprocessingRule,
+    PostprocessingPattern,
+)
+from medspacy.postprocess import postprocessing_functions
 
+postprocessor = Postprocessor(
+    nlp, debug=False
+)  # Set to True for more verbose information about rule matching
+postprocessor = nlp.add_pipe("medspacy_postprocessor")
+postprocess_rules = [
+    # Instantiate our rule
+    PostprocessingRule(
+        # Pass in a list of patterns
+        patterns=[
+            # The pattern will check if the entitie's section is "patient_instructions"
+            PostprocessingPattern(
+                condition=lambda ent: ent._.section_category == "patient_instructions"
+            ),
+        ],
+        # If all patterns are True, this entity will be removed.
+        action=postprocessing_functions.remove_ent,
+        description="Remove any entities from the instructions section.",
+    ),
+]
+postprocessor.add(postprocess_rules)
+
+
+@profiling(output_file="stat/postprocessing.prof", sort_by="ncalls", strip_dirs=True)
+def fun_profiler():
+    doc = nlp(text)
+
+
+fun_profiler()
 print(nlp.pipe_names)
-preprocessed_doc = nlp(text)
-print("Hello")
+
+print("OKAY!")

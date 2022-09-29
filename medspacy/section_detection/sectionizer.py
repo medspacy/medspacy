@@ -112,8 +112,8 @@ class Sectionizer:
         self.assertion_attributes_mapping = None
         self._parent_sections = {}
         self._parent_required = {}
-        self.input_span_type = input_span_type
-        self.span_group_name = span_group_name
+        self._input_span_type = input_span_type
+        self._span_group_name = span_group_name
 
         self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
 
@@ -155,6 +155,40 @@ class Sectionizer:
         """
         return self.__matcher.labels
 
+    @property
+    def input_span_type(self):
+        """
+        The input source of entities for the component. Must be either "ents" corresponding to doc.ents or "group" for
+        a spaCy span group.
+
+        Returns:
+            The input type, "ents" or "group".
+        """
+        return self._input_span_type
+
+    @input_span_type.setter
+    def input_span_type(self, val):
+        if not (val == "ents" or val == "group"):
+            raise ValueError('input_type must be "ents" or "group".')
+        self._input_span_type = val
+
+    @property
+    def span_group_name(self) -> str:
+        """
+        The name of the span group used by this component. If `input_type` is "group", calling this component will
+        use spans in the span group with this name.
+
+        Returns:
+            The span group name.
+        """
+        return self._span_group_name
+
+    @span_group_name.setter
+    def span_group_name(self, name: str):
+        if not name or not isinstance(name, str):
+            raise ValueError("Span group name must be a string.")
+        self._span_group_name = name
+
     @classmethod
     def register_default_attributes(cls):
         """
@@ -184,7 +218,7 @@ class Sectionizer:
 
         for rule in rules:
             if not isinstance(rule, SectionRule):
-                raise TypeError("Rules must be SectionRule, not", type(rule))
+                raise TypeError("Rules must be type SectionRule, not", type(rule))
 
         self.__matcher.add(rules)
 
@@ -418,10 +452,10 @@ class Sectionizer:
         # If it is specified to add assertion attributes,
         # iterate through the entities in doc and add them
         if self.assertion_attributes_mapping:
-            if self.input_span_type.lower() == "ents":
+            if self._input_span_type.lower() == "ents":
                 self.set_assertion_attributes(doc.ents)
-            elif self.input_span_type.lower() == "group":
-                self.set_assertion_attributes(doc.spans[self.span_group_name])
+            elif self._input_span_type.lower() == "group":
+                self.set_assertion_attributes(doc.spans[self._span_group_name])
 
         return doc
 

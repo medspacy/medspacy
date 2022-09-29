@@ -1,14 +1,15 @@
-from .context_component import (
-    ConTextComponent,
+from .context_rule import ConTextRule
+from .context_modifier import ConTextModifier
+from .context_graph import ConTextGraph
+
+from .context import (
+    ConText,
     DEFAULT_RULES_FILEPATH,
     DEFAULT_ATTRIBUTES,
 )
-from .context_rule import ConTextRule
-from .context_graph import ConTextGraph
-from .context_modifier import ConTextModifier
 
 __all__ = [
-    "ConTextComponent",
+    "ConText",
     "ConTextRule",
     "DEFAULT_RULES_FILEPATH",
     "ConTextGraph",

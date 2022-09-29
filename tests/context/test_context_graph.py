@@ -1,7 +1,7 @@
 import pytest
 import spacy
 
-from medspacy.context import ConTextComponent
+from medspacy.context import ConText
 from medspacy.context import ConTextRule
 from medspacy.context.context_modifier import ConTextModifier
 from medspacy.context.context_graph import ConTextGraph

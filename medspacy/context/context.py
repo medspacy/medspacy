@@ -1,4 +1,4 @@
-"""The ConTextComponent definiton."""
+"""The ConText definiton."""
 from os import path
 
 # Filepath to default rules which are included in package
@@ -29,9 +29,9 @@ DEFAULT_RULES_FILEPATH = path.join(
 
 
 @Language.factory("medspacy_context")
-class ConTextComponent:
+class ConText:
     """
-    The ConTextComponent for spaCy processing.
+    The ConText for spaCy processing.
 
     This component matches modifiers in a Doc, defines their scope, and identifies edges between targets and modifiers.
     Sets two spaCy extensions:
@@ -60,7 +60,7 @@ class ConTextComponent:
         span_group_name: str = "medspacy_spans",
     ):
         """
-        Creates a new ConTextComponent.
+        Creates a new ConText.
 
         Args:
             nlp: A SpaCy Language object.
@@ -152,7 +152,9 @@ class ConTextComponent:
 
     @property
     def rules(self):
-        """Returns list of ConTextItems"""
+        """
+        Returns list of ConTextItems
+        """
         return self.__matcher.rules
 
     @property
@@ -162,18 +164,52 @@ class ConTextComponent:
         """
         return self.__matcher.labels
 
+    @property
+    def input_span_type(self):
+        """
+        The input source of entities for the component. Must be either "ents" corresponding to doc.ents or "group" for
+        a spaCy span group.
+
+        Returns:
+            The input type, "ents" or "group".
+        """
+        return self._input_span_type
+
+    @input_span_type.setter
+    def input_span_type(self, val):
+        if not (val == "ents" or val == "group"):
+            raise ValueError('input_type must be "ents" or "group".')
+        self._input_span_type = val
+
+    @property
+    def span_group_name(self) -> str:
+        """
+        The name of the span group used by this component. If `input_type` is "group", calling this component will
+        use spans in the span group with this name.
+
+        Returns:
+            The span group name.
+        """
+        return self._span_group_name
+
+    @span_group_name.setter
+    def span_group_name(self, name: str):
+        if not name or not isinstance(name, str):
+            raise ValueError("Span group name must be a string.")
+        self._span_group_name = name
+
     def add(self, rules):
         """
-        Adds a list of ConTextRule rules to ConText.
+        Adds ConTextRules to Context.
 
         Args:
-            rules: a list of ConTextItems to add.
+            rules: A single ConTextRule or a collection of ConTextRules to add to the Sectionizer.
         """
         if isinstance(rules, ConTextRule):
             rules = [rules]
         for rule in rules:
             if not isinstance(rule, ConTextRule):
-                raise TypeError("rules must be a list of ConTextRules.")
+                raise TypeError(f"Rules must type ConTextRule, not {type(rule)}.")
 
             # If global attributes like allowed_types and max_scope are defined,
             # check if the ConTextRule has them defined. If not, set to the global

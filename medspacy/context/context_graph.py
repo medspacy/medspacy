@@ -3,8 +3,7 @@ from typing import Optional, List, Dict, Any, TYPE_CHECKING
 import srsly
 from spacy.tokens import Span
 
-if TYPE_CHECKING:
-    from medspacy.context import ConTextModifier
+from medspacy.context import ConTextModifier
 from medspacy.util import tuple_overlaps
 
 
@@ -20,7 +19,7 @@ class ConTextGraph:
     def __init__(
         self,
         targets: Optional[List[Span]] = None,
-        modifiers: Optional[List["ConTextModifier"]] = None,
+        modifiers: Optional[List[ConTextModifier]] = None,
         edges: Optional[List] = None,
         prune_on_modifier_overlap: bool = False,
     ):

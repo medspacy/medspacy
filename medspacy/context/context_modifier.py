@@ -128,7 +128,7 @@ class ConTextModifier:
                 raise ValueError(
                     "ConText failed because sentence boundaries have not been set and 'use_context_window' is set to False. "
                     "Add an upstream component such as the dependency parser, Sentencizer, or PyRuSH to detect sentence "
-                    "boundaries or initialize ConTextComponent with 'use_context_window=True.'"
+                    "boundaries or initialize ConText with 'use_context_window=True.'"
                 )
 
         if self.direction.lower() == "forward":

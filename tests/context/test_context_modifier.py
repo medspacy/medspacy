@@ -2,7 +2,7 @@ import pytest
 import spacy
 from spacy.tokens import Span, Doc
 
-from medspacy.context import ConTextRule, ConTextComponent
+from medspacy.context import ConTextRule, ConText
 from medspacy.context.context_modifier import ConTextModifier
 
 nlp = spacy.load("en_core_web_sm")
@@ -124,7 +124,7 @@ class TestConTextModifier:
         assert modifier.limit_scope(modifier2)
 
     def test_terminate_stops_forward_modifier(self):
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
         rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="FORWARD")
         rule2 = ConTextRule("but", "TERMINATE", direction="TERMINATE")
@@ -137,7 +137,7 @@ class TestConTextModifier:
         assert len(pneumonia._.modifiers) == 0
 
     def test_terminate_stops_backward_modifier(self):
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
         rule = ConTextRule("is ruled out", "NEGATED_EXISTENCE", direction="BACKWARD")
         rule2 = ConTextRule("but", "CONJ", direction="TERMINATE")
@@ -151,7 +151,7 @@ class TestConTextModifier:
 
     def test_no_custom_terminate_stops_forward_modifier(self):
         doc = nlp("negative for flu, positive for pneumonia.")
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
         rule = ConTextRule(
             "negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by=None
@@ -166,7 +166,7 @@ class TestConTextModifier:
 
     def test_custom_terminate_stops_forward_modifier(self):
         doc = nlp("negative for flu, positive for pneumonia.")
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
         rule = ConTextRule(
             "negative for",

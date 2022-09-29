@@ -2,7 +2,7 @@ import cProfile
 import pstats
 
 # import profiling decorator
-from profiling_decorator import profile
+from profiling import profiling
 
 import sys
 
@@ -30,20 +30,16 @@ from medspacy.sentence_splitting import PyRuSHSentencizer
 
 # pipeline is here
 nlp = medspacy.load()
+medspacy_tokenizer = create_medspacy_tokenizer(nlp_blank)
+medspacy_tokenizer(text)
 
 
-@profile(
-    output_file="stat/medspacy.custom_tokenizer.create_medspacy_tokenizer.prof",
-    sort_by="ncalls",
-    strip_dirs=True,
+@profiling(
+    output_file="stat/medspacy_tokenizer.prof", sort_by="ncalls", strip_dirs=True
 )
-def fun_test():
-    medspacy_tokenizer = create_medspacy_tokenizer(nlp_blank)
+def fun_profiler():
+    medspacy_tokenizer(text)
 
 
-fun_test()
-# medspacy.load()
-#
-# medspacy_tokenizer(text)
-
+fun_profiler()
 print("OKAY!")

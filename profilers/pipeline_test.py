@@ -17,9 +17,8 @@ print(sys.path)
 import medspacy
 
 
-# profile decorator
 # load spacy model
-nlp = medspacy.load()
+nlp = medspacy.load()  # YES
 
 # tokenizing and sentence splitting
 import spacy
@@ -29,12 +28,12 @@ with open("../notebooks/discharge_summary.txt") as f:
 nlp = spacy.blank("en")
 from medspacy.custom_tokenizer import create_medspacy_tokenizer
 
-medspacy_tokenizer = create_medspacy_tokenizer(nlp)
+medspacy_tokenizer = create_medspacy_tokenizer(nlp)  # YES
 default_tokenizer = nlp.tokenizer
 example_text = r"Pt c\o n;v;d h\o chf+cp"
 print("Tokens from default tokenizer:")
 print(list(default_tokenizer(example_text)))
 print("Tokens from medspacy tokenizer:")
-print(list(medspacy_tokenizer(example_text)))
+print(list(medspacy_tokenizer(example_text)))  # YES
 
 print("Hello")

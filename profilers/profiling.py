@@ -17,7 +17,7 @@ sys.path = [
 import medspacy
 
 
-def profile(
+def profiling(
     output_file=None, sort_by="cumulative", lines_to_print=None, strip_dirs=False
 ):
     """A time profiler decorator.
@@ -71,11 +71,15 @@ def profile(
     return inner
 
 
-@profile()
-def fun_profiler(source_code: str = ""):
-    exec(source_code)
+@profiling(output_file="test.prof", sort_by="ncalls", strip_dirs=True)
+def fun_profiler(code: str = ""):
+    exec(code)
+    print("fun_profiler")
 
 
 print("HERE OKAY!")
+
 fun_profiler("nlp = medspacy.load()")
+
+
 print("RUN TO HERE")

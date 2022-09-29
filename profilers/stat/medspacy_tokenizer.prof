@@ -1,0 +1,47 @@
+         8182 function calls (8161 primitive calls) in 0.004 seconds
+
+   Ordered by: call count
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      924    0.000    0.000    0.000    0.000 tokenizer.pyx:90(__get__)
+      924    0.000    0.000    0.000    0.000 tokenizer.pyx:98(__get__)
+      780    0.000    0.000    0.000    0.000 tokenizer.pyx:74(__get__)
+      684    0.000    0.000    0.000    0.000 tokenizer.pyx:347(_try_specials_and_cache)
+      636    0.000    0.000    0.000    0.000 tokenizer.pyx:106(__get__)
+      557    0.000    0.000    0.000    0.000 doc.pyx:889(__pyx_fuse_0push_back)
+      552    0.000    0.000    0.000    0.000 vocab.pyx:131(get)
+      462    0.000    0.000    0.000    0.000 tokenizer.pyx:530(find_prefix)
+      462    0.002    0.000    0.002    0.000 tokenizer.pyx:544(find_suffix)
+      322    0.000    0.000    0.004    0.000 tokenizer.pyx:376(_tokenize)
+      322    0.000    0.000    0.003    0.000 tokenizer.pyx:388(_split_affixes)
+      322    0.000    0.000    0.001    0.000 tokenizer.pyx:433(_attach_tokens)
+      322    0.000    0.000    0.000    0.000 tokenizer.pyx:495(_save_cached)
+      318    0.000    0.000    0.000    0.000 tokenizer.pyx:82(__get__)
+      318    0.001    0.000    0.001    0.000 tokenizer.pyx:516(find_infix)
+    60/39    0.000    0.000    0.000    0.000 doc.pyx:441(__getitem__)
+       53    0.000    0.000    0.000    0.000 token.pxd:21(cinit)
+       53    0.000    0.000    0.000    0.000 doc.pyx:42(bounds_check)
+       41    0.000    0.000    0.000    0.000 doc.pyx:889(__pyx_fuse_1push_back)
+       14    0.000    0.000    0.000    0.000 {built-in method builtins.max}
+       14    0.000    0.000    0.000    0.000 {built-in method builtins.min}
+       14    0.000    0.000    0.000    0.000 doc.pyx:487(__len__)
+        7    0.000    0.000    0.000    0.000 util.py:1130(normalize_slice)
+        5    0.000    0.000    0.000    0.000 doc.pyx:995(_realloc)
+        1    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 _dict_proxies.py:22(__init__)
+        1    0.000    0.000    0.000    0.000 __init__.py:1043(__init__)
+        1    0.000    0.000    0.004    0.004 tokenizer.pyx:148(_tokenize_affixes)
+        1    0.000    0.000    0.000    0.000 doc.pyx:177(__init__)
+        1    0.000    0.000    0.000    0.000 tokenizer.pyx:286(_prepare_special_spans)
+        1    0.000    0.000    0.000    0.000 tokenizer.pyx:306(_retokenize_special_spans)
+        1    0.000    0.000    0.000    0.000 abc.py:117(__instancecheck__)
+        1    0.000    0.000    0.004    0.004 medspacy_profiler.py:37(fun_profiler)
+        1    0.000    0.000    0.000    0.000 _collections_abc.py:933(update)
+        1    0.000    0.000    0.000    0.000 tokenizer.pyx:226(_apply_special_cases)
+        1    0.000    0.000    0.004    0.004 tokenizer.pyx:135(__call__)
+
+

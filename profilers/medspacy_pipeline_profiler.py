@@ -1,5 +1,8 @@
 import cProfile
 import pstats
+import os
+
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 from profiling import profiling  # import profiling decorator
 import sys
 

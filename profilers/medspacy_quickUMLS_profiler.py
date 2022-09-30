@@ -1,5 +1,8 @@
 import cProfile
 import pstats
+import os
+
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 from profiling import profiling  # import profiling decorator
 import sys
 
@@ -15,17 +18,28 @@ sys.path = [
     "../medspacy",
     "/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/",
 ]
+import spacy
 import medspacy
-from medspacy.ner import TargetRule
+import nltk
+from medspacy.util import DEFAULT_PIPENAMES
+from medspacy.section_detection import Sectionizer
 
-texts = [
-    "Family History: Mother with stroke at age 82.",
-    "Past Medical History: colon cancer",
-    "Allergies: Hydrochlorothiazide",
-    "Some metastasis.",
-    "Patient presents for radiotherapy to treat her breast cancer.",
-]
-# nlp = medspacy.load(enable=["pyrush"])
+medspacy_pipes = DEFAULT_PIPENAMES.copy()
 
-# nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"])
-# print(nlp.pipe_names)
+if "medspacy_quickumls" not in medspacy_pipes:
+    medspacy_pipes.add("medspacy_quickumls")
+
+print(medspacy_pipes)
+with open("../notebooks/discharge_summary.txt") as f:
+    text = f.read()
+nlp = medspacy.load(enable=medspacy_pipes)
+
+
+@profiling(output_file="stat/quickUMLS.prof", sort_by="ncalls", strip_dirs=True)
+def fun_profiler():
+    doc = nlp(text)
+
+
+fun_profiler()
+print(nlp.pipe_names)
+print("Hello")

@@ -126,8 +126,7 @@ class TestQuickUMLS:
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
 
-        nlp.add_pipe("medspacy_quickumls", config={"threshold": 1.0,
-                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+        nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
 
         concept_term = "dipalmitoyllecithin"
 
@@ -159,8 +158,7 @@ class TestQuickUMLS:
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
 
-        nlp.add_pipe("medspacy_quickumls", config={"threshold": 1.0,
-                                                   "result_type": "group",
+        nlp.add_pipe("medspacy_quickumls", config={"result_type": "group",
                                                    "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
 
         concept_term = "dipalmitoyllecithin"

@@ -55,52 +55,72 @@ class ConTextModifier:
 
     @property
     def modifier_span(self) -> Tuple[int, int]:
-        """The spaCy Span object, which is a view of self.doc, covered by this match."""
+        """
+        The spaCy Span object, which is a view of self.doc, covered by this match.
+        """
         return self._start, self._end
 
     @property
     def rule(self) -> ConTextRule:
-        """Returns the associated context rule."""
+        """
+        Returns the associated context rule.
+        """
         return self._context_rule
 
     @property
     def direction(self) -> str:
-        """Returns the associated direction."""
+        """
+        Returns the associated direction.
+        """
         return self.rule.direction
 
     @property
     def category(self) -> str:
-        """Returns the associated category."""
+        """
+        Returns the associated category.
+        """
         return self.rule.category
 
     @property
     def scope_span(self) -> Tuple[int, int]:
-        """Returns the associated scope."""
+        """
+        Returns the associated scope.
+        """
         return self._scope_start, self._scope_end
 
     @property
     def allowed_types(self) -> Set[str]:
-        """Returns the associated allowed types."""
+        """
+        Returns the associated allowed types.
+        """
         return self.rule.allowed_types
 
     @property
     def excluded_types(self) -> Set[str]:
-        """Returns the associated excluded types."""
+        """
+        Returns the associated excluded types.
+        """
         return self.rule.excluded_types
 
     @property
     def num_targets(self) -> int:
-        """Returns the associated number of targets."""
+        """
+        Returns the associated number of targets.
+        """
         return self._num_targets
 
     @property
     def max_targets(self) -> Union[int, None]:
-        """Returns the associated maximum number of targets."""
+        """
+        Returns the associated maximum number of targets.
+        """
         return self.rule.max_targets
 
     @property
     def max_scope(self) -> Union[int, None]:
-        """Returns the associated maximum scope."""
+        """
+        Returns the associated maximum scope.
+        """
         return self.rule.max_scope
 
     def __set_scope(self, doc: Doc):

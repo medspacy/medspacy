@@ -258,9 +258,9 @@ class TestConTextModifier:
             allowed_types={"TRAVEL"},
         )
         modifier = ConTextModifier(rule, 0, 5, doc)
-        travel, condition = doc.ents  # "puerto rico", "pneumonia"
-        assert modifier.modifies(travel) is True
-        assert modifier.modifies(condition) is False
+        ents = doc.ents  # "puerto rico", "pneumonia"
+        assert modifier.modifies(ents[0]) is True
+        assert modifier.modifies(ents[1]) is False
 
     def test_excluded_types(self):
         """Test that specifying excluded_types will not modify that target type."""

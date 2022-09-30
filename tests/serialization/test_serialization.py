@@ -40,7 +40,7 @@ class TestSerialization:
         return doc
 
     @pytest.fixture(scope="class")
-    def doc_with_sections(self, nlp) -> List[Section]:
+    def doc_with_sections(self, nlp) -> Doc:
         sectionizer = Sectionizer(
             nlp, rules=None, span_attrs={"past_medical_history": {"is_negated": True}}
         )

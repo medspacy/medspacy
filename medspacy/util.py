@@ -6,99 +6,79 @@ which will be used in many medspaCy components.
 from sys import platform
 from os import path
 from pathlib import Path
+from typing import Union, Literal, Iterable, Optional, Set, Tuple
 
-from medspacy.visualization import visualize_ent
 import spacy
+from spacy import Language
 
-DEFAULT_PIPENAMES = {
+DEFAULT_PIPE_NAMES = {
+    "medspacy_tokenizer",
     "medspacy_pyrush",
     "medspacy_target_matcher",
     "medspacy_context",
+}
+
+ALL_PIPE_NAMES = {
     "medspacy_tokenizer",
+    "medspacy_preprocessor",
+    "medspacy_pyrush",
+    "medspacy_target_matcher",
+    # "medspacy_quickumls", # quickumls still not included by default due to install issues
+    "medspacy_context",
+    "medspacy_sectionizer",
+    "medspacy_postprocessor",
+    "medspacy_doc_consumer",
 }
-
-ALL_PIPE_NAMES_SIMPLE = {
-    "pyrush",
-    "target_matcher",
-    "context",
-    "tokenizer",
-    "preprocessor",
-    "postprocessor",
-    "sectionizer",
-    "doc_consumer",
-}
-
-ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
 
 
 def load(
-    model="default", enable=None, disable=None, load_rules=True, quickumls_path=None
+    model: Union[Literal["default"], Language] = "default",
+    enable: Union[Literal["all", "default"], Iterable[str]] = "default",
+    disable: Optional[Iterable[str]] = None,
+    load_rules: bool = True,
+    quickumls_path: Optional[str] = None,
+    **model_kwargs,
 ):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be a blank 'en' model with the
     following components:
-        - "tokenizer": A customized tokenizer (set to be nlp.tokenizer)
-        - "sentencizer": PyRuSH Sentencizer for sentence splitting
-        - "target_matcher": TargetMatcher for extended pattern matching
-        - "context": ConText for attribute assertion
+        - "medspacy_tokenizer": A customized, more aggressive tokenizer than the default spaCy tokenizer. This is set to
+            `nlp.tokenizer` and is not loaded as a pipeline component.
+        - "medspacy_pyrush": PyRuSH Sentencizer for sentence splitting
+        - "medspacy_target_matcher": TargetMatcher for extended pattern matching
+        - "medspacy_context": ConText for attribute assertion
     Args:
-        model: (str or spaCy Lang model) The base spaCy model to load.
-            If 'default', will instantiate from a blank 'en' model.
-            Otherwise, if it is a string it will call `spacy.load(model)` along with the enable and disable
-                arguments and then add medspaCy pipeline components.
-            If it is a spaCy language model, then it will simply add medspaCy components to the existing pipeline.
-            Examples:
-                >>> nlp = medspacy.load()
-                >>> nlp = medspacy.load("en_core_web_sm", disable={"ner"})
-                >>> nlp = spacy.load("en_core_web_sm", disable={"ner"}); nlp = medspacy.load(nlp)
-        enable (iterable, str, or None): A string or list of component names to include in the pipeline.
-            If None, will include all pipeline components listed above.
-            If "all", will load all medspaCy components.
-            If a list or other iterable, will load the specified pipeline components.
-            Note that if using enable, *all* desired pipeline component names must be included.
-            Pipeline components could also be instantiated separately and added using the `nlp.add_pipe` method.
-            In addition to the default values above, the following medspaCy components may also be added
-            and will be added if enable="all":
-                - "sectionizer": A SectionDetection component.
-                    See medspacy.section_detection.Sectionizer
-                - "preprocessor": A wrapper around the tokenizer for destructive preprocessing.
-                    Rules added to the preprocessor will modify the underlying text.
-                    This component will be set as nlp.tokenizer and will not be listed with nlp.pipe_names.
-                    See medspacy.preprocess.Preprocessor
-                - "postprocessor": A component for implementing custom business logic at the end of the pipeline
-                    and modifying entities by removing them from doc.ents or setting attributes.
-                    See medspacy.postprocess.Postprocessor
-            Any additional component names (ie., not a medspaCy component) will be passed into
-                spacy.load(model_name, enable=enable) and will apply to the base model.
-                ie., medspacy.load("en_core_web_sm", enable=["tagger", "parser", "context"])
-                will load the tagger and parser from en_core_web_sm and then add context.
-        disable (iterable or None): A list of component names to exclude.
-            Cannot be set if `enable` is not None.
-        load_rules (bool): Whether or not to include default rules for available components.
-            If True, sectionizer and context will both be loaded with default rules.
-            Default is True.
-        quickumls_path (string or None): Path to QuickUMLS resource
+        model: The base spaCy model to load. If 'default', will instantiate from a blank 'en' model. If it is a spaCy
+            language model, then it will simply add medspaCy components to the existing pipeline. If it is a string
+            other than 'default', passes the string to spacy.load(model, **model_kwargs).
+        enable: Specifies which components to enable in the medspacy pipeline. If "default", will load all components
+            found in `DEFAULT_PIPE_NAMES`. These represent the simplest components used in a clinical NLP pipeline:
+            tokenization, sentence detection, concept identification, and ConText. If "all", all components in medspaCy
+            will be loaded. If a collection of strings, the components specified will be loaded.
+        disable: A collection of component names to exclude. Requires "all" is the value for `enable`.
+        load_rules: Whether to include default rules for available components. If True, sectionizer and context will
+            both be loaded with default rules. Default is True.
+        quickumls_path: Path to QuickUMLS dictionaries if it is included in the pipeline.
+        model_kwargs: Optional model keyword arguments to pass to spacy.load().
 
     Returns:
-        nlp: a spaCy Language object
+        A spaCy Language object containing the specified medspacy components.
     """
-    enable, disable = _build_pipe_names(enable, disable)
-    import spacy
 
-    if isinstance(model, str):
-        if model == "default":
-            nlp = spacy.blank("en")
-        else:
-            nlp = spacy.load(model, disable=disable)
-    # Check if it is a spaCy model
-    elif "spacy.lang" in str(type(model)):
+    enable, disable = _build_pipe_names(enable, disable)
+
+    if model == "default":
+        nlp = spacy.blank("en")
+    elif isinstance(model, Language):
         nlp = model
+    elif isinstance(model, str):
+        nlp = spacy.load(model, **model_kwargs)
     else:
         raise ValueError(
-            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
-            "You passed in",
+            "model must be either 'default' or an actual spaCy Language object, not ",
             type(model),
         )
+
     if "medspacy_tokenizer" in enable:
         from .custom_tokenizer import create_medspacy_tokenizer
 
@@ -120,7 +100,7 @@ def load(
     if "medspacy_target_matcher" in enable:
         nlp.add_pipe("medspacy_target_matcher")
 
-    if enable.intersection({"medspacy_quickumls", "quickumls"}):
+    if "medspacy_quickumls" in enable:
         # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
         # but if it's requested at this point, let's load it
         from quickumls import spacy_component
@@ -155,13 +135,7 @@ def load(
         else:
             config = {"rules": None}
         nlp.add_pipe("medspacy_context", config=config)
-        # from .context import ConTextComponent
-        #
-        # if load_rules:
-        #     context = ConTextComponent(nlp, rules="default")
-        # else:
-        #     context = ConTextComponent(nlp, rules=None)
-        # nlp.add_pipe(context)
+
     if "medspacy_sectionizer" in enable:
         if load_rules is True:
             config = {}
@@ -171,59 +145,65 @@ def load(
 
     if "medspacy_postprocessor" in enable:
         nlp.add_pipe("medspacy_postprocessor")
-        # from .postprocess import Postprocessor
-        # postprocessor = Postprocessor()
-        # nlp.add_pipe(postprocessor)
 
     if "medspacy_doc_consumer" in enable:
         nlp.add_pipe("medspacy_doc_consumer")
-        # from .io import DocConsumer
-        # doc_consumer = DocConsumer(nlp)
-        # nlp.add_pipe(doc_consumer)
 
     return nlp
 
 
-def _build_pipe_names(enable=None, disable=None):
-    """Implement logic based on the pipenames defined in 'enable' and 'disable'.
-    If enable and disable are both None, then it will load the default pipenames.
-    Otherwise, will allow custom selection of components.
+def _build_pipe_names(
+    enable: Union[str, Iterable[str]], disable: Optional[Iterable[str]] = None
+) -> Tuple[Set[str], Set[str]]:
     """
-    if enable is not None and disable is not None:
-        raise ValueError("Either `enable` or `disable` must be None.")
+    Implement logic based on the pipenames defined in 'enable' and 'disable'. If enable and disable are both None,
+    then it will load the default pipenames. Otherwise, will allow custom selection of components.
 
-    if disable is not None:
-        # If there's a single pipe name, next it in a set
-        if isinstance(disable, str):
-            disable = {_get_prefix_name(disable)}
-        else:
-            disable = {_get_prefix_name(name) for name in disable}
-        enable = DEFAULT_PIPENAMES.difference(set(disable))
-    elif enable is not None:
+    Args:
+        enable: "all" loads components from ALL_PIPE_NAMES. "default" loads components from DEFAULT_PIPE_NAMES.
+            Otherwise, loads he list of components as components.
+        disable: The optional list of components to disable. Set difference of enable.
 
-        if isinstance(enable, str):
-            if enable == "all":
-                enable = ALL_PIPE_NAMES.copy()
-            else:
-                enable = {_get_prefix_name(enable)}
-        else:
-            enable = {_get_prefix_name(name) for name in enable}
-        disable = set(DEFAULT_PIPENAMES).difference(enable)
+    Returns:
+        A complete list of enabled and disabled components, with all components listed and empty intersection.
+    """
+    if not enable:
+        raise ValueError(
+            "Enable cannot be none, please specify 'all', 'default' or a list of components."
+        )
+
+    # cannot allow lists of enabled and disabled components, what happens if "context" is both enabled and disabled?
+    if (not isinstance(enable, str) and isinstance(enable, Iterable)) and isinstance(
+        disable, Iterable
+    ):
+        raise ValueError("Both enable and disable cannot be collections of components.")
+
+    # set which components are enabled first
+    if enable == "all":
+        enable = ALL_PIPE_NAMES
+    elif enable == "default":
+        enable = DEFAULT_PIPE_NAMES
     else:
-        enable = DEFAULT_PIPENAMES
-        disable = set()
+        enable = set(enable)
+
+    # then find the difference with deactivated components
+    if disable is not None:
+        enable = enable.difference(set(disable))
+    else:
+        disable = set()  # otherwise disable is empty
 
     return enable, disable
 
 
-def _get_prefix_name(component_name):
-    if component_name in ALL_PIPE_NAMES_SIMPLE:
-        return "medspacy_" + component_name
-    if component_name in ALL_PIPE_NAMES:
-        return component_name
-    return component_name
+def tuple_overlaps(a: Tuple[int, int], b: Tuple[int, int]):
+    """
+    Calculates whether two tuples overlap. Assumes tuples are sorted to be like spans (start, end)
 
+    Args:
+        a: A tuple representing a span (start, end).
+        b: A tuple representing a span (start, end).
 
-def tuple_overlaps(a, b):
-    """"""
+    Returns:
+        Whether the tuples overlap.
+    """
     return a[0] <= b[0] < a[1] or a[0] < b[1] <= a[1]

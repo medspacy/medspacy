@@ -46,7 +46,7 @@ class TestDocConsumer:
     def test_init_default(self):
         doc_consumer = DocConsumer(nlp)
         assert DocConsumer(nlp)
-        assert doc_consumer.dtypes == ("ent",)
+        assert doc_consumer.dtypes == ("ents",)
 
     def test_init_context(self):
         doc_consumer = DocConsumer(nlp, dtypes=("context",))
@@ -55,9 +55,9 @@ class TestDocConsumer:
     def test_default_cols(self):
         consumer = DocConsumer(nlp)
         doc = consumer(simple_doc)
-        data = doc._.get_data("ent")
+        data = doc._.get_data("ents")
         assert data is not None
-        assert set(data.keys()) == set(consumer.dtype_attrs["ent"])
+        assert set(data.keys()) == set(consumer.dtype_attrs["ents"])
         assert set(data.keys()) == set(DEFAULT_ENT_ATTRS)
 
     def test_context_cols(self):
@@ -81,7 +81,7 @@ class TestDocConsumer:
     def test_default_data(self):
         consumer = DocConsumer(nlp)
         doc = consumer(simple_doc)
-        data = doc._.get_data("ent")
+        data = doc._.get_data("ents")
         ent = doc.ents[0]
         assert data["text"][0] == ent.text
         assert data["label_"][0] == ent.label_
@@ -91,7 +91,7 @@ class TestDocConsumer:
     def test_context_data(self):
         consumer = DocConsumer(nlp)
         doc = consumer(context_doc)
-        data = doc._.get_data("ent")
+        data = doc._.get_data("ents")
         ent = doc.ents[0]
         assert data["is_family"][0] == ent._.is_family
         assert data["is_hypothetical"][0] == ent._.is_hypothetical
@@ -102,7 +102,7 @@ class TestDocConsumer:
     def test_section_data_ent(self):
         consumer = DocConsumer(nlp)
         doc = consumer(section_doc)
-        data = doc._.get_data("ent")
+        data = doc._.get_data("ents")
         ent = doc.ents[0]
         assert data["section_category"][0] == ent._.section_category
         assert data["section_parent"][0] == ent._.section_parent
@@ -110,7 +110,7 @@ class TestDocConsumer:
     def test_section_data_ent_parent(self):
         consumer = DocConsumer(nlp)
         doc = consumer(section_parent_doc)
-        data = doc._.get_data("ent")
+        data = doc._.get_data("ents")
         ent = doc.ents[0]
         assert data["section_category"][0] == ent._.section_category
         assert data["section_parent"][0] == ent._.section_parent
@@ -132,12 +132,12 @@ class TestDocConsumer:
         assert data["section_parent"][0] == section.parent
 
     def test_ten_concepts(self):
-        consumer = DocConsumer(nlp, dtypes=("ent",))
+        consumer = DocConsumer(nlp, dtypes=("ents",))
         docs = [consumer(d) for d in many_concept_docs]
         for doc in docs:
             print(doc)
             num_concepts = len(doc.ents)
-            data = doc._.get_data("ent")
+            data = doc._.get_data("ents")
             for key in data.keys():
                 print(key)
                 print(num_concepts)
@@ -146,8 +146,8 @@ class TestDocConsumer:
 
     def test_get_default_attrs(self):
         attrs = DocConsumer.get_default_attrs()
-        assert set(attrs.keys()) == {"ent", "context", "section", "doc"}
-        assert set(attrs["ent"]) == set(DEFAULT_ENT_ATTRS)
+        assert set(attrs.keys()) == {"ents", "context", "section", "doc"}
+        assert set(attrs["ents"]) == set(DEFAULT_ENT_ATTRS)
         assert set(attrs["section"]) == set(ALLOWED_SECTION_ATTRS)
         assert set(attrs["context"]) == set(ALLOWED_CONTEXT_ATTRS)
         assert set(attrs["doc"]) == set(DEFAULT_DOC_ATTRS)
@@ -155,5 +155,5 @@ class TestDocConsumer:
     def test_get_data_attrs_not_none(self):
         consumer = DocConsumer(nlp)
         doc = consumer(simple_doc)
-        data = doc._.get_data("ent", attrs=["label_", "is_negated"])
+        data = doc._.get_data("ents", attrs=["label_", "is_negated"])
         assert set(data.keys()) == {"label_", "is_negated"}

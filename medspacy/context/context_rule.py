@@ -1,6 +1,6 @@
 from __future__ import annotations
 import json
-from typing import Optional, Callable, Union, List, Dict, Tuple, Any, Iterable, Set
+from typing import Optional, Callable, Union, List, Dict, Tuple, Any, Set
 
 from spacy.matcher import Matcher
 from spacy.tokens import Doc, Span
@@ -8,7 +8,7 @@ from spacy.tokens import Doc, Span
 from ..common.base_rule import BaseRule
 
 # import warnings
-#
+
 # warnings.simplefilter("always")
 
 

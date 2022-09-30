@@ -1,3 +1,29 @@
+# Version 1.0.0
+
+## Documentation
+
+
+
+## Span Groups
+
+## Serialization
+
+## Component Standardization
+
+### Target Matcher
+
+### Sectionizer
+
+### ConText
+
+### QuickUMLS
+
+### Preprocessor
+
+### Postprocessor
+
+
+
 # Version 0.1.0.1
 This release includes a new subpackage `medspacy.io` which includes utilities for converting docs into structured data which can then be written back to a relational database.
 ## medspacy.io

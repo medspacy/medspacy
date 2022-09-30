@@ -41,14 +41,6 @@ class TestConText:
         context = ConText(nlp, rules=[rule])
         assert context.rules
 
-    def test_bad_rules_arg(self):
-        with pytest.raises(TypeError):
-            ConText(nlp, rules="not valid")
-
-    def test_bad_rule_list(self):
-        with pytest.raises(TypeError):
-            ConText(nlp, rules=["list of strings"])
-
     def test_call(self):
         doc = nlp("Pulmonary embolism has been ruled out.")
         context = ConText(nlp)

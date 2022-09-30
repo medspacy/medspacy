@@ -153,14 +153,14 @@ class ConText:
     @property
     def rules(self):
         """
-        Returns list of ConTextItems
+        Returns list of ConTextRules available to context.
         """
         return self.__matcher.rules
 
     @property
     def categories(self):
         """
-        Returns list of categories from ConTextItems
+        Returns list of categories available that Context might produce.
         """
         return self.__matcher.labels
 

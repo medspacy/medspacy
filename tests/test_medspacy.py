@@ -7,7 +7,9 @@ import spacy
 
 class TestMedSpaCy:
     def test_default_build_pipe_names(self):
-        enable, disable = medspacy.util._build_pipe_names(enable=None, disable=None)
+        enable, disable = medspacy.util._build_pipe_names(
+            enable="default", disable=None
+        )
         assert enable == {
             "medspacy_tokenizer",
             "medspacy_pyrush",
@@ -38,7 +40,7 @@ class TestMedSpaCy:
         assert nlp("This is a sentence. So is this.")
 
     def test_load_disable(self):
-        nlp = medspacy.load(disable=["context"])
+        nlp = medspacy.load(disable=["medspacy_context"])
         expected_pipe_names = {
             "medspacy_pyrush",
             "medspacy_target_matcher",
@@ -47,10 +49,11 @@ class TestMedSpaCy:
 
     def test_load_all_component_names(self):
         expected_pipe_names = {
-            "medspacy_pyrush",
-            "medspacy_preprocessor",
             "medspacy_tokenizer",
+            "medspacy_preprocessor",
+            "medspacy_pyrush",
             "medspacy_target_matcher",
+            # "medspacy_quickumls", # quickumls still not included by default due to install issues
             "medspacy_context",
             "medspacy_sectionizer",
             "medspacy_postprocessor",
@@ -95,7 +98,7 @@ class TestMedSpaCy:
 
     def test_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer
-        custom_tokenizer = medspacy.load(enable=["tokenizer"]).tokenizer
+        custom_tokenizer = medspacy.load(enable=["medspacy_tokenizer"]).tokenizer
 
         text = r"Pt c\o n;v;d h\o chf+cp n/v/d"
 
@@ -114,7 +117,7 @@ class TestMedSpaCy:
 
     def test_disable_medspacy_tokenizer(self):
         default_tokenizer = spacy.blank("en").tokenizer
-        custom_tokenizer = medspacy.load(disable=["tokenizer"]).tokenizer
+        custom_tokenizer = medspacy.load(disable=["medspacy_tokenizer"]).tokenizer
 
         text = r"Pt c\o n;v;d h\o chf+cp n/v/d"
 

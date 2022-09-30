@@ -10,7 +10,7 @@ Library for clinical NLP with spaCy.
 
 
 # Overview
-MedSpaCy is a library of tools for performing clinical NLP and text processing tasks with the popular [spaCy](spacy.io) 
+MedSpaCy is a library of tools for performing clinical NLP and text processing tasks with the popular [spaCy](https://spacy.io) 
 framework. The `medspacy` package brings together a number of other packages, each of which implements specific 
 functionality for common clinical text processing specific to the clinical domain, such as sentence segmentation, 
 contextual analysis and attribute assertion, and section detection.

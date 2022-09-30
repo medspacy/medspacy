@@ -1,5 +1,6 @@
 from typing import Iterable, List, Dict, Tuple, Set
 
+import spacy
 from spacy import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from .regex_matcher import RegexMatcher
@@ -36,14 +37,14 @@ class MedspacyMatcher:
             prune: Whether to prune matches that overlap or are substrings of another match. For example, if "no history
                 of" and "history of" are both matches, setting prune to True would drop "history of". Default is True.
         """
-        self.nlp = nlp
+        self.nlp = nlp.tokenizer # preserve only the tokenizer for creating phrasematcher rules
         self._rule_ids = set()
         self._labels = set()
         self._rule_map = dict()
         self._prune = prune
-        self.__matcher = Matcher(self.nlp.vocab)
-        self.__phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=phrase_matcher_attr)
-        self.__regex_matcher = RegexMatcher(self.nlp.vocab)
+        self.__matcher = Matcher(nlp.vocab)
+        self.__phrase_matcher = PhraseMatcher(nlp.vocab, attr=phrase_matcher_attr)
+        self.__regex_matcher = RegexMatcher(nlp.vocab)
 
         self.__rule_count = 0
         self.__phrase_matcher_attr = phrase_matcher_attr
@@ -106,11 +107,12 @@ class MedspacyMatcher:
             else:
                 if self.__phrase_matcher_attr.lower() == "lower":
                     # only lowercase when the phrase matcher is looking for lowercase matches.
-                    doc = self.nlp(rule.literal.lower())
+                    text = rule.literal.lower()
                 else:
                     # otherwise, expect users to handle phrases as aligned with their non-default phrase matching scheme
                     # this prevents .lower() from blocking matches on attrs like ORTH or UPPER
-                    doc = self.nlp(rule.literal)
+                    text = rule.literal
+                doc = self.nlp(text)
                 self.__phrase_matcher.add(
                     rule_id,
                     [doc],

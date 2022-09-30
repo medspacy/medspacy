@@ -29,7 +29,8 @@ class Postprocessor:
         self._input_type = input_type
         self._span_group_name = span_group_name
 
-        self.add(rules)
+        if rules:
+            self.add(rules)
 
     @property
     def rules(self) -> List[PostprocessingRule]:

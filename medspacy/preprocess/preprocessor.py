@@ -50,7 +50,7 @@ class Preprocessor:
         for rule in self._rules:
             text = rule(text)
 
-        if tokenize:
+        if not tokenize:
             return text
 
         return self.tokenizer(text)

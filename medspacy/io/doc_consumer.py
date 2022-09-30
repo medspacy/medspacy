@@ -1,5 +1,8 @@
 from collections import OrderedDict
 from spacy.language import Language
+from spacy.tokens import Span
+
+from medspacy.context import ConTextModifier
 
 ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
 
@@ -59,7 +62,8 @@ class DocConsumer:
     def __init__(
         self, nlp, name="medspacy_doc_consumer", dtypes=("ent",), dtype_attrs=None
     ):
-        """Create a new DocConsumer.
+        """
+        Creates a new DocConsumer.
 
         This component extracts structured information from a Doc. Information is stored in
         doc._.data, which is a nested dictionary. The outer keys represent the data type of
@@ -176,10 +180,12 @@ class DocConsumer:
         doc._.data = data
         return doc
 
-    def add_context_edge_attributes(self, ent, modifier, context_data, doc):
-        span_tup = modifier.span
+    def add_context_edge_attributes(
+        self, ent: Span, modifier: ConTextModifier, context_data, doc
+    ):
+        span_tup = modifier.modifier_span
         span = doc[span_tup[0] : span_tup[1]]
-        scope_tup = modifier.scope
+        scope_tup = modifier.scope_span
         scope = doc[scope_tup[0] : scope_tup[1]]
         if "ent_text" in self.dtype_attrs["context"]:
             context_data["ent_text"].append(ent.text)

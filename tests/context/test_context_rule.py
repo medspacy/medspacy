@@ -26,41 +26,46 @@ class TestItemData:
         """Test that a ConTextRule category is always upper"""
         literal = "no evidence of"
         category = "definite_negated_existence"
-        rule = "forward"
-        item = ConTextRule(literal, category, rule)
+        direction = "forward"
+        item = ConTextRule(literal, category, direction=direction)
         assert item.category == "DEFINITE_NEGATED_EXISTENCE"
 
     def test_context_item_rule_upper(self):
         """Test that a ConTextRule direction is always upper"""
         literal = "no evidence of"
         category = "definite_negated_existence"
-        rule = "forward"
-        item = ConTextRule(literal, category, rule)
+        direction = "forward"
+        item = ConTextRule(literal, category, direction=direction)
         assert item.direction == "FORWARD"
 
     def test_rule_value_error(self):
         """Test that ConTextRule raises a ValueError if an invalid direction is passed in."""
         literal = "no evidence of"
         category = "definite_negated_existence"
-        rule = "asdf"
+        direction = "asdf"
         with pytest.raises(ValueError):
-            ConTextRule(literal, category, rule)
+            ConTextRule(literal, category, direction=direction)
 
     def test_metadata(self):
         literal = "no evidence of"
         category = "definite_negated_existence"
-        rule = "forward"
+        direction = "forward"
         meta = {"comment": "This is a comment."}
-        item = ConTextRule(literal, category, rule, metadata=meta)
+        item = ConTextRule(literal, category, direction=direction, metadata=meta)
         assert item.metadata
 
     def test_from_dict(self):
-        d = dict(literal="reason for examination", category="INDICATION", direction="FORWARD")
+        d = dict(
+            literal="reason for examination", category="INDICATION", direction="FORWARD"
+        )
         assert ConTextRule.from_dict(d)
 
     def test_from_dict_error(self):
         d = dict(
-            literal="reason for examination", category="INDICATION", direction="FORWARD", invalid="this is an invalid key",
+            literal="reason for examination",
+            category="INDICATION",
+            direction="FORWARD",
+            invalid="this is an invalid key",
         )
         with pytest.raises(ValueError):
             ConTextRule.from_dict(d)
@@ -75,39 +80,20 @@ class TestItemData:
         item = ConTextRule(literal, category, rule)
         assert isinstance(item.to_dict(), dict)
 
-    def test_to_json(self):
-        import json, os
-
-        dname = os.path.join(tmpdirname.name, "tmp_test_modifiers.json")
-
-        literal = "no evidence of"
-        category = "definite_negated_existence"
-        rule = "forward"
-        item = ConTextRule(literal, category, rule)
-        ConTextRule.to_json([item], dname)
-
-        with open(dname) as f:
-            data = json.load(f)
-        assert "context_rules" in data
-        assert len(data["context_rules"]) == 1
-        item = data["context_rules"][0]
-        for key in ["literal", "category", "direction"]:
-            assert key in item
-
-        # os.remove("test_modifiers.json")
-
     def test_default_terminate(self):
-        item = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None)
+        item = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by=None
+        )
         assert item.terminated_by == set()
 
     def test_custom_terminate(self):
-        item = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
+        item = ConTextRule(
+            "no evidence of",
+            "NEGATED_EXISTENCE",
+            "FORWARD",
+            terminated_by={"POSITIVE_EXISTENCE"},
+        )
         assert item.terminated_by == {"POSITIVE_EXISTENCE"}
-
-    def test_deprecated_rule_argument_raises_warrning(self):
-        with pytest.warns(DeprecationWarning) as warning_info:
-            ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
-        assert "The 'rule' argument from ConTextItem has been replaced with 'direction'" in warning_info[0].message.args[0]
 
 
 @pytest.fixture
@@ -118,7 +104,12 @@ def from_json_file():
     json_filepath = os.path.join(tmpdirname.name, "test_modifiers.json")
 
     item_data = [
-        {"literal": "are ruled out", "category": "DEFINITE_NEGATED_EXISTENCE", "pattern": None, "direction": "backward",},
+        {
+            "literal": "are ruled out",
+            "category": "DEFINITE_NEGATED_EXISTENCE",
+            "pattern": None,
+            "direction": "backward",
+        },
         {
             "literal": "is negative",
             "category": "DEFINITE_NEGATED_EXISTENCE",

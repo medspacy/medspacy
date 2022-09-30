@@ -1,3 +1,8 @@
+"""
+This module will contain helper functions and classes for common clinical processing tasks
+which will be used in many medspaCy components.
+"""
+
 from sys import platform
 from os import path
 from pathlib import Path
@@ -146,7 +151,7 @@ def load(
 
     if "medspacy_context" in enable:
         if load_rules is True:
-            config = {"rules": "default"}
+            config = {}
         else:
             config = {"rules": None}
         nlp.add_pipe("medspacy_context", config=config)
@@ -159,17 +164,10 @@ def load(
         # nlp.add_pipe(context)
     if "medspacy_sectionizer" in enable:
         if load_rules is True:
-            config = {"rules": "default"}
+            config = {}
         else:
             config = {"rules": None}
         nlp.add_pipe("medspacy_sectionizer", config=config)
-        # from .section_detection import Sectionizer
-        #
-        # if load_rules:
-        #     sectionizer = Sectionizer(nlp, rules="default")
-        # else:
-        #     sectionizer = Sectionizer(nlp, rules=None)
-        # nlp.add_pipe(sectionizer)
 
     if "medspacy_postprocessor" in enable:
         nlp.add_pipe("medspacy_postprocessor")

@@ -9,7 +9,7 @@ from medspacy.io.doc_consumer import (
     ALLOWED_SECTION_ATTRS,
     ALLOWED_DATA_TYPES,
 )
-from medspacy.context import ConTextComponent
+from medspacy.context import ConText
 from medspacy.section_detection import Sectionizer, SectionRule
 
 nlp = spacy.load("en_core_web_sm")

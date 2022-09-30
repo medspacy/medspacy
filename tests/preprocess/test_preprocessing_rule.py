@@ -12,10 +12,6 @@ class TestMedSpaCyExtensions:
         rule = PreprocessingRule("this is a string")
         assert rule.pattern == re.compile("this is a string", re.IGNORECASE)
 
-    def test_init_pattern(self):
-        rule = PreprocessingRule(re.compile("this is a string"))
-        assert rule.pattern == re.compile("this is a string")
-
     def test_call(self):
         rule = PreprocessingRule("COVID-19 SCREENING:")
         text = "COVID-19 SCREENING:"
@@ -31,25 +27,11 @@ class TestMedSpaCyExtensions:
     def test_to_dict(self):
         rule = PreprocessingRule("this is a string")
         d = rule.to_dict()
-        assert d == {"pattern": "this is a string", "repl": "", "ignorecase": True, "callback": None, "desc": ""}
+        assert d == {"pattern": "this is a string", "flags": 34, "repl": "", "callback": None, "desc": None}
 
     def test_from_dict(self):
-        d = {"pattern": "this is a string", "repl": "", "callback": None, "desc": ""}
+        d = {"pattern": "this is a string", "repl": "", "callback": None, "desc": "", "flags": re.IGNORECASE}
         rule = PreprocessingRule.from_dict(d)
-
-    def test_to_json(self):
-        import os, json
-
-        dname = os.path.join(tmpdirname.name, "test_preprocess_rules.json")
-
-        rule = PreprocessingRule("this is a string")
-        PreprocessingRule.to_json([rule], dname)
-
-        with open(dname) as f:
-            data = json.load(f)
-
-        assert "preprocessing_rules" in data
-        rule = PreprocessingRule.from_dict(data["preprocessing_rules"][0])
 
     def test_from_json(self):
         import os, json
@@ -58,7 +40,7 @@ class TestMedSpaCyExtensions:
         # dname = os.path.join(".", "test_preprocess_rules.json")
         data = {
             "preprocessing_rules": [
-                {"pattern": "this is a string", "repl": "", "ignorecase": True, "callback": None, "desc": ""}
+                {"pattern": "this is a string", "repl": "", "flags": re.IGNORECASE, "ignorecase": True, "callback": None, "desc": ""}
             ]
         }
 
@@ -70,7 +52,7 @@ class TestMedSpaCyExtensions:
         assert isinstance(rule, PreprocessingRule)
         assert rule.pattern.pattern == "this is a string"
         assert rule.repl == ""
-        assert rule.callback == None
+        assert rule.callback is None
         assert rule.desc == ""
 
     def test_repr(self):

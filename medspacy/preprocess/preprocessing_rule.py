@@ -1,73 +1,92 @@
+from __future__ import annotations
 import re
+from typing import Union, Optional, Dict, Callable, Any
 
 
 class PreprocessingRule:
+    """
+    This is a rule for handling preprocessing in the medspaCy Preprocessor. This class does not inherit from BaseRule,
+    as it cannot be used in a spaCy pipeline. The Preprocessor and PreprocessingRules are designed to preprocess text
+    before entering a spaCy pipeline to allow for destructive preprocessing, such as stripping or replacing text.
+    """
 
-    _ALLOWED_KEYS = {"pattern", "repl", "desc", "pattern"}
+    _ALLOWED_KEYS = {"pattern", "repl", "desc", "pattern", "flags"}
 
-    def __init__(self, pattern, repl="", ignorecase=True, callback=None, desc=""):
-        """Create a new PreprocessingRule. Preprocessing rules define spans of text to be removed and optionally
+    def __init__(
+        self,
+        pattern: str,
+        repl: Union[str, Callable[[re.Match], Any]] = "",
+        flags: re.RegexFlag = re.IGNORECASE,
+        callback: Optional[Callable[[str, re.Match], str]] = None,
+        desc: Optional[str] = None,
+    ):
+        """
+        Creates a new PreprocessingRule. Preprocessing rules define spans of text to be removed and optionally
         replaced from the text underneath a doc.
 
-        Arsg:
-            pattern (str or re.Pattern): The text pattern to match and replace in a doc.
-                Must be either a string, which will be compiled as a case-insensitive regular expression,
-                or a compiled regular expression. The patterns will lead to re.Match objects.
-            repl (str or callable): The text to replace a matched string with. By default is an empty string.
-                If a callable, then this will be passed into the re.Pattern.sub() method and will be called on
-                the match object and return the replacement text. See the re documentation for more examples.
-            ignorecase (bool): If pattern is a string, this will indicate whether to compile the pattern with
-                re.IGNORECASE.
-            callback (None or callable): An optional callable which takes the match and returns the entire text for a new doc,
-                rather than just the replacement string for the matched text. This can allow larger text manipulation,
-                such as stripping out an entire section based on a header.
-            self.desc (str): An optional description.
-
-            For serialization methods such as to_json, repl must be a str and callback is not supported.
+        Args:
+            pattern: The text pattern to match and replace in a doc. Must be a string, which will be compiled as
+                a regular expression. The patterns will lead to re.Match objects.
+            repl: The text to replace a matched string with. By default, repl is an empty string. If repl is a function,
+                sends function to re.sub and it will be called on each Match object. More info here
+                https://docs.python.org/3/library/re.html#re.sub
+            flags: A regex compilation flag. Default is re.IGNORECASE.
+            callback: An optional callable which takes the raw text and a Match and returns the new copy of the text,
+                rather than just replacing strings for the matched text. This can allow larger text manipulation, such
+                as stripping out an entire section based on a header.
+            desc: An optional description.
         """
-        if isinstance(pattern, str):
-            if ignorecase is True:
-                pattern = re.compile(pattern, flags=re.IGNORECASE)
-            else:
-                pattern = re.compile(pattern)
-        elif not isinstance(pattern, re.Pattern):
-            raise ValueError(
-                "pattern must be either a str or re.Pattern, not", type(pattern)
-            )
-        self.pattern = pattern
+        self.pattern = re.compile(pattern, flags=flags)
         self.repl = repl
-        self.ignorecase = ignorecase
         self.callback = callback
         self.desc = desc
 
     @classmethod
-    def from_dict(self, d):
-        if "flags" in d:
-            pattern = re.compile(d["pattern"], flags=d["flags"])
-        else:
-            pattern = re.compile(d["pattern"])
+    def from_dict(cls, d: Dict) -> PreprocessingRule:
+        """
+        Creates a PreprocessingRule from a dictionary.
+
+        Args:
+            d: The dict to read.
+
+        Returns:
+            A PreprocessingRule from the dictionary.
+        """
         return PreprocessingRule(
-            pattern,
-            repl=d.get("repl"),
-            ignorecase=d.get("ignorecase", False),
-            callback=d.get("callback"),
-            desc=d.get("desc", ""),
+            d["pattern"],
+            repl=d["repl"],
+            flags=d["flags"],
+            callback=d["callback"],
+            desc=d.get("desc", None),
         )
 
     def to_dict(self):
+        """
+        Writes a preprocessing rule to a dictionary. Useful for writing all rules to a json later.
+
+        Returns:
+            A dictionary containing the PreprocessingRule's data.
+        """
         d = {
             "pattern": self.pattern.pattern,
             "repl": self.repl,
             "callback": self.callback,
             "desc": self.desc,
-            "ignorecase": self.ignorecase,
+            "flags": self.pattern.flags,
         }
-        if self.pattern.flags is not None and self.pattern.flags != 34:  # re.IGNORECASE
-            d["flags"] = self.pattern.flags
         return d
 
     @classmethod
     def from_json(cls, filepath):
+        """
+        Read a JSON file containing PreprocessingRule data at the key "preprocessing_rules".
+
+        Args:
+            filepath: The filepath of the JSON to read.
+
+        Returns:
+            A list of PreprocessingRules from the JSON file.
+        """
         import json
 
         with open(filepath) as f:
@@ -76,32 +95,11 @@ class PreprocessingRule:
             PreprocessingRule.from_dict(rule) for rule in data["preprocessing_rules"]
         ]
 
-    @classmethod
-    def to_json(cls, preprocess_rules, filepath):
-        import json
-
-        # Validate that all of the keys are serializable
-        dicts = []
-        for rule in preprocess_rules:
-            if not isinstance(rule.repl, str):
-                raise ValueError(
-                    "The repl attribute must currently be a string to be serialized as json, not",
-                    type(rule.repl),
-                )
-            if rule.callback is not None:
-                raise ValueError(
-                    "The callback attribute is not serializable and must be left as None."
-                )
-            dicts.append(rule.to_dict())
-        data = {"preprocessing_rules": dicts}
-        with open(filepath, "w") as f:
-            json.dump(data, f)
-
     def __call__(self, text):
-        """Apply a preprocessing direction. If the callback attribute of direction is None,
-        then it will return a string using the direction pattern.sub method.
-        If callback is not None, then then callback function will be executed using
-        the the resulting match as an argument.
+        """
+        Apply a preprocessing direction. If the callback attribute of direction is None, then it will return a string
+        using the direction sub method. If callback is not None, then callback function will be executed using
+        the resulting match as an argument.
         """
         # If the direction just has a repl attribute,
         # Just return a simple re.sub
@@ -111,11 +109,10 @@ class PreprocessingRule:
         match = self.pattern.search(text)
         if match is None:
             return text
-        return self.callback(match)
+        return self.callback(text, match)
 
     def __repr__(self):
         return (
-            "PreprocessingRule(pattern={0}, repl={1}, callback={2}, desc={3})".format(
-                self.pattern, self.repl, self.callback, self.desc
-            )
+            f"PreprocessingRule(pattern={self.pattern.pattern}, flags={self.pattern.flags}, repl={self.repl}, "
+            f"callback={self.callback}, desc={self.desc})"
         )

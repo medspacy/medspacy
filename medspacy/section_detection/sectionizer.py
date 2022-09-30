@@ -12,7 +12,11 @@ from .section_rule import SectionRule
 from .section import Section
 from ..common.medspacy_matcher import MedspacyMatcher
 
-DEFAULT_RULES_FILEPATH = path.join(Path(__file__).resolve().parents[2], "resources", "section_patterns.json",)
+DEFAULT_RULES_FILEPATH = path.join(
+    Path(__file__).resolve().parents[2],
+    "resources",
+    "section_patterns.json",
+)
 
 DEFAULT_ATTRS = {
     "past_medical_history": {"is_historical": True},
@@ -129,13 +133,19 @@ class Sectionizer:
                 attr_dict = add_attrs[modifier]
                 for attr_name, attr_value in attr_dict.items():
                     if not Span.has_extension(attr_name):
-                        raise ValueError("Custom extension {0} has not been set. Call Span.set_extension.")
+                        raise ValueError(
+                            "Custom extension {0} has not been set. Call Span.set_extension."
+                        )
 
             self.add_attrs = True
             self.assertion_attributes_mapping = add_attrs
 
         else:
-            raise ValueError("add_attrs must be either True (default), False, or a dictionary, not {0}".format(add_attrs))
+            raise ValueError(
+                "add_attrs must be either True (default), False, or a dictionary, not {0}".format(
+                    add_attrs
+                )
+            )
 
     @property
     def rules(self):
@@ -185,7 +195,9 @@ class Sectionizer:
                     "rules = section_patterns_to_rules(patterns)`"
                 )
             else:
-                raise TypeError("Rules must be of class SectionRule, not", type(rules[0]))
+                raise TypeError(
+                    "Rules must be of class SectionRule, not", type(rules[0])
+                )
 
         self.matcher.add(rules)
 
@@ -205,7 +217,10 @@ class Sectionizer:
             else:
                 self._parent_sections[name] = set(parents)
 
-            if name in self._parent_required.keys() and self._parent_required[name] != parent_required:
+            if (
+                name in self._parent_required.keys()
+                and self._parent_required[name] != parent_required
+            ):
                 warnings.warn(
                     "Duplicate section title {0} has different parent_required option. Setting parent_required to False.".format(
                         name
@@ -243,11 +258,15 @@ class Sectionizer:
                 identified_parent = None
                 for parent in parents:
                     # go backwards through the section "tree" until you hit a root or the start of the list
-                    candidate = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[i_a - 1][0]]].category
+                    candidate = self._rule_item_mapping[
+                        self.nlp.vocab.strings[sections_final[i_a - 1][0]]
+                    ].category
                     candidates_parent_idx = sections_final[i_a - 1][3]
                     if candidates_parent_idx is not None:
                         candidates_parent = self._rule_item_mapping[
-                            self.nlp.vocab.strings[sections_final[candidates_parent_idx][0]]
+                            self.nlp.vocab.strings[
+                                sections_final[candidates_parent_idx][0]
+                            ]
                         ].category
                     else:
                         candidates_parent = None
@@ -266,18 +285,27 @@ class Sectionizer:
                                 candidate = None
                                 continue
                             # otherwise get the previous item in the list
-                            temp = self._rule_item_mapping[self.nlp.vocab.strings[sections_final[candidate_i - 1][0]]].category
+                            temp = self._rule_item_mapping[
+                                self.nlp.vocab.strings[
+                                    sections_final[candidate_i - 1][0]
+                                ]
+                            ].category
                             temp_parent_idx = sections_final[candidate_i - 1][3]
                             if temp_parent_idx is not None:
                                 temp_parent = self._rule_item_mapping[
-                                    self.nlp.vocab.strings[sections_final[temp_parent_idx][0]]
+                                    self.nlp.vocab.strings[
+                                        sections_final[temp_parent_idx][0]
+                                    ]
                                 ].category
                             else:
                                 temp_parent = None
                             # if the previous item is the parent of the current item
                             # OR if the previous item is a sibling of the current item
                             # continue to search
-                            if temp == candidates_parent or temp_parent == candidates_parent:
+                            if (
+                                temp == candidates_parent
+                                or temp_parent == candidates_parent
+                            ):
                                 candidate = temp
                                 candidates_parent = temp_parent
                                 candidate_i -= 1
@@ -303,7 +331,10 @@ class Sectionizer:
 
         """
         for ent in ents:
-            if ent._.section and ent._.section.category in self.assertion_attributes_mapping:
+            if (
+                ent._.section
+                and ent._.section.category in self.assertion_attributes_mapping
+            ):
                 attr_dict = self.assertion_attributes_mapping[ent._.section.category]
                 for (attr_name, attr_value) in attr_dict.items():
                     setattr(ent._, attr_name, attr_value)
@@ -320,14 +351,14 @@ class Sectionizer:
         doc._.sections = []
         # if there were no matches, return the doc as one section
         if len(matches) == 0:
-            doc._.sections.append(Section(doc, None, 0, 0, 0, len(doc)))
+            doc._.sections.append(Section(None, 0, 0, 0, len(doc)))
             return doc
 
         section_list = []
         # if the firt match does not begin at token 0, handle the first section
         first_match = matches[0]
         if first_match[1] != 0:
-            section_list.append(Section(doc, None, 0, 0, 0, first_match[1]))
+            section_list.append(Section(None, 0, 0, 0, first_match[1]))
 
         # handle section spans
         for i, match in enumerate(matches):
@@ -342,7 +373,9 @@ class Sectionizer:
             if i == len(matches) - 1:
                 # If there is no scope limitation, go until the end of the doc
                 if self.max_scope is None and rule.max_scope is None:
-                    section_list.append(Section(doc, category, start, end, end, len(doc), parent, rule))
+                    section_list.append(
+                        Section(category, start, end, end, len(doc), parent, rule)
+                    )
                 else:
                     # If the rule has a max_scope, use that as a precedence
                     if rule.max_scope is not None:
@@ -350,23 +383,30 @@ class Sectionizer:
                     else:
                         scope_end = min(end + self.max_scope, doc[-1].i + 1)
 
-                    section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
+                    section_list.append(
+                        Section(category, start, end, end, scope_end, parent, rule)
+                    )
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
                 _, next_start, _, _ = next_match
                 if self.max_scope is None and rule.max_scope is None:
-                    section_list.append(Section(doc, category, start, end, end, next_start, parent, rule))
+                    section_list.append(
+                        Section(category, start, end, end, next_start, parent, rule)
+                    )
                 else:
                     if rule.max_scope is not None:
                         scope_end = min(end + rule.max_scope, next_start)
                     else:
                         scope_end = min(end + self.max_scope, next_start)
-                    section_list.append(Section(doc, category, start, end, end, scope_end, parent, rule))
+                    section_list.append(
+                        Section(category, start, end, end, scope_end, parent, rule)
+                    )
 
         for section in section_list:
             doc._.sections.append(section)
-            for token in section.section_span:
+            start, end = section.section_span
+            for token in doc[start:end]:
                 token._.section = section
 
         # If it is specified to add assertion attributes,
@@ -377,8 +417,12 @@ class Sectionizer:
 
     def filter_start_lines(self, doc, matches):
         "Filter a list of matches to only contain spans where the start token is the beginning of a new line."
-        return [m for m in matches if util.is_start_line(m[1], doc, self.newline_pattern)]
+        return [
+            m for m in matches if util.is_start_line(m[1], doc, self.newline_pattern)
+        ]
 
     def filter_end_lines(self, doc, matches):
         "Filter a list of matches to only contain spans where the start token is followed by a new line."
-        return [m for m in matches if util.is_end_line(m[2] - 1, doc, self.newline_pattern)]
+        return [
+            m for m in matches if util.is_end_line(m[2] - 1, doc, self.newline_pattern)
+        ]

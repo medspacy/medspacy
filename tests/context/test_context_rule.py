@@ -1,5 +1,6 @@
-import pytest
 import tempfile
+
+import pytest
 
 tmpdirname = tempfile.TemporaryDirectory()
 
@@ -103,29 +104,16 @@ class TestItemData:
         item = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
         assert item.terminated_by == {"POSITIVE_EXISTENCE"}
 
-    def test_deprecated_context_item_throws_error(self):
-        with pytest.raises(NotImplementedError) as exception_info:
-            # This should fail because context_item throws a NotImplementedError
-            from medspacy.context import ConTextItem
-
-            ConTextItem()
-        exception_info.match("ConTextItem has been deprecated and replaced with ConTextRule.")
-
     def test_deprecated_rule_argument_raises_warrning(self):
         with pytest.warns(DeprecationWarning) as warning_info:
             ConTextRule("no evidence of", "NEGATED_EXISTENCE", rule="FORWARD")
         assert "The 'rule' argument from ConTextItem has been replaced with 'direction'" in warning_info[0].message.args[0]
 
-    def test_deprecated_rule_attribute_raises_warrning(self):
-        with pytest.warns(DeprecationWarning) as warning_info:
-            rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE")
-            rule.rule
-        assert "The 'rule' attribute has been replaced with 'direction'." in warning_info[0].message.args[0]
-
 
 @pytest.fixture
 def from_json_file():
-    import json, os
+    import json
+    import os
 
     json_filepath = os.path.join(tmpdirname.name, "test_modifiers.json")
 

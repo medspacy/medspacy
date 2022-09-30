@@ -1,9 +1,24 @@
+from __future__ import annotations
+from medspacy.context.context_rule import ConTextRule
+from medspacy.util import tuple_overlaps
+import srsly
+
+
 class ConTextModifier:
     """Represents a concept found by ConText in a document.
     Is the result of ConTextRule matching a span of text in a Doc.
     """
 
-    def __init__(self, context_rule, start, end, doc, _use_context_window=False):
+    def __init__(
+        self,
+        context_rule,
+        start,
+        end,
+        doc,
+        _scope_start=None,
+        _scope_end=None,
+        _use_context_window=False,
+    ):
         """Create a new ConTextModifier from a document span.
 
         context_item (int): The ConTextRule object which defines the modifier.
@@ -14,29 +29,29 @@ class ConTextModifier:
         self._context_rule = context_rule
         self.start = start
         self.end = end
-        self.doc = doc
 
         self._targets = []
         self._num_targets = 0
 
         self._use_context_window = _use_context_window
-        self._scope_start = None
-        self._scope_end = None
-
-        self.set_scope()
+        self._scope_start = _scope_start
+        self._scope_end = _scope_end
+        if doc is not None and (self._scope_end is None or self._scope_start is None):
+            self.__set_scope(doc)
 
     @property
     def span(self):
         """The spaCy Span object, which is a view of self.doc, covered by this match."""
-        return self.doc[self.start : self.end]
+        return self.start, self.end
 
     @property
     def rule(self):
-        """Returns the associated direction."""
+        """Returns the associated context rule."""
         return self._context_rule
 
     @property
     def direction(self):
+        """Returns the associated direction."""
         return self.rule.direction
 
     @property
@@ -47,7 +62,7 @@ class ConTextModifier:
     @property
     def scope(self):
         """Returns the associated scope."""
-        return self.doc[self._scope_start : self._scope_end]
+        return self._scope_start, self._scope_end
 
     @property
     def allowed_types(self):
@@ -74,7 +89,7 @@ class ConTextModifier:
         """Returns the associated maximum scope."""
         return self.rule.max_scope
 
-    def set_scope(self):
+    def __set_scope(self, doc):
         """Applies the direction of the ConTextRule which generated
         this ConTextModifier to define a scope.
         If self.max_scope is None, then the default scope is the sentence which it occurs in
@@ -89,19 +104,10 @@ class ConTextModifier:
         """
         # If ConText is set to use defined windows, do that instead of sentence splitting
         if self._use_context_window:
-            full_scope_span = self.span._.window(n=self.rule.max_scope)
-            # # Up to the beginning of the doc
-            # full_scope_start = max(
-            #     (0, self.start - self.rule.max_scope)
-            # )
-            # # Up to the end of the doc
-            # full_scope_end = min(
-            #     (len(self.span.doc), self.end + self.rule.max_scope)
-            # )
-            # full_scope_span = self.span.doc[full_scope_start:full_scope_end]
+            full_scope_span = doc[self.start : self.end]._.window(n=self.rule.max_scope)
         # Otherwise, use the sentence
         else:
-            full_scope_span = self.doc[self.start].sent
+            full_scope_span = doc[self.start].sent
             if full_scope_span is None:
                 raise ValueError(
                     "ConText failed because sentence boundaries have not been set and 'use_context_window' is set to False. "
@@ -111,7 +117,10 @@ class ConTextModifier:
 
         if self.direction.lower() == "forward":
             self._scope_start, self._scope_end = self.end, full_scope_span.end
-            if self.max_scope is not None and (self._scope_end - self._scope_start) > self.max_scope:
+            if (
+                self.max_scope is not None
+                and (self._scope_end - self._scope_start) > self.max_scope
+            ):
                 self._scope_end = self.end + self.max_scope
 
         elif self.direction.lower() == "backward":
@@ -119,7 +128,10 @@ class ConTextModifier:
                 full_scope_span.start,
                 self.start,
             )
-            if self.max_scope is not None and (self._scope_end - self._scope_start) > self.max_scope:
+            if (
+                self.max_scope is not None
+                and (self._scope_end - self._scope_start) > self.max_scope
+            ):
                 self._scope_start = self.start - self.max_scope
         else:  # bidirectional
             self._scope_start, self._scope_end = (
@@ -129,10 +141,16 @@ class ConTextModifier:
 
             # Set the max scope on either side
             # Backwards
-            if self.max_scope is not None and (self.start - self._scope_start) > self.max_scope:
+            if (
+                self.max_scope is not None
+                and (self.start - self._scope_start) > self.max_scope
+            ):
                 self._scope_start = self.start - self.max_scope
             # Forwards
-            if self.max_scope is not None and (self._scope_end - self.end) > self.max_scope:
+            if (
+                self.max_scope is not None
+                and (self._scope_end - self.end) > self.max_scope
+            ):
                 self._scope_end = self.end + self.max_scope
 
     def update_scope(self, span):
@@ -144,9 +162,9 @@ class ConTextModifier:
         self._scope_start, self._scope_end = span.start, span.end
 
     def limit_scope(self, other):
-        """If self and obj have the same category
-        or if obj has a directionality of 'terminate',
-        use the span of obj to update the scope of self.
+        """If self and other have the same category
+        or if other has a directionality of 'terminate',
+        use the span of other to update the scope of self.
         Limiting the scope of two modifiers of the same category
         reduces the number of modifiers. For example, in
         'no evidence of CHF, no pneumonia', 'pneumonia' will only
@@ -157,7 +175,7 @@ class ConTextModifier:
         other (ConTextModifier)
         Returns True if obj modfified the scope of self
         """
-        if self.span.sent != other.span.sent:
+        if not tuple_overlaps(self.scope, other.scope):
             return False
         if self.direction.upper() == "TERMINATE":
             return False
@@ -173,7 +191,8 @@ class ConTextModifier:
         # If two modifiers have the same category but modify different target types,
         # don't limit scope.
         if self.category == other.category and (
-            (self.allowed_types != other.allowed_types) or (self.excluded_types != other.excluded_types)
+            (self.allowed_types != other.allowed_types)
+            or (self.excluded_types != other.excluded_types)
         ):
             return False
 
@@ -196,14 +215,16 @@ class ConTextModifier:
         # one extracted as both a target and modifier, return False
         # to avoid self-modifying concepts
 
-        if self.overlaps_target(target):
+        if tuple_overlaps(
+            self.span, (target.start, target.end)
+        ):  # self.overlaps(target):
             return False
         if self.direction in ("TERMINATE", "PSEUDO"):
             return False
         if not self.allows(target.label_.upper()):
             return False
 
-        if target[0] in self.scope or target[-1] in self.scope:
+        if tuple_overlaps(self.scope, (target.start, target.end)):
             if not self.on_modifies(target):
                 return False
             else:
@@ -234,8 +255,8 @@ class ConTextModifier:
         if self.rule.on_modifies is None:
             return True
         # Find the span in between the target and modifier
-        start = min(target.end, self.span.end)
-        end = max(target.start, self.span.start)
+        start = min(target.end, self.span[1])
+        end = max(target.start, self.span[0])
         span_between = target.doc[start:end]
         rslt = self.rule.on_modifies(target, self.span, span_between)
         if rslt not in (True, False):
@@ -266,23 +287,14 @@ class ConTextModifier:
         self._targets = srtd_targets[: self.max_targets]
         self._num_targets = len(self._targets)
 
-    def overlaps(self, other):
-        """ Returns whether the object overlaps with another span
-
-        other (): the other object to check for overlaps
-
-        RETURNS: true if there is overlap, false otherwise.
-        """
-        return (
-            self.span[0] in other.span
-            or self.span[-1] in other.span
-            or other.span[0] in self.span
-            or other.span[-1] in self.span
-        )
-
-    def overlaps_target(self, target):
-        """Returns True if self overlaps with a spaCy span."""
-        return self.span[0] in target or self.span[-1] in target or target[0] in self.span or target[-1] in self.span
+    # def overlaps(self, other):
+    #     """Returns whether the object overlaps with another span
+    #
+    #     other (): the other object to check for overlaps
+    #
+    #     RETURNS: true if there is overlap, false otherwise.
+    #     """
+    #     return tuple_overlaps(self.span, other.span)
 
     def __gt__(self, other):
         return self.span > other.span
@@ -300,4 +312,72 @@ class ConTextModifier:
         return len(self.span)
 
     def __repr__(self):
-        return f"<ConTextModifier> [{self.span}, {self.category}]"
+        return f"<ConTextModifier> [{self.start}, {self.end}, {self.category}]"
+
+    def serialized_representation(self):
+        """
+        Serialized Representation of the modifier
+        """
+
+        KEYS_TO_KEEP = [
+            "start",
+            "end",
+            "_use_context_window",
+            "_scope_start",
+            "_scope_end",
+        ]
+
+        modifier_dict = self.__dict__
+
+        rule_dict = modifier_dict["_context_rule"].to_dict()
+
+        dict_repr = dict((key, modifier_dict[key]) for key in KEYS_TO_KEEP)
+        dict_repr["context_rule"] = rule_dict
+
+        return dict_repr
+
+    @classmethod
+    def from_serialized_representation(
+        cls, serialized_representation
+    ) -> ConTextModifier:
+        """
+        Instantiates the class from the serialized representation
+        """
+        rule = ConTextRule.from_dict(serialized_representation["context_rule"])
+
+        serialized_representation["context_rule"] = rule
+        serialized_representation["doc"] = None
+
+        return ConTextModifier(**serialized_representation)
+
+
+@srsly.msgpack_encoders("modifiers")
+def serialize_modifiers(obj, chain=None):
+    if isinstance(obj, list) and isinstance(obj[0], ConTextModifier):
+        return {"modifiers": [modifier.serialized_representation() for modifier in obj]}
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_encoders("modifier")
+def serialize_modifier(obj, chain=None):
+    if isinstance(obj, ConTextModifier):
+        return obj.serialized_representation()
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_decoders("modifiers")
+def deserialize_modifiers(obj, chain=None):
+    if "modifiers" in obj:
+        obj["modifiers"] = [
+            ConTextModifier.from_serialized_representation(serialized_modifier)
+            for serialized_modifier in obj["modifiers"]
+        ]
+        return obj
+    return obj if chain is None else chain(obj)
+
+
+@srsly.msgpack_decoders("modifier")
+def deserialize_modifier(obj, chain=None):
+    if "modifier" in obj:
+        return ConTextModifier.from_serialized_representation(obj["modifier"])
+    return obj if chain is None else chain(obj)

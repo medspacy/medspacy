@@ -5,7 +5,9 @@ warnings.filterwarnings("once", "You are using a TargetRule with a regex pattern
 
 
 class RegexMatcher:
-    def __init__(self, vocab, flags=re.IGNORECASE, resolve_start="left", resolve_end="right"):
+    def __init__(
+        self, vocab, flags=re.IGNORECASE, resolve_start="left", resolve_end="right"
+    ):
         """Create a new RegexMatcher. The RegexMatcher is an alternative to spaCy's native
         Matcher and PhraseMatcher classes and allows matching based on typical regular expressions
         over the underlying doc text rather than spacy token attributes. This can be useful for
@@ -68,7 +70,9 @@ class RegexMatcher:
             self.vocab.strings.add(match_id)
         self._patterns.setdefault(self.vocab.strings[match_id], [])
         for pattern in patterns:
-            self._patterns[self.vocab.strings[match_id]].append(re.compile(pattern, flags=self.flags))
+            self._patterns[self.vocab.strings[match_id]].append(
+                re.compile(pattern, flags=self.flags)
+            )
             self._callbacks[self.vocab.strings[match_id]] = on_match
 
     def get(self, key):
@@ -82,8 +86,12 @@ class RegexMatcher:
                 for re_match in pattern.finditer(doc.text_with_ws):
                     span = doc.char_span(re_match.start(), re_match.end())
                     if span is None:
-                        start = get_token_for_char(doc, re_match.start(), resolve=self.resolve_start)
-                        end = get_token_for_char(doc, re_match.end(), resolve=self.resolve_end)
+                        start = get_token_for_char(
+                            doc, re_match.start(), resolve=self.resolve_start
+                        )
+                        end = get_token_for_char(
+                            doc, re_match.end(), resolve=self.resolve_end
+                        )
                         if end is None:
                             end_index = len(doc)
                         else:
@@ -108,7 +116,11 @@ def get_token_for_char(doc, char_idx, resolve="left"):
     if char_idx < 0:
         raise ValueError("char_idx must be > 0")
     if char_idx > len(doc.text_with_ws):
-        raise ValueError("char_idx {0} is out of range for text with length {1}".format(char_idx, len(doc.text_with_ws)))
+        raise ValueError(
+            "char_idx {0} is out of range for text with length {1}".format(
+                char_idx, len(doc.text_with_ws)
+            )
+        )
     for i, token in enumerate(doc):
         if char_idx > token.idx:
             continue

@@ -10,8 +10,13 @@ class TestQuickUMLS:
     @staticmethod
     def can_test_quickumls():
         if platform.startswith("win"):
-            # we're done here for now...
-            return False
+            # at least attempt to import in Windows since there
+            # will be setups where we will do this, but we don't want this to go untested
+            try:
+                import quickumls_simstring
+            except:
+                # we're done here for now...
+                return False
 
         return True
 

@@ -8,7 +8,7 @@ ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
 
 
 def set_extensions():
-    "Set custom medspaCy extensions for Token, Span, and Doc classes."
+    """Set custom medspaCy extensions for Token, Span, and Doc classes."""
     set_token_extensions()
     set_span_extensions()
     set_doc_extensions()
@@ -40,8 +40,12 @@ def set_doc_extensions():
 
 
 def get_extensions():
-    "Get a list of medspaCy extensions for Token, Span, and Doc classes."
-    return {"Token": get_token_extensions(), "Span": get_span_extensions(), "Doc": get_doc_extensions()}
+    """Get a list of medspaCy extensions for Token, Span, and Doc classes."""
+    return {
+        "Token": get_token_extensions(),
+        "Span": get_span_extensions(),
+        "Doc": get_doc_extensions(),
+    }
 
 
 def get_token_extensions():
@@ -128,7 +132,11 @@ def any_context_attribute(span):
 
 
 def get_section_title_spans(doc):
-    return [section.title_span for section in doc._.sections]
+    spans = []
+    for section in doc._.sections:
+        start, end = section.title_span
+        spans.append(doc[start:end])
+    return spans
 
 
 def get_section_categories(doc):
@@ -140,17 +148,26 @@ def get_section_parents(doc):
 
 
 def get_section_spans(doc):
-    return [section.section_span for section in doc._.sections]
+    spans = []
+    for section in doc._.sections:
+        start, end = section.section_span
+        spans.append(doc[start:end])
+    return spans
 
 
 def get_section_body_spans(doc):
-    return [section.body_span for section in doc._.sections]
+    spans = []
+    for section in doc._.sections:
+        start, end = section.body_span
+        spans.append(doc[start:end])
+    return spans
 
 
 def get_section_span_token(token):
     if token._.section is None:
         return None
-    return token._.section.section_span
+    start, end = token._.section.section_span
+    return token.doc[start:end]
 
 
 def get_section_category_token(token):
@@ -162,13 +179,15 @@ def get_section_category_token(token):
 def get_section_title_span_token(token):
     if token._.section is None:
         return None
-    return token._.section.title_span
+    start, end = token._.section.title_span
+    return token.doc[start:end]
 
 
 def get_section_body_span_token(token):
     if token._.section is None:
         return None
-    return token._.section.body_span
+    start, end = token._.section.body_span
+    return token.doc[start:end]
 
 
 def get_section_parent_token(token):
@@ -213,7 +232,11 @@ def get_data(doc, dtype=None, attrs=None, as_rows=False):
             data = data_to_rows(data)
         return data
     else:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(dtype, ALLOWED_DATA_TYPES))
+        raise ValueError(
+            "Invalid data type requested: {0}. Must be one of {1}".format(
+                dtype, ALLOWED_DATA_TYPES
+            )
+        )
 
 
 def data_to_rows(data):
@@ -225,7 +248,11 @@ def data_to_rows(data):
 
 def to_dataframe(doc, data_type="ent"):
     if data_type not in ALLOWED_DATA_TYPES:
-        raise ValueError("Invalid data type requested: {0}. Must be one of {1}".format(data_type, ALLOWED_DATA_TYPES))
+        raise ValueError(
+            "Invalid data type requested: {0}. Must be one of {1}".format(
+                data_type, ALLOWED_DATA_TYPES
+            )
+        )
     import pandas as pd
 
     doc_data = pd.DataFrame(data=doc._.get_data(data_type))

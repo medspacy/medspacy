@@ -5,10 +5,16 @@ sys.path = ['/Users/u6022257/Documents/medspacy/tests', '/Users/u6022257/opt/ana
 import medspacy
 import spacy
 
+
 class TestMedSpaCy:
     def test_default_build_pipe_names(self):
         enable, disable = medspacy.util._build_pipe_names(enable=None, disable=None)
-        assert enable == {"medspacy_tokenizer", "medspacy_pyrush", "medspacy_target_matcher", "medspacy_context"}
+        assert enable == {
+            "medspacy_tokenizer",
+            "medspacy_pyrush",
+            "medspacy_target_matcher",
+            "medspacy_context",
+        }
         assert disable == set()
 
     def test_default_load(self):
@@ -23,7 +29,10 @@ class TestMedSpaCy:
     def test_load_enable(self):
         nlp = medspacy.load(enable={"medspacy_target_matcher", "medspacy_sectionizer"})
         assert len(nlp.pipeline) == 2
-        assert set(nlp.pipe_names) == {"medspacy_target_matcher", "medspacy_sectionizer"}
+        assert set(nlp.pipe_names) == {
+            "medspacy_target_matcher",
+            "medspacy_sectionizer",
+        }
 
     def test_nlp(self):
         nlp = medspacy.load()
@@ -93,7 +102,9 @@ class TestMedSpaCy:
         default_doc = default_tokenizer(text)
         medspacy_doc = custom_tokenizer(text)
 
-        assert [token.text for token in default_doc] != [token.text for token in medspacy_doc]
+        assert [token.text for token in default_doc] != [
+            token.text for token in medspacy_doc
+        ]
 
         # Check that some expected token boundries are generated
         joined_tokens = " ".join([token.text for token in medspacy_doc])
@@ -110,7 +121,9 @@ class TestMedSpaCy:
         default_doc = default_tokenizer(text)
         medspacy_doc = custom_tokenizer(text)
 
-        assert [token.text for token in default_doc] == [token.text for token in medspacy_doc]
+        assert [token.text for token in default_doc] == [
+            token.text for token in medspacy_doc
+        ]
 
     def test_medspacy_tokenizer_uppercase(self):
         custom_tokenizer = medspacy.load(enable=["medspacy_tokenizer"]).tokenizer
@@ -146,8 +159,17 @@ class TestMedSpaCy:
         assert "1.5" in joined_tokens
         assert "1 . 5" not in joined_tokens
 
+
 class TestMedSpaCyForRelease:
-    @pytest.mark.parametrize("language_model", [("es_core_news_sm"), ("pl_core_news_sm"), ("de_core_news_sm"), ("xx_ent_wiki_sm")])
+    @pytest.mark.parametrize(
+        "language_model",
+        [
+            ("es_core_news_sm"),
+            ("pl_core_news_sm"),
+            ("de_core_news_sm"),
+            ("xx_ent_wiki_sm"),
+        ],
+    )
     def test_multilingual_load(self, language_model):
         """
         Checks that we can instantiate the pipeline with different language backends
@@ -159,5 +181,7 @@ class TestMedSpaCyForRelease:
         except OSError:
             assert True
             return
-        doc = nlp("This is a very short piece of text that we want to use for testing. No patients were given type 2 diabetes as part of this test case. Podczas tego testu nie dano żadnemu pacjentowi cukrzycy typu drugiego.")
+        doc = nlp(
+            "This is a very short piece of text that we want to use for testing. No patients were given type 2 diabetes as part of this test case. Podczas tego testu nie dano żadnemu pacjentowi cukrzycy typu drugiego."
+        )
         assert doc

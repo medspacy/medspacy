@@ -1,4 +1,9 @@
-from .doc_consumer import DEFAULT_DOC_ATTRS, DEFAULT_ENT_ATTRS, ALLOWED_CONTEXT_ATTRS, ALLOWED_SECTION_ATTRS
+from .doc_consumer import (
+    DEFAULT_DOC_ATTRS,
+    DEFAULT_ENT_ATTRS,
+    ALLOWED_CONTEXT_ATTRS,
+    ALLOWED_SECTION_ATTRS,
+)
 
 DEFAULT_COLS = {
     "ent": list(DEFAULT_ENT_ATTRS),
@@ -49,8 +54,7 @@ DEFAULT_COL_TYPES = {
 
 
 class DbWriter:
-    """DbWriter is a utility class for writing structured data back to a database.
-    """
+    """DbWriter is a utility class for writing structured data back to a database."""
 
     def __init__(
         self,
@@ -109,7 +113,11 @@ class DbWriter:
                 dtypes = (dtypes,)
 
         _validate_dtypes(dtypes)
-        dtype_col_types = {dtype: col_types for (dtype, col_types) in DEFAULT_COL_TYPES.items() if dtype in dtypes}
+        dtype_col_types = {
+            dtype: col_types
+            for (dtype, col_types) in DEFAULT_COL_TYPES.items()
+            if dtype in dtypes
+        }
         return dtype_col_types
 
     @classmethod
@@ -121,7 +129,11 @@ class DbWriter:
                 dtypes = (dtypes,)
         _validate_dtypes(dtypes)
 
-        dtype_cols = {dtype: cols for (dtype, cols) in DEFAULT_COL_TYPES.items() if dtype in dtypes}
+        dtype_cols = {
+            dtype: cols
+            for (dtype, cols) in DEFAULT_COL_TYPES.items()
+            if dtype in dtypes
+        }
         return dtype_cols
 
     def create_table(self):
@@ -137,7 +149,9 @@ class DbWriter:
     def make_insert_query(self):
         col_list = ", ".join([col for col in self.cols])
         q_list = ", ".join(["?" for col in self.cols])
-        self.insert_query = "INSERT INTO {0} ({1}) VALUES ({2})".format(self.destination_table, col_list, q_list)
+        self.insert_query = "INSERT INTO {0} ({1}) VALUES ({2})".format(
+            self.destination_table, col_list, q_list
+        )
 
     def write(self, doc):
         """Write a doc to a database."""

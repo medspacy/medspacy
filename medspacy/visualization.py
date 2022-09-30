@@ -80,12 +80,19 @@ def visualize_ent(doc, context=True, sections=True, jupyter=True, colors=None):
             for title in section_titles:
                 colors[title] = "#dee0e3"
         ents_display_data, _ = zip(*ents_data)
-        viz_data = [{"text": doc.text, "ents": ents_display_data,}]
+        viz_data = [
+            {
+                "text": doc.text,
+                "ents": ents_display_data,
+            }
+        ]
 
         options = {
             "colors": colors,
         }
-    return displacy.render(viz_data, style="ent", manual=True, options=options, jupyter=jupyter)
+    return displacy.render(
+        viz_data, style="ent", manual=True, options=options, jupyter=jupyter
+    )
 
 
 def _create_color_mapping(labels):
@@ -200,7 +207,9 @@ class MedspaCyVisualizerWidget:
             readout_format="d",
         )
         self.radio = widgets.RadioButtons(options=["Ent", "Dep", "Both"])
-        self.layout = widgets.Layout(display="flex", flex_flow="column", align_items="stretch", width="100%")
+        self.layout = widgets.Layout(
+            display="flex", flex_flow="column", align_items="stretch", width="100%"
+        )
         self.radio.observe(self._change_handler)
         self.slider.observe(self._change_handler)
         self.next_button = widgets.Button(description="Next")
@@ -209,7 +218,12 @@ class MedspaCyVisualizerWidget:
         self.previous_button.on_click(self._on_click_prev)
         self.output = widgets.Output()
         self.box = widgets.Box(
-            [widgets.HBox([self.radio, self.previous_button, self.next_button]), self.slider, self.output], layout=self.layout
+            [
+                widgets.HBox([self.radio, self.previous_button, self.next_button]),
+                self.slider,
+                self.output,
+            ],
+            layout=self.layout,
         )
 
         self.display()

@@ -1,4 +1,6 @@
 from sys import platform
+from os import path
+from pathlib import Path
 
 from medspacy.visualization import visualize_ent
 import spacy
@@ -24,7 +26,9 @@ ALL_PIPE_NAMES_SIMPLE = {
 ALL_PIPE_NAMES = {"medspacy_" + name for name in ALL_PIPE_NAMES_SIMPLE}
 
 
-def load(model="default", enable=None, disable=None, load_rules=True, quickumls_path=None):
+def load(
+    model="default", enable=None, disable=None, load_rules=True, quickumls_path=None
+):
     """Load a spaCy language object with medSpaCy pipeline components.
     By default, the base model will be a blank 'en' model with the
     following components:
@@ -86,7 +90,8 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp = model
     else:
         raise ValueError(
-            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. " "You passed in",
+            "model must be either 'default', the string name of a spaCy model, or an actual spaCy model. "
+            "You passed in",
             type(model),
         )
     if "medspacy_tokenizer" in enable:
@@ -102,13 +107,42 @@ def load(model="default", enable=None, disable=None, load_rules=True, quickumls_
         nlp.tokenizer = preprocessor
 
     if "medspacy_pyrush" in enable:
-        nlp.add_pipe("medspacy_pyrush")
+        pyrush_path = path.join(
+            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
+        )
+        nlp.add_pipe("medspacy_pyrush", config={"rules_path": pyrush_path})
 
     if "medspacy_target_matcher" in enable:
         nlp.add_pipe("medspacy_target_matcher")
 
     if enable.intersection({"medspacy_quickumls", "quickumls"}):
-        nlp.add_pipe("medspacy_quickumls", config={"quickumls_path": quickumls_path})
+        # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
+        # but if it's requested at this point, let's load it
+        from quickumls import spacy_component
+
+        # let's see if we need to supply a path for QuickUMLS.  If none is provided,
+        # let's point to the demo data
+        if quickumls_path is None:
+            # let's use a default sample that we provide in medspacy
+            # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
+            # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
+
+            quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_POSIX_unqlite"
+            if platform.startswith("win"):
+                quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
+
+            quickumls_path = path.join(
+                Path(__file__).resolve().parents[1],
+                "resources",
+                "quickumls/{0}".format(quickumls_platform_dir),
+            )
+            print(
+                "Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(
+                    quickumls_path
+                )
+            )
+
+        nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": quickumls_path})
 
     if "medspacy_context" in enable:
         if load_rules is True:
@@ -190,3 +224,8 @@ def _get_prefix_name(component_name):
     if component_name in ALL_PIPE_NAMES:
         return component_name
     return component_name
+
+
+def tuple_overlaps(a, b):
+    """"""
+    return a[0] <= b[0] < a[1] or a[0] < b[1] <= a[1]

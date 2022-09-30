@@ -81,7 +81,7 @@ class SectionRule(BaseRule):
         """Reads a dictionary into a SectionRule list. Used when reading from a json file.
 
         Args:
-            item_dict: the dictionary to convert
+            rule_dict: the dictionary to convert
 
         Returns:
             item: the SectionRule created from the dictionary

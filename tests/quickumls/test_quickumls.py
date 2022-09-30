@@ -30,7 +30,8 @@ class TestQuickUMLS:
             quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
 
         quickumls_path = path.join(
-            "../../resources",
+            Path(__file__).resolve().parents[1],
+            "../resources",
             "quickumls/{0}".format(quickumls_platform_dir),
         )
 

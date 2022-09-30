@@ -1,12 +1,16 @@
 import pytest
 import sys
-sys.path = ['/Users/u6022257/Documents/medspacy/tests', '/Users/u6022257/opt/anaconda3/lib/python39.zip', '/Users/u6022257/opt/anaconda3/lib/python3.9', '/Users/u6022257/opt/anaconda3/lib/python3.9/lib-dynload', '/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/aeosa', '/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/medspacy_quickumls-2.3-py3.9.egg', '/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/quickumls_simstring-1.1.5.post1-py3.9-macosx-10.9-x86_64.egg', '../', '../medspacy','/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/']
 
 import medspacy
 
 import spacy
 
-from medspacy._extensions import _token_extensions, _span_extensions, _doc_extensions, _context_attributes
+from medspacy._extensions import (
+    _token_extensions,
+    _span_extensions,
+    _doc_extensions,
+    _context_attributes,
+)
 
 nlp = spacy.blank("en")
 doc = nlp("There is no evidence of pneumonia in the chest x-ray.")
@@ -70,7 +74,13 @@ class TestMedSpaCyExtensions:
     def test_span_context_attributes(self):
         span = doc[3:5]
         context_dict = span._.context_attributes
-        assert set(context_dict.keys()) == {"is_negated", "is_hypothetical", "is_uncertain", "is_historical", "is_family"}
+        assert set(context_dict.keys()) == {
+            "is_negated",
+            "is_hypothetical",
+            "is_uncertain",
+            "is_historical",
+            "is_family",
+        }
         assert set(context_dict.values()) == {False}
 
     def test_span_not_any_context_attributes(self):

@@ -2,9 +2,12 @@ import spacy
 import warnings
 from sys import platform
 import pytest
+from os import path
+from pathlib import Path
 
 import medspacy
 
+MEDSPACY_DEFAULT_SPAN_GROUP_NAME = 'medspacy_spans'
 
 class TestQuickUMLS:
     @staticmethod
@@ -19,6 +22,19 @@ class TestQuickUMLS:
                 return False
 
         return True
+
+    @staticmethod
+    def get_quickumls_demo_dir():
+        quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_POSIX_unqlite"
+        if platform.startswith("win"):
+            quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
+
+        quickumls_path = path.join(
+            "../../resources",
+            "quickumls/{0}".format(quickumls_platform_dir),
+        )
+
+        return quickumls_path
 
     # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_initialize_pipeline(self):
@@ -68,3 +84,148 @@ class TestQuickUMLS:
         entity_spans = [ent.text for ent in doc.ents]
 
         assert "dipalmitoyllecithin" in entity_spans
+
+    def test_min_similarity_threshold(self):
+        """
+        Test that an extraction is NOT made if we set our matching to be perfect matching (100% similarity)
+        and we have a typo
+        """
+
+        # let's make sure that this pipe has been initialized
+        # At least for MacOS and Linux which are currently supported...
+        if not TestQuickUMLS.can_test_quickumls():
+            return
+
+        # allow default QuickUMLS (very small sample data) to be loaded
+        nlp = spacy.blank("en")
+
+        nlp.add_pipe("medspacy_quickumls", config={"threshold": 1.0,
+                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+
+        concept_term = "dipalmitoyllecithin"
+        # Let's turn this into a typo which will no longer match...
+        concept_term += 'n'
+
+        text = "Decreased {} content found in lung specimens".format(concept_term)
+
+        doc = nlp(text)
+
+        assert len(doc.ents) == 0
+
+    def test_ensure_match_objects(self):
+        """
+        Test that an extraction has UmlsMatch objects for it
+        """
+
+        # let's make sure that this pipe has been initialized
+        # At least for MacOS and Linux which are currently supported...
+        if not TestQuickUMLS.can_test_quickumls():
+            return
+
+        # allow default QuickUMLS (very small sample data) to be loaded
+        nlp = spacy.blank("en")
+
+        nlp.add_pipe("medspacy_quickumls", config={"threshold": 1.0,
+                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+
+        concept_term = "dipalmitoyllecithin"
+
+        text = "Decreased {} content found in lung specimens".format(concept_term)
+
+        doc = nlp(text)
+
+        assert len(doc.ents) == 1
+
+        ent = doc.ents[0]
+
+        assert len(ent._.umls_matches) > 0
+
+        # make sure that we have a reasonable looking CUI
+        match_object = list(ent._.umls_matches)[0]
+
+        assert match_object.cui.startswith("C")
+
+    def test_span_groups(self):
+        """
+        Test that span groups can bs used as a result type (as opposed to entities)
+        """
+
+        # let's make sure that this pipe has been initialized
+        # At least for MacOS and Linux which are currently supported...
+        if not TestQuickUMLS.can_test_quickumls():
+            return
+
+        # allow default QuickUMLS (very small sample data) to be loaded
+        nlp = spacy.blank("en")
+
+        nlp.add_pipe("medspacy_quickumls", config={"threshold": 1.0,
+                                                   "result_type": "group",
+                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+
+        concept_term = "dipalmitoyllecithin"
+
+        text = "Decreased {} content found in lung specimens".format(concept_term)
+
+        doc = nlp(text)
+
+        assert len(doc.ents) == 0
+
+        assert len(doc.spans[MEDSPACY_DEFAULT_SPAN_GROUP_NAME]) == 1
+
+        span = doc.spans[MEDSPACY_DEFAULT_SPAN_GROUP_NAME][0]
+
+        assert len(span._.umls_matches) > 0
+
+    def test_overlapping_spans(self):
+        """
+            Test that overlapping terms can be extracted
+        """
+
+        # let's make sure that this pipe has been initialized
+        # At least for MacOS and Linux which are currently supported...
+        if not TestQuickUMLS.can_test_quickumls():
+            return
+
+        # allow default QuickUMLS (very small sample data) to be loaded
+        nlp = spacy.blank("en")
+
+        nlp.add_pipe("medspacy_quickumls", config={"threshold": 0.7,
+                                                   "result_type": "group",
+                                                   # do not constrain to the best match for overlapping
+                                                   "best_match": False,
+                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+
+        # the demo data contains both of these concepts, so let's put them together
+        # and allow overlap on one of the tokens
+        # dipalmitoyl phosphatidylcholine
+        # phosphatidylcholine, dipalmitoyl
+        text = """dipalmitoyl phosphatidylcholine dipalmitoyl"""
+
+        doc = nlp(text)
+
+        assert len(doc.spans[MEDSPACY_DEFAULT_SPAN_GROUP_NAME]) >= 2
+
+    def test_multiword_entity(self):
+        """
+        Test that an extraction can be made on a concept with multiple words
+        """
+
+        # let's make sure that this pipe has been initialized
+        # At least for MacOS and Linux which are currently supported...
+        if not TestQuickUMLS.can_test_quickumls():
+            return
+
+        # allow default QuickUMLS (very small sample data) to be loaded
+        nlp = spacy.blank("en")
+
+        nlp.add_pipe("medspacy_quickumls", config={"threshold": 0.7,
+                                                   "result_type": "group",
+                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+
+        # the demo data contains this concept:
+        # dipalmitoyl phosphatidylcholine
+        text = """dipalmitoyl phosphatidylcholine"""
+
+        doc = nlp(text)
+
+        assert len(doc.spans[MEDSPACY_DEFAULT_SPAN_GROUP_NAME]) == 1

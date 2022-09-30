@@ -12,7 +12,7 @@ class TestNotebooks:
     )
     def test_execute_example_notebooks(self):
         successful_executions = 0
-
+        os.chdir("../") #move to medspacy folder
         for root, dirs, files in os.walk(os.path.join(os.getcwd(), "notebooks")):
             for file in files:
                 if file.endswith(".ipynb"):

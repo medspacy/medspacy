@@ -1,5 +1,7 @@
 import pytest
 
+import sys
+sys.path = ['/Users/u6022257/Documents/medspacy/tests', '/Users/u6022257/opt/anaconda3/lib/python39.zip', '/Users/u6022257/opt/anaconda3/lib/python3.9', '/Users/u6022257/opt/anaconda3/lib/python3.9/lib-dynload', '/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/aeosa', '/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/medspacy_quickumls-2.3-py3.9.egg', '/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/quickumls_simstring-1.1.5.post1-py3.9-macosx-10.9-x86_64.egg', '../', '../medspacy','/Users/u6022257/opt/anaconda3/lib/python3.9/site-packages/']
 import medspacy
 import spacy
 

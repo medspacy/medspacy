@@ -54,7 +54,7 @@ class TargetMatcher:
         if rules:
             self.add(rules)
 
-        self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
+        self.__matcher = MedspacyMatcher(nlp, name=name, phrase_matcher_attr=phrase_matcher_attr)
 
     @property
     def rules(self) -> List[TargetRule]:

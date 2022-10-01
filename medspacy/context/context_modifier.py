@@ -23,7 +23,7 @@ class ConTextModifier:
         doc: Doc,
         scope_start: Optional[int] = None,
         scope_end: Optional[int] = None,
-        use_context_window: bool = False,
+        use_context_window: Union[int, bool] = False,
     ):
         """
         Create a new ConTextModifier from a document span. Each modifier represents a span in the text and a surrounding

@@ -1,7 +1,7 @@
 from typing import Dict
 
 from spacy import displacy
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Token, Span
 
 
 def visualize_ent(
@@ -51,9 +51,10 @@ def visualize_ent(
             for modifier in target._.modifiers:
                 if modifier in visualized_modifiers:
                     continue
+                span = doc[modifier.modifier_span[0]: modifier.modifier_span[1]]
                 ent_data = {
-                    "start": modifier.span.start_char,
-                    "end": modifier.span.end_char,
+                    "start": span.start_char,
+                    "end": span.end_char,
                     "label": modifier.category,
                 }
                 ents_data.append((ent_data, "modifier"))
@@ -63,9 +64,10 @@ def visualize_ent(
             category = section.category
             if category is None:
                 continue
+            span = doc[section.title_span[0]: section.title_span[1]]
             ent_data = {
-                "start": section.title_span.start_char,
-                "end": section.title_span.end_char,
+                "start": span.start_char,
+                "end": span.end_char,
                 "label": f"<< {category.upper()} >>",
             }
             ents_data.append((ent_data, "section"))
@@ -154,38 +156,68 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
 
     # Merge phrases
     targets_and_modifiers = [*doc._.context_graph.targets]
-    targets_and_modifiers += [mod.span for mod in doc._.context_graph.modifiers]
-    for span in targets_and_modifiers:
-        first_token = span[0]
-        data = token_data_mapping[first_token]
-        data["tag"] = span.label_
+    targets_and_modifiers += [*doc._.context_graph.modifiers]
 
-        if len(span) == 1:
-            continue
+    for obj in targets_and_modifiers:
+        if isinstance(obj, Span):
+            first_token = obj[0]
+            data = token_data_mapping[first_token]
+            data["tag"] = obj.label_
+            if len(obj) > 1:
+                idx = data["index"]
+                for other_token in obj[1:]:
+                    # Add the text to the display data for the first word
+                    # and remove the subsequent token
+                    data["text"] += " " + other_token.text
+                    # Remove this token from the list of display data
+                    token_data.pop(idx + 1)
+                for other_data in token_data[idx + 1:]:
+                    other_data["index"] -= len(obj) - 1
+        else:
+            span_tup = obj.modifier_span
+            first_token = doc[span_tup[0]]
+            data = token_data_mapping[first_token]
+            data["tag"] = obj.category
+            if span_tup[1] - span_tup[0] > 1:
+                span = doc[span_tup[0]: span_tup[1]]
+                idx = data["index"]
+                for other_token in span[1:]:
+                    # Add the text to the display data for the first word
+                    # and remove the subsequent token
+                    data["text"] += " " + other_token.text
+                    # Remove this token from the list of display data
+                    token_data.pop(idx + 1)
+                for other_data in token_data[idx + 1:]:
+                    other_data["index"] -= len(span) - 1
 
-        idx = data["index"]
-        for other_token in span[1:]:
-            # Add the text to the display data for the first word
-            # and remove the subsequent token
-            data["text"] += " " + other_token.text
-            # Remove this token from the list of display data
-            token_data.pop(idx + 1)
-
-        # Lower the index of the following tokens
-        for other_data in token_data[idx + 1 :]:
-            other_data["index"] -= len(span) - 1
+        # if len(span) == 1:
+        #     continue
+        #
+        # idx = data["index"]
+        # for other_token in span[1:]:
+        #     # Add the text to the display data for the first word
+        #     # and remove the subsequent token
+        #     data["text"] += " " + other_token.text
+        #     # Remove this token from the list of display data
+        #     token_data.pop(idx + 1)
+        #
+        # # Lower the index of the following tokens
+        # for other_data in token_data[idx + 1 :]:
+        #     other_data["index"] -= len(span) - 1
 
     dep_data = {"words": token_data, "arcs": []}
     # Gather the edges between targets and modifiers
     for target, modifier in doc._.context_graph.edges:
         target_data = token_data_mapping[target[0]]
-        modifier_data = token_data_mapping[modifier.span[0]]
+        modifier_data = token_data_mapping[doc[modifier.modifier_span[0]]]
         dep_data["arcs"].append(
             {
                 "start": min(target_data["index"], modifier_data["index"]),
                 "end": max(target_data["index"], modifier_data["index"]),
                 "label": modifier.category,
-                "dir": "right" if target > modifier.span else "left",
+                "dir": "right"
+                if target > doc[modifier.modifier_span[0] : modifier.modifier_span[1]]
+                else "left",
             }
         )
     return displacy.render(dep_data, manual=True, jupyter=jupyter)

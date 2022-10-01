@@ -9,6 +9,11 @@ from .util import prune_overlapping_matches
 
 from spacy.tokens import Doc
 
+import warnings
+# suppress warnings here because the matchers warn if no patterns are specified, but since multiple matchers are
+# included that is not necessarily bad.
+warnings.filterwarnings("ignore")
+
 
 class MedspacyMatcher:
     """
@@ -26,13 +31,14 @@ class MedspacyMatcher:
     name = "medspacy_matcher"
 
     def __init__(
-        self, nlp: Language, phrase_matcher_attr: str = "LOWER", prune: bool = True
+        self, nlp: Language, name: str = "medspacy_matcher", phrase_matcher_attr: str = "LOWER", prune: bool = True
     ):
         """
         Creates a MedspacyMatcher.
 
         Args:
             nlp: A spaCy Language model.
+            name: The name of the component.
             phrase_matcher_attr: The attribute to use for spaCy's PhraseMatcher. Default is 'LOWER'.
             prune: Whether to prune matches that overlap or are substrings of another match. For example, if "no history
                 of" and "history of" are both matches, setting prune to True would drop "history of". Default is True.

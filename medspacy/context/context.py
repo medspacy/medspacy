@@ -109,6 +109,7 @@ class ConText:
 
         self.__matcher = MedspacyMatcher(
             nlp,
+            name=name,
             phrase_matcher_attr=phrase_matcher_attr,
             prune=prune_on_modifier_overlap,
         )

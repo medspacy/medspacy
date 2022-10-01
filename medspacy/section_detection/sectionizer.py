@@ -115,7 +115,7 @@ class Sectionizer:
         self._input_span_type = input_span_type
         self._span_group_name = span_group_name
 
-        self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
+        self.__matcher = MedspacyMatcher(nlp, name=name, phrase_matcher_attr=phrase_matcher_attr)
 
         if rules and rules == "default":
             self.add(SectionRule.from_json(DEFAULT_RULES_FILEPATH))
@@ -429,7 +429,10 @@ class Sectionizer:
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
-                _, next_start, _, _ = next_match
+                if len(match) == 4:
+                    _, next_start, _, _ = next_match
+                else:
+                    _, next_start, _ = next_match
                 if self.max_section_length is None and rule.max_scope is None:
                     section_list.append(
                         Section(category, start, end, end, next_start, parent, rule)

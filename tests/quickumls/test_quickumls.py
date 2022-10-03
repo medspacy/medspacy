@@ -7,7 +7,8 @@ from pathlib import Path
 
 import medspacy
 
-MEDSPACY_DEFAULT_SPAN_GROUP_NAME = 'medspacy_spans'
+from quickumls.constants import MEDSPACY_DEFAULT_SPAN_GROUP_NAME
+from medspacy.util import get_quickumls_demo_dir
 
 class TestQuickUMLS:
     @staticmethod
@@ -22,20 +23,6 @@ class TestQuickUMLS:
                 return False
 
         return True
-
-    @staticmethod
-    def get_quickumls_demo_dir():
-        quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_POSIX_unqlite"
-        if platform.startswith("win"):
-            quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
-
-        quickumls_path = path.join(
-            Path(__file__).resolve().parents[1],
-            "../resources",
-            "quickumls/{0}".format(quickumls_platform_dir),
-        )
-
-        return quickumls_path
 
     # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_initialize_pipeline(self):
@@ -101,7 +88,7 @@ class TestQuickUMLS:
         nlp = spacy.blank("en")
 
         nlp.add_pipe("medspacy_quickumls", config={"threshold": 1.0,
-                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+                                                   "quickumls_fp": get_quickumls_demo_dir()})
 
         concept_term = "dipalmitoyllecithin"
         # Let's turn this into a typo which will no longer match...
@@ -126,7 +113,7 @@ class TestQuickUMLS:
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
 
-        nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+        nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": get_quickumls_demo_dir()})
 
         concept_term = "dipalmitoyllecithin"
 
@@ -159,7 +146,7 @@ class TestQuickUMLS:
         nlp = spacy.blank("en")
 
         nlp.add_pipe("medspacy_quickumls", config={"result_type": "group",
-                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+                                                   "quickumls_fp": get_quickumls_demo_dir()})
 
         concept_term = "dipalmitoyllecithin"
 
@@ -192,7 +179,7 @@ class TestQuickUMLS:
                                                    "result_type": "group",
                                                    # do not constrain to the best match for overlapping
                                                    "best_match": False,
-                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+                                                   "quickumls_fp": get_quickumls_demo_dir()})
 
         # the demo data contains both of these concepts, so let's put them together
         # and allow overlap on one of the tokens
@@ -219,7 +206,7 @@ class TestQuickUMLS:
 
         nlp.add_pipe("medspacy_quickumls", config={"threshold": 0.7,
                                                    "result_type": "group",
-                                                   "quickumls_fp": TestQuickUMLS.get_quickumls_demo_dir()})
+                                                   "quickumls_fp": get_quickumls_demo_dir()})
 
         # the demo data contains this concept:
         # dipalmitoyl phosphatidylcholine

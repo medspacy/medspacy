@@ -7,8 +7,9 @@ from pathlib import Path
 
 import medspacy
 
-from quickumls.constants import MEDSPACY_DEFAULT_SPAN_GROUP_NAME
 from medspacy.util import get_quickumls_demo_dir
+
+MEDSPACY_DEFAULT_SPAN_GROUP_NAME = "medspacy_spans"
 
 class TestQuickUMLS:
     @staticmethod

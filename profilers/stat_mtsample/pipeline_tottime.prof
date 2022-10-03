@@ -1,0 +1,251 @@
+         59312813 function calls (44773243 primitive calls) in 17.747 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+8620712/243706    5.401    0.000   15.686    0.000 FastCNER.py:237(processRules)
+4606407/506411    3.978    0.000   15.208    0.000 FastCNER.py:303(processWildCards)
+1326862/1139112    1.051    0.000    4.357    0.000 ReplicationFunctionsLambda.py:17(processReplicationCommon)
+1326862/1139112    0.537    0.000    5.178    0.000 FastCNER.py:287(processReplication)
+ 10054677    0.524    0.000    0.524    0.000 {built-in method builtins.len}
+2017651/1816979    0.520    0.000    3.471    0.000 WildCardFunctions.py:42(processWildCard_s)
+1257642/510314    0.448    0.000    7.506    0.000 WildCardFunctions.py:84(processWildCard_c)
+      300    0.419    0.001    0.488    0.002 medspacy_matcher.py:77(__call__)
+1333369/1251721    0.354    0.000    2.054    0.000 WildCardFunctions.py:125(processWildCard_w)
+767144/392680    0.292    0.000    0.525    0.000 doc.pyx:451(__getitem__)
+693941/491499    0.281    0.000    4.917    0.000 WildCardFunctions.py:111(processWildCard_a)
+2200129/2196369    0.273    0.000    0.497    0.000 WildCardFunctions.py:49(processWildCard_n)
+  4655376    0.258    0.000    0.258    0.000 {method 'keys' of 'dict' objects}
+   107849    0.226    0.000    0.226    0.000 doc.pyx:449(genexpr)
+  1198402    0.197    0.000    0.253    0.000 ReplicationFunctionsLambda.py:81(<lambda>)
+863806/839394    0.170    0.000    0.559    0.000 WildCardFunctions.py:70(processWildCard_d)
+  3109998    0.155    0.000    0.155    0.000 {method 'isspace' of 'str' objects}
+478239/477996    0.150    0.000    1.328    0.000 ReplicationFunctionsLambda.py:52(processReplication_s)
+   777728    0.136    0.000    0.172    0.000 ReplicationFunctionsLambda.py:95(<lambda>)
+  2461339    0.128    0.000    0.128    0.000 {method 'islower' of 'str' objects}
+  2055823    0.118    0.000    0.118    0.000 {built-in method builtins.ord}
+   478258    0.110    0.000    0.137    0.000 ReplicationFunctionsLambda.py:54(<lambda>)
+  1045822    0.109    0.000    0.110    0.000 WildCardFunctions.py:63(processWildCard_closeParan)
+   334043    0.104    0.000    2.069    0.000 ReplicationFunctionsLambda.py:79(processReplication_c)
+408303/364635    0.095    0.000    0.508    0.000 WildCardFunctions.py:77(processWildCard_C)
+   282249    0.092    0.000    0.809    0.000 ReplicationFunctionsLambda.py:107(processReplication_w)
+    48953    0.092    0.000    0.165    0.000 FastCNER.py:314(addDeterminants)
+   793408    0.090    0.000    0.090    0.000 token.pxd:21(cinit)
+      100    0.079    0.001   15.768    0.158 FastCNER.py:221(process)
+    28022    0.074    0.000    0.518    0.000 context_modifier.py:146(limit_scope)
+   107849    0.071    0.000    0.297    0.000 doc.pyx:408(has_annotation)
+    18730    0.069    0.000    0.071    0.000 tokenizer.pyx:556(find_suffix)
+   288115    0.067    0.000    0.081    0.000 ReplicationFunctionsLambda.py:109(<lambda>)
+454809/446678    0.065    0.000    0.193    0.000 WildCardFunctions.py:91(processWildCard_p)
+202877/202861    0.061    0.000    0.749    0.000 ReplicationFunctionsLambda.py:93(processReplication_a)
+   124840    0.058    0.000    0.120    0.000 util.py:1232(normalize_slice)
+     5295    0.054    0.000    0.144    0.000 vocab.pyx:176(_new_lexeme)
+   891279    0.052    0.000    0.052    0.000 {method 'isdigit' of 'str' objects}
+      100    0.036    0.000   15.884    0.159 {built-in method PyRuSH.StaticSentencizerFun.cpredict}
+    12284    0.035    0.000    0.036    0.000 tokenizer.pyx:528(find_infix)
+   329894    0.034    0.000    0.035    0.000 WildCardFunctions.py:56(processWildCard_openParan)
+   249947    0.033    0.000    0.033    0.000 {built-in method builtins.max}
+   249856    0.030    0.000    0.030    0.000 {built-in method builtins.min}
+      100    0.029    0.000    0.377    0.004 tokenizer.pyx:160(_tokenize_affixes)
+   463567    0.029    0.000    0.029    0.000 {method 'isupper' of 'str' objects}
+   642304    0.027    0.000    0.027    0.000 doc.pyx:45(bounds_check)
+   243706    0.024    0.000    0.026    0.000 WildCardFunctions.py:132(processWildCard_b)
+      100    0.021    0.000    0.082    0.001 sectionizer.py:311(__call__)
+    28802    0.020    0.000    0.020    0.000 underscore.py:22(__init__)
+      100    0.020    0.000    0.291    0.003 {built-in method PyRuSH.StaticSentencizerFun.cset_annotations}
+    13709    0.020    0.000    0.113    0.000 tokenizer.pyx:400(_split_affixes)
+    52781    0.019    0.000    0.019    0.000 IOUtils.py:103(__init__)
+    18730    0.018    0.000    0.020    0.000 tokenizer.pyx:542(find_prefix)
+    50468    0.018    0.000    0.030    0.000 doc.pyx:695(genexpr)
+    48753    0.017    0.000    0.017    0.000 {method 'search' of 'quicksectx.quicksectx.IntervalTree' objects}
+     5295    0.017    0.000    0.023    0.000 lex_attrs.py:118(word_shape)
+    13709    0.016    0.000    0.210    0.000 tokenizer.pyx:445(_attach_tokens)
+    38229    0.016    0.000    0.016    0.000 FastCNER.py:358(compareSpan)
+   151404    0.015    0.000    0.032    0.000 doc.pyx:484(__iter__)
+    28391    0.015    0.000    0.024    0.000 underscore.py:73(__setattr__)
+    62622    0.015    0.000    0.225    0.000 context_modifier.py:28(span)
+   300691    0.013    0.000    0.013    0.000 doc.pyx:497(__len__)
+      100    0.013    0.000   15.790    0.158 RuSH.py:106(segToSentenceSpans)
+    55810    0.011    0.000    0.014    0.000 tokenizer.pyx:359(_try_specials_and_cache)
+    18536    0.011    0.000    0.153    0.000 vocab.pyx:142(get)
+     5295    0.010    0.000    0.015    0.000 lex_attrs.py:22(like_num)
+    28694    0.008    0.000    0.008    0.000 underscore.py:91(_get_key)
+     1447    0.007    0.000    0.056    0.000 context_modifier.py:189(modifies)
+    12751    0.007    0.000    0.007    0.000 {method 'add' of 'quicksectx.quicksectx.IntervalTree' objects}
+     5295    0.007    0.000    0.010    0.000 lex_attrs.py:90(like_url)
+      100    0.006    0.000    0.036    0.000 doc.pyx:690(__get__)
+      100    0.006    0.000    0.524    0.005 context_graph.py:8(update_scopes)
+    13709    0.006    0.000    0.333    0.000 tokenizer.pyx:388(_tokenize)
+    41715    0.005    0.000    0.005    0.000 {method 'pop' of 'list' objects}
+     1447    0.005    0.000    0.031    0.000 context_modifier.py:283(overlaps_target)
+     3935    0.005    0.000    0.005    0.000 RuSH.py:205(trim_gap)
+    49331    0.005    0.000    0.008    0.000 doc.pyx:912(__pyx_fuse_0push_back)
+       66    0.004    0.000    0.005    0.000 doc.pyx:764(set_ents)
+     5295    0.004    0.000    0.006    0.000 lex_attrs.py:33(is_ascii)
+     1437    0.004    0.000    0.020    0.000 context_modifier.py:77(set_scope)
+    26676    0.004    0.000    0.004    0.000 {method 'startswith' of 'str' objects}
+      300    0.004    0.000    0.004    0.000 phrasematcher.pyx:236(__call__)
+10218/10208    0.004    0.000    0.112    0.000 ReplicationFunctionsLambda.py:65(processReplication_d)
+    13709    0.003    0.000    0.003    0.000 tokenizer.pyx:507(_save_cached)
+      100    0.003    0.000    1.028    0.010 context_component.py:305(__call__)
+      498    0.003    0.000    0.003    0.000 doc.pyx:1018(_realloc)
+     8459    0.003    0.000    0.073    0.000 ReplicationFunctionsLambda.py:59(processReplication_n)
+    41010    0.003    0.000    0.003    0.000 {method 'append' of 'list' objects}
+    15304    0.003    0.000    0.004    0.000 ReplicationFunctionsLambda.py:67(<lambda>)
+      200    0.003    0.000    0.003    0.000 FastCNER.py:370(<listcomp>)
+    14366    0.003    0.000    0.003    0.000 ReplicationFunctionsLambda.py:74(<lambda>)
+    10590    0.003    0.000    0.003    0.000 lex_attrs.py:145(lower)
+     5295    0.002    0.000    0.004    0.000 lex_attrs.py:26(is_punct)
+    42494    0.002    0.000    0.002    0.000 {method 'isalpha' of 'str' objects}
+  394/300    0.002    0.000    0.006    0.000 medspacy_matcher.py:88(prune_overlapping_matches)
+     6451    0.002    0.000    0.021    0.000 ReplicationFunctionsLambda.py:72(processReplication_C)
+    23384    0.002    0.000    0.002    0.000 {method 'lower' of 'str' objects}
+     5295    0.002    0.000    0.002    0.000 lex_attrs.py:181(is_stop)
+     5446    0.002    0.000    0.002    0.000 {method 'match' of 're.Pattern' objects}
+     5295    0.002    0.000    0.003    0.000 util.py:1175(_get_attr_unless_lookup)
+    37460    0.002    0.000    0.002    0.000 tokenizer.pyx:94(__get__)
+    37460    0.002    0.000    0.002    0.000 tokenizer.pyx:102(__get__)
+      100    0.002    0.000   17.747    0.177 language.py:987(__call__)
+     5295    0.002    0.000    0.003    0.000 lex_attrs.py:86(like_email)
+      464    0.002    0.000    0.002    0.000 doc.pyx:714(__get__)
+     5295    0.002    0.000    0.002    0.000 vocab.pyx:208(_add_lex_to_vocab)
+      100    0.002    0.000    0.002    0.000 doc.pyx:180(__init__)
+      100    0.002    0.000    0.003    0.000 tokenizer.pyx:238(_apply_special_cases)
+     5295    0.002    0.000    0.002    0.000 lex_attrs.py:78(is_currency)
+    10590    0.002    0.000    0.002    0.000 {built-in method unicodedata.category}
+    31014    0.001    0.000    0.001    0.000 tokenizer.pyx:78(__get__)
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:59(is_quote)
+     5409    0.001    0.000    0.002    0.000 context_modifier.py:38(direction)
+    28958    0.001    0.000    0.001    0.000 doc.pxd:46(__get__)
+     8459    0.001    0.000    0.001    0.000 ReplicationFunctionsLambda.py:60(<lambda>)
+    14551    0.001    0.000    0.001    0.000 context_modifier.py:33(rule)
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:66(is_left_punct)
+    24568    0.001    0.000    0.001    0.000 tokenizer.pyx:110(__get__)
+     5295    0.001    0.000    0.002    0.000 lex_attrs.py:157(is_alpha)
+      100    0.001    0.000    0.073    0.001 target_matcher.py:51(__call__)
+     3735    0.001    0.000    0.006    0.000 RuSH.py:195(fix_gap)
+        6    0.001    0.000    0.001    0.000 tokenizer.pyx:298(_prepare_special_spans)
+     5295    0.001    0.000    0.002    0.000 lex_attrs.py:161(is_digit)
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:54(is_bracket)
+     1437    0.001    0.000    0.021    0.000 context_modifier.py:6(__init__)
+     5295    0.001    0.000    0.002    0.000 lex_attrs.py:165(is_lower)
+    10590    0.001    0.000    0.001    0.000 {method 'replace' of 'str' objects}
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:73(is_right_punct)
+     5295    0.001    0.000    0.002    0.000 lex_attrs.py:173(is_title)
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:169(is_space)
+      500    0.001    0.000    0.001    0.000 {method 'sub' of 're.Pattern' objects}
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:177(is_upper)
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:153(suffix)
+     5030    0.001    0.000    0.001    0.000 {method 'endswith' of 'str' objects}
+     5295    0.001    0.000    0.001    0.000 {method 'join' of 'str' objects}
+     4908    0.001    0.000    0.001    0.000 {method 'count' of 'str' objects}
+     3180    0.001    0.000    0.012    0.000 context_modifier.py:47(scope)
+     2961    0.001    0.000    0.002    0.000 medspacy_matcher.py:125(overlaps)
+     2027    0.001    0.000    0.001    0.000 {method 'remove' of 'quicksectx.quicksectx.IntervalTree' objects}
+     5668    0.001    0.000    0.001    0.000 medspacy_matcher.py:131(_match_overlaps)
+      394    0.001    0.000    0.001    0.000 {built-in method builtins.sorted}
+     5295    0.001    0.000    0.001    0.000 lex_attrs.py:149(prefix)
+      100    0.001    0.000    0.001    0.000 warnings.py:35(_formatwarnmsg_impl)
+      100    0.001    0.000    0.058    0.001 context_graph.py:27(apply_modifiers)
+     1437    0.001    0.000    0.003    0.000 vocab.pyx:243(__getitem__)
+      100    0.001    0.000    0.001    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+       66    0.001    0.000    0.005    0.000 doc.pyx:749(__set__)
+    12284    0.001    0.000    0.001    0.000 tokenizer.pyx:86(__get__)
+    10590    0.001    0.000    0.001    0.000 vocab.pyx:87(__get__)
+      200    0.001    0.000    0.001    0.000 errors.py:6(__getattribute__)
+     5295    0.001    0.000    0.001    0.000 {method 'istitle' of 'str' objects}
+     3486    0.000    0.000    0.000    0.000 medspacy_matcher.py:93(<lambda>)
+     1207    0.000    0.000    0.001    0.000 context_modifier.py:213(allows)
+     5295    0.000    0.000    0.000    0.000 lex_attrs.py:185(get_lang)
+     4327    0.000    0.000    0.000    0.000 FastCNER.py:297(<lambda>)
+  435/255    0.000    0.000    0.001    0.000 underscore.py:45(__getattr__)
+      100    0.000    0.000    0.382    0.004 preprocessor.py:9(__call__)
+     1100    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+      300    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+     1930    0.000    0.000    0.001    0.000 context_modifier.py:42(category)
+      100    0.000    0.000    0.001    0.000 language.py:323(pipeline)
+     1829    0.000    0.000    0.001    0.000 context_modifier.py:52(allowed_types)
+     1729    0.000    0.000    0.001    0.000 context_modifier.py:72(max_scope)
+     1829    0.000    0.000    0.001    0.000 context_modifier.py:57(excluded_types)
+      100    0.000    0.000    0.000    0.000 sectionizer.py:222(set_parent_sections)
+      100    0.000    0.000    0.003    0.000 FastCNER.py:368(removePseudo)
+      100    0.000    0.000    0.003    0.000 postprocessor.py:18(__call__)
+     1437    0.000    0.000    0.001    0.000 context_modifier.py:253(reduce_targets)
+     3670    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+      500    0.000    0.000    0.001    0.000 preprocessing_rule.py:93(__call__)
+      300    0.000    0.000    0.000    0.000 regex_matcher.py:77(__call__)
+     1437    0.000    0.000    0.000    0.000 context_modifier.py:67(max_targets)
+     1437    0.000    0.000    0.002    0.000 vocab.pyx:162(get_by_orth)
+      376    0.000    0.000    0.003    0.000 context_modifier.py:287(__gt__)
+      100    0.000    0.000    0.001    0.000 _dict_proxies.py:26(__init__)
+     4073    0.000    0.000    0.000    0.000 {method 'isalnum' of 'str' objects}
+      365    0.000    0.000    0.001    0.000 doc.pyx:384(__get__)
+      100    0.000    0.000    0.380    0.004 tokenizer.pyx:147(__call__)
+      100    0.000    0.000    0.002    0.000 warnings.py:20(_showwarnmsg_impl)
+      100    0.000    0.000    0.000    0.000 warnings.py:403(__init__)
+      100    0.000    0.000   16.175    0.162 PyRuSHSentencizer.py:50(__call__)
+      100    0.000    0.000    0.001    0.000 __init__.py:1043(__init__)
+        1    0.000    0.000   17.747   17.747 medspacy_pipline_mtsample_profiler.py:133(fun_profiler)
+      100    0.000    0.000    0.000    0.000 pipe.pyx:133(get_error_handler)
+      405    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 {method 'readline' of '_io.BufferedReader' objects}
+      100    0.000    0.000    0.000    0.000 language.py:331(<listcomp>)
+      100    0.000    0.000    0.000    0.000 util.py:218(__init__)
+      100    0.000    0.000    0.382    0.004 language.py:1081(make_doc)
+       66    0.000    0.000    0.000    0.000 doc.pyx:104(values)
+      100    0.000    0.000    0.383    0.004 language.py:1093(_ensure_doc)
+     1038    0.000    0.000    0.000    0.000 doc.pyx:912(__pyx_fuse_1push_back)
+      100    0.000    0.000    0.000    0.000 {method 'get_error_handler' of 'spacy.pipeline.pipe.Pipe' objects}
+      100    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+       66    0.000    0.000    0.000    0.000 _extensions.py:156(get_section_category_token)
+      100    0.000    0.000    0.000    0.000 linecache.py:36(getlines)
+      165    0.000    0.000    0.000    0.000 section.py:5(__init__)
+      100    0.000    0.000   15.884    0.159 PyRuSHSentencizer.py:55(predict)
+      100    0.000    0.000    0.000    0.000 _collections_abc.py:933(update)
+      100    0.000    0.000    0.001    0.000 linecache.py:26(getline)
+      100    0.000    0.000    0.002    0.000 warnings.py:96(_showwarnmsg)
+       66    0.000    0.000    0.001    0.000 _extensions.py:261(<lambda>)
+       66    0.000    0.000    0.001    0.000 medspacy_pipline_mtsample_profiler.py:120(<lambda>)
+      115    0.000    0.000    0.000    0.000 doc.pyx:1917(get_entity_info)
+       66    0.000    0.000    0.001    0.000 postprocessing_rule.py:26(__call__)
+      100    0.000    0.000    0.000    0.000 context_graph.py:2(__init__)
+        6    0.000    0.000    0.000    0.000 tokenizer.pyx:318(_retokenize_special_spans)
+      100    0.000    0.000    0.000    0.000 context_component.py:291(set_context_attributes)
+       66    0.000    0.000    0.001    0.000 postprocessing_pattern.py:16(__call__)
+      100    0.000    0.000    0.000    0.000 abc.py:117(__instancecheck__)
+      562    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+      514    0.000    0.000    0.000    0.000 medspacy_matcher.py:109(<lambda>)
+      100    0.000    0.000    0.000    0.000 {method 'clear' of 'dict' objects}
+       66    0.000    0.000    0.000    0.000 enum.py:443(__members__)
+      100    0.000    0.000    0.001    0.000 warnings.py:117(_formatwarnmsg)
+        1    0.000    0.000    0.000    0.000 {built-in method io.open}
+      500    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+      149    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+      149    0.000    0.000    0.000    0.000 {method 'rsplit' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method posix.stat}
+      114    0.000    0.000    0.001    0.000 section.py:26(section_span)
+      365    0.000    0.000    0.000    0.000 doc.pyx:519(__get__)
+       62    0.000    0.000    0.000    0.000 {built-in method builtins.setattr}
+      100    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
+      196    0.000    0.000    0.000    0.000 vocab.pxd:28(__get__)
+        1    0.000    0.000    0.000    0.000 {method 'readlines' of '_io._IOBase' objects}
+       19    0.000    0.000    0.000    0.000 context_modifier.py:293(__lt__)
+        1    0.000    0.000    0.000    0.000 tokenize.py:388(open)
+       24    0.000    0.000    0.000    0.000 context_modifier.py:248(modify)
+        1    0.000    0.000    0.000    0.000 linecache.py:80(updatecache)
+       24    0.000    0.000    0.000    0.000 context_modifier.py:229(on_modifies)
+        1    0.000    0.000    0.000    0.000 {method '__exit__' of '_io._IOBase' objects}
+        1    0.000    0.000    0.000    0.000 tokenize.py:295(detect_encoding)
+        3    0.000    0.000    0.000    0.000 codecs.py:319(decode)
+        1    0.000    0.000    0.000    0.000 tokenize.py:325(find_cookie)
+        3    0.000    0.000    0.000    0.000 {built-in method _codecs.utf_8_decode}
+        1    0.000    0.000    0.000    0.000 codecs.py:309(__init__)
+        1    0.000    0.000    0.000    0.000 tokenize.py:319(read_or_stop)
+        1    0.000    0.000    0.000    0.000 {method 'startswith' of 'bytes' objects}
+        1    0.000    0.000    0.000    0.000 {method 'decode' of 'bytes' objects}
+        1    0.000    0.000    0.000    0.000 {method 'seek' of '_io.BufferedReader' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+        1    0.000    0.000    0.000    0.000 WildCardFunctions.py:118(processWildCard_u)
+
+

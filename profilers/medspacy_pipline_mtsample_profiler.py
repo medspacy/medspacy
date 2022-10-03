@@ -130,7 +130,11 @@ print(nlp.pipe_names)
 docs = mtsample_crawler(num_notes=100)
 
 
-@profiling(output_file="stat_mtsample/pipeline.prof", sort_by="ncalls", strip_dirs=True)
+@profiling(
+    output_file="stat_mtsample/pipeline_tottime.prof",
+    sort_by="tottime",
+    strip_dirs=True,
+)
 def fun_profiler():
     for text in docs:
         medspacy_doc = nlp(text)

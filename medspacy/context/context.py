@@ -44,7 +44,7 @@ class ConText:
         self,
         nlp: Language,
         name: str = "medspacy_context",
-        rules: Union[Iterable[ConTextRule], Literal["default"], None] = "default",
+        rules: Optional[str] = "default",
         phrase_matcher_attr: str = "LOWER",
         allowed_types: Optional[Set[str]] = None,
         excluded_types: Optional[Set[str]] = None,
@@ -60,14 +60,15 @@ class ConText:
         span_group_name: str = "medspacy_spans",
     ):
         """
-        Creates a new ConText.
+        Creates a new ConText object.
 
         Args:
             nlp: A SpaCy Language object.
             name: The name of the component.
             rules: The rules to load. Default is "default", loads rules packaged with medspaCy that are derived from
                 original ConText rules and years of practical applications at the US Department of Veterans Affairs.  If
-                None, no rules are loaded. Otherwise, must be a list of ConTextRule objects.
+                None, no rules are loaded. Otherwise, must be a path to a json file containing rules. Add ConTextRules
+                directly through `ConText.add`.
             phrase_matcher_attr: The token attribute to use for PhraseMatcher for rules where `pattern` is None. Default
                 is 'LOWER'.
             allowed_types: A global list of types included by context. Rules will operate on only spans with these
@@ -132,7 +133,7 @@ class ConText:
         if max_scope is not None:
             if not (isinstance(max_scope, int) and max_scope > 0):
                 raise ValueError(
-                    f"If 'max_scope' is not None, must be a value greater than 0, not the current value: {max_scope}"
+                    f"If 'max_scope' must be a value greater than 0, not the current value: {max_scope}"
                 )
         self.max_scope = max_scope
 
@@ -146,10 +147,14 @@ class ConText:
                 k.upper(): v for (k, v) in terminating_types.items()
             }
 
-        if rules and rules == "default":
-            self.add(ConTextRule.from_json(DEFAULT_RULES_FILEPATH))
-        elif rules:
-            self.add(rules)
+        rule_path = None
+        if rules == "default":
+            rule_path = DEFAULT_RULES_FILEPATH
+        else:
+            rule_path = rules
+
+        if rule_path:
+            self.add(ConTextRule.from_json(rule_path))
 
     @property
     def rules(self):
@@ -304,9 +309,7 @@ class ConText:
         for (match_id, start, end) in matches:
             # Get the ConTextRule object defining this modifier
             rule = self.__matcher.rule_map[self.nlp.vocab[match_id].text]
-            modifier = ConTextModifier(
-                rule, start, end, doc, self.max_scope if self.max_scope else False
-            )
+            modifier = ConTextModifier(rule, start, end, doc, max_scope=self.max_scope)
             context_graph.modifiers.append(modifier)
 
         context_graph.update_scopes()

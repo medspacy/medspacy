@@ -19,14 +19,14 @@ class Postprocessor:
         name: str = "medspacy_postprocessor",
         rules: Iterable[PostprocessingRule] = None,
         debug: bool = False,
-        input_type: Literal["ents", "group"] = "ents",
+        input_span_type: Literal["ents", "group"] = "ents",
         span_group_name: str = "medspacy_spans",
     ):
         self.nlp = nlp
         self.name = name
         self._rules = []
         self.debug = debug
-        self._input_type = input_type
+        self._input_span_type = input_span_type
         self._span_group_name = span_group_name
 
         if rules:
@@ -43,7 +43,7 @@ class Postprocessor:
         return self._rules
 
     @property
-    def input_type(self):
+    def input_span_type(self):
         """
         The input source of entities for the component. Must be either "ents" corresponding to doc.ents or "group" for
         a spaCy span group.
@@ -51,18 +51,18 @@ class Postprocessor:
         Returns:
             The input type, "ents" or "group".
         """
-        return self._input_type
+        return self._input_span_type
 
-    @input_type.setter
-    def input_type(self, val):
+    @input_span_type.setter
+    def input_span_type(self, val):
         if not (val == "ents" or val == "group"):
-            raise ValueError('input_type must be "ents" or "group".')
-        self._input_type = val
+            raise ValueError('input_span_type must be "ents" or "group".')
+        self._input_span_type = val
 
     @property
     def span_group_name(self) -> str:
         """
-        The name of the span group used by this component. If `input_type` is "group", calling this component will
+        The name of the span group used by this component. If `input_span_type` is "group", calling this component will
         use spans in the span group with this name.
 
         Returns:
@@ -90,6 +90,8 @@ class Postprocessor:
                 raise TypeError(
                     f"Rules must be type PostprocessingRule, not {type(rule)}."
                 )
+            if rule.input_span_type is None:
+                rule.input_span_type = self.input_span_type
         self._rules += rules
 
     def __call__(self, doc: Doc):
@@ -103,7 +105,7 @@ class Postprocessor:
             The processed Doc.
         """
         # Iterate through the entities in reversed order
-        if self._input_type == "ents":
+        if self._input_span_type == "ents":
             spans = doc.ents
         else:
             spans = doc.spans[self._span_group_name]
@@ -113,11 +115,15 @@ class Postprocessor:
             if self.debug:
                 print(ent)
             for rule in self.rules:
-                rule(ent, i, self.debug)
+                rule(ent, i, debug=self.debug)
                 # Check if the entity was removed -if it was, skip to the next entity
                 try:
-                    if spans[i] != ent:
-                        break
+                    if self._input_span_type == "ents":
+                        if len(doc.ents[i]) != len(spans):
+                            break
+                    else:
+                        if len(doc.spans[self.span_group_name]) == len(spans):
+                            break
                 except IndexError:
                     break
             # if self.debug:

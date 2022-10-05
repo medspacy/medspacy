@@ -32,13 +32,7 @@ class TestConText:
         filepath = os.path.join(
             Path(__file__).resolve().parents[2], "resources", "context_rules.json"
         )
-        context = ConText(nlp, rules=ConTextRule.from_json(filepath))
-        assert context.rules
-
-    def test_custom_patterns_list(self):
-        """Test that rules are loaded from a list"""
-        rule = ConTextRule("evidence of", "DEFINITE_EXISTENCE", "forward")
-        context = ConText(nlp, rules=[rule])
+        context = ConText(nlp, rules=filepath)
         assert context.rules
 
     def test_call(self):
@@ -276,7 +270,7 @@ class TestConText:
         )
         context.add([rule])
         doc = nlp("There is no evidence of pneumonia or chf.")
-        doc.ents = (doc[5:6], doc[7:8])
+        doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
         context(doc)
 
         for ent in doc.ents:
@@ -292,7 +286,7 @@ class TestConText:
         )
         context.add([rule])
         doc = nlp("There is no evidence of pneumonia or chf.")
-        doc.ents = (doc[5:6], doc[7:8])
+        doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
         context(doc)
 
         for ent in doc.ents:
@@ -316,10 +310,14 @@ class TestConText:
         assert len(doc._.context_graph.modifiers) == 1
         assert doc._.context_graph.modifiers[0].category == "PSEUDO_NEGATED_EXISTENCE"
 
-    def test__max_scope_fails(self):
-        "Test that if use_context_window is True but max_scope is None, the instantiation will fail"
-        with pytest.raises(ValueError) as exception_info:
-            context = ConText(nlp, max_scope=-1)
+    def test_max_scope(self):
+        nlp_no_sents = spacy.blank("en")
+        context = ConText(nlp_no_sents, max_scope=1)
+        doc = nlp_no_sents("There is no evidence of pneumonia or chf.")
+        doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
+        context(doc)
+        assert doc.ents[0]._.is_negated is True
+        assert doc.ents[1]._.is_negated is False
 
     def test_regex_pattern(self):
         rules = [
@@ -380,6 +378,26 @@ class TestConText:
         for span in doc._.my_custom_spans:
             assert span._.is_historical
         Doc.remove_extension("my_custom_spans")
+
+    def test_allowed_types(self):
+        doc = nlp("She is not prescribed any beta blockers for her hypertension.")
+        # Manually define entities
+        medication_ent = Span(doc, 5, 7, "MEDICATION")
+        condition_ent = Span(doc, 9, 10, "CONDITION")
+        doc.ents = (medication_ent, condition_ent)
+
+        rule = ConTextRule(
+            "not prescribed",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"MEDICATION"},
+        )
+
+        context = ConText(nlp, rules=None)
+        context.add(rule)
+        doc = context(doc)
+
+        assert len(doc._.context_graph.edges) == 1
 
     # def test_non_entity_input_non_iterable(self): # not sure what this is testing
     #     rules = [

@@ -4,6 +4,8 @@ import sys
 import medspacy
 import spacy
 
+from medspacy.target_matcher import TargetRule
+
 
 class TestMedSpaCy:
     def test_default_build_pipe_names(self):
@@ -188,3 +190,18 @@ class TestMedSpaCyForRelease:
             "This is a very short piece of text that we want to use for testing. No patients were given type 2 diabetes as part of this test case. Podczas tego testu nie dano żadnemu pacjentowi cukrzycy typu drugiego."
         )
         assert doc
+
+    def test_pipeline_initiate_with_span_groups(self):
+        nlp2 = spacy.blank("en")
+        matcher = nlp2.add_pipe(
+            "medspacy_target_matcher", config={"result_type": "group"}
+        )
+        matcher.add(TargetRule("pneumonia", "CONDITION"))
+        sectionizer = nlp2.add_pipe(
+            "medspacy_sectionizer", config={"input_span_type": "group"}
+        )
+
+        doc = nlp2("Past Medical History: Pneumonia, stroke, and cancer")
+        assert sectionizer.input_span_type == "group"
+        assert len(doc.spans["medspacy_spans"]) > 0
+        assert doc.spans["medspacy_spans"][0]._.is_historical is True

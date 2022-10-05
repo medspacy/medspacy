@@ -1,6 +1,11 @@
+import json
+
 import spacy
 import warnings
 import pytest
+
+from os import path
+from pathlib import Path
 
 import medspacy
 from medspacy.section_detection import Sectionizer
@@ -581,3 +586,19 @@ class TestSectionizer:
         sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
         assert sectionizer.section_categories == {"past_medical_history"}
+
+    def test_pipeline_initiate(self):
+        nlp2 = spacy.blank("en")
+        nlp2.add_pipe("medspacy_sectionizer")
+        assert "medspacy_sectionizer" in nlp2.pipe_names
+
+    def test_pipeline_initiate_with_rules(self):
+        nlp2 = spacy.blank("en")
+        rules = path.join(
+            Path(__file__).resolve().parents[2],
+            "resources",
+            "section_patterns.json",
+        )
+        sectionizer = nlp2.add_pipe("medspacy_sectionizer", config={"rules": rules})
+        assert "medspacy_sectionizer" in nlp2.pipe_names
+        assert len(sectionizer.rules) > 0

@@ -246,7 +246,7 @@ def data_to_rows(data):
     return row_data
 
 
-def to_dataframe(doc, data_type="ent"):
+def to_dataframe(doc, data_type="ents"):
     if data_type not in ALLOWED_DATA_TYPES:
         raise ValueError(
             "Invalid data type requested: {0}. Must be one of {1}".format(
@@ -305,7 +305,7 @@ _doc_extensions = {
     "section_bodies": {"getter": get_section_body_spans},
     "get_data": {"method": get_data},
     "data": {"default": None},
-    "ent_data": {"getter": lambda doc: get_data(doc, "ent")},
+    "ent_data": {"getter": lambda doc: get_data(doc, "ents")},
     "section_data": {"getter": lambda doc: get_data(doc, "section")},
     "doc_data": {"getter": lambda doc: get_data(doc, "doc")},
     "context_data": {"getter": lambda doc: get_data(doc, "context")},

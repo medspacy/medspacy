@@ -1,0 +1,54 @@
+{
+    "context_rules": [
+        {
+            "category": "NEGATED_EXISTENCE",
+            "literal": "absence of",
+            "direction": "FORWARD"
+        },
+        {
+            "category": "NEGATED_EXISTENCE",
+            "pattern": [
+                {
+                    "LOWER": {
+                        "IN": [
+                            "adequate",
+                            "sufficient"
+                        ]
+                    }
+                },
+                {
+                    "LOWER": "to"
+                },
+                {
+                    "LOWER": "rule"
+                },
+                {
+                    "LOWER": {
+                        "IN": [
+                            "him",
+                            "her",
+                            "them",
+                            "patient",
+                            "pt"
+                        ]
+                    },
+                    "OP": "?"
+                },
+                {
+                    "LOWER": "out"
+                },
+                {
+                    "LOWER": {
+                        "IN": [
+                            "against",
+                            "for"
+                        ]
+                    },
+                    "OP": "?"
+                }
+            ],
+            "literal": "adequate to rule out",
+            "direction": "FORWARD"
+        }
+    ]
+}

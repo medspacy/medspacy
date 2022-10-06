@@ -42,6 +42,14 @@ class TestConTextModifier:
         doc.ents = spans
         return doc
 
+    def create_medication_example(self):
+        doc = nlp("She is not prescribed any beta blockers for her hypertension.")
+        # Manually define entities
+        medication_ent = Span(doc, 5, 7, "MEDICATION")
+        condition_ent = Span(doc, 9, 10, "CONDITION")
+        doc.ents = (medication_ent, condition_ent)
+        return doc
+
     def test_init(self):
         assert self.create_objects()
 
@@ -226,7 +234,7 @@ class TestConTextModifier:
         rule = ConTextRule(
             "family history of", "FAMILY_HISTORY", direction="FORWARD", max_scope=2
         )
-        modifier = ConTextModifier(rule, 0, 3, doc, use_context_window=True)
+        modifier = ConTextModifier(rule, 0, 3, doc, max_scope=True)
         scope = modifier.scope_span
         assert doc[scope[0] : scope[1]] == doc[3:5]
 
@@ -258,9 +266,9 @@ class TestConTextModifier:
             allowed_types={"TRAVEL"},
         )
         modifier = ConTextModifier(rule, 0, 5, doc)
-        travel, condition = doc.ents  # "puerto rico", "pneumonia"
-        assert modifier.modifies(travel) is True
-        assert modifier.modifies(condition) is False
+        ents = doc.ents  # "puerto rico", "pneumonia"
+        assert modifier.modifies(ents[0]) is True
+        assert modifier.modifies(ents[1]) is False
 
     def test_excluded_types(self):
         """Test that specifying excluded_types will not modify that target type."""
@@ -431,3 +439,47 @@ class TestConTextModifier:
         modifier = ConTextModifier(rule, 2, 5, doc)
 
         assert modifier.modifies(doc.ents[0]) is True
+
+    def test_allows(self):
+        doc = self.create_medication_example()
+        rule = ConTextRule(
+            "not prescribed",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"MEDICATION"},
+        )
+        modifier = ConTextModifier(rule, 2, 4, doc)
+
+        assert modifier.allows("CONDITION") is False
+        assert modifier.allows("MEDICATION") is True
+
+    def test_custom_attrs(self):
+        from spacy.tokens import Span
+
+        custom_attrs = {
+            "NEGATED_EXISTENCE": {"is_experienced": False},
+            "FAMILY_HISTORY": {"is_family_history": True, "is_experienced": False},
+        }
+        Span.set_extension("is_experienced", default=True)
+        Span.set_extension("is_family_history", default=False)
+
+        context = ConText(nlp, rules=None, span_attrs=custom_attrs)
+        rules = [
+            ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="FORWARD"),
+            ConTextRule("family history", "FAMILY_HISTORY", direction="FORWARD"),
+        ]
+        context.add(rules)
+
+        doc = nlp("There is no evidence of pneumonia. Family history of diabetes.")
+        doc.ents = (
+            Span(doc, 5, 6, "CONDITION"),
+            Span(doc, 10, 11, "CONDITION"),
+        )
+
+        context(doc)
+
+        assert doc.ents[0]._.is_experienced is False
+        assert doc.ents[0]._.is_family_history is False
+
+        assert doc.ents[1]._.is_experienced is False
+        assert doc.ents[1]._.is_family_history is True

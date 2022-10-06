@@ -60,7 +60,7 @@ class Sectionizer:
         self,
         nlp: Language,
         name: str = "medspacy_sectionizer",
-        rules: Union[Iterable[SectionRule], Literal["default"], None] = "default",
+        rules: Optional[str] = "default",
         max_section_length: Optional[int] = None,
         phrase_matcher_attr: str = "LOWER",
         require_start_line: bool = False,
@@ -80,7 +80,8 @@ class Sectionizer:
             name: The name of the component.
             rules: The rules to load. Default is "default", loads rules packaged with medspaCy that are derived from
                 SecTag, MIMIC-III, and practical refinement at the US Department of Veterans Affairs. If None, no rules
-                are loaded. Otherwise, must be a list of SectionRule objects.
+                are loaded. Otherwise, must be a path to a json file containing rules. Add SectionRules directly through
+                `Sectionizer.add`.
             max_section_length: Optional argument specifying the maximum number of tokens following a section header
                 which can be included in a section body. This can be useful if you think your section rules are
                 incomplete and want to prevent sections from running too long in the note. Default is None, meaning that
@@ -115,12 +116,18 @@ class Sectionizer:
         self._input_span_type = input_span_type
         self._span_group_name = span_group_name
 
-        self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
+        self.__matcher = MedspacyMatcher(
+            nlp, name=name, phrase_matcher_attr=phrase_matcher_attr
+        )
 
-        if rules and rules == "default":
-            self.add(SectionRule.from_json(DEFAULT_RULES_FILEPATH))
-        elif rules:
-            self.add(rules)
+        rule_path = None
+        if rules == "default":
+            rule_path = DEFAULT_RULES_FILEPATH
+        else:
+            rule_path = rules
+
+        if rule_path:
+            self.add(SectionRule.from_json(rule_path))
 
         if span_attrs == "default":
             self.assertion_attributes_mapping = DEFAULT_ATTRS
@@ -429,7 +436,10 @@ class Sectionizer:
             # Otherwise, go until the next section header
             else:
                 next_match = matches[i + 1]
-                _, next_start, _, _ = next_match
+                if len(match) == 4:
+                    _, next_start, _, _ = next_match
+                else:
+                    _, next_start, _ = next_match
                 if self.max_section_length is None and rule.max_scope is None:
                     section_list.append(
                         Section(category, start, end, end, next_start, parent, rule)

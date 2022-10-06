@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Optional, Union, List, Dict, Callable, Tuple, Any
 
 from spacy.matcher import Matcher
@@ -77,7 +78,7 @@ class SectionRule(BaseRule):
         self.parent_required = parent_required
 
     @classmethod
-    def from_json(cls, filepath):
+    def from_json(cls, filepath) -> List[SectionRule]:
         """
         Read in a lexicon of modifiers from a JSON file.
 

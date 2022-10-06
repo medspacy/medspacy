@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List, Dict, Any, TYPE_CHECKING
+from typing import Optional, List, Dict, Any
 import srsly
 from spacy.tokens import Span
 
@@ -24,12 +24,13 @@ class ConTextGraph:
         prune_on_modifier_overlap: bool = False,
     ):
         """
+        Creates a new ConTextGraph object.
 
         Args:
-            targets:
-            modifiers:
-            edges:
-            prune_on_modifier_overlap:
+            targets: A spans that context might modify.
+            modifiers: A list of ConTextModifiers that might modify the targets.
+            edges: A list of edges between targets and modifiers representing the modification relationship.
+            prune_on_modifier_overlap: Whether to prune modifiers when one modifier completely covers another.
         """
         self.targets = targets if targets is not None else []
         self.modifiers = modifiers if modifiers is not None else []

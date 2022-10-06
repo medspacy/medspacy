@@ -12,7 +12,7 @@ from medspacy.io import DocConsumer
 tmpdirname = tempfile.TemporaryDirectory()
 db = os.path.join(tmpdirname.name, "test")
 
-nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"])
+nlp = medspacy.load(enable=["medspacy_pyrush", "medspacy_target_matcher", "medspacy_context", "medspacy_sectionizer"])
 nlp.get_pipe("medspacy_target_matcher").add(TargetRule("pneumonia", "CONDITION"))
 doc = nlp("There is no evidence of pneumonia.")
 

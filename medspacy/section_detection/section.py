@@ -1,5 +1,4 @@
 from __future__ import annotations
-import json
 from typing import Optional, Dict, Union
 
 from medspacy.section_detection.section_rule import SectionRule

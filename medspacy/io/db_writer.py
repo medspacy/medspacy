@@ -6,14 +6,14 @@ from .doc_consumer import (
 )
 
 DEFAULT_COLS = {
-    "ent": list(DEFAULT_ENT_ATTRS),
+    "ents": list(DEFAULT_ENT_ATTRS),
     "doc": list(DEFAULT_DOC_ATTRS),
     "context": list(ALLOWED_CONTEXT_ATTRS),
     "section": list(ALLOWED_SECTION_ATTRS),
 }
 
 DEFAULT_COL_TYPES = {
-    "ent": {
+    "ents": {
         "text": "varchar(50)",
         "start_char": "int",
         "end_char": "int",
@@ -62,7 +62,7 @@ class DbWriter:
         destination_table,
         cols=None,
         col_types=None,
-        doc_dtype="ent",
+        doc_dtype="ents",
         create_table=False,
         drop_existing=False,
         write_batch_size=100,
@@ -79,7 +79,7 @@ class DbWriter:
                 A set of default values can be accesed by:
                 >>> DbWriter.get_default_col_types()
             doc_dtype: The type of data from DocConsumer to write from a doc.
-                Either ("ent", "section", "context", or "doc")
+                Either ("ents", "section", "context", or "doc")
             create_table (bool): Whether to create a table
 
         """

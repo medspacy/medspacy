@@ -9,11 +9,20 @@ from medspacy.io import DocConsumer
 tmpdirname = tempfile.TemporaryDirectory()
 db = os.path.join(tmpdirname.name, "test")
 
-nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"])
+nlp = medspacy.load(
+    enable=[
+        "medspacy_pyrush",
+        "medspacy_target_matcher",
+        "medspacy_context",
+        "medspacy_sectionizer",
+    ]
+)
 nlp.get_pipe("medspacy_target_matcher").add(TargetRule("pneumonia", "CONDITION"))
 doc = nlp("There is no evidence of pneumonia.")
 
-doc_consumer = DocConsumer(nlp, dtype_attrs={"ent": ["text", "label_", "is_negated", "section_category"]})
+doc_consumer = DocConsumer(
+    nlp, dtype_attrs={"ents": ["text", "label_", "is_negated", "section_category"]}
+)
 doc_consumer(doc)
 
 db_dtypes = [
@@ -33,7 +42,10 @@ def create_test_db(db, drop_existing=True):
 
     import sqlite3 as s3
 
-    texts = ["Patient with a history of breast ca", "There is no evidence of pneumonia."]
+    texts = [
+        "Patient with a history of breast ca",
+        "There is no evidence of pneumonia.",
+    ]
 
     conn = s3.connect(db)
 

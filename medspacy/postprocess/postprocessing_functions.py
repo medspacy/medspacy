@@ -205,12 +205,13 @@ def remove_ent(
         input_type: The source of the entity, either "ents" or "group".
         span_group_name: If `input_type` is "group", the name of the span group.
     """
+    doc = ent.doc
     if input_type == "ents":
-        ent.doc.ents = ent.doc.ents[:i] + ent.doc.ents[i + 1 :]
+        doc.ents = doc.ents[:i] + doc.ents[i + 1 :]
     elif input_type == "group":
-        ent.doc.spans[span_group_name] = (
-            ent.doc.spans[span_group_name][:i] + ent.doc.spans[span_group_name][i + 1 :]
-        )
+        t = list(doc.spans[span_group_name])
+        doc.spans[span_group_name] = t[:i] + t[i + 1 :]
+        # del doc.spans[span_group_name][i] # why does this not work?
 
 
 def set_label(

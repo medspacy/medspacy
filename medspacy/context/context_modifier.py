@@ -23,7 +23,7 @@ class ConTextModifier:
         doc: Doc,
         scope_start: Optional[int] = None,
         scope_end: Optional[int] = None,
-        use_context_window: bool = False,
+        max_scope: Optional[int] = None,
     ):
         """
         Create a new ConTextModifier from a document span. Each modifier represents a span in the text and a surrounding
@@ -38,7 +38,7 @@ class ConTextModifier:
                 maintained.
             scope_start: The start token index of the scope.
             scope_end: The end index of the scope.
-            use_context_window: Whether to use scope values rather than sentence boundaries for modifications.
+            max_scope: Whether to use scope values rather than sentence boundaries for modifications.
         """
         self._context_rule = context_rule
         self._start = start
@@ -47,7 +47,7 @@ class ConTextModifier:
         self._targets = []
         self._num_targets = 0
 
-        self._use_context_window = use_context_window
+        self._max_scope = max_scope
         self._scope_start = scope_start
         self._scope_end = scope_end
         if doc is not None and (self._scope_end is None or self._scope_start is None):
@@ -55,58 +55,78 @@ class ConTextModifier:
 
     @property
     def modifier_span(self) -> Tuple[int, int]:
-        """The spaCy Span object, which is a view of self.doc, covered by this match."""
+        """
+        The spaCy Span object, which is a view of self.doc, covered by this match.
+        """
         return self._start, self._end
 
     @property
     def rule(self) -> ConTextRule:
-        """Returns the associated context rule."""
+        """
+        Returns the associated context rule.
+        """
         return self._context_rule
 
     @property
     def direction(self) -> str:
-        """Returns the associated direction."""
+        """
+        Returns the associated direction.
+        """
         return self.rule.direction
 
     @property
     def category(self) -> str:
-        """Returns the associated category."""
+        """
+        Returns the associated category.
+        """
         return self.rule.category
 
     @property
     def scope_span(self) -> Tuple[int, int]:
-        """Returns the associated scope."""
+        """
+        Returns the associated scope.
+        """
         return self._scope_start, self._scope_end
 
     @property
     def allowed_types(self) -> Set[str]:
-        """Returns the associated allowed types."""
+        """
+        Returns the associated allowed types.
+        """
         return self.rule.allowed_types
 
     @property
     def excluded_types(self) -> Set[str]:
-        """Returns the associated excluded types."""
+        """
+        Returns the associated excluded types.
+        """
         return self.rule.excluded_types
 
     @property
     def num_targets(self) -> int:
-        """Returns the associated number of targets."""
+        """
+        Returns the associated number of targets.
+        """
         return self._num_targets
 
     @property
     def max_targets(self) -> Union[int, None]:
-        """Returns the associated maximum number of targets."""
+        """
+        Returns the associated maximum number of targets.
+        """
         return self.rule.max_targets
 
     @property
     def max_scope(self) -> Union[int, None]:
-        """Returns the associated maximum scope."""
+        """
+        Returns the associated maximum scope.
+        """
         return self.rule.max_scope
 
     def __set_scope(self, doc: Doc):
         """
         Applies the direction of the ConTextRule which generated this ConTextModifier to define a scope. If
-        self.max_scope is None, then the default scope is the sentence which it occurs in whichever direction defined by
+        self._max_scope is None, then the default scope is the sentence which it occurs in whichever direction defined by
         self.direction. For example, if the direction is "forward", the scope will be [self.end: sentence.end]. If the
         direction is "backward", it will be [self.start: sentence.start].
 
@@ -117,7 +137,7 @@ class ConTextModifier:
             doc: The spaCy doc to use to set scope.
         """
         # If ConText is set to use defined windows, do that instead of sentence splitting
-        if self._use_context_window:
+        if self._max_scope:
             full_scope_span = doc[self._start : self._end]._.window(
                 n=self.rule.max_scope
             )
@@ -126,9 +146,9 @@ class ConTextModifier:
             full_scope_span = doc[self._start].sent
             if full_scope_span is None:
                 raise ValueError(
-                    "ConText failed because sentence boundaries have not been set and 'use_context_window' is set to False. "
-                    "Add an upstream component such as the dependency parser, Sentencizer, or PyRuSH to detect sentence "
-                    "boundaries or initialize ConText with 'use_context_window=True.'"
+                    "ConText failed because sentence boundaries have not been set. Add an upstream component such as the "
+                    "dependency parser, Sentencizer, or PyRuSH to detect sentence boundaries or initialize ConText with "
+                    "`max_scope` set to a value greater than 0."
                 )
 
         if self.direction.lower() == "forward":
@@ -265,13 +285,9 @@ class ConTextModifier:
             `self.allowed_types` or if `target_label` not in `self.excluded_tupes`. False otherwise.
         """
         if self.allowed_types is not None:
-            if target_label not in self.allowed_types:
-                return False
-            return True
+            return target_label in self.allowed_types
         if self.excluded_types is not None:
-            if target_label not in self.excluded_types:
-                return True
-            return False
+            return target_label not in self.excluded_types
         return True
 
     def on_modifies(self, target: Span) -> bool:
@@ -353,7 +369,7 @@ class ConTextModifier:
         dict_repr["context_rule"] = self.rule.to_dict()
         dict_repr["start"] = self._start
         dict_repr["end"] = self._end
-        dict_repr["use_context_window"] = self._use_context_window
+        dict_repr["max_scope"] = self._max_scope
         dict_repr["scope_start"] = self._scope_start
         dict_repr["scope_end"] = self._scope_end
 

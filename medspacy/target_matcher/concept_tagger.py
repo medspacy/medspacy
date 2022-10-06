@@ -33,7 +33,7 @@ class ConceptTagger:
         self.nlp = nlp
         self.name = name
         self._attr_name = attr_name
-        self.__matcher = MedspacyMatcher(nlp)
+        self.__matcher = MedspacyMatcher(nlp, name=name)
 
         # If the token attribute hasn't been set, add it now
         # try:

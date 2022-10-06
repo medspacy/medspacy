@@ -1,10 +1,12 @@
 from collections import OrderedDict
+from typing import Tuple, Dict, Optional
+
 from spacy.language import Language
 from spacy.tokens import Span
 
 from medspacy.context import ConTextModifier
 
-ALLOWED_DATA_TYPES = ("ent", "section", "context", "doc")
+ALLOWED_DATA_TYPES = ("ents", "section", "context", "doc")
 
 DEFAULT_ENT_ATTRS = (
     "text",
@@ -48,7 +50,8 @@ ALLOWED_CONTEXT_ATTRS = (
 )
 
 DEFAULT_ATTRS = {
-    "ent": DEFAULT_ENT_ATTRS,
+    "ents": DEFAULT_ENT_ATTRS,
+    "group": DEFAULT_ENT_ATTRS,
     "section": ALLOWED_SECTION_ATTRS,
     "context": ALLOWED_CONTEXT_ATTRS,
     "doc": DEFAULT_DOC_ATTRS,
@@ -57,45 +60,50 @@ DEFAULT_ATTRS = {
 
 @Language.factory("medspacy_doc_consumer")
 class DocConsumer:
-    """A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user."""
+    """
+    A DocConsumer object will consume a spacy doc and output rows based on a configuration provided by the user.
 
-    def __init__(
-        self, nlp, name="medspacy_doc_consumer", dtypes=("ent",), dtype_attrs=None
-    ):
-        """
-        Creates a new DocConsumer.
-
-        This component extracts structured information from a Doc. Information is stored in
-        doc._.data, which is a nested dictionary. The outer keys represent the data type of
-        can be either:
-            - "ent": data about the spans in doc.ents such as the text, label,
+    This component extracts structured information from a Doc. Information is stored in doc._.data, which is a
+        nested dictionary. The outer keys represent the data type of can one or more of:
+            - "ents": data about the spans in doc.ents such as the text, label,
                 context attributes, section information, or custom attributes
-            - "section": data about the sections within the notes, such as the
-                section text and category
+            - "group": data about spans in a span group with the name `span_group_attrs` section text and category
             - "context": data about entity-modifier pairs extracted by ConText
-            - "doc": a single doc-level representation. By default only doc.text is extracted,
-                but other attributes may be specified
+            - "doc": a single doc-level representation. By default only doc.text is extracted, but other attributes may
+                be specified
 
         Once processed, a doc's data can be accessed either by:
             - doc._.data
             - doc._.get_data(dtype=...)
             - doc._.ent_data
             - doc._.to_dataframe(dtype=...)
+    """
+
+    def __init__(
+        self,
+        nlp,
+        name: str = "medspacy_doc_consumer",
+        dtypes: Tuple = ("ents",),
+        dtype_attrs: Dict = None,
+        span_group_name: str = "medspacy_spans",
+    ):
+        """
+        Creates a new DocConsumer.
 
         Args:
             nlp: A spaCy model
-            dtypes (tuple or str): Either a tuple of data types to collect or the string "all".
-                Default ("ent",)
-                Valid options are ("ent", "section", "context", "doc")
-
-            dtype_attrs(dict or None): An optional dictionary mapping the data types in dtypes to a list
-                of attributes. If None, will set defaults for each dtype. Attributes for "ent" and "doc"
-                may be customized be adding either native or custom attributes (ie., ent._....)
-                "context" and "section" may only include the attributes contained in the default.
-                Default values for each dtype can be retrieved by the class method DocConsumer.get_default_attrs()
+            dtypes: Either a tuple of data types to collect or the string "all". Default ("ents",). Valid  options are:
+                "ents", "group", "section", "context", "doc".
+            dtype_attrs: An optional dictionary mapping the data types in dtypes to a list of attributes. If None, will
+                set defaults for each dtype. Attributes for "ents", "group", and "doc" may be customized be adding either
+                native or custom attributes (i.e., ent._....) "context" and "section" are not customizable at this time.
+                Default values for each dtype can be retrieved by the class method `DocConsumer.get_default_attrs()
+            span_group_name: the name of the span group used when dtypes contains "group". At this time, only one span
+                group is supported.
         """
         self.nlp = nlp
         self.name = name
+        self._span_group_name = span_group_name
         if not isinstance(dtypes, tuple):
             if dtypes == "all":
                 dtypes = tuple(ALLOWED_DATA_TYPES)
@@ -116,10 +124,20 @@ class DocConsumer:
         self.dtype_attrs = dtype_attrs
 
         if self.dtype_attrs is None:
-            self.set_default_attrs()
+            self._set_default_attrs()
 
     @classmethod
-    def get_default_attrs(cls, dtypes=None):
+    def get_default_attrs(cls, dtypes: Optional[Tuple] = None):
+        """
+        Gets the default attributes available to each type specified.
+
+        Args:
+            dtypes: Optional tuple containing "ents", "group", "context", "section", or "doc". If None, all will be
+                returned.
+
+        Returns:
+            The attributes the doc consumer will output for each of the specified types in `dtypes`.
+        """
         if dtypes is None:
             dtypes = ALLOWED_DATA_TYPES
         else:
@@ -135,11 +153,16 @@ class DocConsumer:
         }
         return dtype_attrs
 
-    def set_default_attrs(self):
+    def _set_default_attrs(self):
+        """
+        Gets the default attributes.
+        """
         self.dtype_attrs = self.get_default_attrs(self.dtypes)
 
     def validate_section_attrs(self, attrs):
-        """Validate that section attributes are either not specified or are valid attribute names."""
+        """
+        Validate that section attributes are either not specified or are valid attribute names.
+        """
         if attrs is None:
             return True
         if "section" not in attrs:
@@ -150,19 +173,36 @@ class DocConsumer:
         return True
 
     def __call__(self, doc):
+        """
+        Call the doc consumer on a doc and assign the data.
+
+        Args:
+            doc: The Doc to process.
+
+        Returns:
+            The processed Doc.
+        """
         data = dict()
         for dtype, attrs in self.dtype_attrs.items():
             data.setdefault(dtype, OrderedDict())
             for attr in attrs:
                 data[dtype][attr] = list()
-        if "ent" in self.dtypes:
+        if "ents" in self.dtypes:
             for ent in doc.ents:
-                for attr in self.dtype_attrs["ent"]:
+                for attr in self.dtype_attrs["ents"]:
                     try:
                         val = getattr(ent, attr)
                     except AttributeError:
                         val = getattr(ent._, attr)
-                    data["ent"][attr].append(val)
+                    data["ents"][attr].append(val)
+        if "group" in self.dtypes:
+            for span in doc.spans[self._span_group_name]:
+                for attr in self.dtype_attrs["ents"]:
+                    try:
+                        val = getattr(span, attr)
+                    except AttributeError:
+                        val = getattr(span._, attr)
+                    data["group"][attr].append(val)
         if "context" in self.dtypes:
             for (ent, modifier) in doc._.context_graph.edges:
                 self.add_context_edge_attributes(ent, modifier, data["context"], doc)

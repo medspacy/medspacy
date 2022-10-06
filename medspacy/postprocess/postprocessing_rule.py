@@ -12,7 +12,6 @@ class PostprocessingRule:
         action: Callable,
         name: str = None,
         description: str = None,
-        input_type: Literal["ents", "group"] = "ents",
         span_group_name: str = "medspacy_spans",
         **kwargs,
     ):
@@ -23,8 +22,8 @@ class PostprocessingRule:
         action: A function to call with the entity as an argument. This function should take the following arguments:
             ent: The spacy span
             i: The index of ent
-            input_type: "ents" or "group". Describes where to look for spans.
-            span_group_name: The name of the span group used when `input_type` is "group".
+            input_span_type: "ents" or "group". Describes where to look for spans.
+            span_group_name: The name of the span group used when `input_span_type` is "group".
             kwargs: Any additional keyword arguments for action.
         name: Optional name of direction.
         description: Optional description of the direction.
@@ -35,7 +34,7 @@ class PostprocessingRule:
         self.action = action
         self.name = name
         self.description = description
-        self.input_type = input_type
+        self.input_span_type = None
         self.span_group_name = span_group_name
         self.kwargs = kwargs
 
@@ -69,14 +68,14 @@ class PostprocessingRule:
         try:
             if self.kwargs:
                 self.action(
-                    ent, i, self.input_type, self.span_group_name, **self.kwargs
+                    ent, i, self.input_span_type, self.span_group_name, **self.kwargs
                 )
             else:
-                self.action(ent, i)
+                self.action(ent, i, self.input_span_type, self.span_group_name)
         except TypeError:
             _raise_action_error(
                 self.action,
-                (ent, i, self.input_type, self.span_group_name, self.kwargs),
+                (ent, i, self.input_span_type, self.span_group_name, self.kwargs),
             )
 
     def __repr__(self):
@@ -87,6 +86,6 @@ def _raise_action_error(func, args):
     raise ValueError(
         f"The action function {func} does not have the correct number of arguments. "
         f"Any action function must start with two arguments: (ent, i) - the span and the index of "
-        f"the span in doc.ents. Any additional arguments must be provided in a tuple "
-        f"in `direction.action_args`. Actual arguments passed in: {args} "
+        f"the span in doc.ents. Any additional arguments must be provided in a tuple. Actual arguments passed in: "
+        f"{args}"
     )

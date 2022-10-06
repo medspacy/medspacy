@@ -24,7 +24,7 @@ class TargetMatcher:
         self,
         nlp: Language,
         name: str = "medspacy_target_matcher",
-        rules: Optional[Iterable[TargetRule]] = None,
+        rules: Optional[str] = None,
         phrase_matcher_attr: str = "LOWER",
         result_type: Union[Literal["ents", "group"], None] = "ents",
         span_group_name: str = "medspacy_spans",
@@ -35,8 +35,8 @@ class TargetMatcher:
         Args:
             nlp: A spaCy Language model.
             name: The name of the TargetMatcher component
-            rules: An optional collection of TargetRules to add to the TargetMatcher. If None, then no rules will be
-                added. Default None.
+            rules: An optional filepath containing a JSON of TargetRules. If None, then no rules will be added. Default
+                None.
             phrase_matcher_attr: The token attribute to use for PhraseMatcher for rules where `pattern` is None. Default
                 is 'LOWER'.
             result_type: "ents" (default), "group", or None. Determines where TargetMatcher will put the matched spans.
@@ -52,9 +52,11 @@ class TargetMatcher:
         self._span_group_name = span_group_name
 
         if rules:
-            self.add(rules)
+            self.add(TargetRule.from_json(rules))
 
-        self.__matcher = MedspacyMatcher(nlp, phrase_matcher_attr=phrase_matcher_attr)
+        self.__matcher = MedspacyMatcher(
+            nlp, name=name, phrase_matcher_attr=phrase_matcher_attr
+        )
 
     @property
     def rules(self) -> List[TargetRule]:
@@ -167,5 +169,8 @@ class TargetMatcher:
                     )
             return doc
         elif self.result_type.lower() == "group":
-            doc.spans[self.span_group_name] = spans
+            if self.span_group_name in doc.spans.keys():
+                doc.spans[self.span_group_name] += spans
+            else:
+                doc.spans[self.span_group_name] = spans
             return doc

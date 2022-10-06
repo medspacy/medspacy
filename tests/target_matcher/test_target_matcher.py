@@ -72,3 +72,8 @@ class TestTargetMatcher:
         span = doc.spans["test_group"][0]
         assert (span.start, span.end) == (4, 5)
         assert span.label_ == "CONDITION"
+
+    def test_pipeline_initiate(self):
+        nlp2 = spacy.blank("en")
+        nlp2.add_pipe("medspacy_target_matcher")
+        assert "medspacy_target_matcher" in nlp2.pipe_names

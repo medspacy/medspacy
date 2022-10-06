@@ -21,7 +21,7 @@ And then these can be run with pip:
 ```
 pip install unqlite>=0.8.1
 pip install medspacy_simstring>=2.1
-pip install --no-deps medspacy_quickumls==2.5
+pip install --no-deps medspacy_quickumls==2.6
 ```
 
 # Testing

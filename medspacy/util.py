@@ -108,19 +108,8 @@ def load(
         # let's see if we need to supply a path for QuickUMLS.  If none is provided,
         # let's point to the demo data
         if quickumls_path is None:
-            # let's use a default sample that we provide in medspacy
-            # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
-            # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
+            quickumls_path = get_quickumls_demo_dir()
 
-            quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_POSIX_unqlite"
-            if platform.startswith("win"):
-                quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
-
-            quickumls_path = path.join(
-                Path(__file__).resolve().parents[1],
-                "resources",
-                "quickumls/{0}".format(quickumls_platform_dir),
-            )
             print(
                 "Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(
                     quickumls_path
@@ -207,3 +196,21 @@ def tuple_overlaps(a: Tuple[int, int], b: Tuple[int, int]):
         Whether the tuples overlap.
     """
     return a[0] <= b[0] < a[1] or a[0] < b[1] <= a[1]
+
+
+def get_quickumls_demo_dir():
+    # let's use a default sample that we provide in medspacy
+    # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
+    # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
+
+    quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_POSIX_unqlite"
+    if platform.startswith("win"):
+        quickumls_platform_dir = "QuickUMLS_SAMPLE_lowercase_Windows_unqlite"
+
+    quickumls_path = path.join(
+        Path(__file__).resolve().parents[1],
+        "resources",
+        "quickumls/{0}".format(quickumls_platform_dir),
+    )
+
+    return quickumls_path

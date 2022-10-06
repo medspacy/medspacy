@@ -40,7 +40,7 @@ class TestQuickUMLS:
             return
 
         # allow default QuickUMLS (very small sample data) to be loaded
-        nlp = medspacy.load(enable=["quickumls"])
+        nlp = medspacy.load(enable=["medspacy_quickumls"])
         assert nlp
 
         quickumls = nlp.get_pipe("medspacy_quickumls")
@@ -62,7 +62,7 @@ class TestQuickUMLS:
             return
 
         # allow default QuickUMLS (very small sample data) to be loaded
-        nlp = medspacy.load(enable=["quickumls"])
+        nlp = medspacy.load(enable=["medspacy_quickumls"])
         quickumls = nlp.get_pipe("medspacy_quickumls")
 
         # TODO -- Consider moving this and other extraction tests to separate tests from loading

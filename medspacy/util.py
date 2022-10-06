@@ -32,9 +32,9 @@ ALL_PIPE_NAMES = {
 
 
 def load(
-    model: Union[Literal["default"], Language] = "default",
-    enable: Union[Literal["all", "default"], Iterable[str]] = "default",
-    disable: Optional[Iterable[str]] = None,
+    model: Union[Literal["default"], str, Language] = "default",
+    medspacy_enable: Union[Literal["all", "default"], Iterable[str]] = "default",
+    medspacy_disable: Optional[Iterable[str]] = None,
     load_rules: bool = True,
     quickumls_path: Optional[str] = None,
     **model_kwargs,
@@ -51,11 +51,11 @@ def load(
         model: The base spaCy model to load. If 'default', will instantiate from a blank 'en' model. If it is a spaCy
             language model, then it will simply add medspaCy components to the existing pipeline. If it is a string
             other than 'default', passes the string to spacy.load(model, **model_kwargs).
-        enable: Specifies which components to enable in the medspacy pipeline. If "default", will load all components
+        medspacy_enable: Specifies which components to enable in the medspacy pipeline. If "default", will load all components
             found in `DEFAULT_PIPE_NAMES`. These represent the simplest components used in a clinical NLP pipeline:
             tokenization, sentence detection, concept identification, and ConText. If "all", all components in medspaCy
             will be loaded. If a collection of strings, the components specified will be loaded.
-        disable: A collection of component names to exclude. Requires "all" is the value for `enable`.
+        medspacy_disable: A collection of component names to exclude. Requires "all" is the value for `enable`.
         load_rules: Whether to include default rules for available components. If True, sectionizer and context will
             both be loaded with default rules. Default is True.
         quickumls_path: Path to QuickUMLS dictionaries if it is included in the pipeline.
@@ -65,7 +65,9 @@ def load(
         A spaCy Language object containing the specified medspacy components.
     """
 
-    enable, disable = _build_pipe_names(enable, disable)
+    medspacy_enable, medspacy_disable = _build_pipe_names(
+        medspacy_enable, medspacy_disable
+    )
 
     if model == "default":
         nlp = spacy.blank("en")
@@ -79,28 +81,28 @@ def load(
             type(model),
         )
 
-    if "medspacy_tokenizer" in enable:
+    if "medspacy_tokenizer" in medspacy_enable:
         from .custom_tokenizer import create_medspacy_tokenizer
 
         medspacy_tokenizer = create_medspacy_tokenizer(nlp)
         nlp.tokenizer = medspacy_tokenizer
 
-    if "medspacy_preprocessor" in enable:
+    if "medspacy_preprocessor" in medspacy_enable:
         from .preprocess import Preprocessor
 
         preprocessor = Preprocessor(nlp.tokenizer)
         nlp.tokenizer = preprocessor
 
-    if "medspacy_pyrush" in enable:
+    if "medspacy_pyrush" in medspacy_enable:
         pyrush_path = path.join(
             Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
         )
         nlp.add_pipe("medspacy_pyrush", config={"rules_path": pyrush_path})
 
-    if "medspacy_target_matcher" in enable:
+    if "medspacy_target_matcher" in medspacy_enable:
         nlp.add_pipe("medspacy_target_matcher")
 
-    if "medspacy_quickumls" in enable:
+    if "medspacy_quickumls" in medspacy_enable:
         # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
         # but if it's requested at this point, let's load it
         from quickumls import spacy_component
@@ -118,24 +120,24 @@ def load(
 
         nlp.add_pipe("medspacy_quickumls", config={"quickumls_fp": quickumls_path})
 
-    if "medspacy_context" in enable:
+    if "medspacy_context" in medspacy_enable:
         if load_rules is True:
             config = {}
         else:
             config = {"rules": None}
         nlp.add_pipe("medspacy_context", config=config)
 
-    if "medspacy_sectionizer" in enable:
+    if "medspacy_sectionizer" in medspacy_enable:
         if load_rules is True:
             config = {}
         else:
             config = {"rules": None}
         nlp.add_pipe("medspacy_sectionizer", config=config)
 
-    if "medspacy_postprocessor" in enable:
+    if "medspacy_postprocessor" in medspacy_enable:
         nlp.add_pipe("medspacy_postprocessor")
 
-    if "medspacy_doc_consumer" in enable:
+    if "medspacy_doc_consumer" in medspacy_enable:
         nlp.add_pipe("medspacy_doc_consumer")
 
     return nlp

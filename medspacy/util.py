@@ -105,6 +105,10 @@ def load(
     if "medspacy_quickumls" in medspacy_enable:
         # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
         # but if it's requested at this point, let's load it
+        if "medspacy_quickumls" in medspacy_enable:
+            # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
+            # but if it's requested at this point, let's load it
+            from quickumls import spacy_component
 
         # let's see if we need to supply a path for QuickUMLS.  If none is provided,
         # let's point to the demo data

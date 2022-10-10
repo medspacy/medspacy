@@ -1,5 +1,6 @@
 """This module will set extension attributes and methods for medspaCy. Examples include custom methods like span._.window()"""
 from spacy.tokens import Doc, Span, Token
+
 from .common.util import span_contains
 
 # from .io.doc_consumer import ALLOWED_DATA_TYPES

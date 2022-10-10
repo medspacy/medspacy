@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from typing import Optional, Dict, Union
 
-from medspacy.section_detection.section_rule import SectionRule
 import srsly
+
+from ..section_detection.section_rule import SectionRule
 
 
 class Section(object):

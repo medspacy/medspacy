@@ -2,7 +2,7 @@ from typing import Union, Iterable
 
 from spacy.tokens import Doc
 
-from medspacy.preprocess import PreprocessingRule
+from ..preprocess import PreprocessingRule
 
 
 class Preprocessor:
@@ -14,6 +14,7 @@ class Preprocessor:
     calling `nlp("your text here")`. SpaCy only allows for non-destructive processing on the text, but that is not
     always advisable for every project, so this enables destructive preprocessing when required.
     """
+
     def __init__(self, tokenizer):
         """
 
@@ -34,10 +35,12 @@ class Preprocessor:
             rules = [rules]
         for rule in rules:
             if not isinstance(rule, PreprocessingRule):
-                raise TypeError(f"Each rule must be an instance of PreprocessingRule, not {type(rule)}.")
+                raise TypeError(
+                    f"Each rule must be an instance of PreprocessingRule, not {type(rule)}."
+                )
         self._rules += rules
 
-    def __call__(self, text, tokenize = True) -> Union[str, Doc]:
+    def __call__(self, text, tokenize=True) -> Union[str, Doc]:
         """
 
         Args:

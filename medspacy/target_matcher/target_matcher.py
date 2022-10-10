@@ -1,7 +1,8 @@
 from typing import List, Union, Iterable, Optional, Literal, Set
 
-from spacy.tokens import Doc, Span
 from spacy.language import Language
+from spacy.tokens import Doc, Span
+
 from .target_rule import TargetRule
 from ..common.medspacy_matcher import MedspacyMatcher
 

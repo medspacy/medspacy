@@ -1,17 +1,17 @@
-from typing import Union, Iterable, Optional, Dict, Any, Tuple, List, Literal, Set
-
-from spacy.tokens import Span, Doc
-from spacy.language import Language
+import re
+import warnings
 
 # Filepath to default rules which are included in package
 from os import path
 from pathlib import Path
-import re
-import warnings
+from typing import Union, Iterable, Optional, Dict, Any, Tuple, List, Literal, Set
+
+from spacy.language import Language
+from spacy.tokens import Span, Doc
 
 from . import util
-from .section_rule import SectionRule
 from .section import Section
+from .section_rule import SectionRule
 from ..common.medspacy_matcher import MedspacyMatcher
 
 DEFAULT_RULES_FILEPATH = path.join(

@@ -1,15 +1,14 @@
+import warnings
 from typing import Iterable, List, Dict, Tuple, Set
 
-import spacy
 from spacy import Language
 from spacy.matcher import Matcher, PhraseMatcher
-from .regex_matcher import RegexMatcher
-from .base_rule import BaseRule
-from .util import prune_overlapping_matches
-
 from spacy.tokens import Doc
 
-import warnings
+from .base_rule import BaseRule
+from .regex_matcher import RegexMatcher
+from .util import prune_overlapping_matches
+
 # suppress warnings here because the matchers warn if no patterns are specified, but since multiple matchers are
 # included that is not necessarily bad.
 warnings.filterwarnings("ignore")

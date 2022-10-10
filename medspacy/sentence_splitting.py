@@ -1,5 +1,5 @@
-from PyRuSH import PyRuSHSentencizer
 import pysbd
+from PyRuSH import PyRuSHSentencizer
 from spacy.language import Language
 
 

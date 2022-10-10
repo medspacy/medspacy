@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 from typing import Optional, List, Dict, Any
+
 import srsly
 from spacy.tokens import Span
 
-from medspacy.context import ConTextModifier
-from medspacy.util import tuple_overlaps
+from ..context import ConTextModifier
+from ..util import tuple_overlaps
 
 
 class ConTextGraph:

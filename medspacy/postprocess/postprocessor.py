@@ -96,7 +96,7 @@ class Postprocessor:
 
     def __call__(self, doc: Doc):
         """
-        Calls the Postprocessor on a spaCy doc. This will call each PostprocessingRule on the doc
+        Calls the Postprocessor on a spaCy doc. This will call each PostprocessingRule on the doc.
 
         Args:
             doc: The Doc to process.

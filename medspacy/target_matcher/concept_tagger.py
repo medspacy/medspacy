@@ -1,9 +1,10 @@
 from typing import List, Union
 
+from spacy.language import Language
+from spacy.tokens import Token, Doc
+
 from . import TargetRule
 from ..common.medspacy_matcher import MedspacyMatcher
-from spacy.tokens import Token, Doc
-from spacy.language import Language
 
 
 @Language.factory("medspacy_concept_tagger")

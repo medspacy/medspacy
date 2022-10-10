@@ -1,7 +1,7 @@
 from typing import Dict
 
 from spacy import displacy
-from spacy.tokens import Doc, Token, Span
+from spacy.tokens import Doc, Span
 
 
 def visualize_ent(
@@ -239,7 +239,6 @@ class MedspaCyVisualizerWidget:
         """
 
         import ipywidgets as widgets
-        from IPython.display import display
 
         self.docs = docs
         self.slider = widgets.IntSlider(

@@ -3,9 +3,9 @@ This module will contain helper functions and classes for common clinical proces
 which will be used in many medspaCy components.
 """
 
-from sys import platform
 from os import path
 from pathlib import Path
+from sys import platform
 from typing import Union, Literal, Iterable, Optional, Set, Tuple
 
 import spacy
@@ -105,7 +105,6 @@ def load(
     if "medspacy_quickumls" in medspacy_enable:
         # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
         # but if it's requested at this point, let's load it
-        from quickumls import spacy_component
 
         # let's see if we need to supply a path for QuickUMLS.  If none is provided,
         # let's point to the demo data

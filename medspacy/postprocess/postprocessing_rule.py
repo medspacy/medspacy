@@ -1,8 +1,6 @@
-from typing import Iterable, Callable, Any, Literal
+from typing import Iterable, Callable
 
-from spacy.tokens import Span
-
-from medspacy.postprocess import PostprocessingPattern
+from ..postprocess import PostprocessingPattern
 
 
 class PostprocessingRule:

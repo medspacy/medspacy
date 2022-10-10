@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import Optional, Tuple, Set, Union
 
+import srsly
 from spacy.tokens import Doc, Span
 
-from medspacy.context.context_rule import ConTextRule
-from medspacy.util import tuple_overlaps
-import srsly
+from ..context.context_rule import ConTextRule
+from ..util import tuple_overlaps
 
 
 class ConTextModifier:

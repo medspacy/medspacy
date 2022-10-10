@@ -1,5 +1,3 @@
-from spacy.symbols import IS_PUNCT
-
 import re
 import string
 

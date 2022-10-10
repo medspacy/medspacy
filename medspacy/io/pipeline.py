@@ -1,5 +1,6 @@
-from .doc_consumer import ALLOWED_DATA_TYPES
 from spacy.language import Language
+
+from .doc_consumer import ALLOWED_DATA_TYPES
 
 
 @Language.factory("medspacy_pipeline")

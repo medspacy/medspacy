@@ -1,17 +1,15 @@
 """The ConText definiton."""
 from os import path
-
 # Filepath to default rules which are included in package
 from pathlib import Path
 from typing import Iterable, Union, Optional, Dict, Any, Set, Literal
 
-from spacy.tokens import Doc, Span
 from spacy.language import Language
+from spacy.tokens import Doc, Span
 
-from .context_modifier import ConTextModifier
 from .context_graph import ConTextGraph
+from .context_modifier import ConTextModifier
 from .context_rule import ConTextRule
-
 from ..common.medspacy_matcher import MedspacyMatcher
 
 #

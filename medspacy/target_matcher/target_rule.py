@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Dict, Callable, Any, List, Tuple, Union, Optional
 
 from spacy.matcher import Matcher

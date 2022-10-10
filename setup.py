@@ -11,7 +11,9 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 additional_installs = []
 if platform.startswith("win"):
-    print("Not installing QuickUMLS for Windows since it currently requires conda (as opposed to just pip)")
+    print(
+        "Not installing QuickUMLS for Windows since it currently requires conda (as opposed to just pip)"
+    )
 else:
     # Using a trick from StackOverflow to set an impossibly high version number
     # to force getting latest from GitHub as opposed to PyPi
@@ -50,12 +52,10 @@ setup(
     version=get_version(),
     description="Library for clinical NLP with spaCy.",
     author="medSpaCy",
-    author_email="medspacy.dev@gmail.com",
     packages=find_packages(),
     install_requires=[
-        # NOTE: spacy imports numpy to bootstrap its own setup.py in 2.3.2
         "spacy>=3.4.1",
-        "PyRuSH>=1.0.4",
+        "PyRuSH>=1.0.6",
         "pysbd==0.3.4",
         "jsonschema",
     ]

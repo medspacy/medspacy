@@ -5,11 +5,13 @@ import subprocess
 import tempfile
 from sys import platform
 
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
+
 
 class TestNotebooks:
-    @pytest.mark.skip(
-        "revisit notebook tests later, currently failing while all other tests passing."
-    )
+    #    @pytest.mark.skip(
+    #        "revisit notebook tests later, currently failing while all other tests passing."
+    #    )
     def test_execute_example_notebooks(self):
         successful_executions = 0
         os.chdir("../")  # move to medspacy folder
@@ -21,8 +23,15 @@ class TestNotebooks:
                     if "using-pretrained-models" in file.lower():
                         continue
 
+                    ## Skip this one since it has some large dependencies and manual downloads
+                    # if "12-io" in file.lower():
+                    #    continue
+
                     # Skip this one since it has some large dependencies and manual downloads
-                    if "12-io" in file.lower():
+                    if "11a" in file.lower():
+                        continue
+
+                    if "11b" in file.lower():
                         continue
 
                     # Skip this one since it has an Exception which currently occurs intentionally

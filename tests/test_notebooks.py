@@ -20,11 +20,9 @@ class TestNotebooks:
             Path(__file__).resolve().parents[1], "notebooks"
         )
 
-        assert "/medspacy/notebooks" in notebook_path
-
         for root, dirs, files in os.walk(notebook_path):
 
-            assert len(files) > 0
+            assert len(files) > 0, f"No files found in {notebook_path}"
 
             for file in files:
                 if file.endswith(".ipynb"):

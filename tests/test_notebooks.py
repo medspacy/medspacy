@@ -28,11 +28,11 @@ class TestNotebooks:
                     #    continue
 
                     # Skip this one since it has some large dependencies and manual downloads
-                    if "11a" in file.lower():
-                        continue
+                    # if "11a" in file.lower():
+                    #    continue
 
-                    if "11b" in file.lower():
-                        continue
+                    # if "11b" in file.lower():
+                    #    continue
 
                     # Skip this one since it has an Exception which currently occurs intentionally
                     # Now sure if we can work around this in some way

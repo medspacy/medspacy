@@ -64,7 +64,7 @@ jobs:
         pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         pip install flake8 pytest
         # we want to test execution of jupyter notebooks in pytest as well
-        pip install jupyter
+        pip install jupyterlab
         pip install nltk
     - name: Lint with flake8
       run: |

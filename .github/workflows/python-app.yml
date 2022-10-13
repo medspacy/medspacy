@@ -2,7 +2,9 @@ name: medspacy
 
 on:
   push:
-    branches: [develop]
+    branches: [ master, develop, ci_debug ]
+  pull_request:
+    branches: [ master, develop ]
 
 jobs:
   build:
@@ -37,11 +39,10 @@ jobs:
             python-version: 3.8
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        ref: develop
         python-version: ${{ matrix.python-version }}      
     - name: Install dependencies      
       run: |
@@ -63,9 +64,8 @@ jobs:
         pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         pip install flake8 pytest
         # we want to test execution of jupyter notebooks in pytest as well
-        pip install jupyterlab
+        pip install jupyter
         pip install nltk
-        python -c "import nltk; nltk.download('punkt')"
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

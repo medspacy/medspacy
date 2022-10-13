@@ -4,6 +4,8 @@ import os
 import subprocess
 import tempfile
 from sys import platform
+from os import path
+from pathlib import Path
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
@@ -14,8 +16,16 @@ class TestNotebooks:
     #    )
     def test_execute_example_notebooks(self):
         successful_executions = 0
-        os.chdir("../")  # move to medspacy folder
-        for root, dirs, files in os.walk(os.path.join(os.getcwd(), "notebooks")):
+        notebook_path = path.join(
+            Path(__file__).resolve().parents[1], "notebooks"
+        )
+
+        assert "/medspacy/notebooks" in notebook_path
+
+        for root, dirs, files in os.walk(notebook_path):
+
+            assert len(files) > 0
+
             for file in files:
                 if file.endswith(".ipynb"):
 
@@ -23,7 +33,7 @@ class TestNotebooks:
                     if "using-pretrained-models" in file.lower():
                         continue
 
-                    ## Skip this one since it has some large dependencies and manual downloads
+                    # Skip this one since it has some large dependencies and manual downloads
                     # if "12-io" in file.lower():
                     #    continue
 

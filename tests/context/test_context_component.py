@@ -5,6 +5,7 @@ import medspacy
 
 from medspacy.context import ConText
 from medspacy.context import ConTextRule
+from medspacy.target_matcher import TargetRule
 
 import pytest
 import os
@@ -398,6 +399,80 @@ class TestConText:
         doc = context(doc)
 
         assert len(doc._.context_graph.edges) == 1
+
+    def test_modifier_issue_155_no_further_without_preceding_section(self):
+        medspacy_nlp = spacy.load("en_core_web_sm")
+
+        # we want to make sure that "ischemic" can be modified appropriately with a rule
+        text = "no further ischemic evaluation warranted"
+
+        matcher = medspacy_nlp.add_pipe("medspacy_target_matcher")
+        matcher.add([TargetRule("ischemic", "ISCHEMIA", pattern=[{"LOWER": "ischemic"}])])
+
+        context = medspacy_nlp.add_pipe("medspacy_context")
+        new_context_rules = [ConTextRule("no further ischemic ", "NEGATED_EXISTENCE", direction="FORWARD",
+                                         pattern=[{"LOWER": "no"},
+                                                  {"LOWER": "further"}])]
+        context.add(new_context_rules)
+
+        doc = medspacy_nlp(text)
+
+        assert len(doc.ents) == 1
+
+        entity = doc.ents[0]
+
+        assert entity.text == 'ischemic'
+
+        assert entity._.is_negated
+
+    def test_modifier_issue_155_further_only_with_preceding_section(self):
+        medspacy_nlp = spacy.load("en_core_web_sm")
+
+        # we want to make sure that "ischemic" can be modified appropriately with a rule
+        text = "RECOMMENDATIONS AND SUGGESTIONS: no further ischemic evaluation warranted"
+
+        matcher = medspacy_nlp.add_pipe("medspacy_target_matcher")
+        matcher.add([TargetRule("ischemic", "ISCHEMIA", pattern=[{"LOWER": "ischemic"}])])
+
+        context = medspacy_nlp.add_pipe("medspacy_context")
+        new_context_rules = [ConTextRule("no further ischemic ", "NEGATED_EXISTENCE", direction="FORWARD",
+                                         pattern=[{"LOWER": "further"}])]
+        context.add(new_context_rules)
+
+        doc = medspacy_nlp(text)
+
+        assert len(doc.ents) == 1
+
+        entity = doc.ents[0]
+
+        assert entity.text == 'ischemic'
+
+        assert entity._.is_negated
+
+    def test_modifier_issue_155_no_further_with_preceding_section(self):
+        medspacy_nlp = spacy.load("en_core_web_sm")
+
+        # we want to make sure that "ischemic" can be modified appropriately with a rule
+        text = "RECOMMENDATIONS AND SUGGESTIONS: no further ischemic evaluation warranted"
+
+        matcher = medspacy_nlp.add_pipe("medspacy_target_matcher")
+        matcher.add([TargetRule("ischemic", "ISCHEMIA", pattern=[{"LOWER": "ischemic"}])])
+
+        context = medspacy_nlp.add_pipe("medspacy_context")
+        new_context_rules = [ConTextRule("no further ischemic ", "NEGATED_EXISTENCE", direction="FORWARD",
+                                         pattern=[{"LOWER": "no"},
+                                                  {"LOWER": "further"}])]
+        context.add(new_context_rules)
+
+        doc = medspacy_nlp(text)
+
+        assert len(doc.ents) == 1
+
+        entity = doc.ents[0]
+
+        assert entity.text == 'ischemic'
+
+        assert entity._.is_negated
 
     # def test_non_entity_input_non_iterable(self): # not sure what this is testing
     #     rules = [

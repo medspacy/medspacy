@@ -4,6 +4,8 @@ import os
 import subprocess
 import tempfile
 from sys import platform
+from os import path
+from pathlib import Path
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
@@ -14,8 +16,14 @@ class TestNotebooks:
     # )
     def test_execute_example_notebooks(self):
         successful_executions = 0
-        os.chdir("../")  # move to medspacy folder
-        for root, dirs, files in os.walk(os.path.join(os.getcwd(), "notebooks")):
+        notebook_path = path.join(
+            Path(__file__).resolve().parents[1], "notebooks"
+        )
+
+        for root, dirs, files in os.walk(notebook_path):
+
+            assert len(files) > 0, f"No files found in {notebook_path}"
+
             for file in files:
                 if file.endswith(".ipynb"):
 
@@ -28,11 +36,11 @@ class TestNotebooks:
                     #    continue
 
                     # Skip this one since it has some large dependencies and manual downloads
-                    if "11a" in file.lower():
-                        continue
+                    # if "11a" in file.lower():
+                    #    continue
 
-                    if "11b" in file.lower():
-                        continue
+                    # if "11b" in file.lower():
+                    #    continue
 
                     # TODO: skip pre-trained notebook until we can find a replacement for med7
                     if "06" in file.lower():

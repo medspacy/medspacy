@@ -9,9 +9,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 
 class TestNotebooks:
-    #    @pytest.mark.skip(
-    #        "revisit notebook tests later, currently failing while all other tests passing."
-    #    )
+    # @pytest.mark.skip(
+    #    "revisit notebook tests later, currently failing in CI while all other tests passing."
+    # )
     def test_execute_example_notebooks(self):
         successful_executions = 0
         os.chdir("../")  # move to medspacy folder
@@ -23,7 +23,7 @@ class TestNotebooks:
                     if "using-pretrained-models" in file.lower():
                         continue
 
-                    ## Skip this one since it has some large dependencies and manual downloads
+                    # Skip this one since it has some large dependencies and manual downloads
                     # if "12-io" in file.lower():
                     #    continue
 
@@ -32,6 +32,10 @@ class TestNotebooks:
                         continue
 
                     if "11b" in file.lower():
+                        continue
+
+                    # TODO: skip pre-trained notebook until we can find a replacement for med7
+                    if "06" in file.lower():
                         continue
 
                     # Skip this one since it has an Exception which currently occurs intentionally

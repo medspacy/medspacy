@@ -66,7 +66,6 @@ jobs:
         # we want to test execution of jupyter notebooks in pytest as well
         pip install ipywidgets
         pip install pyodbc
-        pip install sqlite3
         pip install jupyterlab
         pip install nltk
         pip install pandas

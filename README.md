@@ -127,12 +127,15 @@ http://arxiv.org/abs/2106.07799.
 ```
 
 ```
-@inproceedings{eyre2021medspacy,
-      title={Launching into clinical space with medspaCy: a new clinical text processing toolkit in Python}, 
-      author={Hannah Eyre and Alec B Chapman and Kelly S Peterson and Jianlin Shi and Patrick R Alba and Makoto M Jones and Tamara L Box and Scott L DuVall and Olga V Patterson},
-      booktitle = {AMIA Annual Symposium Proceedings 2021},
-      year={(in press, n.d.)},
-      url       = {http://arxiv.org/abs/2106.07799}
+@Article{medspacy,
+   Author="Eyre, H.  and Chapman, A. B.  and Peterson, K. S.  and Shi, J.  and Alba, P. R.  and Jones, M. M.  and Box, T. L.  and DuVall, S. L.  and Patterson, O. V. ",
+   Title="{{L}aunching into clinical space with medspa{C}y: a new clinical text processing toolkit in {P}ython}",
+   Journal="AMIA Annu Symp Proc",
+   Year="2021",
+   Volume="2021",
+   Pages="438--447"
+}
+
 }
 ```
 

@@ -64,8 +64,12 @@ jobs:
         pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         pip install flake8 pytest
         # we want to test execution of jupyter notebooks in pytest as well
+        pip install ipywidgets
+        pip install pyodbc
+        pip install sqlite3
         pip install jupyterlab
         pip install nltk
+        pip install pandas
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

@@ -2,7 +2,7 @@ import pytest
 import spacy
 from spacy.tokens import Span, Doc
 
-from medspacy.context import ConTextRule, ConTextComponent
+from medspacy.context import ConTextRule, ConText
 from medspacy.context.context_modifier import ConTextModifier
 
 nlp = spacy.load("en_core_web_sm")
@@ -42,17 +42,21 @@ class TestConTextModifier:
         doc.ents = spans
         return doc
 
+    def create_medication_example(self):
+        doc = nlp("She is not prescribed any beta blockers for her hypertension.")
+        # Manually define entities
+        medication_ent = Span(doc, 5, 7, "MEDICATION")
+        condition_ent = Span(doc, 9, 10, "CONDITION")
+        doc.ents = (medication_ent, condition_ent)
+        return doc
+
     def test_init(self):
         assert self.create_objects()
 
     def test_span(self):
         doc, rule, modifier = self.create_objects()
-        assert modifier.span == doc[0:3]
-
-    def test_set_span_fails(self):
-        doc, rule, modifier = self.create_objects()
-        with pytest.raises(AttributeError):
-            modifier.span = "Can't do this!"
+        span = modifier.modifier_span
+        assert doc[span[0] : span[1]] == doc[0:3]
 
     def test_direction(self):
         doc, rule, modifier = self.create_objects()
@@ -67,25 +71,22 @@ class TestConTextModifier:
         to the end of the sentence.
         """
         doc, rule, modifier = self.create_objects()
-        assert modifier.scope == doc[3:-4]
+        scope = modifier.scope_span
+        assert doc[scope[0] : scope[1]] == doc[3:-4]
 
-    def test_limit_scope(self):
+    def test_limit_scope_terminate(self):
         """Test that a 'TERMINATE' ConTextModifier limits the scope of the modifier object"""
         doc, rule, modifier = self.create_objects()
-        rule2 = ConTextRule("but", "TERMINATE", "TERMINATE")
+        rule2 = ConTextRule("but", "TERMINATE", direction="TERMINATE")
         modifier2 = ConTextModifier(rule2, 2, 4, doc)
         assert modifier.limit_scope(modifier2)
 
-    def test_limit_scope2(self):
-        doc, rule, modifier = self.create_objects()
-        rule2 = ConTextRule("but", "TERMINATE", "TERMINATE")
-        modifier2 = ConTextModifier(rule2, 2, 4, doc)
-        assert not modifier2.limit_scope(modifier)
-
-    def test_limit_scope3(self):
+    def test_limit_scope_same_types(self):
         """Test that two modifiers of the same type limit the scope of the first modifier."""
         doc = nlp("no evidence of CHF, neg for pneumonia")
-        rule = ConTextRule("no evidence of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")
+        rule = ConTextRule(
+            "no evidence of", "DEFINITE_NEGATED_EXISTENCE", direction="FORWARD"
+        )
         rule2 = ConTextRule("neg for", "DEFINITE_NEGATED_EXISTENCE", "FORWARD")
         modifier = ConTextModifier(rule, 0, 3, doc)
         modifier2 = ConTextModifier(rule2, 5, 7, doc)
@@ -95,38 +96,46 @@ class TestConTextModifier:
         """Test that a modifier will be explicitly terminated by a modifier with a category
         in terminated_by."""
         doc = nlp("negative for flu, positive for pneumonia.")
-        rule = ConTextRule("negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
+        rule = ConTextRule(
+            "negative for",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            terminated_by={"POSITIVE_EXISTENCE"},
+        )
         rule2 = ConTextRule("positive for", "POSITIVE_EXISTENCE", direction="FORWARD")
         modifier = ConTextModifier(rule, 0, 2, doc)
         modifier2 = ConTextModifier(rule2, 4, 6, doc)
         assert modifier.limit_scope(modifier2)
 
     def test_terminate_limit_scope_custom2(self):
-        """Test that a modifier will be explicitly terminated by a modifier with a category
-        in terminated_by."""
+        """Test that a modifier will be explicitly terminated by a modifier with a category in terminated_by."""
         doc = nlp("flu is negative, pneumonia is positive.")
         rule = ConTextRule("negative", "NEGATED_EXISTENCE", direction="BACKWARD")
-        rule2 = ConTextRule("positive", "POSITIVE_EXISTENCE", direction="BACKWARD", terminated_by={"NEGATED_EXISTENCE"})
+        rule2 = ConTextRule(
+            "positive",
+            "POSITIVE_EXISTENCE",
+            direction="BACKWARD",
+            terminated_by={"NEGATED_EXISTENCE"},
+        )
         modifier = ConTextModifier(rule, 2, 3, doc)
         modifier2 = ConTextModifier(rule2, 6, 7, doc)
         assert modifier2.limit_scope(modifier)
 
     def test_terminate_limit_scope_backward(self):
-        """Test that a 'TERMINATE' modifier will limit the scope of a 'BACKWARD' modifier.
-        """
+        """Test that a 'TERMINATE' modifier will limit the scope of a 'BACKWARD' modifier."""
         doc = nlp("Pt has chf but pneumonia is ruled out")
-        rule = ConTextRule("is ruled out", "NEGATED_EXISTENCE", "BACKWARD")
+        rule = ConTextRule("is ruled out", "NEGATED_EXISTENCE", direction="BACKWARD")
         modifier = ConTextModifier(rule, 6, 8, doc)
 
-        rule2 = ConTextRule("but", "TERMINATE", "TERMINATE")
+        rule2 = ConTextRule("but", "TERMINATE", direction="TERMINATE")
         modifier2 = ConTextModifier(rule2, 3, 4, doc)
         assert modifier.limit_scope(modifier2)
 
     def test_terminate_stops_forward_modifier(self):
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", "FORWARD")
-        rule2 = ConTextRule("but", "TERMINATE", "TERMINATE")
+        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="FORWARD")
+        rule2 = ConTextRule("but", "TERMINATE", direction="TERMINATE")
         context.add([rule, rule2])
         doc = nlp("No evidence of chf but she has pneumonia.")
         doc.ents = (Span(doc, 3, 4, "PROBLEM"), Span(doc, 7, 8, "PROBLEM"))
@@ -136,10 +145,10 @@ class TestConTextModifier:
         assert len(pneumonia._.modifiers) == 0
 
     def test_terminate_stops_backward_modifier(self):
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
-        rule = ConTextRule("is ruled out", "NEGATED_EXISTENCE", "BACKWARD")
-        rule2 = ConTextRule("but", "CONJ", "TERMINATE")
+        rule = ConTextRule("is ruled out", "NEGATED_EXISTENCE", direction="BACKWARD")
+        rule2 = ConTextRule("but", "CONJ", direction="TERMINATE")
         context.add([rule, rule2])
         doc = nlp("Pt has chf but pneumonia is ruled out")
         doc.ents = (Span(doc, 2, 3, "PROBLEM"), Span(doc, 4, 5, "PROBLEM"))
@@ -150,9 +159,11 @@ class TestConTextModifier:
 
     def test_no_custom_terminate_stops_forward_modifier(self):
         doc = nlp("negative for flu, positive for pneumonia.")
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
-        rule = ConTextRule("negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by=None)
+        rule = ConTextRule(
+            "negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by=None
+        )
         rule2 = ConTextRule("positive for", "POSITIVE_EXISTENCE", direction="FORWARD")
         context.add([rule, rule2])
         doc.ents = (Span(doc, 2, 3, "PROBLEM"), Span(doc, 6, 7, "PROBLEM"))
@@ -163,9 +174,14 @@ class TestConTextModifier:
 
     def test_custom_terminate_stops_forward_modifier(self):
         doc = nlp("negative for flu, positive for pneumonia.")
-        context = ConTextComponent(nlp, rules=None)
+        context = ConText(nlp, rules=None)
 
-        rule = ConTextRule("negative for", "NEGATED_EXISTENCE", direction="FORWARD", terminated_by={"POSITIVE_EXISTENCE"})
+        rule = ConTextRule(
+            "negative for",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            terminated_by={"POSITIVE_EXISTENCE"},
+        )
         rule2 = ConTextRule("positive for", "POSITIVE_EXISTENCE", direction="FORWARD")
         context.add([rule, rule2])
         doc.ents = (Span(doc, 2, 3, "PROBLEM"), Span(doc, 6, 7, "PROBLEM"))
@@ -176,19 +192,31 @@ class TestConTextModifier:
 
     def test_no_limit_scope_same_category_different_allowed_types(self):
         """Test that a two ConTextModifiers of the same type but with different
-         allowed types does not limits the scope of the modifier object.
-         """
+        allowed types does not limits the scope of the modifier object.
+        """
         doc = nlp("no history of travel to Puerto Rico, neg for pneumonia")
 
-        rule = ConTextRule("no history of", "DEFINITE_NEGATED_EXISTENCE", "FORWARD", allowed_types={"TRAVEL"},)
-        rule2 = ConTextRule("neg for", "DEFINITE_NEGATED_EXISTENCE", "FORWARD", allowed_types={"CONDITION"},)
+        rule = ConTextRule(
+            "no history of",
+            "DEFINITE_NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"TRAVEL"},
+        )
+        rule2 = ConTextRule(
+            "neg for",
+            "DEFINITE_NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"CONDITION"},
+        )
         modifier = ConTextModifier(rule, 0, 3, doc)
         modifier2 = ConTextModifier(rule2, 8, 10, doc)
         assert not modifier.limit_scope(modifier2)
 
     def test_set_scope_fails_no_sentences(self):
         """Test that setting the scope fails if sentence boundaries haven't been set."""
-        doc = nlp.tokenizer("family history of breast cancer but no diabetes. She has afib.")
+        doc = nlp.tokenizer(
+            "family history of breast cancer but no diabetes. She has afib."
+        )
         rule = ConTextRule("family history of", "FAMILY_HISTORY", direction="FORWARD")
         with pytest.raises(ValueError) as exception_info:
             # This should fail because doc.sents are None
@@ -200,10 +228,15 @@ class TestConTextModifier:
 
     def test_set_scope_context_window_no_sentences(self):
         """Test that setting the scope succeeds if sentence boundaries haven't been set but _use_context_window is True."""
-        doc = nlp.tokenizer("family history of breast cancer but no diabetes. She has afib.")
-        rule = ConTextRule("family history of", "FAMILY_HISTORY", direction="FORWARD", max_scope=2)
-        modifier = ConTextModifier(rule, 0, 3, doc, _use_context_window=True)
-        assert modifier.scope == doc[3:5]
+        doc = nlp.tokenizer(
+            "family history of breast cancer but no diabetes. She has afib."
+        )
+        rule = ConTextRule(
+            "family history of", "FAMILY_HISTORY", direction="FORWARD", max_scope=2
+        )
+        modifier = ConTextModifier(rule, 0, 3, doc, max_scope=True)
+        scope = modifier.scope_span
+        assert doc[scope[0] : scope[1]] == doc[3:5]
 
     def test_update_scope(self):
         doc, rule, modifier = self.create_objects()
@@ -227,13 +260,15 @@ class TestConTextModifier:
         """Test that specifying allowed_types will only modify that target type."""
         doc = self.create_target_type_examples()
         rule = ConTextRule(
-            "no history of travel to", category="DEFINITE_NEGATED_EXISTENCE", direction="FORWARD", allowed_types={"TRAVEL"},
+            "no history of travel to",
+            category="DEFINITE_NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"TRAVEL"},
         )
         modifier = ConTextModifier(rule, 0, 5, doc)
-        modifier.set_scope()
-        travel, condition = doc.ents  # "puerto rico", "pneumonia"
-        assert modifier.modifies(travel) is True
-        assert modifier.modifies(condition) is False
+        ents = doc.ents  # "puerto rico", "pneumonia"
+        assert modifier.modifies(ents[0]) is True
+        assert modifier.modifies(ents[1]) is False
 
     def test_excluded_types(self):
         """Test that specifying excluded_types will not modify that target type."""
@@ -245,7 +280,6 @@ class TestConTextModifier:
             excluded_types={"CONDITION"},
         )
         modifier = ConTextModifier(rule, 0, 5, doc)
-        modifier.set_scope()
         travel, condition = doc.ents  # "puerto rico", "pneumonia"
         assert modifier.modifies(travel) is True
         assert modifier.modifies(condition) is False
@@ -253,9 +287,12 @@ class TestConTextModifier:
     def test_no_types(self):
         """Test that not specifying allowed_types or excluded_types will modify all targets."""
         doc = self.create_target_type_examples()
-        rule = ConTextRule("no history of travel to", category="DEFINITE_NEGATED_EXISTENCE", direction="FORWARD",)
+        rule = ConTextRule(
+            "no history of travel to",
+            category="DEFINITE_NEGATED_EXISTENCE",
+            direction="FORWARD",
+        )
         modifier = ConTextModifier(rule, 0, 5, doc)
-        modifier.set_scope()
         travel, condition = doc.ents  # "puerto rico", "pneumonia"
         assert modifier.modifies(travel) is True
         assert modifier.modifies(condition) is True
@@ -266,7 +303,9 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=2)
+        rule = ConTextRule(
+            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=2
+        )
         # Set "vs" to be the modifier
         modifier = ConTextModifier(rule, 5, 6, doc)
         for target in doc.ents:
@@ -284,7 +323,9 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=3)
+        rule = ConTextRule(
+            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=3
+        )
         # Set "vs" to be the modifier
         modifier = ConTextModifier(rule, 5, 6, doc)
         for target in doc.ents:
@@ -300,7 +341,9 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=None)
+        rule = ConTextRule(
+            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_targets=None
+        )
         # Set "vs" to be the modifier
         modifier = ConTextModifier(rule, 5, 6, doc)
         for target in doc.ents:
@@ -316,7 +359,9 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=1)
+        rule = ConTextRule(
+            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=1
+        )
         modifier = ConTextModifier(rule, 5, 6, doc)
 
         for target in doc.ents:
@@ -332,7 +377,9 @@ class TestConTextModifier:
         """
         doc = self.create_num_target_examples()
         assert len(doc.ents) == 3
-        rule = ConTextRule("vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=None)
+        rule = ConTextRule(
+            "vs", category="UNCERTAIN", direction="BIDIRECTIONAL", max_scope=None
+        )
         modifier = ConTextModifier(rule, 5, 6, doc)
 
         for target in doc.ents:
@@ -355,7 +402,9 @@ class TestConTextModifier:
         def on_modifies(target, modifier, span_between):
             return True
 
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies)
+        rule = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies
+        )
         doc = nlp("There is no evidence of pneumonia or chf.")
         doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 6, 8, "CONDITION"))
         mod = ConTextModifier(rule, 2, 5, doc)
@@ -366,40 +415,71 @@ class TestConTextModifier:
         def on_modifies(target, modifier, span_between):
             return False
 
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies)
+        rule = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", on_modifies=on_modifies
+        )
         doc = nlp("There is no evidence of pneumonia or chf.")
         doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
         modifier = ConTextModifier(rule, 2, 5, doc)
 
         assert modifier.modifies(doc.ents[0]) is False
 
-    def test_on_modifies_arg_types(self):
-        def check_arg_types(target, modifier, span_between):
-            for arg in (target, modifier, span_between):
-                if not isinstance(arg, spacy.tokens.Span):
+    def test_on_modifies_custom_callback(self):
+        def check_none_vals(target, _modifier, span_between):
+            for arg in (target, _modifier, span_between):
+                if arg is None:
                     return False
             return True
 
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", on_modifies=check_arg_types)
+        rule = ConTextRule(
+            "no evidence of", "NEGATED_EXISTENCE", on_modifies=check_none_vals
+        )
         doc = nlp("There is no evidence of pneumonia or chf.")
         doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
         modifier = ConTextModifier(rule, 2, 5, doc)
 
         assert modifier.modifies(doc.ents[0]) is True
 
-    def test_on_modifies_arg_values(self):
-        def check_arg_types(target, modifier, span_between):
-            if target.text.lower() != "chf":
-                return False
-            if modifier.text.lower() != "no evidence of":
-                return False
-            if span_between.text.lower() != "pneumonia or":
-                return False
-            return True
+    def test_allows(self):
+        doc = self.create_medication_example()
+        rule = ConTextRule(
+            "not prescribed",
+            "NEGATED_EXISTENCE",
+            direction="FORWARD",
+            allowed_types={"MEDICATION"},
+        )
+        modifier = ConTextModifier(rule, 2, 4, doc)
 
-        rule = ConTextRule("no evidence of", "NEGATED_EXISTENCE", on_modifies=check_arg_types)
-        doc = nlp("There is no evidence of pneumonia or chf.")
-        doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
-        modifier = ConTextModifier(rule, 2, 5, doc)
+        assert modifier.allows("CONDITION") is False
+        assert modifier.allows("MEDICATION") is True
 
-        assert modifier.modifies(doc.ents[1]) is True
+    def test_custom_attrs(self):
+        from spacy.tokens import Span
+
+        custom_attrs = {
+            "NEGATED_EXISTENCE": {"is_experienced": False},
+            "FAMILY_HISTORY": {"is_family_history": True, "is_experienced": False},
+        }
+        Span.set_extension("is_experienced", default=True)
+        Span.set_extension("is_family_history", default=False)
+
+        context = ConText(nlp, rules=None, span_attrs=custom_attrs)
+        rules = [
+            ConTextRule("no evidence of", "NEGATED_EXISTENCE", direction="FORWARD"),
+            ConTextRule("family history", "FAMILY_HISTORY", direction="FORWARD"),
+        ]
+        context.add(rules)
+
+        doc = nlp("There is no evidence of pneumonia. Family history of diabetes.")
+        doc.ents = (
+            Span(doc, 5, 6, "CONDITION"),
+            Span(doc, 10, 11, "CONDITION"),
+        )
+
+        context(doc)
+
+        assert doc.ents[0]._.is_experienced is False
+        assert doc.ents[0]._.is_family_history is False
+
+        assert doc.ents[1]._.is_experienced is False
+        assert doc.ents[1]._.is_family_history is True

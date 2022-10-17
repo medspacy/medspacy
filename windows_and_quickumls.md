@@ -13,10 +13,7 @@ The following commands must be run after installing medspacy (see [README.md](RE
 First, run these with conda, since they do not install easily with pip
 
 ```
-conda install libiconv
-conda install python-leveldb
-conda install nltk
-conda install unidecode
+conda install libiconv nltk unidecode
 ```
 
 And then these can be run with pip:
@@ -24,7 +21,7 @@ And then these can be run with pip:
 ```
 pip install unqlite>=0.8.1
 pip install medspacy_simstring>=2.1
-pip install --no-deps medspacy_quickumls>=2.4.1
+pip install --no-deps medspacy_quickumls==2.6
 ```
 
 # Testing

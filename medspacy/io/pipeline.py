@@ -1,5 +1,6 @@
-from .doc_consumer import ALLOWED_DATA_TYPES
 from spacy.language import Language
+
+from .doc_consumer import ALLOWED_DATA_TYPES
 
 
 @Language.factory("medspacy_pipeline")
@@ -25,7 +26,11 @@ class Pipeline:
         self.nlp = nlp
         self.dtype = dtype
         if dtype not in ALLOWED_DATA_TYPES:
-            raise ValueError("Invalid dtypes. Supported dtypes are {0}, not {1}".format(ALLOWED_DATA_TYPES, dtype))
+            raise ValueError(
+                "Invalid dtypes. Supported dtypes are {0}, not {1}".format(
+                    ALLOWED_DATA_TYPES, dtype
+                )
+            )
 
     def process(self):
         """Run a pipeline by reading a set of texts from a source table, processing them with nlp,

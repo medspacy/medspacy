@@ -1,4 +1,4 @@
-name: medspacy
+name: manual_multiversion
 
 on:
   workflow_dispatch

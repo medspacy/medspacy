@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         # removed 3.5 since there appears to be a failure with setuptools
-        python-version: [3.6, 3.7, 3.8, 3.9, 3.10.x, 3.11]
+        python-version: [3.6, 3.7, 3.8, 3.9, 3.10.x]
         #os: [ubuntu-latest, macos-latest, windows-2019]
         include:
           - name: "Ubuntu Python 3.8"

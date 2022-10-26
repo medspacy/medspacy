@@ -63,7 +63,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "spacy>=3.4.1",
-        "PyRuSH>=1.0.6",
+        "PyRuSH>=1.0.7",
         "pysbd==0.3.4",
         "jsonschema",
     ]

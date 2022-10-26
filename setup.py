@@ -42,7 +42,15 @@ def get_version():
     """
     try:
         with open("medspacy/_version.py", "r") as f:
-            return f.read().split("\n")[0].split("=")[-1].replace("'", "").strip()
+            version_value = f.read().split("\n")[0].split("=")[-1].strip()
+            
+            # remove either double-quotes or single-quotes
+            version_value = version_value.replace("'", "")
+            version_value = version_value.replace('"', "")
+            
+            #print(f'version value verbatim: {version_value}')
+            
+            return version_value
     except IOError:
         raise IOError
 

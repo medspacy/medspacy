@@ -45,8 +45,12 @@ jobs:
         python --version
         python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
-        pip install -U pip setuptools wheel
-        python setup.py install
+        pip install medspacy
+        pip install ipywidgets
+        pip install pyodbc
+        pip install jupyterlab
+        pip install nltk
+        pip install pandas        
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
@@ -60,12 +64,7 @@ jobs:
         pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
         pip install flake8 pytest
         # we want to test execution of jupyter notebooks in pytest as well
-        pip install ipywidgets
-        pip install pyodbc
-        pip install jupyterlab
-        pip install nltk
-        pip install pandas
-        pip install medspacy
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

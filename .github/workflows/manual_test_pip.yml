@@ -2,8 +2,6 @@ name: manual_test_pip
 
 on:
   workflow_dispatch
-    branches: [ master, develop ]
-
 
 jobs:
   build:

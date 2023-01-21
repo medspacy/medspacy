@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+        python-version: [3.8, 3.9, "3.10"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         conda list
         python --version
         pip install --upgrade pip
-        pip install --use-pep517 -r requirements_piptests.txt
+        pip install --use-pep517 -r tests_requirements.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
@@ -55,7 +55,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+        python-version: [3.8, 3.9, 3.10.x]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -72,11 +72,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}   
         cache: 'pip'   
-        cache-dependency-path: 'requirements_piptests.txt'
+        cache-dependency-path: 'tests_requirements.txt'
     - run: |
         python --version
         pip install --upgrade pip
-        pip install --use-pep517 -r requirements_piptests.txt
+        pip install --use-pep517 -r tests_requirements.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
@@ -86,6 +86,15 @@ jobs:
         python -m spacy download de_core_news_sm
         python -m spacy download xx_ent_wiki_sm
 
+    - uses: actions/checkout@v3
+    - name: check clone
+      run: |
+        pwd
+        ls
+        python -c "import shutil;shutil.rmtree('medspacy')"
+        ls
+
     - name: Test with pytest
       run: |        
         pytest
+

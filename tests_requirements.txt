@@ -1,0 +1,9 @@
+medspacy
+ipywidgets
+pyodbc
+jupyterlab
+nltk
+medspacy_quickumls==2.7
+pandas        
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+pytest

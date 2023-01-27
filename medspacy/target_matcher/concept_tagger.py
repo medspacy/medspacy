@@ -36,14 +36,12 @@ class ConceptTagger:
         self._attr_name = attr_name
         self.__matcher = MedspacyMatcher(nlp, name=name)
 
-        # If the token attribute hasn't been set, add it now
-        # try:
-        #     Token.set_extension(attr_name, default="")
-        # except:
-        #     pass
-
-        # not sure if silent errors here are beneficial, removing try statement for now.
-        Token.set_extension(self._attr_name, default="")
+        # If the token attribute hasn't been registered, add it now
+        # If it has already been set, then we can pass.
+        # This will happen, for example, if you've already instantiated
+        # the ConceptTagger and it registered the attribute.
+        if not Token.has_extension(attr_name):
+            Token.set_extension(attr_name, default="")
 
     @property
     def attr_name(self) -> str:

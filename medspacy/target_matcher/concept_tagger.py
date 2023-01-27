@@ -40,10 +40,8 @@ class ConceptTagger:
         # If it has already been set, then we can pass.
         # This will happen, for example, if you've already instantiated
         # the ConceptTagger and it registered the attribute.
-        try:
+        if not Token.has_extension(attr_name):
             Token.set_extension(attr_name, default="")
-        except ValueError:
-            pass
 
     @property
     def attr_name(self) -> str:

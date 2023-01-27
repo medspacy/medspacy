@@ -9,7 +9,7 @@ class PostprocessingPattern:
     in the later Postprocessor as part of PostprocessingRules.
     """
 
-    def __init__(self, condition: Callable, success_value: Any, **kwargs):
+    def __init__(self, condition: Callable, success_value: Any = True, **kwargs):
         """
         A PostprocessingPattern defines a single condition to check against an entity.
 

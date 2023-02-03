@@ -4,54 +4,36 @@ on:
   workflow_dispatch
 
 jobs:
-  build:
+  test_win:
   
     # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
     #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
 
-    runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        # removed 3.5 since there appears to be a failure with setuptools
-        python-version: [3.8, 3.9, 3.10.x]
-        #os: [ubuntu-latest, macos-latest, windows-2019]
-        include:
-          - name: "Ubuntu Python 3.8"
-            os: ubuntu-latest
-            addons:
-              apt:
-                update: true
-                packages:
-                  # These are the required system level updates for Ubuntu and spacy:
-                  # https://spacy.io/usage#source-ubuntu
-                  - build-essential
-                  - python-dev
-          - name: "MacOS Python 3.8"
-            os: macos-latest
-            python-version: 3.8
-          - name: "Windows Python 3.8"
-            os: windows-2019
-            python-version: 3.8
+        os: [windows-latest]
+        python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}      
-    - name: Install dependencies      
+    - uses: actions/checkout@v3
+    - name: check clone
       run: |
+        pwd
+        ls
+        python -c "import shutil;shutil.rmtree('medspacy')"
+        ls
+
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        python-version: ${{ matrix.python-version }}
+    - run: |
+        conda install -c conda-forge libiconv
+        conda list
         python --version
-        python -m pip install --upgrade pip        
-        # Install our package to make sure our setup works...
-        pip install medspacy
-        pip install ipywidgets
-        pip install pyodbc
-        pip install jupyterlab
-        pip install nltk
-        pip install pandas        
-        # set up all spacy language models that are used in our pytest tests
+        pip install --upgrade pip
+        pip install --use-pep517 -r requirements_piptests.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
@@ -60,19 +42,51 @@ jobs:
         python -m spacy download pl_core_news_sm
         python -m spacy download de_core_news_sm
         python -m spacy download xx_ent_wiki_sm
-        # install scispacy model as well to ensure compatibility
-        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
-        pip install flake8 pytest
-        # we want to test execution of jupyter notebooks in pytest as well
 
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
-      run: |
-        ls medspacy        
-        python -c "import shutil;shutil.rmtree('medspacy')"
+      run: |        
         pytest
+
+  test_linux_mac:
+  
+    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
+    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: check clone
+      run: |
+        pwd
+        ls
+        python -c "import shutil;shutil.rmtree('medspacy')"
+        ls
+
+    - name: Set up Python ${{ matrix.python-version }}  ${{ matrix.os }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: 'requirements_piptests.txt'
+    - run: |
+        python --version
+        pip install --upgrade pip
+        pip install --use-pep517 -r requirements_piptests.txt
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # multilingual models for testing compatibility
+        python -m spacy download es_core_news_sm
+        python -m spacy download pl_core_news_sm
+        python -m spacy download de_core_news_sm
+        python -m spacy download xx_ent_wiki_sm
+
+    - name: Test with pytest
+      run: |        
+        pytest
+

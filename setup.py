@@ -18,7 +18,7 @@ else:
     # Using a trick from StackOverflow to set an impossibly high version number
     # to force getting latest from GitHub as opposed to PyPi
     # since QuickUMLS has not made a release with some recent MedSpacy contributions...
-    quickumls_package = "medspacy_quickumls==2.6"
+    quickumls_package = "medspacy_quickumls==2.7"
     additional_installs.append(quickumls_package)
     print("Attempting to install quickumls package: {}".format(quickumls_package))
 
@@ -62,8 +62,8 @@ setup(
     author="medSpaCy",
     packages=find_packages(),
     install_requires=[
-        "spacy>=3.4.1",
-        "PyRuSH>=1.0.6",
+        "spacy>=3.4.1, <4.0",
+        "PyRuSH>=1.0.8",
         "pysbd==0.3.4",
         "jsonschema",
     ]
@@ -71,4 +71,5 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},
+    python_requires=">=3.8.0",
 )

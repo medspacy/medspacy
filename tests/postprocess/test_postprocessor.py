@@ -103,7 +103,8 @@ class TestPostprocessor:
         matcher(doc)
         assert len(doc.spans["medspacy_spans"]) == 1
 
-        postprocessor = Postprocessor(nlp)
+        # this time it works on group
+        postprocessor = Postprocessor(nlp, input_span_type = "group")
 
         # let's add just two rules
         # The first one should not actually perform an action, but is here for the example

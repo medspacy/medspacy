@@ -10,7 +10,7 @@ Library for clinical NLP with spaCy.
 
 
 # Overview
-MedSpaCy is a library of tools for performing clinical NLP and text processing tasks with the popular [spaCy](spacy.io) 
+MedSpaCy is a library of tools for performing clinical NLP and text processing tasks with the popular [spaCy](https://spacy.io) 
 framework. The `medspacy` package brings together a number of other packages, each of which implements specific 
 functionality for common clinical text processing specific to the clinical domain, such as sentence segmentation, 
 contextual analysis and attribute assertion, and section detection.
@@ -27,7 +27,7 @@ for detecting semantic modifiers and attributes of entities, including negation 
 - `medspacy.io`: Utilities for converting processed texts to structured data and interacting with databases
 - `medspacy.visualization`: Utilities for visualizing concepts and relationships extracted from text
 - `SpacyQuickUMLS`: UMLS concept extraction compatible with spacy and medspacy implemented by [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS).  More detail on this component, how to use it, how to generate UMLS resources beyond the small UMLS sample can be found in [this notebook](notebooks/11-QuickUMLS_Extraction.ipynb).
-	- NOTE: This component is installed by default on MacOS and Linux but not Windows.  For more defails and Windows installation: [QuickUMLS on Windows](windows_and_quickumls.md)
+	- NOTE: This component is installed by default on MacOS and Linux but not Windows.  For more details and Windows installation: [QuickUMLS on Windows](windows_and_quickumls.md)
 
 Future work could include I/O, relations extraction, and pre-trained clinical models.
 
@@ -79,6 +79,7 @@ from medspacy.visualization import visualize_ent
 
 # Load medspacy model
 nlp = medspacy.load()
+print(nlp.pipe_names)
 
 text = """
 Past Medical History:
@@ -90,7 +91,7 @@ There is no evidence of pneumonia. Continue warfarin for Afib. Follow up for man
 """
 
 # Add rules for target concept extraction
-target_matcher = nlp.get_pipe("target_matcher")
+target_matcher = nlp.get_pipe("medspacy_target_matcher")
 target_rules = [
     TargetRule("atrial fibrillation", "PROBLEM"),
     TargetRule("atrial fibrillation", "PROBLEM", pattern=[{"LOWER": "afib"}]),
@@ -126,12 +127,15 @@ http://arxiv.org/abs/2106.07799.
 ```
 
 ```
-@inproceedings{eyre2021medspacy,
-      title={Launching into clinical space with medspaCy: a new clinical text processing toolkit in Python}, 
-      author={Hannah Eyre and Alec B Chapman and Kelly S Peterson and Jianlin Shi and Patrick R Alba and Makoto M Jones and Tamara L Box and Scott L DuVall and Olga V Patterson},
-      booktitle = {AMIA Annual Symposium Proceedings 2021},
-      year={(in press, n.d.)},
-      url       = {http://arxiv.org/abs/2106.07799}
+@Article{medspacy,
+   Author="Eyre, H.  and Chapman, A. B.  and Peterson, K. S.  and Shi, J.  and Alba, P. R.  and Jones, M. M.  and Box, T. L.  and DuVall, S. L.  and Patterson, O. V. ",
+   Title="{{L}aunching into clinical space with medspa{C}y: a new clinical text processing toolkit in {P}ython}",
+   Journal="AMIA Annu Symp Proc",
+   Year="2021",
+   Volume="2021",
+   Pages="438--447"
+}
+
 }
 ```
 

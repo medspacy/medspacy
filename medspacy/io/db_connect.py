@@ -3,7 +3,9 @@ class DbConnect:
     passed into the DbReader and DbWriter classes to retrieve/store document data.
     """
 
-    def __init__(self, driver=None, server=None, db=None, user=None, pwd=None, conn=None):
+    def __init__(
+        self, driver=None, server=None, db=None, user=None, pwd=None, conn=None
+    ):
         """Create a new DbConnect object. You can pass in either information for a pyodbc connection string
         or directly pass in a sqlite or pyodbc connection object.
 
@@ -26,7 +28,9 @@ class DbConnect:
             import pyodbc
 
             self.conn = pyodbc.connect(
-                "DRIVER={0};SERVER={1};DATABASE={2};USER={3};PWD={4}".format(driver, server, db, user, pwd)
+                "DRIVER={0};SERVER={1};DATABASE={2};USER={3};PWD={4}".format(
+                    driver, server, db, user, pwd
+                )
             )
         else:
             self.conn = conn
@@ -43,7 +47,11 @@ class DbConnect:
                 self.db_lib = "pyodbc"
                 self.database_exception = pyodbc.DatabaseError
             else:
-                raise ValueError("conn must be either a sqlite3 or pyodbc Connection object, not {0}".format(type(self.conn)))
+                raise ValueError(
+                    "conn must be either a sqlite3 or pyodbc Connection object, not {0}".format(
+                        type(self.conn)
+                    )
+                )
 
         print("Opened connection to {0}.{1}".format(server, db))
 

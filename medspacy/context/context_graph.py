@@ -1,20 +1,52 @@
+from __future__ import annotations
+
+from typing import Optional, List, Dict, Any
+
+import srsly
+from spacy.tokens import Span
+
+from ..context import ConTextModifier
+from ..util import tuple_overlaps
+
+
 class ConTextGraph:
-    def __init__(self, remove_overlapping_modifiers=False):
-        self.targets = []
-        self.modifiers = []
-        self.edges = []
-        self.remove_overlapping_modifiers = remove_overlapping_modifiers
+    """
+    The ConTextGraph class defines the internal structure of the ConText algorithm. It stores a collection of modifiers,
+    matched with ConTextRules, and targets from some other source such as the TargetMatcher or a spaCy NER model.
 
-    def update_scopes(self):
-        """Update the scope of all ConTextModifier.
+    Each modifier can have some number of associated targets that it modifies. This relationship is stored as edges of
+    of the graph.
+    """
 
-        For each modifier in a list of ConTextModifiers, check against each other
-        modifier to see if one of the modifiers should update the other. 
-        This allows neighboring similar modifiers to extend each other's 
-        scope and allows "terminate" modifiers to end a modifier's scope.
+    def __init__(
+        self,
+        targets: Optional[List[Span]] = None,
+        modifiers: Optional[List[ConTextModifier]] = None,
+        edges: Optional[List] = None,
+        prune_on_modifier_overlap: bool = False,
+    ):
+        """
+        Creates a new ConTextGraph object.
 
         Args:
-            marked_modifiers: A list of ConTextModifiers in a Doc.
+            targets: A spans that context might modify.
+            modifiers: A list of ConTextModifiers that might modify the targets.
+            edges: A list of edges between targets and modifiers representing the modification relationship.
+            prune_on_modifier_overlap: Whether to prune modifiers when one modifier completely covers another.
+        """
+        self.targets = targets if targets is not None else []
+        self.modifiers = modifiers if modifiers is not None else []
+        self.edges = edges if edges is not None else []
+        self.prune_on_modifier_overlap = prune_on_modifier_overlap
+
+    def update_scopes(self):
+        """
+        Update the scope of all ConTextModifier.
+
+        For each modifier in a list of ConTextModifiers, check against each other
+        modifier to see if one of the modifiers should update the other.
+        This allows neighboring similar modifiers to extend each other's
+        scope and allows "terminate" modifiers to end a modifier's scope.
         """
         for i in range(len(self.modifiers) - 1):
             modifier1 = self.modifiers[i]
@@ -25,21 +57,17 @@ class ConTextGraph:
                 modifier2.limit_scope(modifier1)
 
     def apply_modifiers(self):
-        """Checks each target/modifier pair. If modifier modifies target,
-        create an edge between them.
-
-        Args:
-            marked_targets: A list of Spans
-            marked_modifiers: A list of ConTextModifiers
-
-        RETURNS 
-            edges: A list of tuples consisting of target/modifier pairs
         """
-        if self.remove_overlapping_modifiers:
+        Checks each target/modifier pair. If modifier modifies target,
+        create an edge between them.
+        """
+        if self.prune_on_modifier_overlap:
             for i in range(len(self.modifiers) - 1, -1, -1):
                 modifier = self.modifiers[i]
                 for target in self.targets:
-                    if overlap_target_modifiers(target, modifier.span):
+                    if tuple_overlaps(
+                        (target.start, target.end), modifier.modifier_span
+                    ):
                         self.modifiers.pop(i)
                         break
 
@@ -59,18 +87,33 @@ class ConTextGraph:
         self.edges = edges
 
     def __repr__(self):
-        return "<ConTextGraph> with {0} targets and {1} modifiers".format(len(self.targets), len(self.modifiers))
+        return f"<ConTextGraph> with {len(self.targets)} targets and {len(self.modifiers)} modifiers"
+
+    def serialized_representation(self) -> Dict[str, Any]:
+        """
+        Returns the serialized representation of the ConTextGraph
+        """
+        return self.__dict__
+
+    @classmethod
+    def from_serialized_representation(cls, serialized_representation) -> ConTextGraph:
+        """
+        Creates the ConTextGraph from the serialized representation
+        """
+        context_graph = ConTextGraph(**serialized_representation)
+
+        return context_graph
 
 
-def overlap_target_modifiers(span1, span2):
-    """Checks whether two modifiers overlap.
-        
-    Args:
-        span1: the first span
-        span2: the second span
-    """
-    return _spans_overlap(span1, span2)
+@srsly.msgpack_encoders("context_graph")
+def serialize_context_graph(obj, chain=None):
+    if isinstance(obj, ConTextGraph):
+        return {"context_graph": obj.serialized_representation()}
+    return obj if chain is None else chain(obj)
 
 
-def _spans_overlap(span1, span2):
-    return (span1.end > span2.start and span1.end <= span2.end) or (span1.start >= span2.start and span1.start < span2.end)
+@srsly.msgpack_decoders("context_graph")
+def deserialize_context_graph(obj, chain=None):
+    if "context_graph" in obj:
+        return ConTextGraph.from_serialized_representation(obj["context_graph"])
+    return obj if chain is None else chain(obj)

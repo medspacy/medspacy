@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "setuptools_scm[toml]>=6.2", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medspacy"
+dynamic = ["version"]
+authors = [{name = "medSpaCy"}]
+description = "Library for clinical NLP with spaCy."
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+
+dependencies = [
+    "spacy >= 3.4.1, < 4.0",
+    "PyRuSH >= 1.0.8",
+    "pysbd == 0.3.4",
+    "jsonschema",
+    "medspacy_quickumls == 2.7; sys_platform != 'win32'"
+]
+
+[project.urls]
+Source = "https://github.com/medspacy/medspacy"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["resources"]
+
+[tool.setuptools_scm]
+write_to = "medspacy/_version.py"
+

@@ -1,0 +1,50 @@
+name: manual_test_pip
+
+on:
+  workflow_dispatch
+
+jobs:
+
+  test_win_linux_mac:
+  
+    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
+    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: check clone
+      run: |
+        pwd
+        ls
+        python -c "import shutil;shutil.rmtree('medspacy')"
+        ls
+
+    - name: Set up Python ${{ matrix.python-version }}  ${{ matrix.os }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: 'requirements_piptests.txt'
+    - run: |
+        python --version
+        pip install --upgrade pip
+        pip install --use-pep517 -r requirements_piptests.txt
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # multilingual models for testing compatibility
+        python -m spacy download es_core_news_sm
+        python -m spacy download pl_core_news_sm
+        python -m spacy download de_core_news_sm
+        python -m spacy download xx_ent_wiki_sm
+
+    - name: Test with pytest
+      run: |        
+        pytest
+

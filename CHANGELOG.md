@@ -1,3 +1,75 @@
+# Version 1.0.0
+
+We are calling this release medspacy 1.0.0 because we believe it to be the best stable release so far. It contains a 
+large amount of reworking the API in hopes that it will be more stable in the future and a (hopefully) complete 
+documentation of all the current features.
+
+Major additions also include serialization with `nlp.pipe` and SpanGroups.
+
+## Documentation
+
+Overhauled medspacy documentation, created docstrings in Google docstring format and type hints for methods. Tutorial 
+notebooks all have udpated examples and bug fixes.
+
+## Span Groups
+
+Added functionality using spaCy SpanGroups to all components. Default behavior is to use doc.ents, but span groups can 
+be specified and default span group name is "medspacy_spans".
+
+Components that produce entities such as the Target Matcher can specify a destination for the resulting entities as well 
+as the name of the span group. Components that consume entities such as Context or the Sectionizer can specify where to 
+look for spans, either doc.ents or a span group.
+
+SpanGroups can be enabled in: `TargetMatcher`, `Sectionizer`, `ConText`, `PostProcessor`, `QuickUMLS`, and `DocConsumer`.
+
+## Serialization
+
+Serialization has been enabled across medspacy components. Previously, components and custom objects inside medspacy were
+not always JSON-serializable for medspacy's built in multiprocessing. This has been resolved and 
+`nlp.pipe([list of texts])` should now work with medspacy components (particularly ConText and Sectionizer) included in
+the pipeline.
+
+This helps boost performance by allowing batch processing and multiprocessing.
+
+## Data Protection
+
+Started the process of protecting internal component variables. Previously, the internal structure of medspacy 
+components was exposed and could be altered in ways that were not intended. Some variables, such as the internal 
+MedspacyMatcher objects and span group information are now stored as private or protected variables with some properties 
+allowing limited access.
+
+## Data Simplification
+
+Many internal variables within medspacy contained duplicated or unused information. These have all been removed and some
+have been replaced with properties that provide the same information.
+
+## Component Standardization
+
+Components have been standardized across medspaCy.
+
+Components that use the MedspacyMatcher object (TargetMatcher, ConText, Sectionizer), now are initialized with the 
+`rules` parameter that can be "default" if there are default rules, None if no rules should be loaded, or a path to a 
+JSON file containing the rules.
+
+Components now have an `add()` method that append single rule objects or collections of rule objects to the existing 
+rule list.
+
+Components that produce entities, such as QuickUMLS and TargetMatcher, have parameters `result_type` that can be `"ents"`
+or `"group"` determining whether SpanGroup functionality is used.
+
+Components that can consume or modify entities have `input_span_type` that can be `"ents"` or `"group"` that determines
+where they look for entity spans.
+
+Components with span group functionality all have the span group name determined by `span_group_name`, which by default 
+is `"medspacy_spans"`.
+
+We have also renamed `ConTextComponent` to be just `ConText`, so the name is more in line with other medspacy components.
+
+When adding components to a pipeline. The string name of all components is `medspacy_[component_name]`. Abbreviated names 
+have been removed.
+
+
+
 # Version 0.1.0.1
 This release includes a new subpackage `medspacy.io` which includes utilities for converting docs into structured data which can then be written back to a relational database.
 ## medspacy.io

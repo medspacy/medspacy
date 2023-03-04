@@ -11,12 +11,28 @@ tmpdirname = tempfile.TemporaryDirectory()
 db = os.path.join(tmpdirname.name, "test.db")
 
 # Set up a simple pipeline which will allow us to write results
-nlp = medspacy.load(enable=["pyrush", "target_matcher", "context", "sectionizer"])
-nlp.get_pipe("medspacy_target_matcher").add([TargetRule("pneumonia", "CONDITION"), TargetRule("breast ca", "CONDITION")])
+nlp = medspacy.load(
+    enable=[
+        "medspacy_pyrush",
+        "medspacy_target_matcher",
+        "medspacy_context",
+        "medspacy_sectionizer",
+    ]
+)
+nlp.get_pipe("medspacy_target_matcher").add(
+    [TargetRule("pneumonia", "CONDITION"), TargetRule("breast ca", "CONDITION")]
+)
 doc = nlp("There is no evidence of pneumonia.")
 
-doc_consumer = DocConsumer(nlp, dtype_attrs={"ent": ["text", "label_", "is_negated", "section_category"]})
-nlp.add_pipe("medspacy_doc_consumer", config={"dtype_attrs": {"ent": ["text", "label_", "is_negated", "section_category"]}})
+doc_consumer = DocConsumer(
+    nlp, dtype_attrs={"ents": ["text", "label_", "is_negated", "section_category"]}
+)
+nlp.add_pipe(
+    "medspacy_doc_consumer",
+    config={
+        "dtype_attrs": {"ents": ["text", "label_", "is_negated", "section_category"]}
+    },
+)
 
 db_dtypes = [
     "varchar(100)",
@@ -73,7 +89,7 @@ class TestPipeline:
         writer = DbWriter(
             db_conn,
             "ents",
-            ["text_id"] + doc_consumer.dtype_attrs["ent"],
+            ["text_id"] + doc_consumer.dtype_attrs["ents"],
             ["int"] + db_dtypes,
             create_table=True,
             drop_existing=False,
@@ -81,7 +97,7 @@ class TestPipeline:
 
         from medspacy.io.pipeline import Pipeline
 
-        pipeline = Pipeline(nlp, reader, writer, nlp, "ent")
+        pipeline = Pipeline(nlp, reader, writer, nlp, "ents")
         pipeline.process()
 
         sq_conn = sqlite3.connect(db)

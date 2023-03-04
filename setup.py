@@ -11,12 +11,14 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 additional_installs = []
 if platform.startswith("win"):
-    print("Not installing QuickUMLS for Windows since it currently requires conda (as opposed to just pip)")
+    print(
+        "Not installing QuickUMLS for Windows since it currently requires conda (as opposed to just pip)"
+    )
 else:
     # Using a trick from StackOverflow to set an impossibly high version number
     # to force getting latest from GitHub as opposed to PyPi
     # since QuickUMLS has not made a release with some recent MedSpacy contributions...
-    quickumls_package = "medspacy_quickumls>=2.4.1"
+    quickumls_package = "medspacy_quickumls==2.7"
     additional_installs.append(quickumls_package)
     print("Attempting to install quickumls package: {}".format(quickumls_package))
 
@@ -40,7 +42,15 @@ def get_version():
     """
     try:
         with open("medspacy/_version.py", "r") as f:
-            return f.read().split("\n")[0].split("=")[-1].replace("'", "").strip()
+            version_value = f.read().split("\n")[0].split("=")[-1].strip()
+            
+            # remove either double-quotes or single-quotes
+            version_value = version_value.replace("'", "")
+            version_value = version_value.replace('"', "")
+            
+            #print(f'version value verbatim: {version_value}')
+            
+            return version_value
     except IOError:
         raise IOError
 
@@ -50,19 +60,16 @@ setup(
     version=get_version(),
     description="Library for clinical NLP with spaCy.",
     author="medSpaCy",
-    author_email="medspacy.dev@gmail.com",
     packages=find_packages(),
     install_requires=[
-        # NOTE: spacy imports numpy to bootstrap its own setup.py in 2.3.2
-        "spacy>=3.1.3,<3.2.0",
-        "PyRuSH>=1.0.3.5",
+        "spacy>=3.4.1, <4.0",
+        "PyRuSH>=1.0.8",
         "pysbd==0.3.4",
         "jsonschema",
-        "requests>=2.13.0,<2.16",
-        "six>=1.14.0"
     ]
     + additional_installs,
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},
+    python_requires=">=3.8.0",
 )

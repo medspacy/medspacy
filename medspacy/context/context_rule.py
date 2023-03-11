@@ -27,6 +27,7 @@ class ConTextRule(BaseRule):
         "BIDIRECTIONAL",
         "TERMINATE",
         "PSEUDO",
+        "SELF"
     )
     _ALLOWED_KEYS = {
         "literal",
@@ -91,6 +92,7 @@ class ConTextRule(BaseRule):
                     superstrings of modifiers. Example: A modifier with literal="negative attitude" will prevent the
                     phrase "negative" in "She has a negative attitude about her treatment" from being extracted as a
                     modifier.
+                - "SELF": ADD DOCO HERE
             on_match: An optional callback function or other callable which takes 4 arguments: `(matcher, doc, i,
                 matches)`. For more information, see https://spacy.io/usage/rule-based-matching#on_match
             on_modifies: Callback function to run when building an edge between a target and a modifier. This allows

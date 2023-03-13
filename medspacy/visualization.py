@@ -10,6 +10,8 @@ def visualize_ent(
     sections: bool = True,
     jupyter: bool = True,
     colors: Dict[str, str] = None,
+    target_span_type: str = "ents",
+    span_group_name: str = "medspacy_spans"
 ) -> str:
     """
     Creates a NER-style visualization for targets and modifiers in Doc.
@@ -37,7 +39,14 @@ def visualize_ent(
 
     ents_data = []
 
-    for target in doc.ents:
+    if target_span_type == "ents":
+        targets = doc.ents
+    elif target_span_type == "group":
+        targets = doc.spans[span_group_name]
+    else:
+        raise ValueError("Target span type must be either ents or group.")
+
+    for target in targets:
         ent_data = {
             "start": target.start_char,
             "end": target.end_char,
@@ -210,21 +219,28 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
     for target, modifier in doc._.context_graph.edges:
         target_data = token_data_mapping[target[0]]
         modifier_data = token_data_mapping[doc[modifier.modifier_span[0]]]
+        if modifier.direction.upper() == "SELF":
+            start = target_data["index"]
+            end = target_data["index"]+1
+        else:
+            start = min(target_data["index"], modifier_data["index"])
+            end = max(target_data["index"], modifier_data["index"])
         dep_data["arcs"].append(
             {
-                "start": min(target_data["index"], modifier_data["index"]),
-                "end": max(target_data["index"], modifier_data["index"]),
+                "start": start,
+                "end": end,
                 "label": modifier.category,
                 "dir": "right"
                 if target > doc[modifier.modifier_span[0] : modifier.modifier_span[1]]
                 else "left",
             }
         )
+    print(dep_data["arcs"])
     return displacy.render(dep_data, manual=True, jupyter=jupyter)
 
 
 class MedspaCyVisualizerWidget:
-    def __init__(self, docs):
+    def __init__(self, docs, target_span_type: str = "ents", span_group_name: str = "medspacy_spans"):
 
         """Create an IPython Widget Box displaying medspaCy's visualizers.
         The widget allows selecting visualization style ("Ent", "Dep", or "Both")
@@ -241,6 +257,8 @@ class MedspaCyVisualizerWidget:
         import ipywidgets as widgets
 
         self.docs = docs
+        self.target_span_type = target_span_type 
+        self.span_group_name = span_group_name
         self.slider = widgets.IntSlider(
             value=0,
             min=0,
@@ -294,7 +312,7 @@ class MedspaCyVisualizerWidget:
         if self.radio.value.lower() in ("dep", "both"):
             visualize_dep(doc)
         if self.radio.value.lower() in ("ent", "both"):
-            visualize_ent(doc)
+            visualize_ent(doc, target_span_type=self.target_span_type, span_group_name=self.span_group_name)
 
     def _on_click_next(self, b):
         if self.slider.value < len(self.docs) - 1:

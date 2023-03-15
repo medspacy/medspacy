@@ -221,7 +221,7 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
         modifier_data = token_data_mapping[doc[modifier.modifier_span[0]]]
         if modifier.direction.upper() == "SELF":
             start = target_data["index"]
-            end = target_data["index"]+1
+            end = target_data["index"] # +1
         else:
             start = min(target_data["index"], modifier_data["index"])
             end = max(target_data["index"], modifier_data["index"])

@@ -5,7 +5,7 @@ from .common.util import span_contains
 
 # from .io.doc_consumer import ALLOWED_DATA_TYPES
 
-ALLOWED_DATA_TYPES = ("ents", "section", "context", "doc")
+ALLOWED_DATA_TYPES = ("ents", "group", "section", "context", "doc")
 
 
 def set_extensions():

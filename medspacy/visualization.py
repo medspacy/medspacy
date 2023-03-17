@@ -164,7 +164,18 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
         token_data_mapping[token] = data
 
     # Merge phrases
-    targets_and_modifiers = [*doc._.context_graph.targets]
+    # targets_and_modifiers = [*doc._.context_graph.targets]
+    existing_tokens = set()
+    targets_and_modifiers = []
+    for target in doc._.context_graph.targets:
+        already_seen = False 
+        for token in target:
+            if token in existing_tokens:
+                already_seen = True 
+                break 
+        if not already_seen:
+            targets_and_modifiers.append(target)
+            existing_tokens.update({token for token in target}) 
     targets_and_modifiers += [*doc._.context_graph.modifiers]
 
     for obj in targets_and_modifiers:
@@ -191,6 +202,8 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
                 span = doc[span_tup[0]: span_tup[1]]
                 idx = data["index"]
                 for other_token in span[1:]:
+                    print(span, other_token)
+
                     # Add the text to the display data for the first word
                     # and remove the subsequent token
                     data["text"] += " " + other_token.text
@@ -215,6 +228,7 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
         #     other_data["index"] -= len(span) - 1
 
     dep_data = {"words": token_data, "arcs": []}
+    
     # Gather the edges between targets and modifiers
     for target, modifier in doc._.context_graph.edges:
         target_data = token_data_mapping[target[0]]

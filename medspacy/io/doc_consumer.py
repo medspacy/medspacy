@@ -6,7 +6,7 @@ from spacy.tokens import Span
 
 from medspacy.context import ConTextModifier
 
-ALLOWED_DATA_TYPES = ("ents", "section", "context", "doc")
+ALLOWED_DATA_TYPES = ("ents", "group", "section", "context", "doc")
 
 DEFAULT_ENT_ATTRS = (
     "text",

@@ -170,11 +170,6 @@ class ConTextModifier:
             ):
                 self._scope_start = self._start - self.max_scope
         
-        elif self.direction.lower() == "self":
-            self._scope_start, self._scope_end = (
-                self._start, self._end
-            )
-        
         else:  # bidirectional
             self._scope_start, self._scope_end = (
                 full_scope_span.start,
@@ -263,7 +258,7 @@ class ConTextModifier:
         # one extracted as both a target and modifier, return False
         # to avoid self-modifying concepts
 
-        if self.direction != "SELF" and tuple_overlaps(
+        if tuple_overlaps(
             self.modifier_span, (target.start, target.end)
         ):  # self.overlaps(target):
             return False

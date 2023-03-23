@@ -483,20 +483,3 @@ class TestConTextModifier:
 
         assert doc.ents[1]._.is_experienced is False
         assert doc.ents[1]._.is_family_history is True
-
-    def test_self_modifier(self):
-        context = ConText(nlp, rules=None, prune_on_target_overlap=False, prune_on_modifier_overlap=False)
-        text = "Attended with"
-        rules = [
-            ConTextRule("Attended with", "STATUS - CURRENT", direction="SELF")
-        ]
-        context.add(rules)
-
-        doc = nlp(text)
-        doc.ents = (Span(doc, 1, 2, "HOUSING"),)
-        ent = doc.ents[0]
-
-        context(doc)
-
-        modifier_start, modifier_end = doc.ents[0]._.modifiers[0].modifier_span
-        assert (modifier_start, modifier_end) == (ent.start, ent.end)

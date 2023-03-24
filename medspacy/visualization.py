@@ -202,8 +202,6 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
                 span = doc[span_tup[0]: span_tup[1]]
                 idx = data["index"]
                 for other_token in span[1:]:
-                    print(span, other_token)
-
                     # Add the text to the display data for the first word
                     # and remove the subsequent token
                     data["text"] += " " + other_token.text

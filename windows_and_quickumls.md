@@ -1,5 +1,5 @@
 # Overview
-[QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS) is a fast method for extracting UMLS concepts from text.  Our group has worked to make updates to QuickUMLS and some of its methods to ensure that it builds on Windows and works nicely with the other medspaCy components.
+[QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS) is a fast method for extracting UMLS concepts from text.  Our group has worked to make updates to [our fork of QuickUMLS](https://github.com/medspacy/QuickUMLS) and some of its methods to ensure that it builds on Windows and works nicely with the other medspaCy components.
 
 # Requirements
 On Windows, these instructions require the following:
@@ -26,4 +26,4 @@ pip install --no-deps medspacy_quickumls==2.6
 
 # Testing
 
-After this, the best way to test UMLS extractions is by using the QuickUMLS notebook in this repo.  By default, we package up a small set of SAMPLE concepts from UMLS and make them available as resources.  To generate additional resources from scratch from UMLS, see the instructions at [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS).
+After this, the best way to test UMLS extractions is by using the QuickUMLS notebook in this repo.  By default, we package up a small set of SAMPLE concepts from UMLS and make them available as resources.  To generate additional resources from scratch from UMLS, see the instructions at [our fork of QuickUMLS](https://github.com/medspacy/QuickUMLS).

@@ -231,16 +231,10 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
     for target, modifier in doc._.context_graph.edges:
         target_data = token_data_mapping[target[0]]
         modifier_data = token_data_mapping[doc[modifier.modifier_span[0]]]
-        if modifier.direction.upper() == "SELF":
-            start = target_data["index"]
-            end = target_data["index"] # +1
-        else:
-            start = min(target_data["index"], modifier_data["index"])
-            end = max(target_data["index"], modifier_data["index"])
         dep_data["arcs"].append(
             {
-                "start": start,
-                "end": end,
+                "start": min(target_data["index"], modifier_data["index"]),
+                "end": max(target_data["index"], modifier_data["index"]),
                 "label": modifier.category,
                 "dir": "right"
                 if target > doc[modifier.modifier_span[0] : modifier.modifier_span[1]]

@@ -247,7 +247,7 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
                 else "left",
             }
         )
-    print(dep_data["arcs"])
+    
     return displacy.render(dep_data, manual=True, jupyter=jupyter)
 
 

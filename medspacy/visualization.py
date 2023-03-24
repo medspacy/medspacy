@@ -167,16 +167,20 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
     # targets_and_modifiers = [*doc._.context_graph.targets]
     existing_tokens = set()
     targets_and_modifiers = []
-    for target in doc._.context_graph.targets:
+    # Used to prevent duplication of token in targets or modifiers that appear twice due to being in a span group or, appearing twice as a modifier
+    for target_or_modifier in (list(doc._.context_graph.targets) + doc._.context_graph.modifiers):
+        if isinstance (target_or_modifier, Span):
+            span=target_or_modifier
+        else:
+            span=doc[target_or_modifier._start : target_or_modifier._end]
         already_seen = False 
-        for token in target:
+        for token in span:
             if token in existing_tokens:
                 already_seen = True 
                 break 
         if not already_seen:
-            targets_and_modifiers.append(target)
-            existing_tokens.update({token for token in target}) 
-    targets_and_modifiers += [*doc._.context_graph.modifiers]
+            targets_and_modifiers.append(target_or_modifier)
+            existing_tokens.update({token for token in span}) 
 
     for obj in targets_and_modifiers:
         if isinstance(obj, Span):

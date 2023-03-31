@@ -197,7 +197,7 @@ class DocConsumer:
                     data["ents"][attr].append(val)
         if "group" in self.dtypes:
             for span in doc.spans[self._span_group_name]:
-                for attr in self.dtype_attrs["ents"]:
+                for attr in self.dtype_attrs["group"]:
                     try:
                         val = getattr(span, attr)
                     except AttributeError:
@@ -261,7 +261,7 @@ class DocConsumer:
                         raise ValueError(f"Attributes for dtype 'context' must be either "
                                          f"a registered custom Span attribute (i.e., Span._.attr) or one of these pre-defined values: "
                                           f"{ALLOWED_CONTEXT_ATTRS}. \nYou passed in '{attr}'")
-                context_data[f"ent_{attr}"] = val
+                context_data[f"{attr}"].append(val)
 
     def add_section_attributes(self, section, section_data, doc):
         # Allow for null sections

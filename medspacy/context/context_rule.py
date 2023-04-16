@@ -204,19 +204,43 @@ class ConTextRule(BaseRule):
         rule = ConTextRule(**rule_dict)
         return rule
 
-    def to_dict(self) -> Dict[str, str]:
+    def to_dict(self):
         """
         Converts ConTextItems to a python dictionary. Used when writing context rules to a json file.
 
         Returns:
             The dictionary containing the ConTextRule info.
         """
+        
         rule_dict = {}
-        for key in self._ALLOWED_KEYS:
-            value = self.__dict__.get(key)
-            if value is not None:
-                rule_dict[key] = value
-        return rule_dict
+        rules_list = []
+        rules_dict = {}
+
+        for i in self:
+            for key in i._ALLOWED_KEYS:
+                value = i.__dict__.get(key)
+                if value is not None:
+                    rule_dict[key] = value
+                    rules_list.append(rule_dict)
+
+        rules_dict = {'context_rules': rules_list}
+
+        # rule_dict = {}
+        # for key in self._ALLOWED_KEYS:
+            # value = self.__dict__.get(key)
+            # if value is not None:
+                # rule_dict[key] = value
+        return rules_list
+
+    @classmethod
+    def to_json(cls, context_rules: List[ConTextRule], filepath: str):
+        """
+        """
+        import json
+        print(context_rules)
+        # data = {"context_rules": [rule.to_dict() for rule in context_rules]}
+        # with open(filepath, "w") as file:
+            # json.dump(data, file, indent=4)
 
     def __repr__(self):
         return (

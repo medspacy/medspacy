@@ -211,36 +211,25 @@ class ConTextRule(BaseRule):
         Returns:
             The dictionary containing the ConTextRule info.
         """
-        
+
         rule_dict = {}
-        rules_list = []
-        rules_dict = {}
-
-        for i in self:
-            for key in i._ALLOWED_KEYS:
-                value = i.__dict__.get(key)
-                if value is not None:
-                    rule_dict[key] = value
-                    rules_list.append(rule_dict)
-
-        rules_dict = {'context_rules': rules_list}
-
-        # rule_dict = {}
-        # for key in self._ALLOWED_KEYS:
-            # value = self.__dict__.get(key)
-            # if value is not None:
-                # rule_dict[key] = value
-        return rules_list
+        for key in self._ALLOWED_KEYS:
+            value = self.__dict__.get(key)
+            if isinstance(value, set):
+                value = list(value)
+            if value is not None:
+                rule_dict[key] = value
+        return rule_dict
 
     @classmethod
     def to_json(cls, context_rules: List[ConTextRule], filepath: str):
         """
         """
         import json
-        print(context_rules)
-        # data = {"context_rules": [rule.to_dict() for rule in context_rules]}
-        # with open(filepath, "w") as file:
-            # json.dump(data, file, indent=4)
+
+        data = {"context_rules": [rule.to_dict() for rule in context_rules]}
+        with open(filepath, "w") as file:
+            json.dump(data, file, indent=4)
 
     def __repr__(self):
         return (

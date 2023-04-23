@@ -112,8 +112,7 @@ class TestItemData:
                "category": "DEFINITE_NEGATED_EXISTENCE",
                "pattern": [{"LEMMA": "be"}, {"LOWER": "negative"}],
                "direction": "backward",
-               "allowed_types": 
-               ""
+               "allowed_types": ["A_TYPE"],
            },
         ]
 
@@ -127,7 +126,7 @@ class TestItemData:
        rule_dict = data["context_rules"][0]
        assert set(rule_dict.keys()) == {'literal', 'category', 'direction'}
        rule_dict = data["context_rules"][1]
-       assert set(rule_dict.keys()) == {'literal', 'pattern', 'category', 'direction'}
+       assert set(rule_dict.keys()) == {'literal', 'pattern', 'category', 'direction', 'allowed_types'}
 
 @pytest.fixture
 def from_json_file():

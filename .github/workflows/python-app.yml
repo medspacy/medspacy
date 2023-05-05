@@ -77,4 +77,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest
+        # run everything besides the QuickUMLS span group tests...
+        pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
+        # now in a separate session we can run the QuickUMLS span group tests...
+        pytest tests/quickumls/test_quickumls_spangroup.py

@@ -7,9 +7,27 @@ from pathlib import Path
 
 import medspacy
 
+from quickumls import spacy_component
+
 from medspacy.util import get_quickumls_demo_dir
 
 MEDSPACY_DEFAULT_SPAN_GROUP_NAME = "medspacy_spans"
+
+# allow default QuickUMLS (very small sample data) to be loaded
+nlp = spacy.blank("en")
+
+# Configure the QuickUMLS component for these tests on SpanGroups
+# Some allow overlaps, but this config will currently work for all of the tests below
+nlp.add_pipe(
+    "medspacy_quickumls",
+    config={
+        "threshold": 0.7,
+        "result_type": "group",
+        # do not constrain to the best match for overlapping
+        "best_match": False,
+        "quickumls_fp": get_quickumls_demo_dir(),
+    },
+)
 
 
 class TestQuickUMLSSpanGroup:
@@ -17,14 +35,6 @@ class TestQuickUMLSSpanGroup:
         """
         Test that span groups can bs used as a result type (as opposed to entities)
         """
-
-        # allow default QuickUMLS (very small sample data) to be loaded
-        nlp = spacy.blank("en")
-
-        nlp.add_pipe(
-            "medspacy_quickumls",
-            config={"result_type": "group", "quickumls_fp": get_quickumls_demo_dir()},
-        )
 
         concept_term = "dipalmitoyllecithin"
 
@@ -45,20 +55,6 @@ class TestQuickUMLSSpanGroup:
         Test that overlapping terms can be extracted
         """
 
-        # allow default QuickUMLS (very small sample data) to be loaded
-        nlp = spacy.blank("en")
-
-        nlp.add_pipe(
-            "medspacy_quickumls",
-            config={
-                "threshold": 0.7,
-                "result_type": "group",
-                # do not constrain to the best match for overlapping
-                "best_match": False,
-                "quickumls_fp": get_quickumls_demo_dir(),
-            },
-        )
-
         # the demo data contains both of these concepts, so let's put them together
         # and allow overlap on one of the tokens
         # dipalmitoyl phosphatidylcholine
@@ -73,18 +69,6 @@ class TestQuickUMLSSpanGroup:
         """
         Test that an extraction can be made on a concept with multiple words
         """
-
-        # allow default QuickUMLS (very small sample data) to be loaded
-        nlp = spacy.blank("en")
-
-        nlp.add_pipe(
-            "medspacy_quickumls",
-            config={
-                "threshold": 0.7,
-                "result_type": "group",
-                "quickumls_fp": get_quickumls_demo_dir(),
-            },
-        )
 
         # the demo data contains this concept:
         # dipalmitoyl phosphatidylcholine

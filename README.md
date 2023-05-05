@@ -27,7 +27,6 @@ for detecting semantic modifiers and attributes of entities, including negation 
 - `medspacy.io`: Utilities for converting processed texts to structured data and interacting with databases
 - `medspacy.visualization`: Utilities for visualizing concepts and relationships extracted from text
 - `SpacyQuickUMLS`: UMLS concept extraction compatible with spacy and medspacy implemented by [our fork](https://github.com/medspacy/QuickUMLS) of [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS). More detail on this component, how to use it, how to generate UMLS resources beyond the small UMLS sample can be found in [this notebook](notebooks/11-QuickUMLS_Extraction.ipynb).
-	- NOTE: This component is installed by default on MacOS and Linux but not Windows.  For more details and Windows installation: [QuickUMLS on Windows](windows_and_quickumls.md)
 
 Future work could include I/O, relations extraction, and pre-trained clinical models.
 

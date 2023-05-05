@@ -243,8 +243,11 @@ class ConText:
         """
         Registers spaCy attribute extensions: Span._.modifiers and Doc._.context_graph.
         """
-        Span.set_extension("modifiers", default=(), force=True)
-        Doc.set_extension("context_graph", default=None, force=True)
+        try:
+            Span.set_extension("modifiers", default=(), force=True)
+            Doc.set_extension("context_graph", default=None, force=True)
+        except ValueError:  # Extension already set
+            pass
 
     @classmethod
     def register_default_attributes(cls):

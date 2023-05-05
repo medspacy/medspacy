@@ -13,32 +13,12 @@ MEDSPACY_DEFAULT_SPAN_GROUP_NAME = "medspacy_spans"
 
 
 class TestQuickUMLS:
-    @staticmethod
-    def can_test_quickumls():
-        if platform.startswith("win"):
-            # at least attempt to import in Windows since there
-            # will be setups where we will do this, but we don't want this to go untested
-            try:
-                import quickumls_simstring
-            except:
-                # we're done here for now...
-                return False
-
-        return True
 
     # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_initialize_pipeline(self):
         """
         Test that a pipeline with a QuickUMLS component can be loaded in medpacy
-        NOTE: Currently this is only available by default in Linux and MacOS
-            Windows requires additional steps, but this will test capability on Windows
-            if these manual steps are followed
         """
-
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = medspacy.load(medspacy_enable=["medspacy_quickumls"])
@@ -56,11 +36,6 @@ class TestQuickUMLS:
         """
         Test that extractions can be performed using the very small (<100 concept) UMLS sample resources
         """
-
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = medspacy.load(medspacy_enable=["medspacy_quickumls"])
@@ -80,11 +55,6 @@ class TestQuickUMLS:
         Test that an extraction is NOT made if we set our matching to be perfect matching (100% similarity)
         and we have a typo
         """
-
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
@@ -108,11 +78,6 @@ class TestQuickUMLS:
         """
         Test that an extraction has UmlsMatch objects for it
         """
-
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
@@ -143,11 +108,6 @@ class TestQuickUMLS:
         Test that span groups can bs used as a result type (as opposed to entities)
         """
 
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
-
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
 
@@ -174,11 +134,6 @@ class TestQuickUMLS:
         """
         Test that overlapping terms can be extracted
         """
-
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")
@@ -208,11 +163,6 @@ class TestQuickUMLS:
         """
         Test that an extraction can be made on a concept with multiple words
         """
-
-        # let's make sure that this pipe has been initialized
-        # At least for MacOS and Linux which are currently supported...
-        if not TestQuickUMLS.can_test_quickumls():
-            return
 
         # allow default QuickUMLS (very small sample data) to be loaded
         nlp = spacy.blank("en")

@@ -28,9 +28,6 @@ Source = "https://github.com/medspacy/medspacy"
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.packages.find]
-where = ["resources"]
-
 [tool.setuptools_scm]
 write_to = "medspacy/_version.py"
 

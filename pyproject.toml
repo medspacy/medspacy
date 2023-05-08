@@ -19,7 +19,7 @@ dependencies = [
     "PyRuSH >= 1.0.8",
     "pysbd == 0.3.4",
     "jsonschema",
-    "medspacy_quickumls == 2.7; sys_platform != 'win32'"
+    "medspacy_quickumls == 3.0"
 ]
 
 [project.urls]
@@ -27,9 +27,6 @@ Source = "https://github.com/medspacy/medspacy"
 
 [tool.setuptools]
 include-package-data = true
-
-[tool.setuptools.packages.find]
-where = ["resources"]
 
 [tool.setuptools_scm]
 write_to = "medspacy/_version.py"

@@ -1,3 +1,27 @@
+# Version 1.1.2
+
+## QuickUMLS
+MedspaCy QuickUMLS (v3.0) is now installed by default on Windows! 
+
+Dependencies for this previously were challenging and required both conda and pip.  Now this all installs via pip.  
+
+Tests are updated so that these run on Windows.  
+
+Several areas of documentation have been updated to reflect.  
+
+Huge thanks to Jianlin Shi, and the developers of pysimstring (Luca Soldaini, Perceval Wajsburt, and any others) who made this possible.
+
+## Other
+Fixed issues where an exception could be thrown in some components if `set_extension()` was called twice, such as when re-creating a component in a jupyter notebook.
+
+Reverted a default `success_value` to `True` for Postprocessing rules to align with previous versions.
+
+Added `to_json` method to ConText rules.
+
+Prevented spacy v4 or later from being installed.
+
+Fixed some documentation and spelling errors.
+
 # Version 1.0.0
 
 We are calling this release medspacy 1.0.0 because we believe it to be the best stable release so far. It contains a 

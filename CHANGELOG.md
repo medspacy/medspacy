@@ -1,4 +1,4 @@
-# Version 1.1.1
+# Version 1.1.2
 
 ## QuickUMLS
 MedspaCy QuickUMLS (v3.0) is now installed by default on Windows! 

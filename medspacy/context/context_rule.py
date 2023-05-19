@@ -223,7 +223,11 @@ class ConTextRule(BaseRule):
 
     @classmethod
     def to_json(cls, context_rules: List[ConTextRule], filepath: str):
-        """
+        """Writes ConTextItems to a json file.
+
+            Args:
+            context_rules: a list of ContextRules that will be written to a file.
+            filepath: the .json file to contain modifier rules
         """
         import json
 

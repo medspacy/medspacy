@@ -95,6 +95,38 @@ class TestItemData:
         )
         assert item.terminated_by == {"POSITIVE_EXISTENCE"}
 
+    def test_to_json(self):
+       import json, os
+
+       dname = os.path.join(tmpdirname.name, "test_modifiers.json")
+
+       item_data = [
+           {
+               "literal": "are ruled out",
+               "category": "DEFINITE_NEGATED_EXISTENCE",
+               "pattern": None,
+               "direction": "backward",
+           },
+           {
+               "literal": "is negative",
+               "category": "DEFINITE_NEGATED_EXISTENCE",
+               "pattern": [{"LEMMA": "be"}, {"LOWER": "negative"}],
+               "direction": "backward",
+               "allowed_types": ["A_TYPE"],
+           },
+        ]
+
+       rules = [ConTextRule.from_dict(d) for d in item_data]
+       ConTextRule.to_json(rules, dname)
+
+       with open(dname) as f:
+           data = json.load(f)
+       assert "context_rules" in data
+       assert len(data["context_rules"]) == 2
+       rule_dict = data["context_rules"][0]
+       assert set(rule_dict.keys()) == {'literal', 'category', 'direction'}
+       rule_dict = data["context_rules"][1]
+       assert set(rule_dict.keys()) == {'literal', 'pattern', 'category', 'direction', 'allowed_types'}
 
     def test_to_json(self):
         import json, os

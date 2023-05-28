@@ -20,6 +20,10 @@ def package_files(directory):
 # get all files recursively from /resources
 resource_files = package_files("./resources")
 
+# read requirements configuration
+with open('requirements/requirements.txt') as f:
+    required = f.read().splitlines()
+
 
 def get_version():
     """Load the version from version.py, without importing it.
@@ -47,13 +51,7 @@ setup(
     description="Library for clinical NLP with spaCy.",
     author="medSpaCy",
     packages=find_packages(),
-    install_requires=[
-        "spacy>=3.4.1, <3.6",
-        "PyRuSH>=1.0.8",
-        "pysbd==0.3.4",
-        "jsonschema",
-        "medspacy_quickumls==3.0"
-    ],
+    install_requires=required,
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},

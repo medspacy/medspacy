@@ -34,6 +34,7 @@ jobs:
     - run: |
         python --version
         pip install --upgrade pip
+        pip install medspacy
         pip install --use-pep517 -r requirements_piptests.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm

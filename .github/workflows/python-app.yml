@@ -61,14 +61,10 @@ jobs:
         python -m spacy download de_core_news_sm
         python -m spacy download xx_ent_wiki_sm
         # install scispacy model as well to ensure compatibility
-        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
-        pip install flake8 pytest
         # we want to test execution of jupyter notebooks in pytest as well
-        pip install ipywidgets
-        pip install pyodbc
-        pip install jupyterlab
-        pip install nltk
-        pip install pandas
+        # Move previous multiple lines into single txt file
+        pip install -r requirements/requirements_tests.txt
+        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

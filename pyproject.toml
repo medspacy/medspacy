@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "medspacy"
-dynamic = ["version"]
+dynamic = ["version","dependencies"]
 authors = [{name = "medSpaCy"}]
 description = "Library for clinical NLP with spaCy."
 requires-python = ">=3.8"
@@ -14,13 +14,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 
-dependencies = [
-    "spacy >= 3.4.1, < 3.6",
-    "PyRuSH >= 1.0.8",
-    "pysbd == 0.3.4",
-    "jsonschema",
-    "medspacy_quickumls == 3.0"
-]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirments/requirements.txt"]}
 
 [project.urls]
 Source = "https://github.com/medspacy/medspacy"

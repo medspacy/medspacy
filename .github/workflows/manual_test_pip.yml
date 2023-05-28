@@ -1,7 +1,13 @@
 name: manual_test_pip
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      install_prerelease:
+        description: 'whether install the prerelease version of medspacy, default is false'  
+        type: boolean   
+        required: false
+        default: false
 
 jobs:
 
@@ -24,6 +30,28 @@ jobs:
         ls
         python -c "import shutil;shutil.rmtree('medspacy')"
         ls
+    
+    - name: Install formally released medspacy
+      uses: actions/setup-python@v4
+      if: not ${{ github.event.inputs.install_prerelease }}
+      with:
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+    - run: |
+        python --version
+        pip install --upgrade pip
+        pip install medspacy
+    
+    - name: Install prereleased medspacy
+      uses: actions/setup-python@v4
+      if: ${{ github.event.inputs.install_prerelease }}
+      with:
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+    - run: |
+        python --version
+        pip install --upgrade pip
+        pip install --pre medspacy
 
     - name: Set up Python ${{ matrix.python-version }}  ${{ matrix.os }}
       uses: actions/setup-python@v4
@@ -32,9 +60,6 @@ jobs:
         cache: 'pip'   
         cache-dependency-path: 'requirements/requirements_tests.txt'
     - run: |
-        python --version
-        pip install --upgrade pip
-        pip install medspacy
         pip install --use-pep517 -r requirements/requirements_tests.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm

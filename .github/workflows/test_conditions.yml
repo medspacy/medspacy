@@ -23,7 +23,3 @@ jobs:
               if: not ${{ github.event.inputs.install_prerelease }}
             - run: echo "!${{ github.event.inputs.install_prerelease }}"
               if: ! ${{ github.event.inputs.install_prerelease }}
-            - run: echo "${{ github.event.inputs.install_prerelease }} == 'false'"
-              if: ${{ github.event.inputs.install_prerelease }} == 'false'
-            - run: echo "${{ github.event.inputs.install_prerelease }} == 'true'"
-              if: ${{ github.event.inputs.install_prerelease }} == 'true'

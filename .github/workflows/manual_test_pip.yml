@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       install_prerelease:
-        description: 'whether install the prerelease version of medspacy, default is false'  
+        description: 'Check this to install the prerelease version of medspacy if available and the version is newer than formal release.'  
         type: boolean   
         required: false
         default: false

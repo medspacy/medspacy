@@ -30,7 +30,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}   
         cache: 'pip'   
-        cache-dependency-path: 'requirements_piptests.txt'
+        cache-dependency-path: 'requirements_tests.txt'
     - run: |
         python --version
         pip install --upgrade pip

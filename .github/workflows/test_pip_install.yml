@@ -1,0 +1,58 @@
+name: test_install
+
+on:
+  workflow_dispatch:
+    inputs:
+      install_prerelease:
+        description: 'Check this to install the prerelease version of medspacy if available and the version is newer than formal release.'  
+        type: boolean   
+        required: false
+        default: false
+
+jobs:
+
+  test_win_linux_mac:
+  
+    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
+    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: [3.8]
+        # python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+        # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
+        include:
+          - os: ubuntu-latest
+            path: ~/.cache/pip
+          - os: macos-latest
+            path: ~/Library/Caches/pip
+          - os: windows-latest
+            path: ~\AppData\Local\pip\Cache
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Set up pip
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+
+    - run: |
+        python --version
+        pip install --upgrade pip
+    
+    
+    - name: Install prereleased medspacy
+      if: ${{ github.event.inputs.install_prerelease == 'true' }} 
+      run: |
+        pip install --pre medspacy
+
+    - name: Install formal released medspacy
+      if: ${{ github.event.inputs.install_prerelease == 'false' }}  
+      run: |
+        pip install medspacy
+
+

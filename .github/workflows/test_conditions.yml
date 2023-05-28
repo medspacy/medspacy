@@ -1,4 +1,4 @@
-name: manual_test_pip
+name: test_conditions
 
 on:
   workflow_dispatch:

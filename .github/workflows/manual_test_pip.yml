@@ -57,12 +57,12 @@ jobs:
     
     
     - name: Install prereleased medspacy
-      if: ${{ github.event.inputs.install_prerelease }} == "true" 
+      if: ${{ github.event.inputs.install_prerelease == 'true' }} 
       run: |
         pip install --pre medspacy
 
     - name: Install formal released medspacy
-      if: ${{ github.event.inputs.install_prerelease }} == "false" 
+      if: ${{ github.event.inputs.install_prerelease == 'false' }}  
       run: |
         pip install medspacy
 

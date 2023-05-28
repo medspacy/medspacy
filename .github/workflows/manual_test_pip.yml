@@ -40,18 +40,15 @@ jobs:
         # remove cloned source code to ensure test on installed medspacy
         python -c "import shutil;shutil.rmtree('medspacy')"
         ls
-    
-    - uses: actions/cache@v3
-      with:
-        path: ${{ matrix.path }}
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
 
     - name: Set up pip
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}  
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+          'requirements/requirements_tests.txt'
     - run: |
         python --version
         pip install --upgrade pip
@@ -60,22 +57,17 @@ jobs:
 
     
     - name: Install prereleased medspacy
-      if: ${{ github.event.inputs.install_prerelease }} == true 
+      if: ${{ github.event.inputs.install_prerelease }} == "true" 
       run: |
         pip install --pre medspacy
 
     - name: Install formal released medspacy
-      if: ${{ github.event.inputs.install_prerelease }} == false 
+      if: ${{ github.event.inputs.install_prerelease }} == "false" 
       run: |
         pip install medspacy
 
-    - name: Set up Python ${{ matrix.python-version }}  ${{ matrix.os }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}   
-        cache: 'pip'   
-        cache-dependency-path: 'requirements/requirements_tests.txt'
-    - run: |
+    - name: Install dependencies to run pytest
+      run: |
         pip install --use-pep517 -r requirements/requirements_tests.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm

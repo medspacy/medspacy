@@ -50,7 +50,7 @@ jobs:
 
     - name: Install formally released medspacy
       uses: actions/setup-python@v4
-      if: ${{ github.event.inputs.install_prerelease }} != true
+      if: ${{ github.event.inputs.install_prerelease }} == "false"
       with:
         python-version: ${{ matrix.python-version }}  
     - run: |
@@ -60,10 +60,11 @@ jobs:
     
     - name: Install prereleased medspacy
       uses: actions/setup-python@v4
-      if: ${{ github.event.inputs.install_prerelease }} == true
+      if: ${{ github.event.inputs.install_prerelease }} == "true"
       with:
         python-version: ${{ matrix.python-version }}  
     - run: |
+        echo ${{ github.event.inputs.install_prerelease }}
         python --version
         pip install --upgrade pip
         pip install --pre medspacy

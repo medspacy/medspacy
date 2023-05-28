@@ -20,6 +20,14 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+        # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
+        include:
+          - os: ubuntu-latest
+            path: ~/.cache/pip
+          - os: macos-latest
+            path: ~/Library/Caches/pip
+          - os: windows-latest
+            path: ~\AppData\Local\pip\Cache
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -32,6 +40,13 @@ jobs:
         python -c "import shutil;shutil.rmtree('medspacy')"
         ls
     
+    - uses: actions/cache@v3
+      with:
+        path: ${{ matrix.path }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - name: Install formally released medspacy
       uses: actions/setup-python@v4
       if: not ${{ github.event.inputs.install_prerelease }}

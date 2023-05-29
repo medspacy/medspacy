@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "medspacy"
-dynamic = ["version","dependencies"]
+dynamic = ["version","dependencies","readme"]
 authors = [{name = "medSpaCy"}]
 description = "Library for clinical NLP with spaCy."
 requires-python = ">=3.8"
@@ -14,16 +14,15 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 
-
+#https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirments/requirements.txt"]}
+version={attr = "medspacy.__version__"}
+readme={file = ['README.md']}
 
 [project.urls]
 Source = "https://github.com/medspacy/medspacy"
 
 [tool.setuptools]
 include-package-data = true
-
-[tool.setuptools_scm]
-write_to = "medspacy/_version.py"
 

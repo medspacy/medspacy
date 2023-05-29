@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  test_win_linux_mac:
+  test:
   
     # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
     #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'

@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  test_win_linux_mac:
+  test:
   
     # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
     #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
@@ -34,16 +34,6 @@ jobs:
 
         
     steps:
-    - run: echo ${{ github.job }} 
-    - run: |
-        JOB_NAME="${{ matrix.os }} - ${{ matrix.python-version }}"
-        echo $JOB_NAME
-        echo "JOB_NAME=$JOB_NAME" >> $GITHUB_ENV
-    - name: Print JOB_NAME
-      run: |
-        echo "JOB NAME:" ${{ env.JOB_NAME }}
-        echo ${{ github.job }}
-
     - uses: actions/cache@v3
       with:
         path: ${{ matrix.path }}

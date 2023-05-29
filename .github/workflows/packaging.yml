@@ -31,3 +31,5 @@ jobs:
         pip install build
     - name: Build package
       run: python setup.py sdist
+    - name: Check built
+      run: ls

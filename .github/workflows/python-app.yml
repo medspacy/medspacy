@@ -64,7 +64,9 @@ jobs:
         # we want to test execution of jupyter notebooks in pytest as well
         # Move previous multiple lines into single txt file
         pip install -r requirements/requirements_tests.txt
-        python -c 'import medspacy; print(medspacy.__version__)'
+
+    - name: print medspacy version
+      run: python -c 'import medspacy; print(medspacy.__version__)'
         
     - name: Lint with flake8
       run: |

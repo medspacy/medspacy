@@ -66,7 +66,7 @@ jobs:
         pip install -r requirements/requirements_tests.txt
 
     - name: print medspacy version
-      run: python -c 'import medspacy; print(medspacy.__version__)'
+      run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'
         
     - name: Lint with flake8
       run: |

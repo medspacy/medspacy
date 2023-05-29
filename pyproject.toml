@@ -17,7 +17,7 @@ classifiers = [
 #https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirments/requirements.txt"]}
-version={attr = "medspacy.__version__"}
+version={file = "medspacy/VERSION"}
 readme={file = ['README.md']}
 
 [project.urls]

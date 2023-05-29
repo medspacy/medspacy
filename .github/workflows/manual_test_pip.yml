@@ -59,6 +59,9 @@ jobs:
     - name: Install prereleased medspacy
       if: ${{ github.event.inputs.install_prerelease == 'true' }} 
       run: |
+        # use this to avoid install prereleases of dependencies packages
+        pip install medspacy
+        pip uninstall -y medspacy
         pip install --pre medspacy
 
     - name: Install formal released medspacy

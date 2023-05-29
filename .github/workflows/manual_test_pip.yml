@@ -71,6 +71,9 @@ jobs:
         python -m spacy download pl_core_news_sm
         python -m spacy download de_core_news_sm
         python -m spacy download xx_ent_wiki_sm
+
+    - name: print medspacy version
+      run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'
     
     - name: Test with pytest
       # need to run pytest after a clean pip install to 100% replicate the users' environment

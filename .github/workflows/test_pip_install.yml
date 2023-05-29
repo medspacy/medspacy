@@ -34,10 +34,15 @@ jobs:
 
         
     steps:
+    - run: echo ${{ github.job }} 
     - run: |
-        # rename job
         JOB_NAME="${{ matrix.os }} - ${{ matrix.python-version }}"
+        echo $JOB_NAME
         echo "JOB_NAME=$JOB_NAME" >> $GITHUB_ENV
+    - name: Print JOB_NAME
+      run: |
+        echo "JOB NAME:" ${{ env.JOB_NAME }}
+        echo ${{ github.job }}
 
     - uses: actions/cache@v3
       with:

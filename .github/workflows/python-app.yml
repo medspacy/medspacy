@@ -41,9 +41,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}      
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+          'requirements/requirements_tests.txt'
+               
     - name: Install dependencies      
       run: |
         python --version

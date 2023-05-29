@@ -45,8 +45,6 @@ jobs:
     - run: |
         python --version
         pip install --upgrade pip
-        echo ${{ github.event.inputs.install_prerelease }}
-        echo ${{ github.event.inputs.install_prerelease }} != true
     
     
     - name: Install prereleased medspacy

@@ -64,6 +64,7 @@ jobs:
         # we want to test execution of jupyter notebooks in pytest as well
         # Move previous multiple lines into single txt file
         pip install -r requirements/requirements_tests.txt
+        python -m setuptools_scm
         
     - name: Lint with flake8
       run: |

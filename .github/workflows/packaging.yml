@@ -32,4 +32,4 @@ jobs:
     - name: Build package
       run: python setup.py sdist
     - name: Check built
-      run: ls
+      run: ls dist

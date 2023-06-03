@@ -114,15 +114,24 @@ class Postprocessor:
             ent = spans[i]
             if self.debug:
                 print(ent)
+
+            # let's keep track of whether the rule makes a change to spans
+            span_count_before_rule = None
+            if self._input_span_type == "ents":
+                span_count_before_rule = len(doc.ents)
+            else:
+                span_count_before_rule = len(doc.spans[self.span_group_name])
+
             for rule in self.rules:
                 rule(ent, i, debug=self.debug)
-                # Check if the entity was removed -if it was, skip to the next entity
+                # Check if the entity was removed based on span counts before and after rule execution
+                # if it was, skip to the next entity
                 try:
                     if self._input_span_type == "ents":
-                        if len(doc.ents[i]) != len(spans):
+                        if len(doc.ents) != span_count_before_rule:
                             break
                     else:
-                        if len(doc.spans[self.span_group_name]) == len(spans):
+                        if len(doc.spans[self.span_group_name]) != span_count_before_rule:
                             break
                 except IndexError:
                     break

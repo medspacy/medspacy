@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-from sys import platform
 
 # read the contents of the README file
 import os
@@ -8,19 +7,6 @@ from os import path
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
-
-additional_installs = []
-if platform.startswith("win"):
-    print(
-        "Not installing QuickUMLS for Windows since it currently requires conda (as opposed to just pip)"
-    )
-else:
-    # Using a trick from StackOverflow to set an impossibly high version number
-    # to force getting latest from GitHub as opposed to PyPi
-    # since QuickUMLS has not made a release with some recent MedSpacy contributions...
-    quickumls_package = "medspacy_quickumls==2.7"
-    additional_installs.append(quickumls_package)
-    print("Attempting to install quickumls package: {}".format(quickumls_package))
 
 # function to recursively get files for resourcee
 def package_files(directory):
@@ -62,12 +48,12 @@ setup(
     author="medSpaCy",
     packages=find_packages(),
     install_requires=[
-        "spacy>=3.4.1, <4.0",
+        "spacy>=3.4.1, <3.6",
         "PyRuSH>=1.0.8",
         "pysbd==0.3.4",
         "jsonschema",
-    ]
-    + additional_installs,
+        "medspacy_quickumls==3.0"
+    ],
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},

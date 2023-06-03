@@ -31,3 +31,12 @@ jobs:
         pip install build
     - name: Build package
       run: python setup.py sdist
+    - name: Check built
+      run: ls dist
+      
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: tar gz file
+        path: dist
+        retention-days: 2

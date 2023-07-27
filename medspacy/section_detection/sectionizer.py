@@ -419,6 +419,12 @@ class Sectionizer:
                 # IDEs will warn here about match shape disagreeing w/ type hinting, but this if is only used if
                 # parent sections were never set, so parent_idx does not exist
                 (match_id, start, end) = match
+
+            # Section headers should be considered the start of a sentence
+            doc[start].sent_start = True
+            # Text following the header should also be considered a new sentence
+            doc[end+1].sent_start = True
+
             rule = self.__matcher.rule_map[self.nlp.vocab.strings[match_id]]
             category = rule.category
             # If this is the last match, it should include the rest of the doc

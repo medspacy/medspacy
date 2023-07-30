@@ -4,7 +4,7 @@ from spacy.language import Language
 
 
 @Language.factory("medspacy_pysbd")
-class PySBDSenteceSplitter:
+class PySBDSentenceSplitter:
     def __init__(self, name, nlp, clean=False):
         self.name = name
         self.nlp = nlp

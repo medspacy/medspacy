@@ -39,6 +39,9 @@ jobs:
             python-version: 3.9
 
     steps:
+    # 8/23/2023: Actions were failing complaining that directories were not empty, so tried this as a workaround:
+    # https://github.com/marketplace/actions/clean-workspace
+    - uses: AutoModality/action-clean@v1
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4

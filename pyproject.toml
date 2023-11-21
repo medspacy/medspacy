@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "medspacy"
-dynamic = ["version", "dependencies", "readme"]
+dynamic = ["version", "readme"]
 authors = [{name = "medSpaCy"}]
 description = "Library for clinical NLP with spaCy."
 requires-python = ">=3.8"
@@ -23,9 +23,6 @@ requires = [
     "medspacy_quickumls==3.0"
 ]
 
-[project.optional-dependencies]
-# Add optional dependencies here if any
-
 [tool.hatch.version]
 path = "medspacy/VERSION"
 
@@ -35,11 +32,3 @@ readme = "README.md"
 [project.urls]
 Source = "https://github.com/medspacy/medspacy"
 
-[tool.hatch.envs.default]
-dependencies = [
-    "spacy>=3.4.1,<3.6",
-    "PyRuSH>=1.0.8",
-    "pysbd==0.3.4",
-    "jsonschema",
-    "medspacy_quickumls==3.0"
-]

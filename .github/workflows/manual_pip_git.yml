@@ -1,13 +1,7 @@
 name: manual_pip_git
 
 on:
-  workflow_dispatch:
-    inputs:
-      install_prerelease:
-        description: 'Check this to install the prerelease version of medspacy if available and the version is newer than formal release.'  
-        type: boolean   
-        required: false
-        default: false
+  workflow_dispatch
 
 jobs:
 
@@ -46,17 +40,9 @@ jobs:
         python --version
         pip install --upgrade pip
     
-    
-    - name: Install prereleased medspacy
-      if: ${{ github.event.inputs.install_prerelease == 'true' }} 
-      run: |
-        # use this to avoid install prereleases of dependencies packages
-        pip install medspacy
-        pip uninstall -y medspacy
-        pip install --pre medspacy
+  
 
     - name: Install formal released medspacy
-      if: ${{ github.event.inputs.install_prerelease == 'false' }}  
       run: |
         pwd
         ls

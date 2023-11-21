@@ -26,7 +26,7 @@ jobs:
         ls
         # remove cloned source code to ensure test on installed medspacy
         python -c "import shutil;shutil.rmtree('medspacy')"
-        python -c "import shutil;shutil.rmtree('resources')"
+        python -c "import os;os.remove('resources/rush_rules.tsv')"
         ls
 
     - name: Set up pip

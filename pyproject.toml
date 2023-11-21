@@ -23,6 +23,7 @@ dependencies= [
 ]
 [tool.hatch.build]
 include = [
+  "/medspacy",
   "/resources"
 ]
 

@@ -26,6 +26,7 @@ jobs:
         ls
         # remove cloned source code to ensure test on installed medspacy
         python -c "import shutil;shutil.rmtree('medspacy')"
+        python -c "import shutil;shutil.rmtree('resources')"
         ls
 
     - name: Set up pip
@@ -52,9 +53,6 @@ jobs:
       run: |
         pip install --use-pep517 -r requirements/requirements_tests.txt
         python -m spacy download en_core_web_sm
-        python -c "import shutil;shutil.rmtree('medspacy')"
-        python -c "import shutil;shutil.rmtree('resources')"
-
 
     - name: print medspacy version
       run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'

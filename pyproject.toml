@@ -21,7 +21,10 @@ dependencies= [
     "jsonschema",
     "medspacy_quickumls==3.0"
 ]
-package_data={"medspacy":['resource_files']}
+[tool.hatch.build]
+include = [
+  "/resources"
+]
 
 [tool.hatch.version]
 path = "medspacy/_version.py"

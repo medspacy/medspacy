@@ -25,6 +25,7 @@ requires = [
 
 [tool.hatch.version]
 path = "medspacy/VERSION"
+pattern = "b(<version>)"
 
 [tool.hatch.metadata]
 readme = "README.md"

@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0.0", "setuptools_scm[toml]>=6.2", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "medspacy"
-dynamic = ["version","dependencies","readme"]
+readme = "README.MD"
 authors = [{name = "medSpaCy"}]
 description = "Library for clinical NLP with spaCy."
 requires-python = ">=3.8"
@@ -13,16 +13,25 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
 ]
+dynamic = ["version"]
 
-#https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirments/requirements.txt"]}
-version={file = "medspacy/VERSION"}
-readme={file = ['README.md']}
+# Hatch dependencies
+[tool.hatch.metadata]
+dependencies = [
+    "Cython>=0.25,<3.0",
+    "spacy>=3.0.0,<=3.6",
+    "PyFastNER>=1.0.8",
+    "quicksectx>=0.3.5"
+]
+# If you need to dynamically include dependencies from a requirements.txt file, 
+# this will require a custom script or manual update.
+
+[tool.hatch.version]
+path = "medspacy/VERSION"
 
 [project.urls]
 Source = "https://github.com/medspacy/medspacy"
 
-[tool.setuptools]
-include-package-data = true
-
+# Include additional package data
+[tool.hatch.envs.default]
+# Specify additional build settings here if necessary

@@ -54,21 +54,9 @@ jobs:
         python --version
         python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
-        pip install -U pip setuptools wheel
-        pip install -r requirements/requirements.txt
+        pip install -e .
         # set up all spacy language models that are used in our pytest tests
-        python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
-        python -m spacy download en_core_web_md
-        # multilingual models for testing compatibility
-        python -m spacy download es_core_news_sm
-        python -m spacy download pl_core_news_sm
-        python -m spacy download de_core_news_sm
-        python -m spacy download xx_ent_wiki_sm
-        # install scispacy model as well to ensure compatibility
-        # we want to test execution of jupyter notebooks in pytest as well
-        # Move previous multiple lines into single txt file
-        pip install -r requirements/requirements_tests.txt
 
     - name: print medspacy version
       run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'

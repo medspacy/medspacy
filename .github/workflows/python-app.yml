@@ -54,7 +54,7 @@ jobs:
         pip install -e .
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download en_core_web_sm
-        pip install flake8 pytest
+        pip install -r requirements/requirements_tests.txt
 
     - name: print medspacy version
       run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'

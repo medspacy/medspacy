@@ -1,11 +1,17 @@
 name: manual_test_pip
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      install_prerelease:
+        description: 'Check this to install the prerelease version of medspacy if available and the version is newer than formal release.'  
+        type: boolean   
+        required: false
+        default: false
 
 jobs:
 
-  test_win_linux_mac:
+  test:
   
     # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
     #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
@@ -13,28 +19,50 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        # python-version: [3.8]
         python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+        # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
-    - name: check clone
+    - name: Git clone repo and remove source code
       run: |
         pwd
         ls
+        # remove cloned source code to ensure test on installed medspacy
         python -c "import shutil;shutil.rmtree('medspacy')"
         ls
 
-    - name: Set up Python ${{ matrix.python-version }}  ${{ matrix.os }}
+    - name: Set up pip
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}   
         cache: 'pip'   
-        cache-dependency-path: 'requirements_piptests.txt'
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+          'requirements/requirements_tests.txt'
     - run: |
         python --version
         pip install --upgrade pip
-        pip install --use-pep517 -r requirements_piptests.txt
+    
+    
+    - name: Install prereleased medspacy
+      if: ${{ github.event.inputs.install_prerelease == 'true' }} 
+      run: |
+        # use this to avoid install prereleases of dependencies packages
+        pip install medspacy
+        pip uninstall -y medspacy
+        pip install --pre medspacy
+
+    - name: Install formal released medspacy
+      if: ${{ github.event.inputs.install_prerelease == 'false' }}  
+      run: |
+        pip install medspacy
+
+    - name: Install dependencies to run pytest
+      run: |
+        pip install --use-pep517 -r requirements/requirements_tests.txt
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
         python -m spacy download en_core_web_md
@@ -43,3 +71,14 @@ jobs:
         python -m spacy download pl_core_news_sm
         python -m spacy download de_core_news_sm
         python -m spacy download xx_ent_wiki_sm
+
+    - name: print medspacy version
+      run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'
+    
+    - name: Test with pytest
+      # need to run pytest after a clean pip install to 100% replicate the users' environment
+      run: |        
+        # run everything besides the QuickUMLS span group tests...
+        pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
+        # now in a separate session we can run the QuickUMLS span group tests...
+        pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"

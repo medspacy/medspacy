@@ -56,8 +56,9 @@ setup(
     author="medSpaCy",
     packages=find_packages(),
     install_requires=required,
-    long_description=long_description,
-    long_description_content_type="text/markdown",
+    # TODO: Fix this later for a richer description
+    #long_description=long_description,
+    #long_description_content_type="text/markdown",
     package_data={"medspacy": resource_files},
     python_requires=">=3.8.0",
 )

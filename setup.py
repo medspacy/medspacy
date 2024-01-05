@@ -24,6 +24,9 @@ def package_files(directory):
 # get all files recursively from /resources
 resource_files = package_files("./resources")
 
+# get all files recursively from /requirements
+resource_files += package_files("./requirements")
+
 # read requirements configuration
 with open('requirements/requirements.txt') as f:
     required = f.read().splitlines()

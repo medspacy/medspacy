@@ -25,8 +25,7 @@ class ConTextRule(BaseRule):
         "FORWARD",
         "BACKWARD",
         "BIDIRECTIONAL",
-        "TERMINATE",
-        "PSEUDO"
+        "TERMINATE"
     )
     _ALLOWED_KEYS = {
         "literal",

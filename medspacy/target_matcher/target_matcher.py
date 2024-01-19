@@ -31,6 +31,7 @@ class TargetMatcher:
         phrase_matcher_attr: str = "LOWER",
         result_type: Union[Literal["ents", "group"], None] = "ents",
         span_group_name: str = "medspacy_spans",
+        prune: bool = True
     ):
         """
         Creates a new TargetMatcher.
@@ -53,12 +54,13 @@ class TargetMatcher:
         self.name = name
         self._result_type = result_type
         self._span_group_name = span_group_name
+        self._prune = prune
 
         if rules:
             self.add(TargetRule.from_json(rules))
 
         self.__matcher = MedspacyMatcher(
-            nlp, name=name, phrase_matcher_attr=phrase_matcher_attr
+            nlp, name=name, phrase_matcher_attr=phrase_matcher_attr, prune=self._prune
         )
 
     @property

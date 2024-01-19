@@ -1408,6 +1408,23 @@
       "literal": "negative on",
       "pattern": null,
       "direction": "BACKWARD"
+    },
+    {
+      "category": "HISTORICAL",
+      "literal": "presentation",
+      "pattern": [
+        {
+          "LOWER" : {"IN": ["present", "presenting", "presents"]}
+        }
+      ],
+      "direction": "TERMINATE"
+    },
+    {
+      "category": "HISTORICAL",
+      "literal": "comes in with",
+      "pattern": null,
+      "direction": "TERMINATE"
     }
+
   ]
 }

@@ -17,12 +17,12 @@ jobs:
     strategy:
       matrix:
         # removed 3.5 since there appears to be a failure with setuptools
-        #python-version: [3.6, 3.7, 3.8] # [3.5, 3.6, 3.7, 3.8]
+        #python-version: [3.6, 3.7, 3.9] # [3.5, 3.6, 3.7, 3.9]
         #os: [ubuntu-latest, macos-latest, windows-2019]
         include:
-          - name: "Ubuntu Python 3.8"
+          - name: "Ubuntu Python 3.9"
             os: ubuntu-latest
-            python-version: 3.8
+            python-version: 3.9
             addons:
               apt:
                 update: true
@@ -31,26 +31,31 @@ jobs:
                   # https://spacy.io/usage#source-ubuntu
                   - build-essential
                   - python-dev
-          - name: "MacOS Python 3.8"
+          - name: "MacOS Python 3.9"
             os: macos-latest
-            python-version: 3.8
-          - name: "Windows Python 3.8"
+            python-version: 3.9
+          - name: "Windows Python 3.9"
             os: windows-2019
-            python-version: 3.8
+            python-version: 3.9
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}      
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+          'requirements/requirements_tests.txt'
+               
     - name: Install dependencies      
       run: |
         python --version
         python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
         pip install -U pip setuptools wheel
-        python setup.py install
+        pip install -r requirements/requirements.txt
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download de_core_news_sm
         python -m spacy download en_core_web_sm
@@ -61,14 +66,13 @@ jobs:
         python -m spacy download de_core_news_sm
         python -m spacy download xx_ent_wiki_sm
         # install scispacy model as well to ensure compatibility
-        pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
-        pip install flake8 pytest
         # we want to test execution of jupyter notebooks in pytest as well
-        pip install ipywidgets
-        pip install pyodbc
-        pip install jupyterlab
-        pip install nltk
-        pip install pandas
+        # Move previous multiple lines into single txt file
+        pip install -r requirements/requirements_tests.txt
+
+    - name: print medspacy version
+      run: python -c 'import medspacy; print(medspacy.__version__); print(medspacy.__file__)'
+        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

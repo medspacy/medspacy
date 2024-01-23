@@ -1,3 +1,5 @@
+import warnings
+
 from typing import List, Union, Iterable, Optional, Literal, Set
 
 from spacy.language import Language
@@ -143,12 +145,12 @@ class TargetMatcher:
         """
         matches = self.__matcher(doc)
         spans = []
-        for (rule_id, start, end) in matches:
+        for rule_id, start, end in matches:
             rule = self.__matcher.rule_map[self.nlp.vocab.strings[rule_id]]
             span = Span(doc, start=start, end=end, label=rule.category)
             span._.target_rule = rule
             if rule.attributes is not None:
-                for (attribute, value) in rule.attributes.items():
+                for attribute, value in rule.attributes.items():
                     try:
                         setattr(span._, attribute, value)
                     except AttributeError as e:
@@ -164,9 +166,10 @@ class TargetMatcher:
                 except ValueError:
                     # spaCy will raise a value error if the token in span are already part of an entity (i.e., as part
                     # of an upstream component). In that case, let the existing span supersede this one.
-                    raise RuntimeWarning(
+                    warnings.warn(
                         f'The result ""{span}"" conflicts with a pre-existing entity in doc.ents. This result has been '
-                        f"skipped."
+                        f"skipped.",
+                        RuntimeWarning,
                     )
             return doc
         elif self.result_type.lower() == "group":

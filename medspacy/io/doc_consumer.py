@@ -6,7 +6,7 @@ from spacy.tokens import Span
 
 from medspacy.context import ConTextModifier
 
-ALLOWED_DATA_TYPES = ("ents", "section", "context", "doc")
+ALLOWED_DATA_TYPES = ("ents", "group", "section", "context", "doc")
 
 DEFAULT_ENT_ATTRS = (
     "text",
@@ -197,7 +197,7 @@ class DocConsumer:
                     data["ents"][attr].append(val)
         if "group" in self.dtypes:
             for span in doc.spans[self._span_group_name]:
-                for attr in self.dtype_attrs["ents"]:
+                for attr in self.dtype_attrs["group"]:
                     try:
                         val = getattr(span, attr)
                     except AttributeError:
@@ -227,28 +227,41 @@ class DocConsumer:
         span = doc[span_tup[0] : span_tup[1]]
         scope_tup = modifier.scope_span
         scope = doc[scope_tup[0] : scope_tup[1]]
-        if "ent_text" in self.dtype_attrs["context"]:
-            context_data["ent_text"].append(ent.text)
-        if "ent_label_" in self.dtype_attrs["context"]:
-            context_data["ent_label_"].append(ent.label_)
-        if "ent_start_char" in self.dtype_attrs["context"]:
-            context_data["ent_start_char"].append(ent.start_char)
-        if "ent_end_char" in self.dtype_attrs["context"]:
-            context_data["ent_end_char"].append(ent.end_char)
-        if "modifier_text" in self.dtype_attrs["context"]:
-            context_data["modifier_text"].append(span.text)
-        if "modifier_category" in self.dtype_attrs["context"]:
-            context_data["modifier_category"].append(modifier.category)
-        if "modifier_direction" in self.dtype_attrs["context"]:
-            context_data["modifier_direction"].append(modifier.direction)
-        if "modifier_start_char" in self.dtype_attrs["context"]:
-            context_data["modifier_start_char"].append(span.start_char)
-        if "modifier_end_char" in self.dtype_attrs["context"]:
-            context_data["modifier_end_char"].append(span.end_char)
-        if "modifier_scope_start_char" in self.dtype_attrs["context"]:
-            context_data["modifier_scope_start_char"].append(scope.start_char)
-        if "modifier_scope_end_char" in self.dtype_attrs["context"]:
-            context_data["modifier_scope_end_char"].append(scope.end_char)
+        for attr in self.dtype_attrs["context"]:
+            if attr == "ent_text":
+                context_data["ent_text"].append(ent.text)
+            elif attr == "ent_label_":
+                context_data["ent_label_"].append(ent.label_)
+            elif attr == "ent_start_char":
+                context_data["ent_start_char"].append(ent.start_char)
+            elif attr == "ent_end_char":
+                context_data["ent_end_char"].append(ent.end_char)
+            elif attr == "modifier_text":
+                context_data["modifier_text"].append(span.text)
+            elif attr == "modifier_category":
+                context_data["modifier_category"].append(modifier.category)
+            elif attr == "modifier_direction":
+               context_data["modifier_direction"].append(modifier.direction)
+            elif attr == "modifier_start_char":
+                context_data["modifier_start_char"].append(span.start_char)
+            elif attr == "modifier_end_char":
+                context_data["modifier_end_char"].append(span.end_char)
+            elif attr == "modifier_scope_start_char":
+                context_data["modifier_scope_start_char"].append(scope.start_char)
+            elif attr == "modifier_scope_end_char":
+                context_data["modifier_scope_end_char"].append(scope.end_char)
+            else:
+            # if specified attribute is not one of these standard values, check the entity to see if it's an entity value
+                try:
+                    val = getattr(ent, attr)
+                except AttributeError:
+                    try:
+                        val = getattr(ent._, attr)
+                    except AttributeError:
+                        raise ValueError(f"Attributes for dtype 'context' must be either "
+                                         f"a registered custom Span attribute (i.e., Span._.attr) or one of these pre-defined values: "
+                                          f"{ALLOWED_CONTEXT_ATTRS}. \nYou passed in '{attr}'")
+                context_data[f"{attr}"].append(val)
 
     def add_section_attributes(self, section, section_data, doc):
         # Allow for null sections

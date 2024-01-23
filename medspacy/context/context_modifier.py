@@ -169,6 +169,7 @@ class ConTextModifier:
                 and (self._scope_end - self._scope_start) > self.max_scope
             ):
                 self._scope_start = self._start - self.max_scope
+        
         else:  # bidirectional
             self._scope_start, self._scope_end = (
                 full_scope_span.start,

@@ -26,7 +26,7 @@ class ConTextRule(BaseRule):
         "BACKWARD",
         "BIDIRECTIONAL",
         "TERMINATE",
-        "PSEUDO",
+        "PSEUDO"
     )
     _ALLOWED_KEYS = {
         "literal",
@@ -211,6 +211,7 @@ class ConTextRule(BaseRule):
         Returns:
             The dictionary containing the ConTextRule info.
         """
+
         rule_dict = {}
         for key in self._ALLOWED_KEYS:
             value = self.__dict__.get(key)

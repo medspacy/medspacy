@@ -163,12 +163,16 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
         token_data.append(data)
         token_data_mapping[token] = data
 
+    targets = [
+        doc[start:end]
+        for start, end in doc._.context_graph.target_spans
+    ]
+
     # Merge phrases
-    # targets_and_modifiers = [*doc._.context_graph.targets]
     existing_tokens = set()
     targets_and_modifiers = []
     # Used to prevent duplication of token in targets or modifiers that appear twice due to being in a span group or, appearing twice as a modifier
-    for target_or_modifier in (list(doc._.context_graph.targets) + doc._.context_graph.modifiers):
+    for target_or_modifier in (targets + doc._.context_graph.modifiers):
         if isinstance (target_or_modifier, Span):
             span=target_or_modifier
         else:
@@ -232,7 +236,8 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
     dep_data = {"words": token_data, "arcs": []}
     
     # Gather the edges between targets and modifiers
-    for target, modifier in doc._.context_graph.edges:
+    for target_span, modifier in doc._.context_graph.edges:
+        target = doc[target_span[0]:target_span[1]]
         target_data = token_data_mapping[target[0]]
         modifier_data = token_data_mapping[doc[modifier.modifier_span[0]]]
         dep_data["arcs"].append(

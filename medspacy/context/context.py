@@ -266,14 +266,15 @@ class ConText:
             except ValueError:  # Extension already set
                 pass
 
-    def set_context_attributes(self, edges):
+    def set_context_attributes(self, edges, doc):
         """
         Adds Span-level attributes to targets with modifiers.
 
         Args:
             edges: The edges of the ContextGraph to modify.
         """
-        for (target, modifier) in edges:
+        for (target_span, modifier) in edges:
+            target = doc[target_span[0]:target_span[1]]
             if modifier.category in self.context_attributes_mapping:
                 attr_dict = self.context_attributes_mapping[modifier.category]
                 for attr_name, attr_value in attr_dict.items():
@@ -317,12 +318,13 @@ class ConText:
         context_graph.apply_modifiers()
 
         # Link targets to their modifiers
-        for target, modifier in context_graph.edges:
+        for target_span, modifier in context_graph.edges:
+            target = doc[target_span[0]:target_span[1]]
             target._.modifiers += (modifier,)
 
         # If attributes need to be modified
         if self.context_attributes_mapping:
-            self.set_context_attributes(context_graph.edges)
+            self.set_context_attributes(context_graph.edges, doc)
 
         doc._.context_graph = context_graph
 

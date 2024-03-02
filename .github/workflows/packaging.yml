@@ -55,18 +55,18 @@ jobs:
     #     pip install -r requirements/requirements_tests.txt
 
     - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.5
-        env:
-          # TODO: Build Cython with the compile-all flag?
-          # Unfortunately, there is no way to modify cibuildwheel's build command
-          # so there is no way to pass this in directly.
-          # This would require modifying cython's setup.py to look for these flags
-          # in env vars.
-          CIBW_BEFORE_BUILD: "pip install -r requirements/requirements.txt && python -m spacy download en_core_web_sm && python -m spacy download en_core_web_md"
-          # CIBW_BEFORE_BUILD: "python setup.py build_ext --inplace"
-          CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-          CIBW_ENVIRONMENT: CFLAGS='-O3 -g0 -mtune=generic -pipe -fPIC' LDFLAGS='-fPIC'          
-          CIBW_TEST_COMMAND: pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span" {package}/tests && pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span" {package}/tests
+      uses: pypa/cibuildwheel@v2.16.5
+      env:
+        # TODO: Build Cython with the compile-all flag?
+        # Unfortunately, there is no way to modify cibuildwheel's build command
+        # so there is no way to pass this in directly.
+        # This would require modifying cython's setup.py to look for these flags
+        # in env vars.
+        CIBW_BEFORE_BUILD: "pip install -r requirements/requirements.txt && python -m spacy download en_core_web_sm && python -m spacy download en_core_web_md"
+        # CIBW_BEFORE_BUILD: "python setup.py build_ext --inplace"
+        CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+        CIBW_ENVIRONMENT: CFLAGS='-O3 -g0 -mtune=generic -pipe -fPIC' LDFLAGS='-fPIC'          
+        CIBW_TEST_COMMAND: pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span" {package}/tests && pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span" {package}/tests
 
     - name: Check built
       run: ls dist

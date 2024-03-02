@@ -24,18 +24,51 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
-    - name: Install dependencies
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+          'requirements/requirements_tests.txt'
+
+    - name: Install dependencies      
       run: |
-        python -m pip install --upgrade pip
-        pip install build
+        python --version
+        python -m pip install --upgrade pip        
+        # Install our package to make sure our setup works...
+        pip install -U pip setuptools wheel
+        pip install -r requirements/requirements.txt
+        # set up all spacy language models that are used in our pytest tests
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # multilingual models for testing compatibility
+        python -m spacy download es_core_news_sm
+        python -m spacy download pl_core_news_sm
+        python -m spacy download de_core_news_sm
+        python -m spacy download xx_ent_wiki_sm
+        # install scispacy model as well to ensure compatibility
+        # we want to test execution of jupyter notebooks in pytest as well
+        # Move previous multiple lines into single txt file
+        pip install -r requirements/requirements_tests.txt
+
+    - name: Test with pytest
+      run: |
+        # run everything besides the QuickUMLS span group tests...
+        pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
+        # now in a separate session we can run the QuickUMLS span group tests...
+        pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"
+
     - name: Build package
-      run: python setup.py sdist
+      run: python setup.py sdist bdist_wheel
+
     - name: Check built
       run: ls dist
+    - name: Get tag version
+      id: get_tag_version
+      run: echo "## v${GITHUB_REF##refs/tags/}" >> $GITHUB_ENV
       
     - name: Create Release
       id: create_release

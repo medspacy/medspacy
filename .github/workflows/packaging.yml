@@ -74,9 +74,8 @@ jobs:
     - name: Get tag version
       id: get_tag_version
       run: |
-        TAG_VERSION: ${{ steps.get_tag_version.outputs.TAG_VERSION }}
-        echo ${{ TAG_VERSION }}
-              
+        echo ${{ steps.get_tag_version.outputs.TAG_VERSION }}        
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1

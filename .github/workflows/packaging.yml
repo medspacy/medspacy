@@ -64,8 +64,7 @@ jobs:
       id: get_tag_version
       env: 
         TAG_VERSION: ${{ steps.get_tag_version.outputs.TAG_VERSION }}
-      run: |        
-        echo ${{ TAG_VERSION }}
+      run: echo ${{ TAG_VERSION }}
 
     - name: Test with pytest
       run: |

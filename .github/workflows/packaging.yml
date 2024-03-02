@@ -21,6 +21,8 @@ jobs:
   build_release:
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v3
@@ -76,7 +78,6 @@ jobs:
       id: get_tag_version
       run: |
           echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "::set-output name=tag_version::${GITHUB_REF#refs/tags/}"      
 
     - name: Create Release
       id: create_release

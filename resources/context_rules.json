@@ -1398,6 +1398,18 @@
       "direction": "BACKWARD"
     },
     {
+      "category": "NEGATED_EXISTENCE",
+      "literal": "are not evident",
+      "pattern": null,
+      "direction": "BACKWARD"
+    },
+    {
+      "category": "NEGATED_EXISTENCE",
+      "literal": "negative on",
+      "pattern": null,
+      "direction": "BACKWARD"
+    },
+    {
       "category": "HISTORICAL",
       "literal": "presentation",
       "pattern": [

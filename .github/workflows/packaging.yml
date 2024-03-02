@@ -9,10 +9,10 @@
 name: Build Release
 
 on:
-  workflow_dispatch
-  # push:
-  #   tags:
-  #     - '*'
+  # workflow_dispatch
+  push:
+    tags:
+      - '*'
 
 permissions:
   contents: read

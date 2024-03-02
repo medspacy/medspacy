@@ -59,9 +59,12 @@ jobs:
 
     - name: Check built
       run: ls dist
+
     - name: Get tag version
       id: get_tag_version
-      run: echo "## v${GITHUB_REF##refs/tags/}" >> $GITHUB_ENV
+      run: |
+        TAG_VERSION: ${{ steps.get_tag_version.outputs.TAG_VERSION }}
+        echo ${{ TAG_VERSION }}
 
     - name: Test with pytest
       run: |

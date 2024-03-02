@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Upload Release
+name: Build Release
 
 on:
   workflow_dispatch

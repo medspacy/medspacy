@@ -66,6 +66,7 @@ jobs:
 
     - name: Test with pytest
       run: |
+        pip install dist/medspacy*.whl
         # run everything besides the QuickUMLS span group tests...
         pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
         # now in a separate session we can run the QuickUMLS span group tests...

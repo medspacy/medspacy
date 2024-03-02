@@ -6,10 +6,13 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Packaging
+name: Upload Release
 
 on:
   workflow_dispatch
+  # push:
+  #   tags:
+  #     - '*'
 
 permissions:
   contents: read
@@ -34,9 +37,24 @@ jobs:
     - name: Check built
       run: ls dist
       
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: tar gz file
-        path: dist
-        retention-days: 2
+        tag_name: ${{ steps.get_tag_version.outputs.tag_version }}
+        release_name: "Release v${{ steps.get_tag_version.outputs.tag_version }}"
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/*.tar.gz
+        asset_name: ${{ steps.get_tag_version.outputs.tag_version }}.tar.gz
+        asset_content_type: application/zip

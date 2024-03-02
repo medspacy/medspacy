@@ -77,7 +77,9 @@ jobs:
     - name: Get tag version
       id: get_tag_version
       run: |
-          echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        echo ${{ env.TAG_VERSION }}
 
     - name: Create Release
       id: create_release

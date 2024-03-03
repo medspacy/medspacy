@@ -92,6 +92,12 @@ jobs:
         draft: false
         prerelease: false
 
+    - name: Check built
+      run: |
+        ls dist
+        pwd
+        ls        
+
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:

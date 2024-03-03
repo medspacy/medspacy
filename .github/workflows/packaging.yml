@@ -79,7 +79,12 @@ jobs:
       run: |
         echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: check tag version
+      id: check_tag_version
+      run: |        
         echo $TAG_VERSION
+        echo ${{ steps.get_tag_version.outputs.tag_version }}
 
     - name: Create Release
       id: create_release
@@ -87,8 +92,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name:  ${{ github.ref }}
-        release_name: "Release  ${{ github.ref }}"
+        tag_name:  ${{ steps.get_tag_version.outputs.tag_version }}
+        release_name: "Release  ${{ steps.get_tag_version.outputs.tag_version }}"
         draft: false
         prerelease: false
 
@@ -104,8 +109,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/medspacy-${{ github.ref }}.tar.gz
-        asset_name: medspacy-${{ github.ref }}.tar.gz
+        asset_path: dist/medspacy-${{ steps.get_tag_version.outputs.tag_version }}.tar.gz
+        asset_name: medspacy-${{ steps.get_tag_version.outputs.tag_version }}.tar.gz
         asset_content_type: application/gzip
 
     - name: Upload Wheel Asset
@@ -114,6 +119,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/medspacy-${{ github.ref }}-py3-none-any.whl
-        asset_name: medspacy-${{ github.ref }}-py3-none-any.whl
+        asset_path: dist/medspacy-${{ steps.get_tag_version.outputs.tag_version }}-py3-none-any.whl
+        asset_name: medspacy-${{ steps.get_tag_version.outputs.tag_version }}-py3-none-any.whl
         asset_content_type: application/zip

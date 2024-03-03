@@ -79,7 +79,7 @@ jobs:
       run: |
         echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-        echo ${{ env.TAG_VERSION }}
+        echo $TAG_VERSION
 
     - name: Create Release
       id: create_release
@@ -87,18 +87,27 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.get_tag_version.outputs.tag_version }}
-        release_name: "Release v${{ steps.get_tag_version.outputs.tag_version }}"
+        tag_name:  ${{ github.ref }}
+        release_name: "Release  ${{ github.ref }}"
         draft: false
         prerelease: false
 
     - name: Upload Release Asset
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/*.tar.gz
-        asset_name: ${{ steps.get_tag_version.outputs.tag_version }}.tar.gz
+        asset_name: medspacy-${{ github.ref }}.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Wheel Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/*.whl
+        asset_name: project-name-${{ github.ref }}.whl
         asset_content_type: application/zip

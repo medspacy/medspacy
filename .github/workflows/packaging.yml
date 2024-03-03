@@ -104,7 +104,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/*.tar.gz
+        asset_path: dist/*.tar.gz
         asset_name: medspacy-${{ github.ref }}.tar.gz
         asset_content_type: application/gzip
 
@@ -114,6 +114,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/*.whl
-        asset_name: project-name-${{ github.ref }}.whl
+        asset_path: dist/*.whl
+        asset_name: medspacy-${{ github.ref }}.whl
         asset_content_type: application/zip

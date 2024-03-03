@@ -1,0 +1,112 @@
+# This workflow will a release based on tag version, upload the zipped source code, 
+# as well as built tar.gz and whl files to that release.
+name: Build Release
+
+on:
+  # workflow_dispatch
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: read
+
+jobs:
+  build_release:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements/requirements.txt'
+          'requirements/requirements_tests.txt'
+
+    - name: Install dependencies      
+      run: |
+        python --version
+        python -m pip install --upgrade pip        
+        # Install our package to make sure our setup works...
+        pip install -U pip setuptools wheel
+        pip install -r requirements/requirements.txt
+        # set up all spacy language models that are used in our pytest tests
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # multilingual models for testing compatibility
+        # python -m spacy download es_core_news_sm
+        # python -m spacy download pl_core_news_sm
+        # python -m spacy download de_core_news_sm
+        # python -m spacy download xx_ent_wiki_sm
+        # install scispacy model as well to ensure compatibility
+        # we want to test execution of jupyter notebooks in pytest as well
+        # Move previous multiple lines into single txt file
+        pip install -r requirements/requirements_tests.txt
+
+    - name: Build package
+      run: |
+        python setup.py sdist bdist_wheel
+
+    - name: Test with pytest
+      run: |
+        pip install dist/medspacy*.whl
+        # run everything besides the QuickUMLS span group tests...
+        pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
+        # now in a separate session we can run the QuickUMLS span group tests...
+        pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"      
+      
+    - name: Get tag version
+      id: get_tag_version
+      run: |
+        echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: check tag version
+      id: check_tag_version
+      run: |        
+        echo $TAG_VERSION
+        echo ${{ steps.get_tag_version.outputs.tag_version }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name:  ${{ steps.get_tag_version.outputs.tag_version }}
+        release_name: "Release  ${{ steps.get_tag_version.outputs.tag_version }}"
+        draft: false
+        prerelease: false
+
+    - name: Check built
+      run: |
+        ls dist
+        pwd
+        ls        
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/medspacy-${{ steps.get_tag_version.outputs.tag_version }}.tar.gz
+        asset_name: medspacy-${{ steps.get_tag_version.outputs.tag_version }}.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Wheel Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/medspacy-${{ steps.get_tag_version.outputs.tag_version }}-py3-none-any.whl
+        asset_name: medspacy-${{ steps.get_tag_version.outputs.tag_version }}-py3-none-any.whl
+        asset_content_type: application/zip

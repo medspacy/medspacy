@@ -1,6 +1,6 @@
 # NLP Postprocessor
 This package implements functionality for postprocessing of spaCy entities. It is especially designed to be compatible 
-with medSpaCy components such as [cycontext](https://github.com/medspacy/cycontext).
+with medSpaCy components such as **ConText**.
 A typical spaCy pipeline processes a Doc with multiple steps of components. For example, an **NER** model might
 extract entities and assign labels to spans, and **ConText** will identify contextual modifiers and assign attributes 
 like negation and uncertainty. After going through these multiple steps, you may want to implement additional logic 
@@ -27,11 +27,11 @@ python
 doc = nlp("There is no evidence of pneumonia but he does have PE.")
 print(doc.ents)
 >>> (pneumonia, PE)
-import cycontext
-context = cycontext.ConTextComponent(nlp, rules="default")
+from medspacy.context import ConText, ConTextRule
+context = nlp.get_pipe("medspacy_context")
 context(doc)
 for ent in doc.ents:
-    print(ent, ent._.is_negated)
+    print((ent, ent._.is_negated))
 >>> (pneumonia, True)
     (PE, False)
 

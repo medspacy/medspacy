@@ -21,6 +21,7 @@ class ConTextGraph:
     def __init__(
         self,
         targets: Optional[List[Span]] = None,
+        target_spans: Optional[List[List[int]]] = [],
         modifiers: Optional[List[ConTextModifier]] = None,
         edges: Optional[List] = None,
         prune_on_modifier_overlap: bool = False,
@@ -30,11 +31,17 @@ class ConTextGraph:
 
         Args:
             targets: A spans that context might modify.
+            target_spans: A list of integer pairs that represent the target spans.
+                Each pair is the start and end indices of the span.
             modifiers: A list of ConTextModifiers that might modify the targets.
             edges: A list of edges between targets and modifiers representing the modification relationship.
             prune_on_modifier_overlap: Whether to prune modifiers when one modifier completely covers another.
         """
         self.targets = targets if targets is not None else []
+        self.target_spans = [
+            (target.start, target.end)
+            for target in targets
+        ] if targets is not None else target_spans
         self.modifiers = modifiers if modifiers is not None else []
         self.edges = edges if edges is not None else []
         self.prune_on_modifier_overlap = prune_on_modifier_overlap
@@ -82,7 +89,7 @@ class ConTextGraph:
         for modifier in self.modifiers:
             modifier.reduce_targets()
             for target in modifier._targets:
-                edges.append((target, modifier))
+                edges.append(((target.start, target.end), modifier))
 
         self.edges = edges
 
@@ -93,7 +100,9 @@ class ConTextGraph:
         """
         Returns the serialized representation of the ConTextGraph
         """
-        return self.__dict__
+        rep = self.__dict__
+        rep.pop("targets", None)
+        return rep
 
     @classmethod
     def from_serialized_representation(cls, serialized_representation) -> ConTextGraph:
@@ -101,6 +110,10 @@ class ConTextGraph:
         Creates the ConTextGraph from the serialized representation
         """
         context_graph = ConTextGraph(**serialized_representation)
+        context_graph.edges = [
+            (target, ConTextModifier.from_serialized_representation(modifier_dict))
+            for target, modifier_dict in context_graph.edges
+        ]
 
         return context_graph
 

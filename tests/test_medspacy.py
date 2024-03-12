@@ -57,7 +57,7 @@ class TestMedSpaCy:
             "medspacy_preprocessor",
             "medspacy_pyrush",
             "medspacy_target_matcher",
-            # "medspacy_quickumls", # quickumls still not included by default due to install issues
+            "medspacy_quickumls",
             "medspacy_context",
             "medspacy_sectionizer",
             "medspacy_postprocessor",

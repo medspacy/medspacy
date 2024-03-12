@@ -13,8 +13,6 @@ MEDSPACY_DEFAULT_SPAN_GROUP_NAME = "medspacy_spans"
 
 
 class TestQuickUMLSEntity:
-
-    # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_initialize_pipeline(self):
         """
         Test that a pipeline with a QuickUMLS component can be loaded in medpacy
@@ -31,7 +29,6 @@ class TestQuickUMLSEntity:
         # Check that the simstring database exists
         assert quickumls.quickumls.ss_db
 
-    # @pytest.mark.skip(reason="quickumls not enabled for spacy v3")
     def test_quickumls_extractions(self):
         """
         Test that extractions can be performed using the very small (<100 concept) UMLS sample resources

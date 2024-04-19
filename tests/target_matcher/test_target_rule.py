@@ -1,3 +1,6 @@
+import os, sys
+# recent pytest failed because of project directory is not included in sys.path somehow, might due to other configuration issue. Add this for a temp solution
+sys.path.append(os.getcwd())
 import spacy
 import warnings
 import pytest

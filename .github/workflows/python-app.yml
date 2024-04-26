@@ -85,3 +85,7 @@ jobs:
         pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
         # now in a separate session we can run the QuickUMLS span group tests...
         pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"
+        
+    - name: Test Build package      
+      run: |
+        python setup.py sdist bdist_wheel

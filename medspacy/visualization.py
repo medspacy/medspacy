@@ -10,6 +10,8 @@ def visualize_ent(
     sections: bool = True,
     jupyter: bool = True,
     colors: Dict[str, str] = None,
+    target_span_type: str = "ents",
+    span_group_name: str = "medspacy_spans"
 ) -> str:
     """
     Creates a NER-style visualization for targets and modifiers in Doc.
@@ -37,7 +39,14 @@ def visualize_ent(
 
     ents_data = []
 
-    for target in doc.ents:
+    if target_span_type == "ents":
+        targets = doc.ents
+    elif target_span_type == "group":
+        targets = doc.spans[span_group_name]
+    else:
+        raise ValueError("Target span type must be either ents or group.")
+
+    for target in targets:
         ent_data = {
             "start": target.start_char,
             "end": target.end_char,
@@ -155,8 +164,23 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
         token_data_mapping[token] = data
 
     # Merge phrases
-    targets_and_modifiers = [*doc._.context_graph.targets]
-    targets_and_modifiers += [*doc._.context_graph.modifiers]
+    # targets_and_modifiers = [*doc._.context_graph.targets]
+    existing_tokens = set()
+    targets_and_modifiers = []
+    # Used to prevent duplication of token in targets or modifiers that appear twice due to being in a span group or, appearing twice as a modifier
+    for target_or_modifier in (list(doc._.context_graph.targets) + doc._.context_graph.modifiers):
+        if isinstance (target_or_modifier, Span):
+            span=target_or_modifier
+        else:
+            span=doc[target_or_modifier._start : target_or_modifier._end]
+        already_seen = False 
+        for token in span:
+            if token in existing_tokens:
+                already_seen = True 
+                break 
+        if not already_seen:
+            targets_and_modifiers.append(target_or_modifier)
+            existing_tokens.update({token for token in span}) 
 
     for obj in targets_and_modifiers:
         if isinstance(obj, Span):
@@ -206,6 +230,7 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
         #     other_data["index"] -= len(span) - 1
 
     dep_data = {"words": token_data, "arcs": []}
+    
     # Gather the edges between targets and modifiers
     for target, modifier in doc._.context_graph.edges:
         target_data = token_data_mapping[target[0]]
@@ -220,11 +245,12 @@ def visualize_dep(doc: Doc, jupyter: bool = True) -> str:
                 else "left",
             }
         )
+    
     return displacy.render(dep_data, manual=True, jupyter=jupyter)
 
 
 class MedspaCyVisualizerWidget:
-    def __init__(self, docs):
+    def __init__(self, docs, target_span_type: str = "ents", span_group_name: str = "medspacy_spans"):
 
         """Create an IPython Widget Box displaying medspaCy's visualizers.
         The widget allows selecting visualization style ("Ent", "Dep", or "Both")
@@ -241,6 +267,8 @@ class MedspaCyVisualizerWidget:
         import ipywidgets as widgets
 
         self.docs = docs
+        self.target_span_type = target_span_type 
+        self.span_group_name = span_group_name
         self.slider = widgets.IntSlider(
             value=0,
             min=0,
@@ -294,7 +322,7 @@ class MedspaCyVisualizerWidget:
         if self.radio.value.lower() in ("dep", "both"):
             visualize_dep(doc)
         if self.radio.value.lower() in ("ent", "both"):
-            visualize_ent(doc)
+            visualize_ent(doc, target_span_type=self.target_span_type, span_group_name=self.span_group_name)
 
     def _on_click_next(self, b):
         if self.slider.value < len(self.docs) - 1:

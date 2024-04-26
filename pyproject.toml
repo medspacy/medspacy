@@ -8,6 +8,7 @@ dynamic = ["version","dependencies","readme"]
 authors = [{name = "medSpaCy"}]
 description = "Library for clinical NLP with spaCy."
 requires-python = ">=3.8"
+readme = "README.md"
 license = { file = "LICENSE" }
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -16,7 +17,7 @@ classifiers = [
 
 #https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirments/requirements.txt"]}
+dependencies = {file = ["requirements/requirements.txt"]}
 version={file = "medspacy/VERSION"}
 readme={file = ['README.md'], content-type = "text/markdown"}
 

@@ -1,3 +1,6 @@
+import os, sys
+# recent pytest failed because of project directory is not included in sys.path somehow, might due to other configuration issue. Add this for a temp solution
+sys.path.append(os.getcwd())
 import spacy
 from spacy.pipeline import EntityRuler
 
@@ -146,8 +149,9 @@ class TestDocConsumer:
 
     def test_get_default_attrs(self):
         attrs = DocConsumer.get_default_attrs()
-        assert set(attrs.keys()) == {"ents", "context", "section", "doc"}
+        assert set(attrs.keys()) == {"ents", "group", "context", "section", "doc"}
         assert set(attrs["ents"]) == set(DEFAULT_ENT_ATTRS)
+        assert set(attrs["group"]) == set(DEFAULT_ENT_ATTRS)
         assert set(attrs["section"]) == set(ALLOWED_SECTION_ATTRS)
         assert set(attrs["context"]) == set(ALLOWED_CONTEXT_ATTRS)
         assert set(attrs["doc"]) == set(DEFAULT_DOC_ATTRS)
@@ -157,3 +161,18 @@ class TestDocConsumer:
         doc = consumer(simple_doc)
         data = doc._.get_data("ents", attrs=["label_", "is_negated"])
         assert set(data.keys()) == {"label_", "is_negated"}
+
+    def test_context_data_custom_ent_attribute(self):
+        """Test that we can add a custom Span._ attribute to the ConText data output."""
+        consumer = DocConsumer(nlp, dtypes=("context",),
+                               dtype_attrs={"context": ("modifier_text", "modifier_category", "my_custom_attr")})
+        from spacy.tokens import Span; Span.set_extension("my_custom_attr", force=True, default="")
+        doc = nlp(context_text)
+        assert len(doc._.context_graph.edges) == 1
+        doc.ents[0]._.my_custom_attr = "Hello!"
+        consumer(doc)
+        doc_data = doc._.data
+        assert isinstance(doc_data, dict)
+        assert doc_data.keys() == {"context"}
+        assert set(doc_data["context"].keys()) == {"modifier_text", "modifier_category", "my_custom_attr"}
+        assert doc_data["context"]["my_custom_attr"][0] == "Hello!"

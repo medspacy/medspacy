@@ -52,7 +52,7 @@ jobs:
     - name: Install dependencies      
       run: |
         python --version
-        python -m pip install --upgrade pip        
+        pip install --upgrade pip   
         # Install our package to make sure our setup works...
         pip install -U pip setuptools wheel
         pip install -r requirements/requirements.txt

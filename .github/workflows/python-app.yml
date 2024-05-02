@@ -39,9 +39,9 @@ jobs:
             python-version: 3.9
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}   
         cache: 'pip'   
@@ -52,7 +52,7 @@ jobs:
     - name: Install dependencies      
       run: |
         python --version
-        python -m pip install --upgrade pip        
+        pip install --upgrade pip   
         # Install our package to make sure our setup works...
         pip install -U pip setuptools wheel
         pip install -r requirements/requirements.txt
@@ -85,3 +85,7 @@ jobs:
         pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
         # now in a separate session we can run the QuickUMLS span group tests...
         pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"
+
+    - name: Test Build package      
+      run: |
+        python setup.py sdist bdist_wheel

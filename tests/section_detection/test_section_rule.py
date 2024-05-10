@@ -19,7 +19,7 @@ class TestSectionizer:
 
     def test_read_json(self):
         rules_path = os.path.join(
-            Path(__file__).resolve().parents[2], "resources", "section_patterns.json"
+            Path(__file__).resolve().parents[2], "resources", "en", "section_patterns.json"
         )
         rules = SectionRule.from_json(rules_path)
         assert rules

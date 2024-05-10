@@ -14,12 +14,6 @@ from .section import Section
 from .section_rule import SectionRule
 from ..common.medspacy_matcher import MedspacyMatcher
 
-DEFAULT_RULES_FILEPATH = path.join(
-    Path(__file__).resolve().parents[2],
-    "resources",
-    "section_patterns.json",
-)
-
 DEFAULT_ATTRS = {
     "past_medical_history": {"is_historical": True},
     "sexual_and_social_history": {"is_historical": True},
@@ -61,6 +55,7 @@ class Sectionizer:
         nlp: Language,
         name: str = "medspacy_sectionizer",
         rules: Optional[str] = "default",
+        language_code: str = 'en',
         max_section_length: Optional[int] = None,
         phrase_matcher_attr: str = "LOWER",
         require_start_line: bool = False,
@@ -82,6 +77,9 @@ class Sectionizer:
                 SecTag, MIMIC-III, and practical refinement at the US Department of Veterans Affairs. If None, no rules
                 are loaded. Otherwise, must be a path to a json file containing rules. Add SectionRules directly through
                 `Sectionizer.add`.
+            language_code: Language code to use (ISO code) as a default for loading resources.  See documentation
+                and also the /resources directory to see which resources might be available in each language.
+                Default is "en" for English.
             max_section_length: Optional argument specifying the maximum number of tokens following a section header
                 which can be included in a section body. This can be useful if you think your section rules are
                 incomplete and want to prevent sections from running too long in the note. Default is None, meaning that
@@ -120,9 +118,16 @@ class Sectionizer:
             nlp, name=name, phrase_matcher_attr=phrase_matcher_attr
         )
 
+        self.DEFAULT_RULES_FILEPATH = path.join(
+            Path(__file__).resolve().parents[2],
+            "resources",
+            language_code.lower(),
+            "section_patterns.json",
+        )
+
         rule_path = None
         if rules == "default":
-            rule_path = DEFAULT_RULES_FILEPATH
+            rule_path = self.DEFAULT_RULES_FILEPATH
         else:
             rule_path = rules
 

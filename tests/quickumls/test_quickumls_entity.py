@@ -64,7 +64,7 @@ class TestQuickUMLSEntity:
 
         nlp.add_pipe(
             "medspacy_quickumls",
-            config={"threshold": 1.0, "quickumls_fp": get_quickumls_demo_dir()},
+            config={"threshold": 1.0, "quickumls_fp": get_quickumls_demo_dir("en")},
         )
 
         concept_term = "dipalmitoyllecithin"
@@ -86,7 +86,7 @@ class TestQuickUMLSEntity:
         nlp = spacy.blank("en")
 
         nlp.add_pipe(
-            "medspacy_quickumls", config={"quickumls_fp": get_quickumls_demo_dir()}
+            "medspacy_quickumls", config={"quickumls_fp": get_quickumls_demo_dir("en")}
         )
 
         concept_term = "dipalmitoyllecithin"

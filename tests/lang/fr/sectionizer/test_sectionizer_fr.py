@@ -19,7 +19,7 @@ LANGUAGE_CODE = 'fr'
 nlp = spacy.blank(LANGUAGE_CODE)
 
 
-class TestSectionizer:
+class TestSectionizerFR:
     def test_initiate(self):
         assert Sectionizer(nlp, language_code = LANGUAGE_CODE)
 

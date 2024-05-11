@@ -47,3 +47,11 @@ class TestConTextFR:
 
         assert doc.ents[0]._.is_historical is True
 
+    def test_is_family(self):
+        doc = nlp("Sa tante avait le cancer")
+        context = ConText(nlp, language_code=LANGUAGE_CODE)
+        doc.ents = (Span(doc, 4, 5, "CONDITION"),)
+        context(doc)
+
+        assert doc.ents[0]._.is_family is True
+

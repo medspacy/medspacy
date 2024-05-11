@@ -1702,7 +1702,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -2230,7 +2230,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2241,7 +2241,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2252,7 +2252,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2263,7 +2263,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2274,7 +2274,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2285,7 +2285,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2296,7 +2296,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2307,7 +2307,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2318,7 +2318,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2329,7 +2329,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2340,7 +2340,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2351,7 +2351,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2582,7 +2582,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2593,7 +2593,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2923,7 +2923,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2978,7 +2978,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -2989,7 +2989,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -3121,7 +3121,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -4045,7 +4045,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -4056,7 +4056,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -4639,7 +4639,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -4683,7 +4683,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -4705,7 +4705,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -4848,7 +4848,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -5002,7 +5002,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -5024,7 +5024,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18851,7 +18851,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18873,7 +18873,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18895,7 +18895,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18917,7 +18917,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18939,7 +18939,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18961,7 +18961,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -18983,7 +18983,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19005,7 +19005,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19027,7 +19027,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19049,7 +19049,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19060,7 +19060,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19071,7 +19071,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19082,7 +19082,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19104,7 +19104,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19115,7 +19115,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19137,7 +19137,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19148,7 +19148,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19170,7 +19170,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19181,7 +19181,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19203,7 +19203,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19214,7 +19214,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19236,7 +19236,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19247,7 +19247,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19269,7 +19269,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19280,7 +19280,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19302,7 +19302,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19313,7 +19313,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19335,7 +19335,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19346,7 +19346,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19368,7 +19368,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19379,7 +19379,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19401,7 +19401,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19412,7 +19412,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19434,7 +19434,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19445,7 +19445,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19467,7 +19467,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19478,7 +19478,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19500,7 +19500,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19511,7 +19511,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19533,7 +19533,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19544,7 +19544,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19566,7 +19566,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19577,7 +19577,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19599,7 +19599,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19610,7 +19610,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19632,7 +19632,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19643,7 +19643,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19665,7 +19665,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19676,7 +19676,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19698,7 +19698,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19709,7 +19709,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19731,7 +19731,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19742,7 +19742,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19764,7 +19764,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19775,7 +19775,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19797,7 +19797,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19808,7 +19808,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19830,7 +19830,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19841,7 +19841,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19863,7 +19863,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19874,7 +19874,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19896,7 +19896,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19907,7 +19907,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19929,7 +19929,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19940,7 +19940,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19962,7 +19962,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19973,7 +19973,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -19995,7 +19995,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20006,7 +20006,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20028,7 +20028,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20039,7 +20039,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20061,7 +20061,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20072,7 +20072,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20094,7 +20094,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20105,7 +20105,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20127,7 +20127,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20138,7 +20138,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20160,7 +20160,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20171,7 +20171,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20193,7 +20193,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20204,7 +20204,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20226,7 +20226,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20237,7 +20237,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20259,7 +20259,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20270,7 +20270,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20292,7 +20292,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20303,7 +20303,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20325,7 +20325,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20336,7 +20336,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20358,7 +20358,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20369,7 +20369,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20391,7 +20391,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20402,7 +20402,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20424,7 +20424,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20435,7 +20435,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20457,7 +20457,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20468,7 +20468,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20490,7 +20490,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20501,7 +20501,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20523,7 +20523,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20534,7 +20534,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20556,7 +20556,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20567,7 +20567,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20589,7 +20589,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20600,7 +20600,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20622,7 +20622,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20633,7 +20633,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20655,7 +20655,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20666,7 +20666,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20688,7 +20688,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20699,7 +20699,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20721,7 +20721,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20732,7 +20732,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20754,7 +20754,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20765,7 +20765,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20787,7 +20787,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20798,7 +20798,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20820,7 +20820,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20831,7 +20831,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20853,7 +20853,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20864,7 +20864,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20886,7 +20886,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20897,7 +20897,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20919,7 +20919,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20930,7 +20930,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20952,7 +20952,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20963,7 +20963,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20985,7 +20985,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -20996,7 +20996,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21018,7 +21018,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21029,7 +21029,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21051,7 +21051,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21062,7 +21062,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21084,7 +21084,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21095,7 +21095,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21117,7 +21117,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21128,7 +21128,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21150,7 +21150,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21161,7 +21161,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21183,7 +21183,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21194,7 +21194,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21216,7 +21216,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21227,7 +21227,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21249,7 +21249,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21260,7 +21260,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21282,7 +21282,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21293,7 +21293,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21315,7 +21315,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21326,7 +21326,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21348,7 +21348,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21359,7 +21359,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21381,7 +21381,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21392,7 +21392,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21414,7 +21414,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21425,7 +21425,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21447,7 +21447,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21458,7 +21458,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21480,7 +21480,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21491,7 +21491,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21513,7 +21513,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21524,7 +21524,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21546,7 +21546,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21557,7 +21557,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21579,7 +21579,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21590,7 +21590,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21612,7 +21612,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21623,7 +21623,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21645,7 +21645,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21656,7 +21656,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -21667,7 +21667,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21678,7 +21678,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21689,7 +21689,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21700,7 +21700,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21711,7 +21711,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21722,7 +21722,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21733,7 +21733,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21744,7 +21744,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21755,7 +21755,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21766,7 +21766,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21777,7 +21777,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21788,7 +21788,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21799,7 +21799,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21810,7 +21810,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21821,7 +21821,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21832,7 +21832,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21843,7 +21843,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21854,7 +21854,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21865,7 +21865,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21876,7 +21876,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21887,7 +21887,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21898,7 +21898,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21909,7 +21909,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21920,7 +21920,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21931,7 +21931,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21942,7 +21942,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21953,7 +21953,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21964,7 +21964,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21975,7 +21975,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21986,7 +21986,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -21997,7 +21997,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -22008,7 +22008,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -22019,7 +22019,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -22030,7 +22030,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -25913,7 +25913,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -28223,7 +28223,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -28245,7 +28245,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -28267,7 +28267,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -28289,7 +28289,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -28311,7 +28311,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -28333,7 +28333,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -40455,7 +40455,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40466,7 +40466,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40477,7 +40477,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40488,7 +40488,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40499,7 +40499,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40532,7 +40532,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40554,7 +40554,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40686,7 +40686,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40697,7 +40697,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40719,7 +40719,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40741,7 +40741,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40763,7 +40763,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40785,7 +40785,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40807,7 +40807,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40829,7 +40829,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40851,7 +40851,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "BIDIRECTIONAL"
         },
         {
@@ -40873,7 +40873,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40928,7 +40928,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40950,7 +40950,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 3,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -40961,7 +40961,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 3,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -51180,7 +51180,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -51191,7 +51191,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "FORWARD"
         },
         {
@@ -89273,7 +89273,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -89295,7 +89295,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91572,7 +91572,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91594,7 +91594,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91616,7 +91616,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91638,7 +91638,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91660,7 +91660,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91682,7 +91682,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91704,7 +91704,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91726,7 +91726,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91748,7 +91748,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91770,7 +91770,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91891,7 +91891,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91913,7 +91913,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91935,7 +91935,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91957,7 +91957,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -91979,7 +91979,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92001,7 +92001,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92023,7 +92023,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92045,7 +92045,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92067,7 +92067,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92089,7 +92089,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92111,7 +92111,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92133,7 +92133,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92155,7 +92155,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92177,7 +92177,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92199,7 +92199,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92221,7 +92221,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92243,7 +92243,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92265,7 +92265,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92287,7 +92287,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92309,7 +92309,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92331,7 +92331,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -92353,7 +92353,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93233,7 +93233,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93255,7 +93255,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93277,7 +93277,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93299,7 +93299,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93321,7 +93321,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93343,7 +93343,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93365,7 +93365,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93387,7 +93387,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93409,7 +93409,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93431,7 +93431,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93453,7 +93453,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93475,7 +93475,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93497,7 +93497,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93519,7 +93519,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93541,7 +93541,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93563,7 +93563,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93585,7 +93585,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93607,7 +93607,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93629,7 +93629,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93651,7 +93651,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93673,7 +93673,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93695,7 +93695,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93717,7 +93717,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93739,7 +93739,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93761,7 +93761,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93783,7 +93783,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93805,7 +93805,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93827,7 +93827,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93849,7 +93849,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93871,7 +93871,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93893,7 +93893,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93915,7 +93915,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93937,7 +93937,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93959,7 +93959,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -93981,7 +93981,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94003,7 +94003,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94025,7 +94025,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94047,7 +94047,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94069,7 +94069,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94091,7 +94091,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94113,7 +94113,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94135,7 +94135,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94157,7 +94157,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94179,7 +94179,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94201,7 +94201,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94223,7 +94223,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94245,7 +94245,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94267,7 +94267,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94289,7 +94289,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94311,7 +94311,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94333,7 +94333,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94355,7 +94355,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94377,7 +94377,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94399,7 +94399,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94421,7 +94421,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94443,7 +94443,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94465,7 +94465,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94487,7 +94487,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94509,7 +94509,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94531,7 +94531,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94553,7 +94553,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94575,7 +94575,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94597,7 +94597,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94619,7 +94619,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94641,7 +94641,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94663,7 +94663,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94685,7 +94685,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94707,7 +94707,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94729,7 +94729,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94751,7 +94751,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94773,7 +94773,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -94795,7 +94795,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96621,7 +96621,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96643,7 +96643,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96665,7 +96665,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96687,7 +96687,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96709,7 +96709,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96731,7 +96731,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96753,7 +96753,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96775,7 +96775,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96797,7 +96797,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96819,7 +96819,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96841,7 +96841,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96863,7 +96863,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96885,7 +96885,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96907,7 +96907,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96929,7 +96929,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96951,7 +96951,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96973,7 +96973,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -96995,7 +96995,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97017,7 +97017,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97039,7 +97039,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97061,7 +97061,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97083,7 +97083,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97105,7 +97105,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97127,7 +97127,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97149,7 +97149,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97171,7 +97171,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97193,7 +97193,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97215,7 +97215,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97237,7 +97237,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97259,7 +97259,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97281,7 +97281,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97303,7 +97303,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97325,7 +97325,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97347,7 +97347,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97369,7 +97369,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97391,7 +97391,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97413,7 +97413,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97435,7 +97435,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97457,7 +97457,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97479,7 +97479,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97501,7 +97501,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97523,7 +97523,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97545,7 +97545,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97567,7 +97567,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97589,7 +97589,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97611,7 +97611,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97633,7 +97633,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97655,7 +97655,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97677,7 +97677,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97699,7 +97699,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97721,7 +97721,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97743,7 +97743,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97765,7 +97765,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97787,7 +97787,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97809,7 +97809,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97831,7 +97831,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97853,7 +97853,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97875,7 +97875,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97897,7 +97897,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97919,7 +97919,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97941,7 +97941,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97963,7 +97963,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -97985,7 +97985,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98007,7 +98007,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98029,7 +98029,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98051,7 +98051,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98073,7 +98073,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98095,7 +98095,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98117,7 +98117,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98139,7 +98139,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98161,7 +98161,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98183,7 +98183,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -98205,7 +98205,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -102308,7 +102308,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -102330,7 +102330,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -102352,7 +102352,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -102374,7 +102374,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -102396,7 +102396,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -102418,7 +102418,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106411,7 +106411,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106433,7 +106433,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106455,7 +106455,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106477,7 +106477,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106499,7 +106499,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106521,7 +106521,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106543,7 +106543,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106565,7 +106565,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106587,7 +106587,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106609,7 +106609,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106631,7 +106631,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106653,7 +106653,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106741,7 +106741,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106763,7 +106763,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106785,7 +106785,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106807,7 +106807,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106829,7 +106829,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -106851,7 +106851,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -108897,7 +108897,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -108919,7 +108919,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -108941,7 +108941,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -108963,7 +108963,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -108985,7 +108985,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109007,7 +109007,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109029,7 +109029,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109051,7 +109051,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109073,7 +109073,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109095,7 +109095,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109117,7 +109117,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109139,7 +109139,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109161,7 +109161,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109183,7 +109183,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109205,7 +109205,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109227,7 +109227,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109249,7 +109249,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109271,7 +109271,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109293,7 +109293,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109315,7 +109315,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109337,7 +109337,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109359,7 +109359,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109381,7 +109381,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109403,7 +109403,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109425,7 +109425,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109447,7 +109447,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109469,7 +109469,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109491,7 +109491,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109513,7 +109513,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109535,7 +109535,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109557,7 +109557,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109579,7 +109579,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109601,7 +109601,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109623,7 +109623,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109645,7 +109645,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109667,7 +109667,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109777,7 +109777,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109898,7 +109898,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109920,7 +109920,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109942,7 +109942,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109964,7 +109964,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -109986,7 +109986,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110008,7 +110008,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110030,7 +110030,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110052,7 +110052,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110074,7 +110074,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110096,7 +110096,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110118,7 +110118,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110140,7 +110140,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110162,7 +110162,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110184,7 +110184,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110206,7 +110206,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110228,7 +110228,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110250,7 +110250,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110272,7 +110272,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110294,7 +110294,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110316,7 +110316,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110338,7 +110338,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110360,7 +110360,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110382,7 +110382,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110404,7 +110404,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110426,7 +110426,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110448,7 +110448,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110470,7 +110470,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110492,7 +110492,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110514,7 +110514,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110536,7 +110536,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110558,7 +110558,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110580,7 +110580,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110602,7 +110602,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110624,7 +110624,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110646,7 +110646,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {
@@ -110668,7 +110668,7 @@
             "excluded_types": null,
             "allowed_types": null,
             "max_scope": 30,
-            "category": "NONPATIENT",
+            "category": "FAMILY",
             "direction": "TERMINATE"
         },
         {

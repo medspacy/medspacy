@@ -39,3 +39,11 @@ class TestConTextFR:
 
         assert doc.ents[0]._.is_negated is True
 
+    def test_is_historical(self):
+        doc = nlp("histoire de cancer")
+        context = ConText(nlp, language_code=LANGUAGE_CODE)
+        doc.ents = (Span(doc, 2, 3, "CONDITION"),)
+        context(doc)
+
+        assert doc.ents[0]._.is_historical is True
+

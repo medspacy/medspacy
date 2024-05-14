@@ -600,6 +600,7 @@ class TestSectionizer:
         rules = path.join(
             Path(__file__).resolve().parents[2],
             "resources",
+            "en",
             "section_patterns.json",
         )
         sectionizer = nlp2.add_pipe("medspacy_sectionizer", config={"rules": rules})

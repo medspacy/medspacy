@@ -35,6 +35,7 @@ def load(
     model: Union[Literal["default"], str, Language] = "default",
     medspacy_enable: Union[Literal["all", "default"], Iterable[str]] = "default",
     medspacy_disable: Optional[Iterable[str]] = None,
+    language_code: str = "en",
     load_rules: bool = True,
     quickumls_path: Optional[str] = None,
     **model_kwargs,
@@ -56,6 +57,9 @@ def load(
             tokenization, sentence detection, concept identification, and ConText. If "all", all components in medspaCy
             will be loaded. If a collection of strings, the components specified will be loaded.
         medspacy_disable: A collection of component names to exclude. Requires "all" is the value for `enable`.
+        language_code: Language code to use (ISO code) as a default for loading additional resources.  See documentation
+            and also the /resources directory to see which resources might be available in each language.
+            Default is "en" for English.
         load_rules: Whether to include default rules for available components. If True, sectionizer and context will
             both be loaded with default rules. Default is True.
         quickumls_path: Path to QuickUMLS dictionaries if it is included in the pipeline.
@@ -95,7 +99,7 @@ def load(
 
     if "medspacy_pyrush" in medspacy_enable:
         pyrush_path = path.join(
-            Path(__file__).resolve().parents[1], "resources", "rush_rules.tsv"
+            Path(__file__).resolve().parents[1], "resources", language_code.lower(), "rush_rules.tsv"
         )
         nlp.add_pipe("medspacy_pyrush", config={"rules_path": pyrush_path})
 
@@ -113,7 +117,7 @@ def load(
         # let's see if we need to supply a path for QuickUMLS.  If none is provided,
         # let's point to the demo data
         if quickumls_path is None:
-            quickumls_path = get_quickumls_demo_dir()
+            quickumls_path = get_quickumls_demo_dir(language_code)
 
             print(
                 "Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(
@@ -125,16 +129,18 @@ def load(
 
     if "medspacy_context" in medspacy_enable:
         if load_rules is True:
-            config = {}
+            config = {'language_code': language_code}
         else:
-            config = {"rules": None}
+            config = {"rules": None,
+                      'language_code': language_code}
         nlp.add_pipe("medspacy_context", config=config)
 
     if "medspacy_sectionizer" in medspacy_enable:
         if load_rules is True:
-            config = {}
+            config = {'language_code': language_code}
         else:
-            config = {"rules": None}
+            config = {"rules": None,
+                      'language_code': language_code}
         nlp.add_pipe("medspacy_sectionizer", config=config)
 
     if "medspacy_postprocessor" in medspacy_enable:
@@ -203,7 +209,7 @@ def tuple_overlaps(a: Tuple[int, int], b: Tuple[int, int]):
     return a[0] <= b[0] < a[1] or a[0] < b[1] <= a[1]
 
 
-def get_quickumls_demo_dir():
+def get_quickumls_demo_dir(language_code):
     # let's use a default sample that we provide in medspacy
     # NOTE: Currently QuickUMLS uses an older fork of simstring where databases
     # cannot be shared between Windows and POSIX systems so we distribute the sample for both:
@@ -215,6 +221,7 @@ def get_quickumls_demo_dir():
     quickumls_path = path.join(
         Path(__file__).resolve().parents[1],
         "resources",
+        language_code.lower(),
         "quickumls/{0}".format(quickumls_platform_dir),
     )
 

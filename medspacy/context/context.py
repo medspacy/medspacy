@@ -21,10 +21,6 @@ DEFAULT_ATTRIBUTES = {
     "FAMILY": {"is_family": True},
 }
 
-DEFAULT_RULES_FILEPATH = path.join(
-    Path(__file__).resolve().parents[2], "resources", "context_rules.json"
-)
-
 
 @Language.factory("medspacy_context")
 class ConText:
@@ -43,6 +39,7 @@ class ConText:
         nlp: Language,
         name: str = "medspacy_context",
         rules: Optional[str] = "default",
+        language_code: str = 'en',
         phrase_matcher_attr: str = "LOWER",
         allowed_types: Optional[Set[str]] = None,
         excluded_types: Optional[Set[str]] = None,
@@ -67,6 +64,9 @@ class ConText:
                 original ConText rules and years of practical applications at the US Department of Veterans Affairs.  If
                 None, no rules are loaded. Otherwise, must be a path to a json file containing rules. Add ConTextRules
                 directly through `ConText.add`.
+            language_code: Language code to use (ISO code) as a default for loading resources.  See documentation
+                and also the /resources directory to see which resources might be available in each language.
+                Default is "en" for English.
             phrase_matcher_attr: The token attribute to use for PhraseMatcher for rules where `pattern` is None. Default
                 is 'LOWER'.
             allowed_types: A global list of types included by context. Rules will operate on only spans with these
@@ -105,6 +105,10 @@ class ConText:
         self.input_span_type = input_span_type
         self.span_group_name = span_group_name
         self.context_attributes_mapping = None
+
+        self.DEFAULT_RULES_FILEPATH = path.join(
+            Path(__file__).resolve().parents[2], "resources", language_code.lower(), "context_rules.json"
+        )
 
         self.__matcher = MedspacyMatcher(
             nlp,
@@ -147,7 +151,7 @@ class ConText:
 
         rule_path = None
         if rules == "default":
-            rule_path = DEFAULT_RULES_FILEPATH
+            rule_path = self.DEFAULT_RULES_FILEPATH
         else:
             rule_path = rules
 

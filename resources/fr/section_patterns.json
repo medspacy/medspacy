@@ -1,0 +1,12 @@
+{
+  "section_rules": [
+    {
+      "literal": "Examen physique:",
+      "category": "physical_exam"
+    },
+    {
+      "literal": "Plan:",
+      "category": "observation_and_plan"
+    }
+  ]
+}

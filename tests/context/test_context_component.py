@@ -33,7 +33,7 @@ class TestConText:
     def test_custom_patterns_json(self):
         """Test that rules are loaded from a json"""
         filepath = os.path.join(
-            Path(__file__).resolve().parents[2], "resources", "context_rules.json"
+            Path(__file__).resolve().parents[2], "resources", "en", "context_rules.json"
         )
         context = ConText(nlp, rules=filepath)
         assert context.rules

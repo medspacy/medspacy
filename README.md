@@ -32,6 +32,24 @@ Future work could include I/O, relations extraction, and pre-trained clinical mo
 
 **As of 10/2/2021 (version 0.2.0.0), medspaCy supports spaCy v3**
 
+# Language supports
+As of May 2024, medspacy has been restructured to allow distributing rules and resources in languages besides English.
+
+** Please note that some languages are effectively "empty" from the perspective of medspacy.  We've had requests to allow some of these languages, but we have no rules since the medspacy team works primarily in English.  Please see the table below for a summary of what is available in each language, as they each vary.  As of this writing, the languages have been sorted in order of what rules/maturity they currently support. **
+
+| Language | ConText rules | Section Rules | QuickUMLS sample (and unit test) |
+|---|---|---|---|---|
+| English (en) | Yes | Yes | Yes |
+| French (fr) | Yes | Very few | Yes |
+| Spanish (es) | No | Very few | Yes |
+| Polish (pl) | No | No | No |
+| Portuguese (pt) | No | No | Yes |
+| Italian (it) | No | No | Yes |
+| German (de) | No | No | No |
+
+Regarding the rules that are available in these languages, a few citations to mention:
+* French ConText Rules (adapted): https://hal-lirmm.ccsd.cnrs.fr/lirmm-01656834/document
+
 # Usage
 ## Installation
 

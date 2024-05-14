@@ -42,6 +42,7 @@ As of May 2024, medspacy has been restructured to allow distributing rules and r
 |------------------|---------------|---------------|------------------------|
 | English (en) | Yes | Yes | Yes |
 | French (fr) | Yes | Very few | Yes |
+| Dutch (nl) | Yes | No | No |
 | Spanish (es) | No | Very few | Yes |
 | Polish (pl) | No | No | No |
 | Portuguese (pt) | No | No | Yes |
@@ -51,6 +52,7 @@ As of May 2024, medspacy has been restructured to allow distributing rules and r
 
 Regarding the rules that are available in these languages, a few citations to mention:
 * French ConText Rules (adapted): https://hal-lirmm.ccsd.cnrs.fr/lirmm-01656834/document
+* Dutch ConText Rules: Paper https://www.medrxiv.org/content/10.1101/2024.03.14.24304289v1.full and Code https://github.com/mi-erasmusmc/medspacy_dutch
 
 # Usage
 ## Installation

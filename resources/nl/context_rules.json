@@ -1,0 +1,2811 @@
+{
+  "context_rules": [
+    {
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geen",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["hij","zij","ze","patient","pt","name","ik"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": [
+				"ben","bent","is","zijn","was","waren", 
+				"heb","hebt","heeft","hebben","had","hadden",
+				"zal","zult","zullen","zou","zouden",
+				"lijk","lijkt","lijken","leek","leken", 
+				"blijk","blijkt","blijken","bleek","bleken",
+				"leid","leidt","leed","leden", 
+				"kan","kunnen","kon","konden",
+				"waardeer","waardeert", "waarderen", "waardeerde", "waardeerden",
+				"veroorzaak","veroorzaakt","veroorzaken","veroorzaakte","veroorzaakten",
+				"vertoon","vertoont","vertonen","vertoonde","vertoonden",
+				"voel","voelt","voelen","voelde","voelden",
+				"weet","weten","wist","wisten",
+				"toon","toont","tonen","toonde","toonden",
+				"meld","melden","meldde","meldden",
+				"vermeld","vermelden","vermeldde","vermeldden",
+				"zie","ziet","zien","zag","zagen",
+				"word","wordt","worden","werd","werden"
+			]
+          },
+          "OP": "?"
+        },
+        {
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": {
+            "IN": ["aanwijzing","aanwijzingen","klacht","klachten","teken","tekenen","geschiedenis","bevinding","bevindingen","bewijs","bewijzen","kennis","vermelding","vermeldingen"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["van","voor","dat"]
+          },
+          "OP": "?"
+        } 		
+      ],
+      "direction": "FORWARD"
+    },
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geen behoefte aan",
+      "pattern": [
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": "behoefte"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor", "aan"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["hij","zij","ze","patient","pt","name","ik"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": [
+				"ben","bent","is","zijn","was","waren", 
+				"heb","hebt","heeft","hebben","had","hadden",
+				"zal","zult","zullen","zou","zouden",
+				"lijk","lijkt","lijken","leek","leken",  
+				"blijk","blijkt","blijken","bleek","bleken",
+				"leid","leidt","leed","leden", 
+				"kan","kunnen","kon","konden",
+				"waardeer","waardeert", "waarderen", "waardeerde", "waardeerden",
+				"veroorzaak","veroorzaakt","veroorzaken","veroorzaakte","veroorzaakten",
+				"vertoon","vertoont","vertonen","vertoonde","vertoonden",
+				"voel","voelt","voelen","voelde","voelden",
+				"weet","weten","wist","wisten",
+				"toon","toont","tonen","toonde","toonden",
+				"meld","melden","meldde","meldden",
+				"vermeld","vermelden","vermeldde","vermeldden",
+				"zie","ziet","zien","zag","zagen",
+				"word","wordt","worden","werd","werden",
+				"leid","leidt","leiden","leed","leden",
+				"klaag","klaagt","klagen","klaagde","klaagden",
+				"beklaag","beklaagt","beklagen","beklaagde","beklaagden"
+			]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["zich","haar"]
+          },
+          "OP": "?"
+        },
+        {
+          "LOWER": "niet"
+        }
+      ],
+      "direction": "FORWARD"
+    },
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "hij klaagt niet over",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["hij","zij","ze","de patient","patient","pt","name","ik"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": [
+				"klaag","klaagt","klagen","klaagde","klaagden",
+				"beklaag","beklaagt","beklagen","beklaagde","beklaagden",
+				"zeur","zeurt","zeuren","zeurde","zeurden"
+			]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["zich","haar"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["over", "om"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "nooit geweest dat",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+		},
+		{
+          "LOWER": "zo",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["geweest","gehad","geleken","gebleken","getoond","aangetoond","vertoond","gevoeld","geweten","gemeld","vermeld","gezien","veroorzaakt","geleid"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["dat", "tot"]
+          }
+        }		
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet leiden tot",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["meteen", "direct"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "leiden"
+        },
+		{
+          "LOWER": "tot"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet aan te tonen dat",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "aan",
+          "OP": "?"
+        },
+		{
+          "LOWER": "te"
+        },
+		{
+          "LOWER": {
+            "IN": ["tonen", "bewijzen"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["of", "dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet gerelateerd aan",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["gerelateerd", "geassocieerd"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["met", "aan"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet bekend of",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "bekend"
+        },
+		{
+          "LOWER": {
+            "IN": ["of", "dat", "wanneer"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet noodzakelijk dat",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["noodzakelijk", "essentieel", "vereist"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["dat", "voor", "van"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "ziet er niet uit als",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["zie", "ziet", "zien","zag","zagen"]
+          }
+        },
+		{
+          "LOWER": "er",
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "uit"
+        },
+		{
+          "LOWER": "als"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "uitsluiten voor",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["uitsluiten", "uitgesloten"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["voor", "tegen", "van","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is uit te sluiten voor",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["ben","bent","is","zijn","was","waren"]
+          }
+        },
+		{
+          "LOWER": "uit"
+        },
+		{
+          "LOWER": "te"
+        },
+		{
+          "LOWER": "sluiten"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor", "tegen", "van","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "sluit uit voor",
+      "pattern": [
+		{
+          "LOWER": "sluit"
+        },
+		{
+          "LOWER": "de",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["hem","haar","hen","patient","name"]
+          }
+        },
+		{
+          "LOWER": "uit"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor", "tegen", "van","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is uit te sluiten voor",
+      "pattern": [
+		{
+          "LOWER": "sluit"
+        },
+		{
+          "LOWER": "de",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["hem","haar","hen","patient","name"]
+          }
+        },
+		{
+          "LOWER": "uit"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor", "tegen", "van","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "zonder",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["zonder","behalve","behoudens"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "zonder aanwijzing van",
+      "pattern": [
+		{
+          "LOWER": "zonder"
+        },
+		{
+          "LOWER": {
+            "IN": ["aanwijzing","aanwijzingen","klacht","klachten","teken","tekenen","geschiedenis","bevinding","bevindingen","bewijs","bewijzen","kennis","vermelding","vermeldingen"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["voor", "tegen","van","dat"]
+          }
+        }		
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "gecontroleerd op",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["gecontroleerd","gecheckt","test","getest"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["op","voor"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "vrij van",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "in plaats van",
+      "pattern": [
+		{
+          "LOWER": "in"
+        },
+		{
+          "LOWER": "de",
+          "OP": "?"
+        },
+		{
+          "LOWER": "plaats"
+        },
+		{
+          "LOWER": "van"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "evalueren voor",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "weigerd",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": [
+			"weiger","weigert","weigeren","weigerde","weigerden",
+			"ontken","ontkent","ontkennen","ontkende","ontkenden"
+			]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "uitgezonderd van",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["uitgezonderd","afgezien"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["van","voor"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "inconsistent met",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["inconsistent","tegenstrijdig","ambivalent","contradictoir","onverenigbaar","strijdig","tegengesteld"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["met","aan"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "gebrek aan",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "negatief voor",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["negatief","neg"]
+          }
+        },
+		{
+          "LOWER": "voor"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "nooit",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["nooit","nimmer"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "onbekend of",
+      "pattern": [
+		{
+          "LOWER": "onbekend"
+        },
+		{
+          "LOWER": {
+            "IN": ["of","wanneer","hoe"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "noch",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geen aanwijzing",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": {
+            "IN": ["aanwijzing","aanwijzingen","klacht","klachten","teken","tekenen","geschiedenis","bevinding","bevindingen","bewijs","bewijzen","kennis","vermelding","vermeldingen"]
+          }
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is geen behoefte",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": {
+            "IN": ["behoefte","behoeften"]
+          }
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet geweest",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+		},
+		{
+          "LOWER": {
+            "IN": ["geweest","gehad","geleken","gebleken","getoond","aangetoond","vertoond","gevoeld","geweten","gemeld","vermeld","gezien","veroorzaakt","geleid"]
+          }
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet aan te tonen",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "aan",
+          "OP": "?"
+        },
+		{
+          "LOWER": "te"
+        },
+		{
+          "LOWER": {
+            "IN": ["tonen","bewijzen"]
+          }
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet geassocieerd",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["geassocieerd","gerelateerd"]
+          }
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet bekend",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "bekend"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is uitgesloten",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "uitgesloten"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is uit te sluiten",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "uit"
+        },
+		{
+          "LOWER": "te"
+        },
+		{
+          "LOWER": "sluiten"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is verdwenen",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["verdwenen","weg","weggetrokken","opgetrokken","geheeld"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet openbaren",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["openbaren","geopenbaard"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is gevalueerd",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "voor",
+          "OP": "?"
+        },		
+		{
+          "LOWER": "gevalueerd"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is geweigerd",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["geweigerd","weigerend","ontkend","ontkennend","afgewezen","afgeslagen"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "negatief",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["negatief","neg"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "vrij",
+      "pattern": null,
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet langer aanwezig",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["meer","langer","verder"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["aanwezig","present"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet significant",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["significant","verdacht"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet diagnostisch",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "diagnostisch"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet noodzakelijk",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["noodzakelijk","essentieel","vereist"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is nu opgelost",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "nu",
+          "OP": "?"
+        },
+		{
+          "LOWER": "opgelost"
+        },
+		{
+          "LOWER": "meer",
+          "OP": "?"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is nu geen probleem",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "nu",
+          "OP": "?"
+        },
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": "probleem"
+        },
+		{
+          "LOWER": "meer",
+          "OP": "?"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is onbekend",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "onbekend"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is nihil",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "nihil"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "nee",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["nee","neen"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "uitsluit",
+      "pattern": null,
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "onwaarschijnlijk",
+      "pattern": null,
+      "direction": "BIDIRECTIONAL"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "daargelaten",
+      "pattern": null,
+      "direction": "BIDIRECTIONAL"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "evenmin",
+      "pattern": null,
+      "direction": "BIDIRECTIONAL"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geen duidelijke oorzaak voor",
+      "pattern": [
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": {
+            "IN": ["duidelijke","bekende","heldere"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["oorzaak","bron"]
+          }
+        },
+		{
+          "LOWER": "bekend",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["van","voor","dat"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geen abnormale toename",
+      "pattern": [
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": {
+            "IN": ["abnormale","nieuwe","suspecte","verdachte","significante","duidelijke"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["toename","afname","verandering"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "nooit geen",
+      "pattern": null,
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "ontkent niet",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["ontken","ontkent","ontkennen","ontkende","ontkenden"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["niet","geen"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet afwijzen dat",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["afwijzen","ontkennen","weigeren"]
+          }
+        },
+		{
+          "LOWER": "dat",
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet ongewoon",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","geen"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["ongewoon","ongewone","zelden"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet onbekend",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","geen"]
+          }
+        },
+		{
+          "LOWER": "onbekend"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet uitsluiten",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["uitsluiten","uitgesloten"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet uit te sluiten",
+      "pattern": null,
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "sluit niet uit",
+      "pattern": null,
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet vrij van",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+        },
+		{
+          "LOWER": "vrij"
+        },
+		{
+          "LOWER": "van",
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet zonder",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+        },
+		{
+          "LOWER": "zonder"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet uitgezonderd",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["uitgezonderd","afgezien"]
+          }
+        },
+		{
+          "LOWER": "van",
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet inconsistent met",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["inconsistent","tegenstrijdig","ambivalent","contradictoir","onverenigbaar","strijdig","tegengesteld"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["met","aan"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geen gebrek aan",
+      "pattern": null,
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "niet negatief",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["niet","nooit"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["negatief","neg"]
+          }
+        },
+		{
+          "LOWER": "voor",
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "is niet opgelost",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["nu","nog"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": "opgelost"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "gram negatief",
+      "pattern": null,
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "maar",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["maar","doch","enkel","hoewel","echter","niettemin","behalve","toch","desondanks","nochtans"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "wel",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["en"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["wel"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "oorzaak van",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["oorzaak","reden","redenen","bron"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["voor","van"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "oorsprong van",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["oorsprong","oorsprongen"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["voor","van"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "afgezien van",
+      "pattern": [
+		{
+          "LOWER": "afgezien"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor","van"]
+          },
+          "OP": "?"
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "secundair aan",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "los van",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "geeft aan",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "klaagt over",
+      "pattern": [
+		{
+          "LOWER": "klaagt"
+        },
+		{
+          "LOWER": "over",
+          "OP": "?"
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "hij is",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["hij","zij","ze","patient","pt","name","ik"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["ben","bent","is","zijn","was","waren"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "NEGATED_EXISTENCE",
+      "literal": "na",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "mogelijk moet",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["mogelijk","eventueel","misschien","wellicht"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["moet","moeten","zal","zullen","ga","gaat","gaan","word","wordt","worden"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "mogelijk dat",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["mogelijk","mogelijkheid","denkbaar","voorstelbaar","eventueel","misschien","wellicht"]
+          }
+        },
+		{
+          "LOWER": "dat"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "Indien nodig",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["Indien","als","wanneer","mits","ingeval"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["nodig","noodzakelijk","essentieel","vereist","onmisbaar"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "ingeval van",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "Naar behoefte",
+      "pattern": [
+		{
+          "LOWER": "Naar"
+        },
+		{
+          "LOWER": {
+            "IN": ["behoefte","verlangen"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "terugkomen voor",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["terugkomen","terugkeren"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["voor","om","wanneer"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "indien er",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["indien","als","wanneer","ingeval"]
+          }
+        },
+		{
+          "LOWER": "de",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["er","hij","zij","ze","het","ik","patient","pt","name"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "nog te bezien of",
+      "pattern": [
+		{
+          "LOWER": "valt",
+          "OP": "?"
+        },
+		{
+          "LOWER": "nog"
+        },
+		{
+          "LOWER": "maar",
+          "OP": "?"
+        },
+		{
+          "LOWER": "te",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["bezien","zien"]
+          }
+        },
+		{
+          "LOWER": "of"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "is mogelijk nodig",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["mogelijk","eventueel","misschien","wellicht"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["nodig","noodzakelijk","essentieel","vereist","onmisbaar","behoefte"]
+          }
+        },
+		{
+          "LOWER": "naar",
+          "OP": "?"
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "is een mogelijkheid",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          }
+        },
+		{
+          "LOWER": "een",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["mogelijk","mogelijkheid","mogelijkheden","denkbaar","voorstelbaar","possibiliteit","possibiliteiten","toekomstperspectief","perspectief"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "ligt in het verschiet",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["ligt","liggen"]
+          }
+        },
+		{
+          "LOWER": "in"
+        },
+		{
+          "LOWER": {
+            "IN": ["het","de"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["verschiet","toekomst"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "nog te bezien",
+      "pattern": [
+		{
+          "LOWER": "valt",
+          "OP": "?"
+        },
+		{
+          "LOWER": "nog"
+        },
+		{
+          "LOWER": "maar",
+          "OP": "?"
+        },
+		{
+          "LOWER": "te",
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["bezien","zien"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "toekomstmuziek",
+      "pattern": null,
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "niet mogelijk",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["mogelijk","denkbaar","voorstelbaar","nodig","noodzakelijk","essentieel","vereist","onmisbaar"]
+          }
+        },
+		{
+          "LOWER": "dat",
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "omdat",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["omdat","daarom","aangezien","vermits","wijl"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HYPOTHETICAL",
+      "literal": "maar",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["maar","doch","enkel","hoewel","echter","niettemin","behalve","toch","desondanks","nochtans"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "misschien",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["misschien","wellicht"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "niet zeker of",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["zeker","vertrouwd","betrouwbaar","waarschijnlijk","beslist","duidelijk"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["of","wanneer","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "waarschijnlijk geen",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["waarschijnlijk","mogelijk"]
+          }
+        },
+		{
+          "LOWER": "geen"
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "onzeker of",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["onzeker","onvertrouwd","onbetrouwbaar","onwaarschijnlijk","onbeslist","onduidelijk","twijfelachtig"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["of","wanneer","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "niet uitgesloten of",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["uitgesloten","uitsluiten"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["of","wanneer","dat"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "bezorgd voor",
+      "pattern": [
+		{
+          "LOWER": "bezorgd"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor","over","om"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "zorgwekkend dat",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["zorgwekkend","zorgbarend","verontrustend","onrustbarend","zorgelijk"]
+          }
+        },
+		{
+          "LOWER": "dat"
+        }		
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "twijfel of",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["twijfel","twijfeling","aarzeling","vaagheid","onzekerheid"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["of","over","om"]
+          },
+          "OP": "?"
+        }		
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "moet kunnen worden uitgesloten van",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["moet","moeten","moest","moesten","zal","zullen","zou","zouden"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["moeten","kunnen"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "worden"
+        },
+		{
+          "LOWER": "uitgesloten"
+        },
+		{
+          "LOWER": {
+            "IN": ["voor","van","tegen","dat","of"]
+          }
+        }		
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "zou",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["zou","zouden"]
+          }
+        },
+		{
+          "LOWER": "kunnen",
+          "OP": "?"
+        },
+		{
+          "LOWER": "dat",
+          "OP": "?"
+        }		
+      ],
+      "direction": "FORWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "moet kunnen worden uitgesloten",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["moet","moeten","moest","moesten","zal","zullen","zou","zouden"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["moeten","kunnen"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "worden"
+        },
+		{
+          "LOWER": "uitgesloten"
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "is zorgwekkend",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["zorgwekkend","zorgbarend","verontrustend","onrustbarend","zorgelijk"]
+          }
+        }	
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "is niet uitgesloten",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren","heb","heeft","hebben","had","hadden","kan","kunt","kunnen","kon","konden"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["uitgesloten","uitsluiten"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "is niet zeker",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["zeker","vertrouwd","betrouwbaar","waarschijnlijk","beslist","duidelijk"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "is onzeker",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["onzeker","onvertrouwd","onbetrouwbaar","onwaarschijnlijk","onbeslist","onduidelijk","twijfelachtig"]
+          }
+        }
+      ],
+      "direction": "BACKWARD"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "is zeker",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren"]
+          },
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["zeker","vertrouwd","betrouwbaar","waarschijnlijk","beslist","duidelijk"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["of","wanneer","dat"]
+          },
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "heeft zeker weten",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren","heb","heeft","hebben","had","hadden"]
+          }
+		},
+		{
+          "LOWER": "zeker"
+        },
+		{
+          "LOWER": "weten",
+          "OP": "?"
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "niet onzeker",
+      "pattern": [
+		{
+          "LOWER": "niet"
+        },
+		{
+          "LOWER": {
+            "IN": ["onzeker","onvertrouwd","onbetrouwbaar","onwaarschijnlijk","onbeslist","onduidelijk","twijfelachtig"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "niet bezorgd",
+      "pattern": null,
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "geen twijfel",
+      "pattern": [
+		{
+          "LOWER": "geen"
+        },
+		{
+          "LOWER": {
+            "IN": ["twijfel","twijfeling","aarzeling","vaagheid","onzekerheid"]
+          }
+        }		
+      ],
+      "direction": "PSEUDO"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "omdat",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["omdat","daarom","aangezien","vermits","wijl"]
+          }
+        }		
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "maar",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["maar","doch","enkel","hoewel","echter","niettemin","behalve","toch","desondanks","nochtans"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "FAMILY",
+      "literal": "family",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["van", "voor"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["zijn", "haar","hun"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": [
+              "tante",
+              "tantes",
+              "broer",
+              "broers",
+			  "tweeling",
+			  "tweelingen",
+              "kind",
+              "kinderen",
+              "neef",
+              "neven",
+			  "nicht",
+              "nichten",
+              "papa",
+              "papas",
+              "dochter",
+              "dochters",
+              "fam",
+              "familie",
+              "families",
+              "vader",
+              "vaders",
+              "kleinkind",
+              "kleinkinderen",
+              "kleindochter",
+              "granddaughters",
+              "grootvader",
+			  "opa",
+              "grootvaders",
+              "grootmoeder",
+			  "oma",
+              "grootmoeders",
+              "grootouder",
+              "grootouders",
+              "kleinzoon",
+              "kleinzoons",
+			  "kleinzonen",
+              "echtgenoot",
+			  "echtgenote",
+              "mama",
+              "mamas",
+              "moeder",
+              "moeders",
+              "neefje",
+              "neefjes",
+              "nichtje",
+              "nichtjes",
+              "ouder",
+              "ouders",
+              "brusje",
+              "brusjes",
+              "zus",
+              "zussen",
+              "zoon",
+              "zoons",
+              "oom",
+              "ooms"
+            ]
+          }
+        },
+        {
+          "LOWER": {
+            "IN": ["'s", "'"]
+          },
+          "OP": "?"
+        }
+      ],
+      "direction": "FORWARD"
+    },
+	{
+      "category": "FAMILY",
+      "literal": "haar man",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["van", "voor"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": {
+            "IN": ["zijn", "haar"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["vrouw","man"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+    },
+	{
+      "category": "FAMILY",
+      "literal": "in de familie is",
+      "pattern": [
+        {
+          "LOWER": "in"
+        },
+		{
+          "LOWER": {
+            "IN": ["de", "het"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["familie","gezin"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["is","zijn","was","waren","zit","zitten","zat","zaten"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+    },
+	{
+      "category": "FAMILY",
+      "literal": "in de familie",
+      "pattern": null,
+      "direction": "BIDIRECTIONAL"
+	},
+	{
+      "category": "FAMILY",
+      "literal": "in het gezin",
+      "pattern": null,
+      "direction": "BIDIRECTIONAL"
+	},
+	{
+      "category": "FAMILY",
+      "literal": "patient is",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["patient","pt","name"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["is","was","heeft","had"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "medische voorgeschiedenis",
+      "pattern": [
+        {
+          "LOWER": "medische",
+          "OP": "?"
+        },
+        {
+          "LOWER": {
+            "IN": ["voorgeschiedenis","historie","vg","anamnese","h/o"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "vroeger",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "lang geleden",
+      "pattern": null,
+      "direction": "FORWARD"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "2 weken geleden",
+      "pattern": [
+		{
+          "is_digit": true,
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["een","twee","drie","vier","vijf","zes","zeven","acht","negen","tien"]
+          },
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["weken","wk","maand","maanden","jr","jaar","jaren"]
+          }
+        },        
+		{
+          "LOWER": {
+            "IN": ["geleden","gld","gel"]
+          }
+        }      
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "sinds 2 weken",
+      "pattern": [       
+		{
+          "LOWER": {
+            "IN": ["nu","sinds"]
+          }
+        },  
+		{
+          "is_digit": true,
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["een","twee","drie","vier","vijf","zes","zeven","acht","negen","tien"]
+          },
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["weken","wk","maand","maanden","jr","jaar","jaren"]
+          }
+        }    
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "vorige maand",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["vorig","vorige","voorgaand","voorgaande","afgelopen","laatst","laatste"]
+          }
+		},   
+		{
+          "LOWER": {
+            "IN": ["mnd","maand","maanden","jr","jaar","jaren","keer","bezoek"]
+          }
+        }      
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "in het verleden",
+      "pattern": [
+		{
+          "LOWER": "in"
+        },
+		{
+          "LOWER": "het"
+        },		
+		{
+          "LOWER": {
+            "IN": ["verre","nabije","recente","verdere"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "verleden"
+        }		
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "in maand",
+      "pattern": [
+		{
+          "LOWER": "in",
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["jan","januari",
+				"feb","februari",
+				"mrt","maart",
+				"apr","april",
+				"mei",
+				"jun","juni",
+				"jul","juli",
+				"aug","augustus",
+				"sept","september",
+				"okt","oktober",
+				"nov","november",
+				"dec","december"]
+          }
+		}  
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "op jarige leefdtijd",
+      "pattern": [
+		{
+          "LOWER": "op"
+		},
+		{
+          "is_digit": true,
+          "OP": "?"
+		},
+		{
+          "LOWER": {
+            "IN": ["een","twee","drie","vier","vijf","zes","zeven","acht","negen","tien"]
+          },
+          "OP": "?"
+		},
+		{
+          "LOWER": "jarige"
+		},
+		{
+          "LOWER": "leeftijd"
+		} 
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "in zijn jeugd",
+      "pattern": [
+		{
+          "LOWER": "in"
+        },	
+		{
+          "LOWER": {
+            "IN": ["zijn","haar","hun"]
+          },
+          "OP": "?"
+        },
+		{
+          "LOWER": "jeugd"
+        }		
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "als kind",
+      "pattern": null,
+      "direction": "BIDIRECTIONAL"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "sinds maand jaar",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["sinds","in","vanaf"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["jan","januari",
+				"feb","februari",
+				"mrt","maart",
+				"apr","april",
+				"mei",
+				"jun","juni",
+				"jul","juli",
+				"aug","augustus",
+				"sept","september",
+				"okt","oktober",
+				"nov","november",
+				"dec","december"]
+          },
+          "OP": "?"
+		},
+		{
+          "LOWER": {"REGEX": "(19|20)(\\d{2})"}
+		}
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "sinds jaar",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["sinds","op","vanaf"]
+          }
+        },
+		{
+          "LOWER": {"REGEX": "(\\d{1,2})[\\.-\\/]{1}(\\d{1,2})[\\.-\\/]{1}(19|20){0,1}(\\d{2})"}
+		}
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "sinds dag maand jaar",
+      "pattern": [
+		{
+          "LOWER": {
+            "IN": ["sinds","op","vanaf"]
+          }
+        },
+		{
+          "is_digit": true
+		},
+		{
+          "LOWER": {
+            "IN": ["jan","januari",
+				"feb","februari",
+				"mrt","maart",
+				"apr","april",
+				"mei",
+				"jun","juni",
+				"jul","juli",
+				"aug","augustus",
+				"sept","september",
+				"okt","oktober",
+				"nov","november",
+				"dec","december"]
+          }
+		},
+		{
+          "LOWER": {"REGEX": "(19|20)(\\d{2})"},
+          "OP": "?"
+		}
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "afname van de anamnese",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["afname", "afnemen"]
+          }
+        },
+        {
+          "LOWER": "van"
+        },
+        {
+          "LOWER": "de"
+        },
+        {
+          "LOWER": "anamnese"
+        }
+      ],
+      "direction": "PSEUDO"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "anamnese afname",
+      "pattern": [
+		{
+          "LOWER": "anamnese"
+        },
+        {
+          "LOWER": {
+            "IN": ["afname", "afnemen"]
+          }
+        },
+        {
+          "LOWER": "en",
+          "OP": "?"
+        },
+        {
+          "LOWER": "lichamelijk onderzoek",
+          "OP": "?"
+        }        
+      ],
+      "direction": "PSEUDO"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "anamnese van",
+      "pattern": [
+		{
+          "LOWER": "anamnese"
+        },
+        {
+          "LOWER": {
+            "IN": ["van", "voor"]
+          }
+        }
+      ],
+      "direction": "PSEUDO"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "nu",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "momenteel",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "op dit moment",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "er is",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "er is sprake van",
+      "pattern": null,
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "vandaag",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["vandaag","vanmorgen","vanmiddag","vanavond","vannacht"]
+          }
+        }      
+      ],
+      "direction": "TERMINATE"
+	},
+	{
+      "category": "HISTORICAL",
+      "literal": "gisteren",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["gister","gisteren","gisterochtend","gistermiddag","gisteravond","gisternacht"]
+          }
+        }      
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "eergisteren",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["eergister","eergisteren","eergisterochtend","eergistermiddag","eergisteravond","eergisternacht"]
+          }
+        }      
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "deze week",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["deze","vorige","voorgaande","afgelopen","laatste"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["week","wk"]
+          }
+        }		
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "enkele dagen geleden",
+      "pattern": [
+		{
+          "LOWER": "een",
+          "OP": "?"
+        },
+        {
+          "LOWER": {
+            "IN": ["enkele","paar","enige","wat"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["dagen","uur","minuten"]
+          }
+        },
+		{
+          "LOWER": {
+            "IN": ["geleden","gld","gel"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "recent",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["recent","onlangs","laatst"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "presenteerd",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["presenteerd","presenteren","presenteerde","presenteerden",
+			"rapporteerd","rapporteren","rapporteerde","rapporteerden"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "spoedeisende hulp",
+      "pattern": null,
+      "direction": "TERMINATE"
+    },
+	{
+      "category": "HISTORICAL",
+      "literal": "seh",
+      "pattern": null,
+      "direction": "TERMINATE"
+    }
+  ]
+}

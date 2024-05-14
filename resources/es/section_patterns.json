@@ -1,0 +1,24 @@
+{
+  "section_rules": [
+    {
+      "literal": "Motivo De Consulta:",
+      "category": "chief_complaint"
+    },
+    {
+      "literal": "Enfermedad Actual:",
+      "category": "history_of_present_illness"
+    },
+    {
+      "literal": "Exploracion:",
+      "category": "physical_exam"
+    },
+    {
+      "literal": "Antecedentes:",
+      "category": "past_medical_history"
+    },
+    {
+      "literal": "Tratamiento:",
+      "category": "treatment"
+    }
+  ]
+}

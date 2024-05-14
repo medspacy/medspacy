@@ -28,7 +28,7 @@ nlp.add_pipe(
         "result_type": "group",
         # do not constrain to the best match for overlapping
         "best_match": False,
-        "quickumls_fp": get_quickumls_demo_dir(),
+        "quickumls_fp": get_quickumls_demo_dir('en'),
     },
 )
 

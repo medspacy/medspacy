@@ -41,7 +41,7 @@ As of May 2024, medspacy has been restructured to allow distributing rules and r
 | Language         | ConText rules | Section Rules | QuickUMLS sample (and unit test) |
 |------------------|---------------|---------------|------------------------|
 | English (en) | Yes | Yes | Yes |
-| French (fr) | Yes | Very few few | Yes |
+| French (fr) | Yes | Very few | Yes |
 | Spanish (es) | No | Very few | Yes |
 | Polish (pl) | No | No | No |
 | Portuguese (pt) | No | No | Yes |

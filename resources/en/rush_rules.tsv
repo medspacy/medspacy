@@ -218,6 +218,8 @@
 \c:\n+(\a	0	stbegin
 \s+\s+(\d\)\s+\C	0	stbegin
 \s+\s+(\d\d\)\s+\C	0	stbegin
+\a)\e	2	stend
+\a)\w+\e	2	stend
 \n)                                    \d\d\)	2	stend
 
 \c:\n+(\d. 	0	stbegin
@@ -817,6 +819,9 @@ Instructions:\n+(\a	0	stbegin
 \sand)\s+\n+\c	3	stend
 \sand)\n+\C	3	stend
 \sand)\n+\c	3	stend
+
+\s\a\.\w+and	3	stend
+\.\a\.\w+and	3	stend
 
 
 

@@ -70,6 +70,7 @@ class TestMedSpaCy:
         full_pipe_names = [
             "medspacy_pyrush",
             "medspacy_target_matcher",
+            "medspacy_quickumls",
             "medspacy_context",
             "medspacy_sectionizer",
             "medspacy_postprocessor",

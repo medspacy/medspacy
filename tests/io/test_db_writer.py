@@ -1,4 +1,7 @@
 import os, sys
+from datetime import time, datetime
+from pathlib import Path
+
 # recent pytest failed because of project directory is not included in sys.path somehow, might due to other configuration issue. Add this for a temp solution
 sys.path.append(os.getcwd())
 import pytest
@@ -26,6 +29,8 @@ doc_consumer(doc)
 class TestDbWriter:
     def test_init_from_sqlite3_conn_defaults(self):
         """Test writing with default values for ent attributes."""
+        if Path(db).exists():
+            Path(db).unlink()
         sq_conn = sqlite3.connect(db)
         cursor = sq_conn.cursor()
         db_conn = DbConnect(conn=sq_conn)
@@ -37,10 +42,36 @@ class TestDbWriter:
         rslts = cursor.fetchone()
         assert rslts == ("pneumonia", 24, 33, "CONDITION", 1, 0, 0, 0, 0, None, None)
         db_conn.close()
+        Path(db).unlink()
+
+    def test_init_write_docs(self):
+        """Test writing with default values for ent attributes."""
+        if Path(db).exists():
+            Path(db).unlink()
+        sq_conn = sqlite3.connect(db)
+        cursor = sq_conn.cursor()
+        db_conn = DbConnect(conn=sq_conn)
+        from medspacy.io.db_writer import DbWriter
+
+        writer = DbWriter(db_conn, "ents", cols=None, col_types=None, create_table=True, drop_existing=False)
+        writer.write_docs([doc]*100)
+        cursor.execute("SELECT COUNT(*) FROM ents;")
+        rslts = cursor.fetchone()
+        assert rslts[0] == 100
+        db_conn.close()
+        Path(db).unlink()
+
+
+
+
+
+
 
     def test_init_from_sqlite3_conn_specific_cols(self):
         from medspacy.io.db_connect import DbConnect
         import sqlite3
+        if Path(db).exists():
+            Path(db).unlink()
 
         sq_conn = sqlite3.connect(db)
         cursor = sq_conn.cursor()
@@ -63,3 +94,4 @@ class TestDbWriter:
         rslts = cursor.fetchone()
         assert rslts == ("CONDITION", "pneumonia", True, None)
         db_conn.close()
+        Path(db).unlink()

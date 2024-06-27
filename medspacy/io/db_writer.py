@@ -1,3 +1,7 @@
+from typing import Union, List
+
+from spacy.tokens import Doc
+
 from .doc_consumer import (
     DEFAULT_DOC_ATTRS,
     DEFAULT_ENT_ATTRS,
@@ -57,15 +61,15 @@ class DbWriter:
     """DbWriter is a utility class for writing structured data back to a database."""
 
     def __init__(
-        self,
-        db_conn,
-        destination_table,
-        cols=None,
-        col_types=None,
-        doc_dtype="ents",
-        create_table=False,
-        drop_existing=False,
-        write_batch_size=100,
+            self,
+            db_conn,
+            destination_table,
+            cols=None,
+            col_types=None,
+            doc_dtype="ents",
+            create_table=False,
+            drop_existing=False,
+            write_batch_size=100,
     ):
         """Create a new DbWriter object.
 
@@ -153,10 +157,29 @@ class DbWriter:
             self.destination_table, col_list, q_list
         )
 
-    def write(self, doc):
+    def write(self, docs: Union[Doc, List[Doc]]):
+        """Write a list of docs or doc to a database."""
+        if isinstance(docs, Doc):
+            self.write_doc(docs)
+        else:
+            self.write_docs(docs)
+
+    def write_doc(self, doc):
         """Write a doc to a database."""
         data = doc._.get_data(self.doc_dtype, attrs=self.cols, as_rows=True)
         self.write_data(data)
+
+    def write_docs(self, docs, batch_size=800):
+        """write a list of docs to database through bulk insert"""
+        data = []
+        for doc in docs:
+            data.extend(doc._.get_data(self.doc_dtype, attrs=self.cols, as_rows=True))
+            if len(data) >= batch_size:
+                self.write_data(data)
+                data = []
+        if len(data) > 0:
+            self.write_data(data)
+        pass
 
     def write_data(self, data):
         self.db.write(self.insert_query, data)

@@ -3,3 +3,4 @@ PyRuSH>=1.0.8
 pysbd==0.3.4
 jsonschema
 medspacy_quickumls==3.2
+numpy==1.26.4

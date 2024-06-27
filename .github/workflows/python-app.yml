@@ -88,4 +88,5 @@ jobs:
 
     - name: Test Build package      
       run: |
+        pip install -U wheel
         python setup.py sdist bdist_wheel

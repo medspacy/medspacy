@@ -429,8 +429,8 @@ class Sectionizer:
                 # Section headers should be considered the start of a sentence
                 doc[start].sent_start = True
                 # Text following the header should also be considered a new sentence
-                if end+1 < len(doc):
-                    doc[end+1].sent_start = True
+                if end < len(doc):
+                    doc[end].sent_start = True
 
             rule = self.__matcher.rule_map[self.nlp.vocab.strings[match_id]]
             category = rule.category

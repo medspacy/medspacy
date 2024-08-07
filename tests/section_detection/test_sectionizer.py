@@ -606,3 +606,48 @@ class TestSectionizer:
         sectionizer = nlp2.add_pipe("medspacy_sectionizer", config={"rules": rules})
         assert "medspacy_sectionizer" in nlp2.pipe_names
         assert len(sectionizer.rules) > 0
+
+    def test_apply_sentence_boundary(self):
+        nlp2 = medspacy.load()
+        nlp2.add_pipe('medspacy_sectionizer', config={
+            'apply_sentence_boundary': True,
+        })
+        sectionizer = nlp2.get_pipe('medspacy_sectionizer')
+        sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
+        doc = nlp2("Start of doc\nPast Medical History: PE")
+
+        token = doc[-1]
+
+        assert token._.section
+        assert len(token._.section_category)
+        assert len(token._.section_title)
+        assert len(token._.section_span)
+        assert len(token._.section_body)
+        assert token._.section_rule
+
+        start = token._.section.title_start
+        end = token._.section.title_end
+        assert doc[start].sent_start != -1
+        assert doc[end].sent_start != -1
+
+    def test_section_at_end_of_doc(self):
+        nlp2 = medspacy.load()
+        #nlp2.remove_pipe('medspacy_sectionizer')
+        nlp2.add_pipe('medspacy_sectionizer', config={
+            'apply_sentence_boundary': True,
+        })
+        sectionizer = nlp2.get_pipe('medspacy_sectionizer')
+        sectionizer.add([SectionRule("Past Medical History:", "past_medical_history")])
+        doc = nlp2("Start of doc\nPast Medical History:")
+
+        token = doc[-1]
+
+        assert token._.section
+        assert len(token._.section_category)
+        assert len(token._.section_title)
+        assert len(token._.section_span)
+        assert not len(token._.section_body)
+        assert token._.section_rule
+
+        start = token._.section.title_start
+        assert doc[start].sent_start == 1

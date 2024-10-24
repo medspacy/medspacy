@@ -22,13 +22,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }} 
         cache: 'pip'
-        cache-dependency-path: 'requirements_tests.txt'    
+        cache-dependency-path: 'requirements/requirements_tests.txt'    
     - name: Install dependencies      
       run: |
         python --version
         python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
-        python -m pip install --use-pep517 -r requirements_tests.txt
+        python -m pip install --use-pep517 -r requirements/requirements_tests.txt
         python -m pip install .
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download de_core_news_sm
@@ -48,4 +48,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest
+        pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
+        # now in a separate session we can run the QuickUMLS span group tests...
+        pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"

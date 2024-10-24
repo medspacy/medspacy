@@ -35,6 +35,11 @@ class DbConnect:
         else:
             self.conn = conn
         self.cursor = self.conn.cursor()
+        # according this thread, bulk insert for sqlserver need to set fast_executemany=True.
+        # https://stackoverflow.com/questions/29638136/how-to-speed-up-bulk-insert-to-ms-sql-server-using-pyodbc
+        if hasattr(self.cursor, 'fast_executemany'):
+            self.cursor.fast_executemany = True
+
         import sqlite3
 
         if isinstance(self.conn, sqlite3.Connection):
@@ -42,7 +47,6 @@ class DbConnect:
             self.database_exception = sqlite3.DatabaseError
         else:
             import pyodbc
-
             if isinstance(self.conn, pyodbc.Connection):
                 self.db_lib = "pyodbc"
                 self.database_exception = pyodbc.DatabaseError
@@ -83,12 +87,12 @@ class DbConnect:
             raise e
         else:
             self.conn.commit()
-            print("Wrote {0} rows with query: {1}".format(len(data), query))
+            # print("Wrote {0} rows with query: {1}".format(len(data), query))
 
     def read(self, query):
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        print("Read {0} rows with query: {1}".format(len(result), query))
+        # print("Read {0} rows with query: {1}".format(len(result), query))
         return result
 
     def close(self):

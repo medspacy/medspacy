@@ -49,8 +49,11 @@ class TestTargetMatcher:
 
     def test_add_rule_regex(self):
         matcher = TargetMatcher(nlp)
-        matcher.add([TargetRule("PE", "CONDITION", pattern="pulmonary embolisms?")])
-        doc = nlp("Past Medical History: Pulmonary embolism")
+        # NOTE: The previous test used "pulmonary embolisms? as a regex
+        # but spacy 3.8.2 now recognizes "pulmonary" as an entity, so there was a conflict!
+        pattern = [{"LOWER": "blood"}, {"LOWER": {"REGEX": "clots?"}}]
+        matcher.add([TargetRule("BLOOD_CLOT", "CONDITION", pattern=pattern)])
+        doc = nlp("Past Medical History: Blood clot observed")
         matcher(doc)
         assert len(doc.ents) == 1
         assert (doc.ents[0].start, doc.ents[0].end) == (4, 6)

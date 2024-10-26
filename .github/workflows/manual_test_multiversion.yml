@@ -29,7 +29,7 @@ jobs:
         python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
         python -m pip install --use-pep517 -r requirements/requirements_tests.txt
-        pip install -I --pre PyRuSH
+        pip install -I --pre --no-deps PyRuSH
         python -m pip install .
         # set up all spacy language models that are used in our pytest tests
         python -m spacy download de_core_news_sm

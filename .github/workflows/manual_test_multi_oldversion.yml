@@ -1,0 +1,55 @@
+name: manual_multiversion
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+  
+    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
+    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop
+
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-12, windows-latest]
+        python-version: [3.6,3.7]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }} 
+        cache: 'pip'
+        cache-dependency-path: 'requirements/requirements_tests.txt'    
+    - name: Install dependencies      
+      run: |
+        python --version
+        python -m pip install --upgrade pip        
+        # Install our package to make sure our setup works...
+        # Test prerelease when release is not ready:
+        # pip install -I --pre --no-deps PyRuSH
+        python -m pip install --use-pep517 -r requirements/requirements_tests.txt        
+        python -m pip install .
+        # set up all spacy language models that are used in our pytest tests
+        python -m spacy download de_core_news_sm
+        python -m spacy download en_core_web_sm
+        python -m spacy download en_core_web_md
+        # multilingual models for testing compatibility
+        python -m spacy download es_core_news_sm
+        python -m spacy download pl_core_news_sm
+        python -m spacy download de_core_news_sm
+        python -m spacy download xx_ent_wiki_sm
+
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest -k "not test_span_groups and not test_overlapping_spans and not test_multiword_span"
+        # now in a separate session we can run the QuickUMLS span group tests...
+        pytest -k "test_span_groups or test_overlapping_spans or test_multiword_span"

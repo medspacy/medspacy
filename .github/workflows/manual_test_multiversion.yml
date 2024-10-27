@@ -28,7 +28,8 @@ jobs:
         python --version
         python -m pip install --upgrade pip        
         # Install our package to make sure our setup works...
-        pip install -I --pre --no-deps PyRuSH
+        # Test prerelease when release is not ready:
+        # pip install -I --pre --no-deps PyRuSH
         python -m pip install --use-pep517 -r requirements/requirements_tests.txt        
         python -m pip install .
         # set up all spacy language models that are used in our pytest tests

@@ -1,4 +1,4 @@
-name: manual_multiversion
+name: manual_multi_oldversion
 
 on:
   workflow_dispatch

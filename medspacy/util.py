@@ -11,6 +11,8 @@ from typing import Union, Literal, Iterable, Optional, Set, Tuple
 import spacy
 from spacy import Language
 
+from quickumls import spacy_component
+
 DEFAULT_PIPE_NAMES = {
     "medspacy_tokenizer",
     "medspacy_pyrush",
@@ -23,14 +25,14 @@ ALL_PIPE_NAMES = {
     "medspacy_preprocessor",
     "medspacy_pyrush",
     "medspacy_target_matcher",
-    # "medspacy_quickumls", # quickumls still not included by default due to install issues
+    "medspacy_quickumls",
     "medspacy_context",
     "medspacy_sectionizer",
     "medspacy_postprocessor",
     "medspacy_doc_consumer",
 }
 
-
+# just commit to trigger another check workflow action to see what hold back the tests from passing
 def load(
     model: Union[Literal["default"], str, Language] = "default",
     medspacy_enable: Union[Literal["all", "default"], Iterable[str]] = "default",
@@ -48,6 +50,7 @@ def load(
         - "medspacy_pyrush": PyRuSH Sentencizer for sentence splitting
         - "medspacy_target_matcher": TargetMatcher for extended pattern matching
         - "medspacy_context": ConText for attribute assertion
+        - "medspacy_quickumls": QuickUMLS for UMLS concept mapping
     Args:
         model: The base spaCy model to load. If 'default', will instantiate from a blank 'en' model. If it is a spaCy
             language model, then it will simply add medspaCy components to the existing pipeline. If it is a string
@@ -107,15 +110,6 @@ def load(
         nlp.add_pipe("medspacy_target_matcher")
 
     if "medspacy_quickumls" in medspacy_enable:
-        # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
-        # but if it's requested at this point, let's load it
-        if "medspacy_quickumls" in medspacy_enable:
-            # NOTE: This could fail if a user requests this and QuickUMLS cannot be found
-            # but if it's requested at this point, let's load it
-            from quickumls import spacy_component
-
-        # let's see if we need to supply a path for QuickUMLS.  If none is provided,
-        # let's point to the demo data
         if quickumls_path is None:
             quickumls_path = get_quickumls_demo_dir(language_code)
 

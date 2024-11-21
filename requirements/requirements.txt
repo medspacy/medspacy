@@ -1,4 +1,5 @@
-spacy>=3.4.1, <3.6
+spacy<3.8; python_version < "3.12"
+spacy>=3.8; python_version >= "3.12"
 PyRuSH>=1.0.8
 pysbd==0.3.4
 jsonschema

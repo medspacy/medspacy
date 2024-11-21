@@ -66,6 +66,7 @@ class Sectionizer:
         span_attrs: Union[
             Literal["default"], Dict[str, Dict[str, Any]], None
         ] = "default",
+        apply_sentence_boundary: bool = False,
     ):
         """
         Create a new Sectionizer component.
@@ -101,6 +102,8 @@ class Sectionizer:
                 "group" will modify attributes of spans in the span group specified by `span_group_name`.
             span_group_name: The name of the span group used when `input_span_type` is "group". Default is
                 "medspacy_spans".
+            apply_sentence_boundary: Optionally end sentence before and after section header boundary. This ensures
+                the section header is considered its own sentence.
         """
         self.nlp = nlp
         self.name = name
@@ -113,6 +116,7 @@ class Sectionizer:
         self._parent_required = {}
         self._input_span_type = input_span_type
         self._span_group_name = span_group_name
+        self._apply_sentence_boundary = apply_sentence_boundary
 
         self.__matcher = MedspacyMatcher(
             nlp, name=name, phrase_matcher_attr=phrase_matcher_attr
@@ -419,6 +423,15 @@ class Sectionizer:
                 # IDEs will warn here about match shape disagreeing w/ type hinting, but this if is only used if
                 # parent sections were never set, so parent_idx does not exist
                 (match_id, start, end) = match
+
+            # Make section header its own sentence
+            if self._apply_sentence_boundary:
+                # Section headers should be considered the start of a sentence
+                doc[start].sent_start = True
+                # Text following the header should also be considered a new sentence
+                if end < len(doc):
+                    doc[end].sent_start = True
+
             rule = self.__matcher.rule_map[self.nlp.vocab.strings[match_id]]
             category = rule.category
             # If this is the last match, it should include the rest of the doc

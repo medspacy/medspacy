@@ -5,4 +5,5 @@ nltk
 pandas    
 pytest
 flake8    
-https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.3.0/en_core_sci_sm-0.3.0.tar.gz
+spacy<3.8; python_version < "3.12"
+spacy>=3.8; python_version >= "3.12"

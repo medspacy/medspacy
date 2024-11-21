@@ -1,4 +1,4 @@
-name: manual_multiversion
+name: manual_multi_oldversion
 
 on:
   workflow_dispatch
@@ -11,8 +11,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.8, 3.9, "3.10.x", "3.11.x","3.12"]
+        os: [ubuntu-20.04, macos-12, windows-latest]
+        python-version: [3.6,3.7]
     runs-on: ${{ matrix.os }}
 
     steps:

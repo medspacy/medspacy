@@ -30,8 +30,8 @@ for detecting semantic modifiers and attributes of entities, including negation 
 
 Future work could include I/O, relations extraction, and pre-trained clinical models.
 
-## Latest release 1.3.0 (11/21/2024)
-What's new in 1.3.0:
+## Latest release 1.3.1 (11/21/2024)
+What's new in 1.3.1:
 * - Optimized database I/O to write concepts into [SQLite in batches](https://github.com/medspacy/medspacy/pull/301/commits/3173be24df55d43fc8ed115d9853c126aad89820), which has been tested on [mariadb](https://github.com/medspacy/medspacy/tree/mariadb_test) (not integrated into main branch yet).
 * - Reconfigured `requirements.txt` and updated medspacydependencies to support later versions of spaCy up to 3.8.2.
 * - Due to deprecated and incompatible configurations, we have stopped supporting Python 3.6 and 3.7.

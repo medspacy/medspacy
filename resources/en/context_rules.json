@@ -387,12 +387,29 @@
       "pattern": [
         {
           "LOWER": {
-            "IN": ["concerned", "concerning"]
+            "IN": ["concern", "concerned", "concerning"]
           }
         },
         {
           "LOWER": {
             "IN": ["for", "about"]
+          }
+        }
+      ],
+      "direction": "FORWARD"
+    },
+    {
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "biopsy for",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["biopsy", "bx"]
+          }
+        },
+        {
+          "LOWER": {
+            "IN": ["for"]
           }
         }
       ],
@@ -551,7 +568,28 @@
     },
     {
       "category": "NEGATED_EXISTENCE",
+      "literal": "consistent with",
+      "pattern": [
+        {
+          "LOWER": "consistent"
+        },
+        {
+          "LOWER": {
+            "IN": ["with", "for"]
+          }
+        }
+      ],
+      "direction": "TERMINATE"
+    },
+    {
+      "category": "NEGATED_EXISTENCE",
       "literal": "inconsistent with",
+      "pattern": null,
+      "direction": "FORWARD"
+    },
+    {
+      "category": "NEGATED_EXISTENCE",
+      "literal": "not consistent with",
       "pattern": null,
       "direction": "FORWARD"
     },
@@ -1298,6 +1336,47 @@
     },
     {
       "category": "NEGATED_EXISTENCE",
+      "literal": "is not identified",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["was", "is", "are"]
+          },
+          "OP": "?"
+        },
+        {
+          "LOWER": {
+            "IN": ["not", "n't"]
+          }
+        },
+        {
+          "LOWER": "identified"
+        }
+      ],
+      "direction": "BACKWARD"
+    },
+    {
+      "category": "NEGATED_EXISTENCE",
+      "literal": "was negative for",
+      "pattern": [
+        {
+          "LOWER": {
+            "IN": ["was", "is", "are"]
+          }
+        },
+        {
+          "LOWER": {
+            "IN": ["negative", "neg"]
+          }
+        },
+        {
+          "LOWER": "for"
+        }
+      ],
+      "direction": "BIDIRECTIONAL"
+    },
+    {
+      "category": "NEGATED_EXISTENCE",
       "literal": "was negative",
       "pattern": [
         {
@@ -1386,6 +1465,20 @@
       "direction": "FORWARD"
     },
     {
+      "category": "POSSIBLE_EXISTENCE",
+      "literal": "indefinite for",
+      "pattern": [
+        {
+          "LOWER": "indefinite"
+        },
+        {
+          "LOWER": "for",
+          "OP": "?"
+        }
+      ],
+      "direction": "FORWARD"
+    },
+    {
       "category": "NEGATED_EXISTENCE",
       "literal": ": none",
       "pattern": null,
@@ -1407,6 +1500,26 @@
       "category": "NEGATED_EXISTENCE",
       "literal": "negative on",
       "pattern": null,
+      "direction": "BACKWARD"
+    },
+    {
+      "literal": "are not seen",
+      "pattern": [
+        {
+          "LOWER": "are",
+          "OP": "?"
+        },
+        {
+          "LOWER": "is",
+          "OP": "?"
+        },
+        {
+          "LOWER": "not"
+        },
+        {
+          "LOWER": "seen"
+        }
+      ],
       "direction": "BACKWARD"
     },
     {

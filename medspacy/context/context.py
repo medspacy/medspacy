@@ -53,6 +53,7 @@ class ConText:
         ] = "default",
         input_span_type: Union[Literal["ents", "group"]] = "ents",
         span_group_name: str = "medspacy_spans",
+        match_target_sents_only: bool = False,
     ):
         """
         Creates a new ConText object.
@@ -105,6 +106,7 @@ class ConText:
         self.input_span_type = input_span_type
         self.span_group_name = span_group_name
         self.context_attributes_mapping = None
+        self.match_target_sents_only = match_target_sents_only
 
         self.DEFAULT_RULES_FILEPATH = path.join(
             Path(__file__).resolve().parents[2], "resources", language_code.lower(), "context_rules.json"
@@ -309,7 +311,22 @@ class ConText:
         context_graph.targets = targets
 
         context_graph.modifiers = []
-        matches = self.__matcher(doc)
+        if self.match_target_sents_only:
+            target_sents = set()
+            matches = []
+            for target in targets:
+                try:
+                    target_sent = target.sent
+                except ValueError as e:
+                    raise ValueError("If match_target_sents_only is True, then sentence boundaries must be set. "
+                                     "Please set context.match_target_sents_only to False or set sentence boundaries.")
+                target_sents.add(target_sent)
+            target_sents = sorted(list(target_sents))
+            for sent in target_sents:
+                matches += self.__matcher(sent)
+        else:
+            matches = self.__matcher(doc)
+        
 
         for (match_id, start, end) in matches:
             # Get the ConTextRule object defining this modifier

@@ -1,0 +1,5 @@
+mkdocs
+mkdocstrings[python]
+mkdocs-material
+mkdocs-api-autonav
+pymdown-extensions

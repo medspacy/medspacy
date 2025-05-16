@@ -72,8 +72,11 @@ jobs:
           if [ ${#versions[@]} -eq 0 ]; then
             versions+=("3.10.x")
           fi
-          echo "python_versions=$(echo "${versions[@]}" | jq -c -n '[inputs]')" >> $GITHUB_OUTPUT
+          # Convert the array to JSON and save to outputs
+          json_array=$(printf '%s\n' "${versions[@]}" | jq -R . | jq -s .)
+          echo "python_versions=${json_array}" >> $GITHUB_OUTPUT
         shell: bash
+
 
   test:
     needs: prepare_matrix

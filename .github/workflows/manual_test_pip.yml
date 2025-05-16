@@ -87,7 +87,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         # python-version: [3.8]
-        python-version: ${{ needs.setup.outputs.versions || '3.10.x' }}
+        python-version: ${{ needs.setup.outputs.versions || ["3.10.x"] }}
 
         # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
     runs-on: ${{ matrix.os }}

@@ -45,59 +45,53 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      pythonVersions: ${{ steps.set-python-versions.outputs.pythonVersions }}
+      python-versions: ${{ steps.get-python-versions.outputs.versions }}
     steps:
-      - id: set-python-versions
+      - id: get-python-versions
         run: |
-          # Start with an empty JSON array
-          PYTHON_VERSIONS="[]"
-          
-          # Use jq to build the array
+          VERSIONS=""
           if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.8.x"]')
+            VERSIONS='"3.8"'
           fi
-          
           if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.9.x"]')
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.9\""
           fi
-          
           if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.10.x"]')
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.10.x\""
           fi
-          
           if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.11.x"]')
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.11.x\""
           fi
-          
           if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.12.x"]')
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.12.x\""
           fi
-          
           if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.13.x"]')
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.13.x\""
           fi
-          
-          # Default to 3.10.x if nothing selected
-          if [[ "$PYTHON_VERSIONS" == "[]" ]]; then
-            PYTHON_VERSIONS='["3.10.x"]'
+          # Default to 3.10.x if nothing is selected
+          if [[ -z "$VERSIONS" ]]; then
+            VERSIONS='"3.10.x"'
           fi
-          
-          # Debug output
-          echo "Python versions JSON: $PYTHON_VERSIONS"
-          
-          # Set the output directly
-          echo "pythonVersions=$PYTHON_VERSIONS" >> $GITHUB_OUTPUT
+          echo "versions=[$VERSIONS]"
+          echo "versions=[$VERSIONS]" >> $GITHUB_OUTPUT
         shell: bash
 
   test:
     needs: setup
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ${{ fromJSON(needs.setup.outputs.pythonVersions) }}
-    runs-on: ${{ matrix.os }}
+        # python-version: [3.8]
+        python-version: ${{ setup.outputs.versions }}
 
+
+        # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v4

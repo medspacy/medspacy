@@ -45,53 +45,60 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      python-versions: ${{ steps.get-python-versions.outputs.versions }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - id: get-python-versions
+      - id: set-matrix
         run: |
-          VERSIONS=""
+          # Create a JSON array of Python versions
+          echo "Building Python versions array..."
+          
+          # Start with an empty array
+          PYTHON_VERSIONS="[]"
+          
+          # Add versions based on inputs
           if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
-            VERSIONS='"3.8"'
+            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.8.x"]')
           fi
           if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
-            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-            VERSIONS="${VERSIONS}\"3.9\""
+            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.9.x"]')
           fi
           if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
-            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-            VERSIONS="${VERSIONS}\"3.10.x\""
+            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.10.x"]')
           fi
           if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
-            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-            VERSIONS="${VERSIONS}\"3.11.x\""
+            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.11.x"]')
           fi
           if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
-            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-            VERSIONS="${VERSIONS}\"3.12.x\""
+            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.12.x"]')
           fi
           if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
-            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-            VERSIONS="${VERSIONS}\"3.13.x\""
+            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.13.x"]')
           fi
-          # Default to 3.10.x if nothing is selected
-          if [[ -z "$VERSIONS" ]]; then
-            VERSIONS='"3.10.x"'
+          
+          # Default to 3.10.x if nothing selected
+          if [[ "$PYTHON_VERSIONS" == "[]" ]]; then
+            PYTHON_VERSIONS='["3.10.x"]'
           fi
-          echo "versions=[$VERSIONS]"
-          echo "versions=[$VERSIONS]" >> $GITHUB_OUTPUT
+          
+          # Create the complete matrix JSON
+          MATRIX=$(echo '{}' | jq --argjson versions "$PYTHON_VERSIONS" '. + {"python-version": $versions}')
+          echo "Matrix: $MATRIX"
+          
+          # Set the output
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
         shell: bash
 
   test:
     needs: setup
     strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        # python-version: [3.8]
-        python-version: ${{ needs.setup.outputs.versions }}
-
-
-        # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+      include:
+        - os: ubuntu-latest
+        - os: macos-latest 
+        - os: windows-latest
     runs-on: ${{ matrix.os }}
+
 
     steps:
     - uses: actions/checkout@v4

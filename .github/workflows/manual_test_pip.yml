@@ -42,10 +42,10 @@ on:
 
 
 jobs:
-  prepare_matrix:
+  setup:
     runs-on: ubuntu-latest
     outputs:
-      python_versions: ${{ steps.set-matrix.outputs.python_versions }}
+      python-versions: ${{ steps.get-python-versions.outputs.versions }}
     steps:
       - id: get-python-versions
         run: |
@@ -77,20 +77,16 @@ jobs:
           if [[ -z "$VERSIONS" ]]; then
             VERSIONS='"3.10.x"'
           fi
-          echo "versions=[$VERSIONS]"
           echo "versions=[$VERSIONS]" >> $GITHUB_OUTPUT
         shell: bash
 
-
-
   test:
-    needs: prepare_matrix
-
+    needs: setup
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         # python-version: [3.8]
-        python-version: ${{ steps.get-python-versions.outputs.versions || '3.10.x' }}
+        python-version: ${{ needs.setup.outputs.versions || '3.10.x' }}
 
         # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
     runs-on: ${{ matrix.os }}

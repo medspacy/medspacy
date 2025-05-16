@@ -50,45 +50,49 @@ jobs:
       - id: set-matrix
         run: |
           # Create a JSON array of Python versions
-          echo "Building Python versions array..."
-          
-          # Start with an empty array
-          PYTHON_VERSIONS="[]"
+          python_versions=()
           
           # Add versions based on inputs
           if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.8.x"]')
+            python_versions+=("3.8.x")
           fi
           if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.9.x"]')
+            python_versions+=("3.9.x")
           fi
           if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.10.x"]')
+            python_versions+=("3.10.x")
           fi
           if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.11.x"]')
+            python_versions+=("3.11.x")
           fi
           if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.12.x"]')
+            python_versions+=("3.12.x")
           fi
           if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
-            PYTHON_VERSIONS=$(echo $PYTHON_VERSIONS | jq '. += ["3.13.x"]')
+            python_versions+=("3.13.x")
           fi
           
           # Default to 3.10.x if nothing selected
-          if [[ "$PYTHON_VERSIONS" == "[]" ]]; then
-            PYTHON_VERSIONS='["3.10.x"]'
+          if [ ${#python_versions[@]} -eq 0 ]; then
+            python_versions=("3.10.x")
           fi
+
+          # Convert to JSON format
+          JSON_VERSIONS="[$(printf '"%s",' "${python_versions[@]}" | sed 's/,$/')]"
           
-          # Define the OS list
-          OS_LIST='["ubuntu-latest", "macos-latest", "windows-latest"]'
+          # Create the complete matrix JSON with proper escaping
+          MATRIX="{\"python-version\":$JSON_VERSIONS,\"os\":[\"ubuntu-latest\",\"macos-latest\",\"windows-latest\"]}"
           
-          # Create the complete matrix JSON
-          MATRIX=$(echo '{}' | jq --argjson versions "$PYTHON_VERSIONS" --argjson os "$OS_LIST" '. + {"python-version": $versions, "os": $os}')
-          echo "Matrix: $MATRIX"
+          # Escape the output to handle special characters properly
+          MATRIX="${MATRIX//\%/\%25}"
+          MATRIX="${MATRIX//\\/\%0A}"
+          MATRIX="${MATRIX//\]/\%5D}"
+          MATRIX="${MATRIX//\[/\%5B}"
           
-          # Set the output
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+          
+          # Debug output
+          echo "Created matrix: $MATRIX"
         shell: bash
 
   test:

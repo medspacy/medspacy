@@ -51,35 +51,36 @@ jobs:
       run: |
         VERSIONS=""
         if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
-          VERSIONS="3.8"
+          VERSIONS='"3.8"'
         fi
         if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
           if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-          VERSIONS="${VERSIONS}3.9"
+          VERSIONS="${VERSIONS}\"3.9\""
         fi
         if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
           if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-          VERSIONS="${VERSIONS}3.10.x"
+          VERSIONS="${VERSIONS}\"3.10.x\""
         fi
         if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
           if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-          VERSIONS="${VERSIONS}3.11.x"
+          VERSIONS="${VERSIONS}\"3.11.x\""
         fi
         if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
           if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-          VERSIONS="${VERSIONS}3.12.x"
+          VERSIONS="${VERSIONS}\"3.12.x\""
         fi
         if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
           if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
-          VERSIONS="${VERSIONS}3.13.x"
+          VERSIONS="${VERSIONS}\"3.13.x\""
         fi
         # Default to 3.10.x if nothing is selected
         if [[ -z "$VERSIONS" ]]; then
-          VERSIONS="3.10.x"
+          VERSIONS='"3.10.x"'
         fi
         echo "versions=[$VERSIONS]"
         echo "versions=[$VERSIONS]" >> $GITHUB_OUTPUT
       shell: bash
+
 
 
   test:
@@ -89,7 +90,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         # python-version: [3.8]
-        python-version: ${{ fromJSON(needs.prepare_matrix.outputs.python_versions) }}
+        python-version: ${{ steps.get-python-versions.outputs.versions || '3.10.x' }}
+
         # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
     runs-on: ${{ matrix.os }}
 

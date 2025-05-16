@@ -8,19 +8,81 @@ on:
         type: boolean   
         required: false
         default: false
+      python_38:
+        description: 'Test with Python 3.8'
+        type: boolean
+        default: false
+        required: false
+      python_39:
+        description: 'Test with Python 3.9'
+        type: boolean
+        default: false
+        required: false
+      python_310:
+        description: 'Test with Python 3.10'
+        type: boolean
+        default: true
+        required: false
+      python_311:
+        description: 'Test with Python 3.11'
+        type: boolean
+        default: false
+        required: false
+      python_312:
+        description: 'Test with Python 3.12'
+        type: boolean
+        default: false
+        required: false
+      python_313:
+        description: 'Test with Python 3.13'
+        type: boolean
+        default: false
+        required: false
+
+
 
 jobs:
+  prepare_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      python_versions: ${{ steps.set-matrix.outputs.python_versions }}
+    steps:
+      - id: set-matrix
+        run: |
+          versions=()
+          if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
+            versions+=("3.8")
+          fi
+          if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
+            versions+=("3.9")
+          fi
+          if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
+            versions+=("3.10.x")
+          fi
+          if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
+            versions+=("3.11.x")
+          fi
+          if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
+            versions+=("3.12.x")
+          fi
+          if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
+            versions+=("3.13.x")
+          fi
+          # Default to 3.10.x if nothing is selected
+          if [ ${#versions[@]} -eq 0 ]; then
+            versions+=("3.10.x")
+          fi
+          echo "python_versions=$(echo "${versions[@]}" | jq -c -n '[inputs]')" >> $GITHUB_OUTPUT
+        shell: bash
 
   test:
-  
-    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
-    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
+    needs: prepare_matrix
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         # python-version: [3.8]
-        python-version: [3.8, 3.9, "3.10.x", "3.11.x", "3.12.x", "3.13.x"]
+        python-version: ${{ fromJSON(needs.prepare_matrix.outputs.python_versions) }}
         # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
     runs-on: ${{ matrix.os }}
 

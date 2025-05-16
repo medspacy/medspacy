@@ -47,35 +47,39 @@ jobs:
     outputs:
       python_versions: ${{ steps.set-matrix.outputs.python_versions }}
     steps:
-      - id: set-matrix
-        run: |
-          versions=()
-          if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
-            versions+=("3.8")
-          fi
-          if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
-            versions+=("3.9")
-          fi
-          if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
-            versions+=("3.10.x")
-          fi
-          if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
-            versions+=("3.11.x")
-          fi
-          if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
-            versions+=("3.12.x")
-          fi
-          if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
-            versions+=("3.13.x")
-          fi
-          # Default to 3.10.x if nothing is selected
-          if [ ${#versions[@]} -eq 0 ]; then
-            versions+=("3.10.x")
-          fi
-          # Convert the array to JSON and save to outputs
-          json_array=$(printf '%s\n' "${versions[@]}" | jq -R . | jq -s .)
-          echo "python_versions=${json_array}" >> $GITHUB_OUTPUT
-        shell: bash
+    - id: get-python-versions
+      run: |
+        VERSIONS=""
+        if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
+          VERSIONS="3.8"
+        fi
+        if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
+          if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+          VERSIONS="${VERSIONS}3.9"
+        fi
+        if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
+          if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+          VERSIONS="${VERSIONS}3.10.x"
+        fi
+        if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
+          if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+          VERSIONS="${VERSIONS}3.11.x"
+        fi
+        if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
+          if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+          VERSIONS="${VERSIONS}3.12.x"
+        fi
+        if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
+          if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+          VERSIONS="${VERSIONS}3.13.x"
+        fi
+        # Default to 3.10.x if nothing is selected
+        if [[ -z "$VERSIONS" ]]; then
+          VERSIONS="3.10.x"
+        fi
+        echo "versions=[$VERSIONS]"
+        echo "versions=[$VERSIONS]" >> $GITHUB_OUTPUT
+      shell: bash
 
 
   test:

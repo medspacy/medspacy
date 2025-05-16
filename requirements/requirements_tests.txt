@@ -7,7 +7,5 @@ pytest
 flake8    
 spacy<3.8; python_version < "3.12"
 spacy>=3.8,<4.0; python_version >= "3.12"
-ipython<9.0; python_version < "3.12"
-ipython>=9.0; python_version >= "3.12"
-
+ipython<9.0
 

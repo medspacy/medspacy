@@ -21,14 +21,14 @@ as part of a `spacy` processing pipeline. Each of the following modules is avail
 - `medspacy.sentence_splitter`: Clinical sentence segmentation
 - `medspacy.ner`: Utilities for extracting concepts from clinical text
 - `medspacy.context`: Implementation of the [ConText](https://www.sciencedirect.com/science/article/pii/S1532046409000744)
-for detecting semantic modifiers and attributes of entities, including negation and uncertainty
+algorithm for detecting semantic modifiers and attributes of entities, including negation and uncertainty.
 - `medspacy.section_detection`: Clinical section detection and segmentation
 - `medspacy.postprocess`: Flexible framework for modifying and removing extracted entities
 - `medspacy.io`: Utilities for converting processed texts to structured data and interacting with databases
 - `medspacy.visualization`: Utilities for visualizing concepts and relationships extracted from text
 - `SpacyQuickUMLS`: UMLS concept extraction compatible with spacy and medspacy implemented by [our fork](https://github.com/medspacy/QuickUMLS) of [QuickUMLS](https://github.com/Georgetown-IR-Lab/QuickUMLS). More detail on this component, how to use it, how to generate UMLS resources beyond the small UMLS sample can be found in [this notebook](notebooks/11a-QuickUMLS_Extraction_Defaults.ipynb).
 
-Future work could include I/O, relations extraction, and pre-trained clinical models.
+Future work will include I/O, relations extraction, and pre-trained clinical models.
 
 ## Latest release 1.3.1 (11/21/2024)
 What's new in 1.3.1:
@@ -174,3 +174,4 @@ Here are some links to projects or tutorials which use medSpacy. If you have a p
 - [clinspacy](https://ml4lhs.github.io/clinspacy/index.html): An R wrapper for spaCy, sciSpaCy, and medSpaCy for performing clinical NLP and UMLS linking in R
 - [mimic34md2020_materials](https://github.com/Melbourne-BMDS/mimic34md2020_materials): A crash course in clinical data science from the University of Melbourne. For medSpaCy materials, see `notebooks/nlp-*.ipynb`
 - [ReHouSED NLP](https://github.com/abchapman93/ReHouSED): An NLP pipeline for [studying Veteran housing stability](https://www.sciencedirect.com/science/article/pii/S153204642100232X) and distinguishing between Veterans who are currently unstably housed and those who have exited homelessness
+- [Melanoma Pathology NLP (https://github.com/VINCI-AppliedNLP/melanoma_NLP)]: A pipeline for the extraction of a melanoma diagnosis and feature extraction from free-text pathology reports/

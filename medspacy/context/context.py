@@ -53,7 +53,7 @@ class ConText:
         ] = "default",
         input_span_type: Union[Literal["ents", "group"]] = "ents",
         span_group_name: str = "medspacy_spans",
-        match_target_sents_only: bool = False,
+        match_target_sents_only: bool = True,
     ):
         """
         Creates a new ConText object.

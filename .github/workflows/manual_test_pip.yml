@@ -8,19 +8,89 @@ on:
         type: boolean   
         required: false
         default: false
+      python_38:
+        description: 'Test with Python 3.8'
+        type: boolean
+        default: false
+        required: false
+      python_39:
+        description: 'Test with Python 3.9'
+        type: boolean
+        default: false
+        required: false
+      python_310:
+        description: 'Test with Python 3.10'
+        type: boolean
+        default: true
+        required: false
+      python_311:
+        description: 'Test with Python 3.11'
+        type: boolean
+        default: false
+        required: false
+      python_312:
+        description: 'Test with Python 3.12'
+        type: boolean
+        default: false
+        required: false
+      python_313:
+        description: 'Test with Python 3.13'
+        type: boolean
+        default: false
+        required: false
+
+
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      python-versions: ${{ steps.get-python-versions.outputs.versions }}
+    steps:
+      - id: get-python-versions
+        run: |
+          VERSIONS=""
+          if [[ "${{ github.event.inputs.python_38 }}" == "true" ]]; then
+            VERSIONS='"3.8"'
+          fi
+          if [[ "${{ github.event.inputs.python_39 }}" == "true" ]]; then
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.9\""
+          fi
+          if [[ "${{ github.event.inputs.python_310 }}" == "true" ]]; then
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.10.x\""
+          fi
+          if [[ "${{ github.event.inputs.python_311 }}" == "true" ]]; then
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.11.x\""
+          fi
+          if [[ "${{ github.event.inputs.python_312 }}" == "true" ]]; then
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.12.x\""
+          fi
+          if [[ "${{ github.event.inputs.python_313 }}" == "true" ]]; then
+            if [[ -n "$VERSIONS" ]]; then VERSIONS="$VERSIONS,"; fi
+            VERSIONS="${VERSIONS}\"3.13.x\""
+          fi
+          # Default to 3.10.x if nothing is selected
+          if [[ -z "$VERSIONS" ]]; then
+            VERSIONS='"3.10.x"'
+          fi
+          echo "versions=[$VERSIONS]"
+          echo "versions=[$VERSIONS]" >> $GITHUB_OUTPUT
+        shell: bash
 
   test:
-  
-    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
-    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
-
+    needs: setup
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         # python-version: [3.8]
-        python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+        python-version: ${{ fromJSON(needs.setup.outputs.python-versions) }}
+
+
+
         # revised from https://github.com/actions/cache/blob/main/examples.md#python---pip
     runs-on: ${{ matrix.os }}
 

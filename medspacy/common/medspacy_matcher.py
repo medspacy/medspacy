@@ -131,12 +131,20 @@ class MedspacyMatcher:
         in the case of overlapping matches the longest will be returned.
 
         Args:
-            doc: The spaCy Doc to process.
+            doc: The spaCy Doc or Span to process.
 
         Returns:
             A list of tuples, each containing 3 ints representing the individual match (match_id, start, end).
+            All indices are document-relative, even when a Span is passed.
         """
         matches = self.__matcher(doc)
+        # spaCy's Matcher returns span-relative indices when called on a Span,
+        # unlike PhraseMatcher and RegexMatcher which return doc-relative indices.
+        # Normalize Matcher results to doc-relative so all indices are consistent.
+        if hasattr(doc, "start") and doc.start != 0:
+            offset = doc.start
+            matches = [(match_id, start + offset, end + offset)
+                       for (match_id, start, end) in matches]
         matches += self.__phrase_matcher(doc)
         matches += self.__regex_matcher(doc)
         if self._prune:

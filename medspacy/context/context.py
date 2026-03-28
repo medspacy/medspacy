@@ -317,7 +317,7 @@ class ConText:
             for target in targets:
                 try:
                     target_sent = target.sent
-                except ValueError as e:
+                except ValueError:
                     raise ValueError("If match_target_sents_only is True, then sentence boundaries must be set. "
                                      "Please set context.match_target_sents_only to False or set sentence boundaries.")
                 target_sents.add(target_sent)

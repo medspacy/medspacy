@@ -172,7 +172,7 @@ class TestConText:
         assert doc.ents[0]._.is_family is False
 
     def test_simple_callback(self, capsys):
-        context = ConText(nlp, rules=None)
+        context = ConText(nlp, rules=None, match_target_sents_only=False)
 
         def simple_callback(matcher, doc, i, matches):
             match_id, start, end = matches[i]
@@ -315,7 +315,7 @@ class TestConText:
 
     def test_max_scope(self):
         nlp_no_sents = spacy.blank("en")
-        context = ConText(nlp_no_sents, max_scope=1)
+        context = ConText(nlp_no_sents, max_scope=1, match_target_sents_only=False)
         doc = nlp_no_sents("There is no evidence of pneumonia or chf.")
         doc.ents = (Span(doc, 5, 6, "CONDITION"), Span(doc, 7, 8, "CONDITION"))
         context(doc)
@@ -331,7 +331,7 @@ class TestConText:
                 pattern="no (history|hx) of",
             ),
         ]
-        context = ConText(nlp, rules=None)
+        context = ConText(nlp, rules=None, match_target_sents_only=False)
         context.add(rules)
 
         doc = nlp("No history of afib. No hx of MI.")
@@ -343,7 +343,7 @@ class TestConText:
             ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
             ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD"),
         ]
-        context = ConText(nlp, rules=None, prune_on_modifier_overlap=True)
+        context = ConText(nlp, rules=None, prune_on_modifier_overlap=True, match_target_sents_only=False)
         context.add(rules)
 
         doc = nlp("No history of afib.")
@@ -359,7 +359,7 @@ class TestConText:
             ConTextRule("history of", "HISTORICAL", direction="FORWARD"),
             ConTextRule("no history of", "NEGATED_EXISTENCE", direction="FORWARD"),
         ]
-        context = ConText(nlp, rules=None, prune_on_modifier_overlap=False)
+        context = ConText(nlp, rules=None, prune_on_modifier_overlap=False, match_target_sents_only=False)
         context.add(rules)
 
         doc = nlp("No history of afib.")
@@ -448,3 +448,37 @@ class TestConText:
         Doc.remove_extension("my_custom_spans")
         nlp.remove_pipe("custom_span_setter")
         nlp.remove_pipe("medspacy_context")
+
+    def test_match_target_sents_only(self):
+        rules = [
+            ConTextRule("no evidence", "NEGATED_EXISTENCE")
+        ]
+        context = ConText(nlp, rules=None, match_target_sents_only=True)
+        context.add(rules)
+
+        doc = nlp("There is no evidence of pneumonia. This sentence has no evidence.")
+        doc.ents = (Span(doc, 5, 6, "PNEUMONIA"),)
+        assert len(doc.ents) == 1
+
+        context(doc)
+        assert len(doc._.context_graph.targets) == 1
+        assert len(doc._.context_graph.modifiers) == 1
+        assert len(doc._.context_graph.edges) == 1
+
+    def test_match_target_sents_only_false(self):
+        rules = [
+            ConTextRule("no evidence", "NEGATED_EXISTENCE")
+        ]
+        context = ConText(nlp, rules=None, match_target_sents_only=False)
+        context.add(rules)
+
+        doc = nlp("There is no evidence of pneumonia. This sentence has no evidence.")
+        doc.ents = (Span(doc, 5, 6, "PNEUMONIA"),)
+        assert len(doc.ents) == 1
+        context(doc)
+
+        assert len(doc._.context_graph.targets) == 1
+        assert len(doc._.context_graph.modifiers) == 2
+        assert len(doc._.context_graph.edges) == 1
+
+

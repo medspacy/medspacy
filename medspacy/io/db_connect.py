@@ -1,3 +1,4 @@
+from loguru import logger
 class DbConnect:
     """DbConnect is a wrapper for either a pyodbc or sqlite3 connection. It can then be
     passed into the DbReader and DbWriter classes to retrieve/store document data.

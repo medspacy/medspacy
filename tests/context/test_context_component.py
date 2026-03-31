@@ -449,6 +449,36 @@ class TestConText:
         nlp.remove_pipe("custom_span_setter")
         nlp.remove_pipe("medspacy_context")
 
+    def test_match_target_sents_only_multi_sentence(self):
+        """Modifiers in later sentences should be correctly assigned
+        when match_target_sents_only=True. Regression test for a bug
+        where sentence-relative match indices caused modifiers from
+        later sentences to be mapped to wrong document positions."""
+        rules = [
+            ConTextRule("no", "NEGATED_EXISTENCE", direction="FORWARD"),
+            ConTextRule("possible", "POSSIBLE_EXISTENCE", direction="FORWARD"),
+        ]
+        context = ConText(nlp, rules=None, match_target_sents_only=True)
+        context.add(rules)
+
+        doc = nlp("No pneumonia. Possible pneumonia.")
+        doc.ents = (
+            Span(doc, 1, 2, "CONDITION"),
+            Span(doc, 4, 5, "CONDITION"),
+        )
+        context(doc)
+
+        # First entity should be negated, not possible
+        assert doc.ents[0]._.is_negated is True
+        mods_0 = doc.ents[0]._.modifiers
+        assert len(mods_0) == 1
+        assert mods_0[0].category == "NEGATED_EXISTENCE"
+
+        # Second entity should be possible, not negated
+        mods_1 = doc.ents[1]._.modifiers
+        assert len(mods_1) == 1
+        assert mods_1[0].category == "POSSIBLE_EXISTENCE"
+
     def test_match_target_sents_only(self):
         rules = [
             ConTextRule("no evidence", "NEGATED_EXISTENCE")

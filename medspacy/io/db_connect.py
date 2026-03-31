@@ -1,3 +1,4 @@
+from loguru import logger
 class DbConnect:
     """DbConnect is a wrapper for either a pyodbc or sqlite3 connection. It can then be
     passed into the DbReader and DbWriter classes to retrieve/store document data.
@@ -57,7 +58,7 @@ class DbConnect:
                     )
                 )
 
-        print("Opened connection to {0}.{1}".format(server, db))
+        logger.debug("Opened connection to {0}.{1}".format(server, db))
 
     def create_table(self, query, table_name, drop_existing):
         if drop_existing:
@@ -76,7 +77,7 @@ class DbConnect:
             raise e
         else:
             self.conn.commit()
-            print("Created table {0} with query: {1}".format(table_name, query))
+            logger.debug("Created table {0} with query: {1}".format(table_name, query))
 
     def write(self, query, data):
         try:
@@ -87,15 +88,15 @@ class DbConnect:
             raise e
         else:
             self.conn.commit()
-            # print("Wrote {0} rows with query: {1}".format(len(data), query))
+            logger.debug("Wrote {0} rows with query: {1}".format(len(data), query))
 
     def read(self, query):
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        # print("Read {0} rows with query: {1}".format(len(result), query))
+        logger.debug("Read {0} rows with query: {1}".format(len(result), query))
         return result
 
     def close(self):
         self.conn.commit()
         self.conn.close()
-        print("Connection closed.")
+        logger.debug("Connection closed.")

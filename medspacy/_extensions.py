@@ -2,6 +2,7 @@
 from spacy.tokens import Doc, Span, Token
 
 from .common.util import span_contains
+from loguru import logger
 
 # from .io.doc_consumer import ALLOWED_DATA_TYPES
 
@@ -28,7 +29,7 @@ def set_span_extensions():
         try:
             Span.set_extension(attr, **attr_info)
         except ValueError as e:  # If the attribute has already set, this will raise an error
-            # print(e)
+            logger.warning(e)
             pass
 
 

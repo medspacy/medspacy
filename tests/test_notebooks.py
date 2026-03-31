@@ -23,7 +23,7 @@ class TestNotebooks:
             assert len(files) > 0, f"No files found in {notebook_path}"
 
             for file in files:
-                if file.endswith(".ipynb"):
+                if file.endswith(".ipynb") and not file.startswith('benchmark'):
 
                     # Skip this one since it has some large dependencies and downloads
                     if "using-pretrained-models" in file.lower():

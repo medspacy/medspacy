@@ -3,6 +3,7 @@ from typing import Iterable, Union, List, Literal
 
 from spacy.language import Language
 from spacy.tokens import Doc
+from loguru import logger
 
 from medspacy.postprocess import PostprocessingRule
 
@@ -112,8 +113,7 @@ class Postprocessor:
 
         for i in range(len(spans) - 1, -1, -1):
             ent = spans[i]
-            if self.debug:
-                print(ent)
+            logger.debug(ent)
 
             # let's keep track of whether the rule makes a change to spans
             span_count_before_rule = None

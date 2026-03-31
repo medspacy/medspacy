@@ -11,6 +11,7 @@ from .context_graph import ConTextGraph
 from .context_modifier import ConTextModifier
 from .context_rule import ConTextRule
 from ..common.medspacy_matcher import MedspacyMatcher
+from loguru import logger
 
 #
 DEFAULT_ATTRIBUTES = {
@@ -318,8 +319,7 @@ class ConText:
                 try:
                     target_sent = target.sent
                 except ValueError:
-                    raise ValueError("If match_target_sents_only is True, then sentence boundaries must be set. "
-                                     "Please set context.match_target_sents_only to False or set sentence boundaries.")
+                    logger.warning("If match_target_sents_only is True, then sentence boundaries must be set.\n\tPlease set context.match_target_sents_only to False or set sentence boundaries.")
                 target_sents.add(target_sent)
             target_sents = sorted(list(target_sents))
             for sent in target_sents:

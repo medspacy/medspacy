@@ -12,6 +12,7 @@ import spacy
 from spacy import Language
 
 from quickumls import spacy_component
+from loguru import logger
 
 DEFAULT_PIPE_NAMES = {
     "medspacy_tokenizer",
@@ -113,7 +114,7 @@ def load(
         if quickumls_path is None:
             quickumls_path = get_quickumls_demo_dir(language_code)
 
-            print(
+            logger.info(
                 "Loading QuickUMLS resources from a Medspacy-distributed SAMPLE of UMLS data from here: {}".format(
                     quickumls_path
                 )

@@ -320,6 +320,7 @@ class ConText:
                     target_sent = target.sent
                 except ValueError:
                     logger.warning("If match_target_sents_only is True, then sentence boundaries must be set.\n\tPlease set context.match_target_sents_only to False or set sentence boundaries.")
+                    continue
                 target_sents.add(target_sent)
             target_sents = sorted(list(target_sents))
             for sent in target_sents:

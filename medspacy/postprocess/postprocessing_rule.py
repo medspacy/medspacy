@@ -1,6 +1,7 @@
 from typing import Iterable, Callable
 
 from ..postprocess import PostprocessingPattern
+from loguru import logger
 
 
 class PostprocessingRule:
@@ -60,8 +61,7 @@ class PostprocessingRule:
                     return False
 
         # Every pattern passed - do the action
-        if debug:
-            print("Passed:", self, "on ent:", ent, ent.sent)
+        logger.debug(f"Passed: {self} on ent: {ent}, {ent.sent}")
 
         try:
             if self.kwargs:

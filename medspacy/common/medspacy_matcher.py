@@ -9,9 +9,6 @@ from .base_rule import BaseRule
 from .regex_matcher import RegexMatcher
 from .util import prune_overlapping_matches
 
-# suppress warnings here because the matchers warn if no patterns are specified, but since multiple matchers are
-# included that is not necessarily bad.
-warnings.filterwarnings("ignore")
 
 
 class MedspacyMatcher:
@@ -137,15 +134,20 @@ class MedspacyMatcher:
             A list of tuples, each containing 3 ints representing the individual match (match_id, start, end).
             All indices are document-relative, even when a Span is passed.
         """
-        matches = self.__matcher(doc)
-        # spaCy's Matcher returns span-relative indices when called on a Span,
-        # unlike PhraseMatcher and RegexMatcher which return doc-relative indices.
-        # Normalize Matcher results to doc-relative so all indices are consistent.
-        if hasattr(doc, "start") and doc.start != 0:
-            offset = doc.start
-            matches = [(match_id, start + offset, end + offset)
-                       for (match_id, start, end) in matches]
-        matches += self.__phrase_matcher(doc)
+        # Suppress spaCy warnings about empty matchers — MedspacyMatcher
+        # intentionally keeps all three sub-matchers alive even when some
+        # have no patterns, so "Matcher is empty" is expected, not an error.
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The matcher is empty")
+            matches = self.__matcher(doc)
+            # spaCy's Matcher returns span-relative indices when called on a Span,
+            # unlike PhraseMatcher and RegexMatcher which return doc-relative indices.
+            # Normalize Matcher results to doc-relative so all indices are consistent.
+            if hasattr(doc, "start") and doc.start != 0:
+                offset = doc.start
+                matches = [(match_id, start + offset, end + offset)
+                           for (match_id, start, end) in matches]
+            matches += self.__phrase_matcher(doc)
         matches += self.__regex_matcher(doc)
         if self._prune:
             matches = prune_overlapping_matches(matches)

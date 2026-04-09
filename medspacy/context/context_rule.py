@@ -44,7 +44,7 @@ class ConTextRule(BaseRule):
         self,
         literal: str,
         category: str,
-        pattern: Optional[Union[str, List[Dict[str, str]]]] = None,
+        pattern: Optional[Union[str, List[Dict[str, Any]]]] = None,
         direction: str = "BIDIRECTIONAL",
         on_match: Optional[
             Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]

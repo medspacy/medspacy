@@ -27,7 +27,7 @@ class SectionRule(BaseRule):
         self,
         literal: str,
         category: str,
-        pattern: Optional[Union[List[Dict[str, str]], str]] = None,
+        pattern: Optional[Union[List[Dict[str, Any]], str]] = None,
         on_match: Optional[
             Callable[[Matcher, Doc, int, List[Tuple[int, int, int]]], Any]
         ] = None,

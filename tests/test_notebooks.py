@@ -36,10 +36,6 @@ class TestNotebooks:
                     # if "11b" in file.lower():
                     #    continue
 
-                    # TODO: skip pre-trained notebook until we can find a replacement for med7
-                    if "06" in file.lower():
-                        continue
-
                     # TODO: skip IO notebook until we can find a replacement for med7
                     if "12" in file.lower():
                         continue

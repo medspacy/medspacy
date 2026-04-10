@@ -25,10 +25,6 @@ class TestNotebooks:
             for file in files:
                 if file.endswith(".ipynb") and not file.startswith('benchmark'):
 
-                    # Skip this one since it has some large dependencies and downloads
-                    if "using-pretrained-models" in file.lower():
-                        continue
-
                     # Skip this one since it has some large dependencies and manual downloads
                     # if "12-io" in file.lower():
                     #    continue

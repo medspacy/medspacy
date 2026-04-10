@@ -489,6 +489,36 @@ class TestSectionizer:
         assert s3.parent.category == "s2"
         assert s4.parent is None
 
+    def test_parent_section_with_leading_text(self):
+        """Test that subsections are correctly assigned when non-sectioned text
+        precedes the first section header (issue #114)."""
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(
+            [
+                SectionRule(
+                    category="past_medical_history", literal="Past Medical History:"
+                ),
+                SectionRule(
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history"],
+                ),
+            ]
+        )
+        text = "Some intro text. Past Medical History: some text. Explanation: details here."
+        doc = nlp(text)
+        sectionizer(doc)
+        # 3 sections: intro (None), PMH, Explanation
+        assert len(doc._.sections) == 3
+        intro = doc._.sections[0]
+        pmh = doc._.sections[1]
+        explanation = doc._.sections[2]
+        assert intro.category is None
+        assert intro.parent is None
+        assert pmh.parent is None
+        assert explanation.parent is not None
+        assert explanation.parent.category == "past_medical_history"
+
     # @pytest.mark.skip("This test fails frequently with new versions") # seems to have been resolved
     def test_duplicate_parent_definitions(self):
         with warnings.catch_warnings(record=True) as w:

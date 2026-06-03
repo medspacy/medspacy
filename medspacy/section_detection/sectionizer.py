@@ -409,8 +409,13 @@ class Sectionizer:
         section_list = []
         # if the first match does not begin at token 0, handle the first section
         first_match = matches[0]
+        # Track whether an intro section was prepended so parent indices
+        # (which refer to positions in `matches`, not `section_list`) can
+        # be shifted to account for the extra element.
+        parent_offset = 0
         if first_match[1] != 0:
             section_list.append(Section(None, 0, 0, 0, first_match[1]))
+            parent_offset = 1
 
         # handle section spans
         for i, match in enumerate(matches):
@@ -418,7 +423,7 @@ class Sectionizer:
             if len(match) == 4:
                 (match_id, start, end, parent_idx) = match
                 if parent_idx is not None:
-                    parent = section_list[parent_idx]
+                    parent = section_list[parent_idx + parent_offset]
             else:
                 # IDEs will warn here about match shape disagreeing w/ type hinting, but this if is only used if
                 # parent sections were never set, so parent_idx does not exist

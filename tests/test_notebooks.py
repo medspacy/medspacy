@@ -1,6 +1,7 @@
 import pytest
 
 import os
+import shutil
 import subprocess
 import tempfile
 from sys import platform
@@ -11,9 +12,10 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 
 class TestNotebooks:
-    # @pytest.mark.skip(
-    #    "revisit notebook tests later, currently failing in CI while all other tests passing."
-    # )
+    @pytest.mark.skipif(
+        shutil.which("jupyter") is None,
+        reason="jupyter is not installed or not on PATH",
+    )
     def test_execute_example_notebooks(self):
         successful_executions = 0
         notebook_path = path.join(Path(__file__).resolve().parents[1], "notebooks")

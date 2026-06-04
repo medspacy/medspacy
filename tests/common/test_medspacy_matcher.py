@@ -198,3 +198,70 @@ class TestMedspacyMatcherSpanIndices:
         # Both should return index 0
         assert doc_matches[0][1] == 0
         assert sent_matches[0][1] == 0
+
+
+class TestEmptyMatcherNoWarning:
+    """Verify that MedspacyMatcher does not emit warnings when
+    some or all sub-matchers have no patterns."""
+
+    def test_empty_matcher_no_warning(self):
+        """Calling a matcher with no rules should produce no warnings."""
+        matcher = MedspacyMatcher(nlp)
+        doc = nlp("Patient has pneumonia")
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            matches = matcher(doc)
+            assert len(matches) == 0
+            assert len(w) == 0
+
+    def test_only_phrase_rules_no_warning(self):
+        """Only phrase rules added — token and regex matchers are empty."""
+        matcher = MedspacyMatcher(nlp)
+        matcher.add([BaseRule("pneumonia", "CONDITION")])
+        doc = nlp("Patient has pneumonia")
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            matches = matcher(doc)
+            assert len(matches) == 1
+            assert len(w) == 0
+
+    def test_only_token_pattern_rules_no_warning(self):
+        """Only token-pattern rules added — phrase and regex matchers are empty."""
+        matcher = MedspacyMatcher(nlp)
+        matcher.add([BaseRule("pneumonia", "CONDITION",
+                              pattern=[{"LOWER": "pneumonia"}])])
+        doc = nlp("Patient has pneumonia")
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            matches = matcher(doc)
+            assert len(matches) == 1
+            assert len(w) == 0
+
+    def test_only_regex_rules_no_warning(self):
+        """Only regex rules added — token and phrase matchers are empty."""
+        matcher = MedspacyMatcher(nlp)
+        matcher.add([BaseRule("pneumonia", "CONDITION",
+                              pattern=r"pneumonia")])
+        doc = nlp("Patient has pneumonia")
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            matches = matcher(doc)
+            assert len(matches) == 1
+            assert len(w) == 0
+
+    def test_all_rule_types(self):
+        """All three rule types added — all sub-matchers active."""
+        matcher = MedspacyMatcher(nlp)
+        matcher.add([
+            BaseRule("pneumonia", "CONDITION"),
+            BaseRule("fever", "CONDITION",
+                     pattern=[{"LOWER": "fever"}]),
+            BaseRule("cough", "CONDITION",
+                     pattern=r"cough"),
+        ])
+        doc = nlp("Patient has pneumonia and fever and cough")
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            matches = matcher(doc)
+            assert len(matches) == 3
+            assert len(w) == 0

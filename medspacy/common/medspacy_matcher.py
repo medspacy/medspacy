@@ -1,4 +1,3 @@
-import warnings
 from typing import Iterable, List, Dict, Tuple, Set
 
 from spacy import Language
@@ -9,9 +8,6 @@ from .base_rule import BaseRule
 from .regex_matcher import RegexMatcher
 from .util import prune_overlapping_matches
 
-# suppress warnings here because the matchers warn if no patterns are specified, but since multiple matchers are
-# included that is not necessarily bad.
-warnings.filterwarnings("ignore")
 
 
 class MedspacyMatcher:
@@ -137,15 +133,18 @@ class MedspacyMatcher:
             A list of tuples, each containing 3 ints representing the individual match (match_id, start, end).
             All indices are document-relative, even when a Span is passed.
         """
-        matches = self.__matcher(doc)
-        # spaCy's Matcher returns span-relative indices when called on a Span,
-        # unlike PhraseMatcher and RegexMatcher which return doc-relative indices.
-        # Normalize Matcher results to doc-relative so all indices are consistent.
-        if hasattr(doc, "start") and doc.start != 0:
-            offset = doc.start
-            matches = [(match_id, start + offset, end + offset)
-                       for (match_id, start, end) in matches]
-        matches += self.__phrase_matcher(doc)
+        matches = []
+        if len(self.__matcher):
+            matches = self.__matcher(doc)
+            # spaCy's Matcher returns span-relative indices when called on a Span,
+            # unlike PhraseMatcher and RegexMatcher which return doc-relative indices.
+            # Normalize Matcher results to doc-relative so all indices are consistent.
+            if hasattr(doc, "start") and doc.start != 0:
+                offset = doc.start
+                matches = [(match_id, start + offset, end + offset)
+                           for (match_id, start, end) in matches]
+        if len(self.__phrase_matcher):
+            matches += self.__phrase_matcher(doc)
         matches += self.__regex_matcher(doc)
         if self._prune:
             matches = prune_overlapping_matches(matches)

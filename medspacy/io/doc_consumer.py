@@ -84,7 +84,7 @@ class DocConsumer:
         nlp,
         name: str = "medspacy_doc_consumer",
         dtypes: Tuple = ("ents",),
-        dtype_attrs: Dict = None,
+        dtype_attrs: Optional[Dict] = None,
         span_group_name: str = "medspacy_spans",
     ):
         """

@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import Iterable, Union, List, Literal
+from typing import Iterable, Optional, Union, List, Literal
 
 from spacy.language import Language
 from spacy.tokens import Doc
@@ -18,7 +18,7 @@ class Postprocessor:
         self,
         nlp: Language,
         name: str = "medspacy_postprocessor",
-        rules: Iterable[PostprocessingRule] = None,
+        rules: Optional[Iterable[PostprocessingRule]] = None,
         debug: bool = False,
         input_span_type: Literal["ents", "group"] = "ents",
         span_group_name: str = "medspacy_spans",

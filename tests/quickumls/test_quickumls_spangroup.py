@@ -1,5 +1,4 @@
 import os, sys
-# recent pytest failed because of project directory is not included in sys.path somehow, might due to other configuration issue. Add this for a temp solution
 sys.path.append(os.getcwd())
 import spacy
 import warnings
@@ -16,34 +15,21 @@ from medspacy.util import get_quickumls_demo_dir
 
 MEDSPACY_DEFAULT_SPAN_GROUP_NAME = "medspacy_spans"
 
-# allow default QuickUMLS (very small sample data) to be loaded
-nlp = spacy.blank("en")
-
-# Configure the QuickUMLS component for these tests on SpanGroups
-# Some allow overlaps, but this config will currently work for all of the tests below
-nlp.add_pipe(
-    "medspacy_quickumls",
-    config={
-        "threshold": 0.7,
-        "result_type": "group",
-        # do not constrain to the best match for overlapping
-        "best_match": False,
-        "quickumls_fp": get_quickumls_demo_dir('en'),
-    },
-)
-
 
 class TestQuickUMLSSpanGroup:
-    def test_span_groups(self):
+    def test_span_groups(self, quickumls_nlp):
         """
         Test that span groups can bs used as a result type (as opposed to entities)
         """
+
+        quickumls = quickumls_nlp.get_pipe("medspacy_quickumls")
+        quickumls.result_type = "group"
 
         concept_term = "dipalmitoyllecithin"
 
         text = "Decreased {} content found in lung specimens".format(concept_term)
 
-        doc = nlp(text)
+        doc = quickumls_nlp(text)
 
         assert len(doc.ents) == 0
 
@@ -53,10 +39,13 @@ class TestQuickUMLSSpanGroup:
 
         assert len(span._.umls_matches) > 0
 
-    def test_overlapping_spans(self):
+    def test_overlapping_spans(self, quickumls_nlp):
         """
         Test that overlapping terms can be extracted
         """
+
+        quickumls = quickumls_nlp.get_pipe("medspacy_quickumls")
+        quickumls.result_type = "group"
 
         # the demo data contains both of these concepts, so let's put them together
         # and allow overlap on one of the tokens
@@ -64,19 +53,22 @@ class TestQuickUMLSSpanGroup:
         # phosphatidylcholine, dipalmitoyl
         text = """dipalmitoyl phosphatidylcholine dipalmitoyl"""
 
-        doc = nlp(text)
+        doc = quickumls_nlp(text)
 
         assert len(doc.spans[MEDSPACY_DEFAULT_SPAN_GROUP_NAME]) >= 2
 
-    def test_multiword_span(self):
+    def test_multiword_span(self, quickumls_nlp):
         """
         Test that an extraction can be made on a concept with multiple words
         """
+
+        quickumls = quickumls_nlp.get_pipe("medspacy_quickumls")
+        quickumls.result_type = "group"
 
         # the demo data contains this concept:
         # dipalmitoyl phosphatidylcholine
         text = """dipalmitoyl phosphatidylcholine"""
 
-        doc = nlp(text)
+        doc = quickumls_nlp(text)
 
         assert len(doc.spans[MEDSPACY_DEFAULT_SPAN_GROUP_NAME]) == 1

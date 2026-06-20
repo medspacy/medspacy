@@ -248,6 +248,7 @@ class Sectionizer:
                         f"Duplicate section title {name}. Merging parents. "
                         f"If this is not intended, please specify distinct titles.",
                         RuntimeWarning,
+                        stacklevel=2,
                     )
                     self._parent_sections[name].update(parents)
                 else:
@@ -261,6 +262,7 @@ class Sectionizer:
                     f"Duplicate section title {name} has different parent_required option. "
                     f"Setting parent_required to False.",
                     RuntimeWarning,
+                    stacklevel=2,
                 )
                 self._parent_required[name] = False
             else:

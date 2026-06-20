@@ -1,3 +1,8 @@
+# Unreleased
+
+## Bug Fixes
+- Add missing `stacklevel=2` to 4 `warnings.warn()` calls so warnings correctly point to user code instead of medspacy internals
+
 # Version 1.1.2
 
 ## QuickUMLS

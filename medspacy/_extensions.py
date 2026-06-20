@@ -212,6 +212,7 @@ def get_data(doc, dtype=None, attrs=None, as_rows=False):
             "doc._.data is None, which might mean that you haven't processed your doc with a DocConsumer yet.\n"
             "Make sure you've processed a doc by either calling doc_consumer(doc) or nlp.add_pipe(doc_consumer)",
             RuntimeWarning,
+            stacklevel=2,
         )
         return None
 

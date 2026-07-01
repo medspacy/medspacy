@@ -60,7 +60,7 @@ class Sectionizer:
         phrase_matcher_attr: str = "LOWER",
         require_start_line: bool = False,
         require_end_line: bool = False,
-        newline_pattern: str = r"[\n\r]+[\s]*$",
+        newline_pattern: str = r"[\n\r]+[\s]*\Z",
         input_span_type: Union[Literal["ents", "group"], None] = "ents",
         span_group_name: str = "medspacy_spans",
         span_attrs: Union[

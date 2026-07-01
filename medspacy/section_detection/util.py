@@ -6,7 +6,7 @@ import re
 
 from spacy.tokens import Doc
 
-NEWLINE_PATTERN = r"[\n\r]+[\s]*$"
+NEWLINE_PATTERN = r"[\n\r]+[\s]*\Z"
 
 
 def is_start_line(idx: int, doc: Doc, pattern: re.Pattern) -> bool:

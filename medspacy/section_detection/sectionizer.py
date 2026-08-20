@@ -68,7 +68,7 @@ class Sectionizer:
         ] = "default",
         apply_sentence_boundary: bool = False,
     ):
-        """
+        r"""
         Create a new Sectionizer component.
 
         Args:

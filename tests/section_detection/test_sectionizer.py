@@ -295,6 +295,34 @@ class TestSectionizer:
         assert pmh.parent is None
         assert explanation.parent.category == "past_medical_history"
 
+    def test_parent_section_after_unsectioned_text(self):
+        """Text before the first header adds a headerless section, which must not
+        shift parent lookups. Regression test for #114."""
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(
+            [
+                SectionRule(
+                    category="past_medical_history", literal="Past Medical History:"
+                ),
+                SectionRule(
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history"],
+                ),
+            ]
+        )
+        text = (
+            "This text is not in any section. "
+            "Past Medical History: some other text Explanation: The patient has one"
+        )
+        doc = nlp(text)
+        sectionizer(doc)
+        assert len(doc._.sections) == 3
+        preamble, pmh, explanation = doc._.sections
+        assert preamble.category is None
+        assert pmh.parent is None
+        assert explanation.parent.category == "past_medical_history"
+
     def test_parent_section_multiple_candidates(self):
         sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(

@@ -411,6 +411,10 @@ class Sectionizer:
         first_match = matches[0]
         if first_match[1] != 0:
             section_list.append(Section(None, 0, 0, 0, first_match[1]))
+        # Parent indices returned by set_parent_sections index into matches. When a
+        # headerless section is prepended above, section_list is offset from matches
+        # by one, so parent lookups must be shifted by the same amount.
+        parent_offset = len(section_list)
 
         # handle section spans
         for i, match in enumerate(matches):
@@ -418,7 +422,7 @@ class Sectionizer:
             if len(match) == 4:
                 (match_id, start, end, parent_idx) = match
                 if parent_idx is not None:
-                    parent = section_list[parent_idx]
+                    parent = section_list[parent_idx + parent_offset]
             else:
                 # IDEs will warn here about match shape disagreeing w/ type hinting, but this if is only used if
                 # parent sections were never set, so parent_idx does not exist

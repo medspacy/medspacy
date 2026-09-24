@@ -84,10 +84,12 @@ class ConText:
             max_targets: The maximum number of targets a modifier can modify. Default value is None, context will modify
                 all targets in its scope. If a value greater than zero, applies this value globally. Both options will
                 be overridden by a more specific value in a ContextRule.
-            prune_on_modifier_overlap: Whether to prune modifiers which are substrings of another modifier. If True,
-                will drop substrings completely. For example, if "no history of"  and "history of" are both
-                ConTextRules,both will match the text "no history of afib", but only "no  history of" should modify
-                afib. Default True.
+            prune_on_modifier_overlap: Whether to prune overlapping modifiers. If True, overlapping modifiers are
+                pruned after they are linked to targets, preferring the modifier which modified more targets. For
+                example, in "FINDINGS: No pneumonia", the BACKWARD ": no" modifier and the FORWARD "no" modifier
+                overlap; only the FORWARD "no" modifies a target, so ": no" is dropped and pneumonia is negated.
+                Ties are broken by keeping the longest modifier span. If False, no modifier overlap pruning occurs.
+                Default True.
             prune_on_target_overlap: Whether to remove any matched modifiers which overlap with target entities. If
                 False, any overlapping modifiers will not modify the overlapping entity but will still modify any other
                 targets in its scope. Default False.
@@ -113,11 +115,18 @@ class ConText:
             Path(__file__).resolve().parents[2], "resources", language_code.lower(), "context_rules.json"
         )
 
+        # Modifier overlap pruning happens after modifiers are linked to targets
+        # (see ConTextGraph.prune_overlapping_modifiers), so the modifier
+        # matcher must not prune overlapping matches up front. Pruning before
+        # linking can drop the modifier that would have modified a target: for
+        # example, in "FINDINGS: No pneumonia", the BACKWARD ": no" match would
+        # eliminate the overlapping FORWARD "no" match even though ": no"
+        # modifies nothing. See https://github.com/medspacy/medspacy/issues/155.
         self.__matcher = MedspacyMatcher(
             nlp,
             name=name,
             phrase_matcher_attr=phrase_matcher_attr,
-            prune=prune_on_modifier_overlap,
+            prune=False,
         )
 
         if span_attrs == "default":
@@ -306,7 +315,8 @@ class ConText:
         # Store data in ConTextGraph object
         # TODO: move some of this over to ConTextGraph
         context_graph = ConTextGraph(
-            prune_on_modifier_overlap=self.prune_on_target_overlap
+            prune_on_modifier_overlap=self.prune_on_target_overlap,
+            prune_modifier_overlap=self.prune_on_modifier_overlap,
         )
 
         context_graph.targets = targets

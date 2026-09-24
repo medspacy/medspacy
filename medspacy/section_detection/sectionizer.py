@@ -412,13 +412,21 @@ class Sectionizer:
         if first_match[1] != 0:
             section_list.append(Section(None, 0, 0, 0, first_match[1]))
 
+        # parent_idx values returned by set_parent_sections() index into the
+        # matches list, but section_list may contain additional leading
+        # section(s) (see above). Offset the lookup so the parent resolves to
+        # the correct Section. Without this, a subsection whose parent is the
+        # first section of the document points at the wrong Section whenever
+        # the document has text before the first section header (see #102).
+        parent_index_offset = len(section_list)
+
         # handle section spans
         for i, match in enumerate(matches):
             parent = None
             if len(match) == 4:
                 (match_id, start, end, parent_idx) = match
                 if parent_idx is not None:
-                    parent = section_list[parent_idx]
+                    parent = section_list[parent_idx + parent_index_offset]
             else:
                 # IDEs will warn here about match shape disagreeing w/ type hinting, but this if is only used if
                 # parent sections were never set, so parent_idx does not exist

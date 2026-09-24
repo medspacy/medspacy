@@ -422,6 +422,64 @@ class TestSectionizer:
         assert section.category is None
         assert section.parent is None
 
+    def test_parent_section_first_parent_with_leading_text(self):
+        # Regression test for #102: a subsection whose parent is the first
+        # section of the document must still resolve to that parent when the
+        # document contains text before the first section header. The
+        # Sectionizer prepends an unnamed Section for that leading text, so
+        # the parent index must be offset accordingly.
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(
+            [
+                SectionRule(
+                    category="past_medical_history", literal="Past Medical History:"
+                ),
+                SectionRule(
+                    category="explanation",
+                    literal="Explanation:",
+                    parents=["past_medical_history"],
+                ),
+            ]
+        )
+        text = "Some intro text Past Medical History: some other text Explanation: The patient has one"
+        doc = nlp(text)
+        sectionizer(doc)
+        assert len(doc._.sections) == 3
+        intro = doc._.sections[0]
+        pmh = doc._.sections[1]
+        explanation = doc._.sections[2]
+        assert intro.category is None
+        assert intro.parent is None
+        assert pmh.category == "past_medical_history"
+        assert pmh.parent is None
+        assert explanation.category == "explanation"
+        assert explanation.parent is not None
+        assert explanation.parent.category == "past_medical_history"
+
+    def test_parent_section_chain_with_leading_text(self):
+        # Same as above but for a nested subsection chain: each subsection
+        # must resolve to its true parent even with leading text present.
+        sectionizer = Sectionizer(nlp, rules=None)
+        sectionizer.add(
+            [
+                SectionRule(category="s1", literal="section 1:"),
+                SectionRule(category="s2", literal="section 2:", parents=["s1"]),
+                SectionRule(category="s3", literal="section 3:", parents=["s2"]),
+            ]
+        )
+        text = "intro text section 1: abc section 2: abc section 3: abc"
+        doc = nlp(text)
+        sectionizer(doc)
+        assert len(doc._.sections) == 4
+        intro = doc._.sections[0]
+        s1 = doc._.sections[1]
+        s2 = doc._.sections[2]
+        s3 = doc._.sections[3]
+        assert intro.category is None
+        assert s1.parent is None
+        assert s2.parent.category == "s1"
+        assert s3.parent.category == "s2"
+
     def test_parent_section_chain(self):
         sectionizer = Sectionizer(nlp, rules=None)
         sectionizer.add(

@@ -172,6 +172,7 @@ class TargetMatcher:
                         f'The result ""{span}"" conflicts with a pre-existing entity in doc.ents. This result has been '
                         f"skipped.",
                         RuntimeWarning,
+                        stacklevel=2,
                     )
             return doc
         elif self.result_type.lower() == "group":

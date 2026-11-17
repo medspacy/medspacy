@@ -145,6 +145,31 @@ visualize_ent(doc)
 
 For more detailed examples and explanations of each component, see the [notebooks](./notebooks) folder.
 
+### Matching an existing entity type
+
+A `TargetRule` token pattern can use `ENT_TYPE` when an earlier component, such as spaCy's
+`EntityRuler` or `ner`, has already labeled the tokens in `doc.ents`. Use `result_type="group"`
+to store matched spans separately. The default `result_type="ents"` gives existing entities
+precedence when a match overlaps them.
+
+```python
+import spacy
+from medspacy.target_matcher import TargetRule
+
+nlp = spacy.blank("en")
+ruler = nlp.add_pipe("entity_ruler")
+ruler.add_patterns([{"label": "SYMPTOM", "pattern": "cough"}])
+matcher = nlp.add_pipe(
+    "medspacy_target_matcher",
+    config={"result_type": "group", "span_group_name": "targets"},
+)
+matcher.add(TargetRule("cough", "TARGET", pattern=[{"ENT_TYPE": "SYMPTOM"}]))
+
+doc = nlp("Reports cough.")
+assert [(span.text, span.label_) for span in doc.ents] == [("cough", "SYMPTOM")]
+assert [(span.text, span.label_) for span in doc.spans["targets"]] == [("cough", "TARGET")]
+```
+
 # Citing medspaCy
 If you use medspaCy in your work, consider citing our paper! Presented at the AMIA Annual Symposium 2021, [preprint available on Arxiv](http://arxiv.org/abs/2106.07799).
 
